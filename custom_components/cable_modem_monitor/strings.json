@@ -3,15 +3,17 @@
     "step": {
       "user": {
         "title": "Cable Modem Monitor",
-        "description": "Enter your cable modem's IP address",
+        "description": "Enter your cable modem's IP address and credentials. The IP is typically 192.168.100.1 for Motorola modems. Leave username/password blank if your modem doesn't require authentication.",
         "data": {
-          "host": "IP Address"
+          "host": "Modem IP Address (e.g., 192.168.100.1)",
+          "username": "Username (optional, typically 'admin')",
+          "password": "Password (optional, stored securely)"
         }
       }
     },
     "error": {
-      "cannot_connect": "Failed to connect to the modem. Please verify the IP address and ensure the modem's web interface is accessible.",
-      "unknown": "Unexpected error occurred"
+      "cannot_connect": "Failed to connect to the modem. Please verify: 1) IP address is correct (typically 192.168.100.1), 2) Username and password are correct, 3) Modem's web interface is accessible from Home Assistant's network.",
+      "unknown": "Unexpected error occurred. Check Home Assistant logs for details."
     },
     "abort": {
       "already_configured": "This modem is already configured"

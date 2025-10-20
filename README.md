@@ -176,7 +176,7 @@ automation:
 1. Verify modem IP address is correct
 2. Open modem web interface in browser to confirm it's accessible
 3. Ensure Home Assistant can reach the modem (same network)
-4. Check if modem requires authentication (not currently supported)
+4. If modem requires authentication, enter username and password in the config dialog
 
 ***REMOVED******REMOVED******REMOVED*** Sensors show "Unknown" or no data
 The modem's HTML format may differ from expected. To debug:
@@ -230,7 +230,8 @@ To change this, edit the value in `custom_components/cable_modem_monitor/const.p
 
 - All data stays local - no cloud services involved
 - Only reads data from your modem (no configuration changes)
-- No authentication support yet (most modems don't require it for status pages)
+- Supports authentication for modems that require login
+- Credentials are stored securely in Home Assistant's encrypted storage
 
 ***REMOVED******REMOVED*** License
 

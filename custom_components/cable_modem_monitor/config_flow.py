@@ -11,7 +11,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 
-from .const import CONF_HOST, DOMAIN
+from .const import CONF_HOST, CONF_USERNAME, CONF_PASSWORD, DOMAIN
 from .modem_scraper import ModemScraper
 
 _LOGGER = logging.getLogger(__name__)
@@ -19,6 +19,8 @@ _LOGGER = logging.getLogger(__name__)
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_HOST, default="192.168.100.1"): str,
+        vol.Optional(CONF_USERNAME, default="admin"): str,
+        vol.Optional(CONF_PASSWORD, default=""): str,
     }
 )
 
@@ -26,8 +28,10 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
     """Validate the user input allows us to connect."""
     host = data[CONF_HOST]
+    username = data.get(CONF_USERNAME)
+    password = data.get(CONF_PASSWORD)
 
-    scraper = ModemScraper(host)
+    scraper = ModemScraper(host, username, password)
 
     ***REMOVED*** Test the connection
     try:

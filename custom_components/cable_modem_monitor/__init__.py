@@ -9,7 +9,7 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import CONF_HOST, DEFAULT_SCAN_INTERVAL, DOMAIN
+from .const import CONF_HOST, CONF_USERNAME, CONF_PASSWORD, DEFAULT_SCAN_INTERVAL, DOMAIN
 from .modem_scraper import ModemScraper
 
 _LOGGER = logging.getLogger(__name__)
@@ -20,8 +20,10 @@ PLATFORMS: list[Platform] = [Platform.SENSOR]
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Cable Modem Monitor from a config entry."""
     host = entry.data[CONF_HOST]
+    username = entry.data.get(CONF_USERNAME)
+    password = entry.data.get(CONF_PASSWORD)
 
-    scraper = ModemScraper(host)
+    scraper = ModemScraper(host, username, password)
 
     async def async_update_data():
         """Fetch data from the modem."""
@@ -57,3 +59,9 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.data[DOMAIN].pop(entry.entry_id)
 
     return unload_ok
+
+
+async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Reload config entry."""
+    await async_unload_entry(hass, entry)
+    await async_setup_entry(hass, entry)
