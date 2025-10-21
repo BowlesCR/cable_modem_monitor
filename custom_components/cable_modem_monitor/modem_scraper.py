@@ -233,8 +233,11 @@ class ModemScraper:
 
                 headers = [td.text.strip() for td in header_row.find_all("td", class_="moto-param-header-s")]
 
-                ***REMOVED*** Look for upstream-specific headers
-                if headers and any(keyword in " ".join(headers).lower() for keyword in ["upstream", "transmit", "symbol rate", "symb", "freq. (mhz)"]):
+                ***REMOVED*** Look for upstream-specific headers (must have symb rate, not SNR which is downstream)
+                headers_text = " ".join(headers).lower()
+                is_upstream = ("symb" in headers_text or "symbol rate" in headers_text) and "snr" not in headers_text
+
+                if headers and is_upstream:
                     _LOGGER.debug(f"Found upstream channel table with headers: {headers}")
                     rows = table.find_all("tr")[1:]  ***REMOVED*** Skip header row
 
