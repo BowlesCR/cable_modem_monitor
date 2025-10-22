@@ -12,3 +12,13 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+
+***REMOVED*** Virtual environment
+venv/
+env/
+ENV/
+
+***REMOVED*** Test coverage
+.coverage
+htmlcov/
+coverage.xml
