@@ -8,7 +8,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'custom_components'))
 
 from cable_modem_monitor.config_flow import (
-    CableModemMonitorConfigFlow,
+    ConfigFlow,
     OptionsFlowHandler,
     CannotConnect,
     validate_input,
