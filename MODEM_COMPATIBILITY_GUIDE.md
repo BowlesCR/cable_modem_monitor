@@ -5,8 +5,8 @@ Help us support your cable modem! This guide explains how to provide information
 ## Currently Supported Modems
 
 ✅ **Confirmed Working:**
-- Motorola MB series (MB7420, MB8600, etc.)
-- Arris SB6183, SB8200 (newer models)
+- Motorola MB7621 (other MB series models likely compatible)
+- Arris SB6183, SB8200 (newer models - reported by community)
 
 🧪 **Being Tested:**
 - Arris SB6141 (parser added, awaiting user confirmation)
