@@ -97,7 +97,10 @@ After installation, you can configure additional settings:
    - **History Retention**: Number of days to keep when using Clear History button (1-365 days, default: 30)
 
 ![Cable Modem Configuration Settings](images/cable-modem-settings.png)
+
 *Configuration options available through the Settings UI*
+
+---
 
 ***REMOVED******REMOVED*** Available Sensors
 
@@ -163,9 +166,11 @@ Here's an example of a simple, clean dashboard showing all key modem health metr
 Track your signal quality over time with history graphs:
 
 ![Downstream Power Levels](images/downstream-power-levels.png)
+
 *Downstream power levels across all channels - ideal range is -7 to +7 dBmV*
 
 ![Signal-to-Noise Ratio](images/signal-to-noise-ratio.png)
+
 *Signal-to-Noise Ratio for all channels - higher is better, aim for above 40 dB*
 
 Create a dashboard to monitor your modem health:
