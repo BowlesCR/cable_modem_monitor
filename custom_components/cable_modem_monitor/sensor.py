@@ -93,7 +93,8 @@ async def async_setup_entry(
     ***REMOVED*** Add per-channel downstream sensors
     if coordinator.data.get("downstream"):
         for idx, channel in enumerate(coordinator.data["downstream"]):
-            ***REMOVED*** v1.8+ uses 'channel_id' from parser, fallback to index
+            ***REMOVED*** v1.8+ parsers return 'channel_id', older versions used 'channel'
+            ***REMOVED*** Fallback to index+1 if neither exists (shouldn't happen in practice)
             channel_num = int(channel.get("channel_id", channel.get("channel", idx + 1)))
             entities.extend(
                 [
@@ -115,7 +116,8 @@ async def async_setup_entry(
     ***REMOVED*** Add per-channel upstream sensors
     if coordinator.data.get("upstream"):
         for idx, channel in enumerate(coordinator.data["upstream"]):
-            ***REMOVED*** v1.8+ uses 'channel_id' from parser, fallback to index
+            ***REMOVED*** v1.8+ parsers return 'channel_id', older versions used 'channel'
+            ***REMOVED*** Fallback to index+1 if neither exists (shouldn't happen in practice)
             channel_num = int(channel.get("channel_id", channel.get("channel", idx + 1)))
             entities.extend(
                 [
@@ -226,7 +228,8 @@ class ModemDownstreamPowerSensor(ModemSensorBase):
     def native_value(self) -> float | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("downstream", []):
-            ***REMOVED*** v1.8+ uses 'channel_id'
+            ***REMOVED*** v1.8+ parsers return 'channel_id', older versions used 'channel'
+            ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
                 return ch.get("power")
@@ -252,7 +255,8 @@ class ModemDownstreamSNRSensor(ModemSensorBase):
     def native_value(self) -> float | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("downstream", []):
-            ***REMOVED*** v1.8+ uses 'channel_id'
+            ***REMOVED*** v1.8+ parsers return 'channel_id', older versions used 'channel'
+            ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
                 return ch.get("snr")
@@ -279,7 +283,8 @@ class ModemDownstreamFrequencySensor(ModemSensorBase):
     def native_value(self) -> int | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("downstream", []):
-            ***REMOVED*** v1.8+ uses 'channel_id'
+            ***REMOVED*** v1.8+ parsers return 'channel_id', older versions used 'channel'
+            ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
                 return ch.get("frequency")
@@ -304,7 +309,8 @@ class ModemDownstreamCorrectedSensor(ModemSensorBase):
     def native_value(self) -> int | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("downstream", []):
-            ***REMOVED*** v1.8+ uses 'channel_id'
+            ***REMOVED*** v1.8+ parsers return 'channel_id', older versions used 'channel'
+            ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
                 return ch.get("corrected")
@@ -329,7 +335,8 @@ class ModemDownstreamUncorrectedSensor(ModemSensorBase):
     def native_value(self) -> int | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("downstream", []):
-            ***REMOVED*** v1.8+ uses 'channel_id'
+            ***REMOVED*** v1.8+ parsers return 'channel_id', older versions used 'channel'
+            ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
                 return ch.get("uncorrected")
@@ -355,7 +362,8 @@ class ModemUpstreamPowerSensor(ModemSensorBase):
     def native_value(self) -> float | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("upstream", []):
-            ***REMOVED*** v1.8+ uses 'channel_id'
+            ***REMOVED*** v1.8+ parsers return 'channel_id', older versions used 'channel'
+            ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
                 return ch.get("power")
@@ -382,7 +390,8 @@ class ModemUpstreamFrequencySensor(ModemSensorBase):
     def native_value(self) -> int | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("upstream", []):
-            ***REMOVED*** v1.8+ uses 'channel_id'
+            ***REMOVED*** v1.8+ parsers return 'channel_id', older versions used 'channel'
+            ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
                 return ch.get("frequency")

@@ -190,7 +190,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     ***REMOVED*** Register services
     async def handle_clear_history(call: ServiceCall) -> None:
         """Handle the clear_history service call."""
-        from homeassistant.components import recorder
         from homeassistant.helpers import entity_registry as er
 
         days_to_keep = call.data.get("days_to_keep", 30)
@@ -248,13 +247,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 states_deleted = cursor.rowcount
 
                 ***REMOVED*** Find statistics metadata IDs using entity_id list from registry
-                ***REMOVED*** Build dynamic query to match any of our entities
-                stats_patterns = []
-                for entity_id in cable_modem_entities:
-                    stats_patterns.append(f"statistic_id = '{entity_id}'")
-
-                stats_query = "SELECT id FROM statistics_meta WHERE " + " OR ".join(stats_patterns)
-                cursor.execute(stats_query)
+                ***REMOVED*** Use parameterized query to safely match entity IDs
+                placeholders = ",".join("?" * len(cable_modem_entities))
+                stats_query = f"SELECT id FROM statistics_meta WHERE statistic_id IN ({placeholders})"
+                cursor.execute(stats_query, cable_modem_entities)
 
                 stats_metadata_ids = [row[0] for row in cursor.fetchall()]
 
