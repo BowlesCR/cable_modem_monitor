@@ -6,6 +6,14 @@ CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
 CONF_HISTORY_DAYS = "history_days"
 CONF_SCAN_INTERVAL = "scan_interval"
+CONF_ENTITY_PREFIX = "entity_prefix"
+
+# Entity naming options
+ENTITY_PREFIX_DEFAULT = "default"  # No prefix (current behavior)
+ENTITY_PREFIX_DOMAIN = "domain"  # Prefix with "cable_modem_"
+ENTITY_PREFIX_IP = "ip_address"  # Prefix with IP address (e.g., "192_168_100_1_")
+ENTITY_PREFIX_CUSTOM = "custom"  # User-defined custom prefix
+CONF_CUSTOM_PREFIX = "custom_prefix"  # Store user's custom prefix text
 
 # Polling interval defaults based on industry best practices
 # References:

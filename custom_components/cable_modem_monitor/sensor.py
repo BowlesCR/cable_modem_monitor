@@ -14,7 +14,53 @@ from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
 )
 
-from .const import DOMAIN
+from .const import (
+    CONF_CUSTOM_PREFIX,
+    CONF_ENTITY_PREFIX,
+    CONF_HOST,
+    DOMAIN,
+    ENTITY_PREFIX_CUSTOM,
+    ENTITY_PREFIX_DEFAULT,
+    ENTITY_PREFIX_DOMAIN,
+    ENTITY_PREFIX_IP,
+)
+
+
+def get_entity_name(entry: ConfigEntry, base_name: str) -> str:
+    """Generate entity name with configured prefix.
+
+    Args:
+        entry: Config entry containing entity naming preferences
+        base_name: Base name for the entity (e.g., "Connection Status")
+
+    Returns:
+        Full entity name with appropriate prefix
+    """
+    prefix_type = entry.data.get(CONF_ENTITY_PREFIX, ENTITY_PREFIX_DEFAULT)
+
+    if prefix_type == ENTITY_PREFIX_DEFAULT:
+        # No prefix - current behavior
+        return base_name
+    elif prefix_type == ENTITY_PREFIX_DOMAIN:
+        # Add "Cable Modem " prefix
+        return f"Cable Modem {base_name}"
+    elif prefix_type == ENTITY_PREFIX_IP:
+        # Add IP address prefix (sanitized for entity names)
+        host = entry.data.get(CONF_HOST, "")
+        sanitized_host = host.replace(".", "_").replace(":", "_")
+        return f"{sanitized_host} {base_name}"
+    elif prefix_type == ENTITY_PREFIX_CUSTOM:
+        # Add custom prefix
+        custom_prefix = entry.data.get(CONF_CUSTOM_PREFIX, "")
+        if custom_prefix:
+            # Ensure custom prefix ends with space if it doesn't already
+            if not custom_prefix.endswith(" "):
+                custom_prefix += " "
+            return f"{custom_prefix}{base_name}"
+        return base_name
+    else:
+        # Fallback to no prefix
+        return base_name
 
 
 async def async_setup_entry(
@@ -108,7 +154,7 @@ class ModemConnectionStatusSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Modem Connection Status"
+        self._attr_name = get_entity_name(entry, "Modem Connection Status")
         self._attr_unique_id = f"{entry.entry_id}_connection_status"
         self._attr_icon = "mdi:router-network"
 
@@ -129,7 +175,7 @@ class ModemTotalCorrectedSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Total Corrected Errors"
+        self._attr_name = get_entity_name(entry, "Total Corrected Errors")
         self._attr_unique_id = f"{entry.entry_id}_total_corrected"
         self._attr_icon = "mdi:alert-circle-check"
         self._attr_state_class = SensorStateClass.TOTAL_INCREASING
@@ -146,7 +192,7 @@ class ModemTotalUncorrectedSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Total Uncorrected Errors"
+        self._attr_name = get_entity_name(entry, "Total Uncorrected Errors")
         self._attr_unique_id = f"{entry.entry_id}_total_uncorrected"
         self._attr_icon = "mdi:alert-circle"
         self._attr_state_class = SensorStateClass.TOTAL_INCREASING
@@ -166,7 +212,7 @@ class ModemDownstreamPowerSensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Downstream Ch {channel} Power"
+        self._attr_name = get_entity_name(entry, f"Downstream Ch {channel} Power")
         self._attr_unique_id = f"{entry.entry_id}_downstream_{channel}_power"
         self._attr_native_unit_of_measurement = "dBmV"
         self._attr_icon = "mdi:signal"
@@ -190,7 +236,7 @@ class ModemDownstreamSNRSensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Downstream Ch {channel} SNR"
+        self._attr_name = get_entity_name(entry, f"Downstream Ch {channel} SNR")
         self._attr_unique_id = f"{entry.entry_id}_downstream_{channel}_snr"
         self._attr_native_unit_of_measurement = "dB"
         self._attr_icon = "mdi:signal-variant"
@@ -214,7 +260,7 @@ class ModemDownstreamFrequencySensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Downstream Ch {channel} Frequency"
+        self._attr_name = get_entity_name(entry, f"Downstream Ch {channel} Frequency")
         self._attr_unique_id = f"{entry.entry_id}_downstream_{channel}_frequency"
         self._attr_native_unit_of_measurement = "Hz"
         self._attr_icon = "mdi:sine-wave"
@@ -239,7 +285,7 @@ class ModemDownstreamCorrectedSensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Downstream Ch {channel} Corrected"
+        self._attr_name = get_entity_name(entry, f"Downstream Ch {channel} Corrected")
         self._attr_unique_id = f"{entry.entry_id}_downstream_{channel}_corrected"
         self._attr_icon = "mdi:check-circle"
         self._attr_state_class = SensorStateClass.TOTAL_INCREASING
@@ -262,7 +308,7 @@ class ModemDownstreamUncorrectedSensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Downstream Ch {channel} Uncorrected"
+        self._attr_name = get_entity_name(entry, f"Downstream Ch {channel} Uncorrected")
         self._attr_unique_id = f"{entry.entry_id}_downstream_{channel}_uncorrected"
         self._attr_icon = "mdi:alert-circle"
         self._attr_state_class = SensorStateClass.TOTAL_INCREASING
@@ -285,7 +331,7 @@ class ModemUpstreamPowerSensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Upstream Ch {channel} Power"
+        self._attr_name = get_entity_name(entry, f"Upstream Ch {channel} Power")
         self._attr_unique_id = f"{entry.entry_id}_upstream_{channel}_power"
         self._attr_native_unit_of_measurement = "dBmV"
         self._attr_icon = "mdi:signal"
@@ -309,7 +355,7 @@ class ModemUpstreamFrequencySensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Upstream Ch {channel} Frequency"
+        self._attr_name = get_entity_name(entry, f"Upstream Ch {channel} Frequency")
         self._attr_unique_id = f"{entry.entry_id}_upstream_{channel}_frequency"
         self._attr_native_unit_of_measurement = "Hz"
         self._attr_icon = "mdi:sine-wave"
@@ -331,7 +377,7 @@ class ModemDownstreamChannelCountSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Downstream Channel Count"
+        self._attr_name = get_entity_name(entry, "Downstream Channel Count")
         self._attr_unique_id = f"{entry.entry_id}_downstream_channel_count"
         self._attr_icon = "mdi:numeric"
         self._attr_state_class = SensorStateClass.MEASUREMENT
@@ -348,7 +394,7 @@ class ModemUpstreamChannelCountSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Upstream Channel Count"
+        self._attr_name = get_entity_name(entry, "Upstream Channel Count")
         self._attr_unique_id = f"{entry.entry_id}_upstream_channel_count"
         self._attr_icon = "mdi:numeric"
         self._attr_state_class = SensorStateClass.MEASUREMENT
@@ -365,7 +411,7 @@ class ModemSoftwareVersionSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Software Version"
+        self._attr_name = get_entity_name(entry, "Software Version")
         self._attr_unique_id = f"{entry.entry_id}_software_version"
         self._attr_icon = "mdi:information-outline"
 
@@ -381,7 +427,7 @@ class ModemSystemUptimeSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "System Uptime"
+        self._attr_name = get_entity_name(entry, "System Uptime")
         self._attr_unique_id = f"{entry.entry_id}_system_uptime"
         self._attr_icon = "mdi:clock-outline"
 
