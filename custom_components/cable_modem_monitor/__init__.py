@@ -41,33 +41,35 @@ async def async_migrate_entity_ids(hass: HomeAssistant, entry: ConfigEntry) -> N
     entity_reg = er.async_get(hass)
 
     # Mapping of old entity ID patterns to new ones
-    # This handles migration from v1.x (no prefix, IP prefix, custom prefix) to v2.0 (cable_modem_ prefix)
+    # This handles migration from v1.8 (which used cable_modem_ in unique_id but not entity_id)
+    # Simplified patterns - we only support migrating from cable_modem_ prefix to maintain it
     old_patterns_to_new = {
+        # Note: v1.8 never released custom/IP prefixes, so we only handle no-prefix entities
         # Downstream channels
-        r'^sensor\.(\d+_\d+_\d+_\d+_)?downstream_ch_(\d+)_(power|snr|frequency|corrected|uncorrected)$':
+        r'^sensor\.downstream_ch_(\d+)_(power|snr|frequency|corrected|uncorrected)$':
             'sensor.cable_modem_downstream_ch_{}_{}',
         # Upstream channels
-        r'^sensor\.(\d+_\d+_\d+_\d+_)?upstream_ch_(\d+)_(power|frequency)$':
+        r'^sensor\.upstream_ch_(\d+)_(power|frequency)$':
             'sensor.cable_modem_upstream_ch_{}_{}',
         # Summary sensors
-        r'^sensor\.(\d+_\d+_\d+_\d+_)?total_(corrected|uncorrected)$':
+        r'^sensor\.total_(corrected|uncorrected)$':
             'sensor.cable_modem_total_{}',
         # Channel counts
-        r'^sensor\.(\d+_\d+_\d+_\d+_)?downstream_channel_count$':
+        r'^sensor\.downstream_channel_count$':
             'sensor.cable_modem_downstream_channel_count',
-        r'^sensor\.(\d+_\d+_\d+_\d+_)?upstream_channel_count$':
+        r'^sensor\.upstream_channel_count$':
             'sensor.cable_modem_upstream_channel_count',
         # Status and info
-        r'^sensor\.(\d+_\d+_\d+_\d+_)?modem_connection_status$':
+        r'^sensor\.modem_connection_status$':
             'sensor.cable_modem_connection_status',
-        r'^sensor\.(\d+_\d+_\d+_\d+_)?software_version$':
+        r'^sensor\.software_version$':
             'sensor.cable_modem_software_version',
-        r'^sensor\.(\d+_\d+_\d+_\d+_)?system_uptime$':
+        r'^sensor\.system_uptime$':
             'sensor.cable_modem_system_uptime',
-        r'^sensor\.(\d+_\d+_\d+_\d+_)?last_boot_time$':
+        r'^sensor\.last_boot_time$':
             'sensor.cable_modem_last_boot_time',
         # Button
-        r'^button\.(\d+_\d+_\d+_\d+_)?restart_modem$':
+        r'^button\.restart_modem$':
             'button.cable_modem_restart_modem',
     }
 
@@ -93,8 +95,8 @@ async def async_migrate_entity_ids(hass: HomeAssistant, entry: ConfigEntry) -> N
         for pattern, template in old_patterns_to_new.items():
             match = re.match(pattern, old_entity_id)
             if match:
-                # Extract relevant groups (skip the prefix group)
-                groups = [g for g in match.groups()[1:] if g is not None]
+                # Extract all captured groups
+                groups = match.groups()
 
                 # Generate new entity ID
                 if '{}' in template:
