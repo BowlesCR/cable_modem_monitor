@@ -93,7 +93,8 @@ async def async_setup_entry(
     ***REMOVED*** Add per-channel downstream sensors
     if coordinator.data.get("downstream"):
         for idx, channel in enumerate(coordinator.data["downstream"]):
-            channel_num = channel.get("channel", idx + 1)
+            ***REMOVED*** v1.8+ uses 'channel_id' from parser, fallback to index
+            channel_num = int(channel.get("channel_id", channel.get("channel", idx + 1)))
             entities.extend(
                 [
                     ModemDownstreamPowerSensor(coordinator, entry, channel_num),
@@ -114,7 +115,8 @@ async def async_setup_entry(
     ***REMOVED*** Add per-channel upstream sensors
     if coordinator.data.get("upstream"):
         for idx, channel in enumerate(coordinator.data["upstream"]):
-            channel_num = channel.get("channel", idx + 1)
+            ***REMOVED*** v1.8+ uses 'channel_id' from parser, fallback to index
+            channel_num = int(channel.get("channel_id", channel.get("channel", idx + 1)))
             entities.extend(
                 [
                     ModemUpstreamPowerSensor(coordinator, entry, channel_num),
@@ -224,7 +226,9 @@ class ModemDownstreamPowerSensor(ModemSensorBase):
     def native_value(self) -> float | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("downstream", []):
-            if ch.get("channel") == self._channel:
+            ***REMOVED*** v1.8+ uses 'channel_id'
+            ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
+            if ch_num == self._channel:
                 return ch.get("power")
         return None
 
@@ -248,7 +252,9 @@ class ModemDownstreamSNRSensor(ModemSensorBase):
     def native_value(self) -> float | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("downstream", []):
-            if ch.get("channel") == self._channel:
+            ***REMOVED*** v1.8+ uses 'channel_id'
+            ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
+            if ch_num == self._channel:
                 return ch.get("snr")
         return None
 
@@ -273,7 +279,9 @@ class ModemDownstreamFrequencySensor(ModemSensorBase):
     def native_value(self) -> int | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("downstream", []):
-            if ch.get("channel") == self._channel:
+            ***REMOVED*** v1.8+ uses 'channel_id'
+            ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
+            if ch_num == self._channel:
                 return ch.get("frequency")
         return None
 
@@ -296,7 +304,9 @@ class ModemDownstreamCorrectedSensor(ModemSensorBase):
     def native_value(self) -> int | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("downstream", []):
-            if ch.get("channel") == self._channel:
+            ***REMOVED*** v1.8+ uses 'channel_id'
+            ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
+            if ch_num == self._channel:
                 return ch.get("corrected")
         return None
 
@@ -319,7 +329,9 @@ class ModemDownstreamUncorrectedSensor(ModemSensorBase):
     def native_value(self) -> int | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("downstream", []):
-            if ch.get("channel") == self._channel:
+            ***REMOVED*** v1.8+ uses 'channel_id'
+            ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
+            if ch_num == self._channel:
                 return ch.get("uncorrected")
         return None
 
@@ -343,7 +355,9 @@ class ModemUpstreamPowerSensor(ModemSensorBase):
     def native_value(self) -> float | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("upstream", []):
-            if ch.get("channel") == self._channel:
+            ***REMOVED*** v1.8+ uses 'channel_id'
+            ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
+            if ch_num == self._channel:
                 return ch.get("power")
         return None
 
@@ -368,7 +382,9 @@ class ModemUpstreamFrequencySensor(ModemSensorBase):
     def native_value(self) -> int | None:
         """Return the state of the sensor."""
         for ch in self.coordinator.data.get("upstream", []):
-            if ch.get("channel") == self._channel:
+            ***REMOVED*** v1.8+ uses 'channel_id'
+            ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
+            if ch_num == self._channel:
                 return ch.get("frequency")
         return None
 
