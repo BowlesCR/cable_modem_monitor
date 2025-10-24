@@ -51,9 +51,9 @@ async def async_migrate_entity_ids(hass: HomeAssistant, entry: ConfigEntry) -> N
         # Upstream channels
         r'^sensor\.upstream_ch_(\d+)_(power|frequency)$':
             'sensor.cable_modem_upstream_ch_{}_{}',
-        # Summary sensors
-        r'^sensor\.total_(corrected|uncorrected)$':
-            'sensor.cable_modem_total_{}',
+        # Summary sensors (match with or without _errors suffix)
+        r'^sensor\.total_(corrected|uncorrected)(?:_errors)?$':
+            'sensor.cable_modem_total_{}_errors',
         # Channel counts
         r'^sensor\.downstream_channel_count$':
             'sensor.cable_modem_downstream_channel_count',
