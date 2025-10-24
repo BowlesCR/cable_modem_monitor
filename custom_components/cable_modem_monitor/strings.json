@@ -18,5 +18,32 @@
     "abort": {
       "already_configured": "This modem is already configured"
     }
+  },
+  "options": {
+    "step": {
+      "connection_settings": {
+        "title": "Connection Settings",
+        "description": "Configure modem connection and polling settings.",
+        "data": {
+          "host": "Modem IP Address",
+          "username": "Username (optional)",
+          "password": "Password (optional)",
+          "scan_interval": "Polling Interval (seconds)",
+          "history_days": "History Days"
+        }
+      },
+      "entity_naming": {
+        "title": "Entity Naming",
+        "description": "Configure how entity names are formatted. This helps when you have multiple modems or want consistent naming.",
+        "data": {
+          "entity_prefix": "Entity Naming Format",
+          "custom_prefix": "Custom Prefix"
+        },
+        "data_description": {
+          "entity_prefix": "Choose how entity names should be prefixed:\n• Default: No prefix (e.g., 'Modem Connection Status')\n• Domain: Add 'Cable Modem' prefix (e.g., 'Cable Modem Modem Connection Status')\n• IP Address: Use IP as prefix (e.g., '192_168_100_1 Modem Connection Status')\n• Custom: Define your own prefix",
+          "custom_prefix": "Enter a custom prefix for entity names (only shown if Custom is selected above)"
+        }
+      }
+    }
   }
 }
