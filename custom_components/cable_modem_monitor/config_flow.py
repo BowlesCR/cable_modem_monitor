@@ -94,6 +94,12 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 await self.async_set_unique_id(user_input[CONF_HOST])
                 self._abort_if_unique_id_configured()
 
+                ***REMOVED*** Add default values for fields not in initial setup
+                user_input.setdefault(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+                user_input.setdefault(CONF_HISTORY_DAYS, DEFAULT_HISTORY_DAYS)
+                ***REMOVED*** Default to domain prefix (cable_modem_) for new installations
+                user_input.setdefault(CONF_ENTITY_PREFIX, ENTITY_PREFIX_DOMAIN)
+
                 return self.async_create_entry(title=info["title"], data=user_input)
 
         return self.async_show_form(
@@ -126,6 +132,10 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
             else:
+                ***REMOVED*** Preserve existing password if user left it blank
+                if not user_input.get(CONF_PASSWORD):
+                    user_input[CONF_PASSWORD] = self.config_entry.data.get(CONF_PASSWORD, "")
+
                 ***REMOVED*** Save connection data and move to entity naming step
                 self._connection_data = user_input
                 return await self.async_step_entity_naming()

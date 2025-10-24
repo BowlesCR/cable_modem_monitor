@@ -9,7 +9,7 @@ CONF_SCAN_INTERVAL = "scan_interval"
 CONF_ENTITY_PREFIX = "entity_prefix"
 
 ***REMOVED*** Entity naming options
-ENTITY_PREFIX_DEFAULT = "default"  ***REMOVED*** No prefix (current behavior)
+ENTITY_PREFIX_DEFAULT = "default"  ***REMOVED*** No prefix (backwards compatible)
 ENTITY_PREFIX_DOMAIN = "domain"  ***REMOVED*** Prefix with "cable_modem_"
 ENTITY_PREFIX_IP = "ip_address"  ***REMOVED*** Prefix with IP address (e.g., "192_168_100_1_")
 ENTITY_PREFIX_CUSTOM = "custom"  ***REMOVED*** User-defined custom prefix
