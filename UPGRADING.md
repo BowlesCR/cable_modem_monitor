@@ -16,11 +16,13 @@ Version 2.0 introduces **breaking changes** to entity naming for improved consis
 - `sensor.cable_modem_downstream_ch_1_power`
 - `sensor.cable_modem_upstream_ch_1_power`
 
-**Display Names**: Changed to remove redundant prefixes:
-- "Downstream Ch 1 Power" → "Ch 1 Power"
-- "Upstream Ch 1 Power" → "Ch 1 Power"
+**Display Names**: Changed to use industry-standard DS/US abbreviations:
+- "Downstream Ch 1 Power" → "DS Ch 1 Power"
+- "Upstream Ch 1 Power" → "US Ch 1 Power"
 - "Total Corrected Errors" (unchanged)
 - "Modem Connection Status" (unchanged)
+
+This follows cable industry standards (DS = Downstream, US = Upstream) and prevents confusion between upstream and downstream channels.
 
 ***REMOVED******REMOVED******REMOVED*** Why This Change?
 
