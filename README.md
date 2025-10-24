@@ -134,15 +134,15 @@ After installation, you can configure additional settings:
 - `sensor.total_uncorrected_errors`: Total uncorrected errors across all downstream channels
 
 ### Per-Channel Downstream Sensors (for each channel)
-- `sensor.downstream_ch_X_power`: Power level in dBmV
-- `sensor.downstream_ch_X_snr`: Signal-to-Noise Ratio in dB
-- `sensor.downstream_ch_X_frequency`: Channel frequency in Hz
-- `sensor.downstream_ch_X_corrected`: Corrected errors (if available)
-- `sensor.downstream_ch_X_uncorrected`: Uncorrected errors (if available)
+- `sensor.cable_modem_downstream_ch_X_power`: Power level in dBmV (displays as "DS Ch X Power")
+- `sensor.cable_modem_downstream_ch_X_snr`: Signal-to-Noise Ratio in dB (displays as "DS Ch X SNR")
+- `sensor.cable_modem_downstream_ch_X_frequency`: Channel frequency in Hz (displays as "DS Ch X Frequency")
+- `sensor.cable_modem_downstream_ch_X_corrected`: Corrected errors (displays as "DS Ch X Corrected")
+- `sensor.cable_modem_downstream_ch_X_uncorrected`: Uncorrected errors (displays as "DS Ch X Uncorrected")
 
 ### Per-Channel Upstream Sensors (for each channel)
-- `sensor.upstream_ch_X_power`: Transmit power level in dBmV
-- `sensor.upstream_ch_X_frequency`: Channel frequency in Hz
+- `sensor.cable_modem_upstream_ch_X_power`: Transmit power level in dBmV (displays as "US Ch X Power")
+- `sensor.cable_modem_upstream_ch_X_frequency`: Channel frequency in Hz (displays as "US Ch X Frequency")
 
 ### Controls
 - `button.restart_modem`: Restart your cable modem remotely
