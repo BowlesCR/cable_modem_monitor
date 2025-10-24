@@ -46,8 +46,9 @@ def get_entity_name(entry: ConfigEntry, base_name: str) -> str:
         # No prefix - current behavior
         return base_name
     elif prefix_type == ENTITY_PREFIX_DOMAIN:
-        # Add "Cable Modem " prefix
-        return f"Cable Modem {base_name}"
+        # Domain mode: Display name has NO prefix (device name provides context)
+        # Entity ID will have cable_modem_ prefix (handled via unique_id)
+        return base_name
     elif prefix_type == ENTITY_PREFIX_IP:
         # Add IP address prefix (sanitized for entity names)
         host = entry.data.get(CONF_HOST, "")
