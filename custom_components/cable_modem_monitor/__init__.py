@@ -41,10 +41,10 @@ async def async_migrate_entity_ids(hass: HomeAssistant, entry: ConfigEntry) -> N
     entity_reg = er.async_get(hass)
 
     ***REMOVED*** Mapping of old entity ID patterns to new ones
-    ***REMOVED*** This handles migration from v1.8 (which used cable_modem_ in unique_id but not entity_id)
-    ***REMOVED*** Simplified patterns - we only support migrating from cable_modem_ prefix to maintain it
+    ***REMOVED*** This handles migration from pre-v2.0 versions to v2.0 entity naming
+    ***REMOVED*** Simplified patterns - we only support migrating from no-prefix to cable_modem_ prefix
     old_patterns_to_new = {
-        ***REMOVED*** Note: v1.8 never released custom/IP prefixes, so we only handle no-prefix entities
+        ***REMOVED*** Note: Custom/IP prefixes were never released, so we only handle no-prefix entities
         ***REMOVED*** Downstream channels
         r'^sensor\.downstream_ch_(\d+)_(power|snr|frequency|corrected|uncorrected)$':
             'sensor.cable_modem_downstream_ch_{}_{}',
