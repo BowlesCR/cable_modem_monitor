@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***REMOVED******REMOVED******REMOVED*** Breaking Changes
 - **Entity Naming Standardization** - All sensor entity IDs now use the hard-coded `cable_modem_` prefix
-  - **Before (v1.x)**: Entity IDs could vary (no prefix, IP prefix, or custom prefix)
+  - **Before (v1.x)**: Entity IDs could vary (no prefix or domain prefix)
   - **After (v2.0)**: All entity IDs consistently use `sensor.cable_modem_*` format
   - Automatic migration included - entity IDs will be renamed on first startup
   - Configuration options for entity prefixes have been removed
@@ -31,10 +31,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Entity naming configuration removed (now hard-coded)
   - Cleaner, more intuitive configuration experience
 - **Cleaner Sensor Names** - Removed redundant prefixes from channel sensor display names
-  - "Downstream Ch 1 Power" → "Ch 1 Power"
-  - "Upstream Ch 1 Power" → "Ch 1 Power"
+  - Downstream: "Downstream Ch 1 Power" → "Ch 1 Power"
+  - Upstream: "Upstream Ch 1 Power" → "Ch 1 Power"
   - Reduces redundancy in dashboard cards with section headers
-  - Entity IDs remain unchanged (still include downstream/upstream)
+  - Entity IDs remain unchanged (still include downstream/upstream in the ID)
 - **Improved Code Quality** - Code review and cleanup
   - Removed unused imports
   - Fixed SQL injection potential with parameterized queries

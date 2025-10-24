@@ -11,16 +11,16 @@ Version 2.0 introduces **breaking changes** to entity naming for improved consis
 **Before (v1.x)**: Entity IDs could vary based on configuration:
 - `sensor.downstream_ch_1_power` (no prefix)
 - `sensor.cable_modem_downstream_ch_1_power` (domain prefix)
-- `sensor.192_168_100_1_downstream_ch_1_power` (IP prefix)
-- `sensor.living_room_downstream_ch_1_power` (custom prefix)
 
 **After (v2.0)**: All entity IDs consistently use:
 - `sensor.cable_modem_downstream_ch_1_power`
+- `sensor.cable_modem_upstream_ch_1_power`
 
-**Display Names**: No change - display names remain simple without prefix:
-- "Downstream Ch 1 Power"
-- "Total Corrected Errors"
-- "Modem Connection Status"
+**Display Names**: Changed to remove redundant prefixes:
+- "Downstream Ch 1 Power" → "Ch 1 Power"
+- "Upstream Ch 1 Power" → "Ch 1 Power"
+- "Total Corrected Errors" (unchanged)
+- "Modem Connection Status" (unchanged)
 
 ***REMOVED******REMOVED******REMOVED*** Why This Change?
 
