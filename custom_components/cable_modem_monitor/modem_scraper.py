@@ -37,12 +37,12 @@ class ModemScraper:
     def _fetch_data(self) -> tuple[str, str] | None:
         """Fetch data from the modem."""
         urls_to_try = [
-            f"{self.base_url}/network_setup.jst",  # Technicolor XB7
-            f"{self.base_url}/MotoConnection.asp",
-            f"{self.base_url}/cmconnectionstatus.html",
-            f"{self.base_url}/cmSignalData.htm",
-            f"{self.base_url}/cmSignal.html",
-            f"{self.base_url}/",
+            f"{self.base_url}/network_setup.jst",       # Technicolor XB7, TC4400
+            f"{self.base_url}/MotoConnection.asp",      # Motorola MB series
+            f"{self.base_url}/cmconnectionstatus.html", # Various cable modems
+            f"{self.base_url}/cmSignalData.htm",        # Arris SB6141
+            f"{self.base_url}/cmSignal.html",           # Various cable modems
+            f"{self.base_url}/",                        # Fallback root page
         ]
 
         for url in urls_to_try:
