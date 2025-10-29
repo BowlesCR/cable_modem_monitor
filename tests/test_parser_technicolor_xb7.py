@@ -45,25 +45,46 @@ class TestXB7Authentication:
     """Test XB7 authentication."""
 
     def test_xb7_login_with_credentials(self):
-        """Test that credentials are configured for Basic Auth."""
+        """Test that XB7 form-based authentication works."""
         from unittest.mock import Mock
 
         parser = TechnicolorXB7Parser()
         session = Mock()
-        result = parser.login(session, "http://10.0.0.1", "admin", "password")
 
-        assert result is True
-        assert session.auth == ("admin", "password")
+        ***REMOVED*** Mock the POST request to check.jst
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.url = "http://10.0.0.1/at_a_glance.jst"  ***REMOVED*** Simulates redirect
+        session.post.return_value = mock_response
+
+        ***REMOVED*** Mock the GET request to network_setup.jst
+        mock_status_response = Mock()
+        mock_status_response.status_code = 200
+        mock_status_response.text = "<html>Status page content</html>"
+        session.get.return_value = mock_status_response
+
+        success, html = parser.login(session, "http://10.0.0.1", "admin", "password")
+
+        assert success is True
+        assert html == "<html>Status page content</html>"
+        session.post.assert_called_once_with(
+            "http://10.0.0.1/check.jst",
+            data={"username": "admin", "password": "password"},
+            timeout=10,
+            allow_redirects=True
+        )
+        session.get.assert_called_once_with("http://10.0.0.1/network_setup.jst", timeout=10)
 
     def test_xb7_login_without_credentials(self):
-        """Test that login succeeds even without credentials."""
+        """Test that login fails gracefully without credentials."""
         from unittest.mock import Mock
 
         parser = TechnicolorXB7Parser()
         session = Mock()
-        result = parser.login(session, "http://10.0.0.1", None, None)
+        success, html = parser.login(session, "http://10.0.0.1", None, None)
 
-        assert result is True
+        assert success is False
+        assert html is None
 
 
 class TestXB7Downstream:

@@ -39,12 +39,12 @@ class ModemScraper:
     def _fetch_data(self) -> tuple[str, str] | None:
         """Fetch data from the modem."""
         all_urls = [
-            (f"{self.base_url}/network_setup.jst", 'basic'),       ***REMOVED*** Technicolor XB7, TC4400
-            (f"{self.base_url}/MotoConnection.asp", 'form'),      ***REMOVED*** Motorola MB series
-            (f"{self.base_url}/cmconnectionstatus.html", 'basic'), ***REMOVED*** Technicolor TC4400
-            (f"{self.base_url}/cmSignalData.htm", 'none'),        ***REMOVED*** Arris SB6141
-            (f"{self.base_url}/cmSignal.html", 'none'),           ***REMOVED*** Various cable modems
-            (f"{self.base_url}/", 'none'),                        ***REMOVED*** Fallback root page
+            (f"{self.base_url}/network_setup.jst", 'none'),         ***REMOVED*** Technicolor XB7 (uses form auth in parser)
+            (f"{self.base_url}/MotoConnection.asp", 'form'),        ***REMOVED*** Motorola MB series
+            (f"{self.base_url}/cmconnectionstatus.html", 'basic'),  ***REMOVED*** Technicolor TC4400
+            (f"{self.base_url}/cmSignalData.htm", 'none'),          ***REMOVED*** Arris SB6141
+            (f"{self.base_url}/cmSignal.html", 'none'),             ***REMOVED*** Various cable modems
+            (f"{self.base_url}/", 'none'),                          ***REMOVED*** Fallback root page
         ]
 
         ***REMOVED*** If we have a cached URL from previous successful connection, try it first
