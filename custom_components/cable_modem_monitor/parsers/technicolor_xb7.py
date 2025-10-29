@@ -13,25 +13,66 @@ class TechnicolorXB7Parser(ModemParser):
     name = "Technicolor XB7"
     manufacturer = "Technicolor"
     models = ["XB7", "CGM4331COM"]
-    auth_type = "basic"
+    auth_type = "form"
 
-    def login(self, session, base_url, username, password) -> bool:
+    def login(self, session, base_url, username, password) -> tuple[bool, str]:
         """
-        XB7 uses Basic HTTP Authentication.
+        XB7 uses form-based authentication.
+
+        Login flow:
+        1. POST credentials to /check.jst
+        2. Receives redirect to /at_a_glance.jst
+        3. Can then access /network_setup.jst
 
         Args:
             session: requests session object
-            base_url: modem base URL
+            base_url: modem base URL (e.g., http://10.0.0.1)
             username: admin username
             password: admin password
 
         Returns:
-            True if authentication configured (credentials will be used in requests)
+            tuple: (success: bool, html: str) - authenticated HTML from network_setup.jst
         """
-        if username and password:
-            session.auth = (username, password)
-            _LOGGER.debug("XB7 Basic Auth credentials configured")
-        return True
+        if not username or not password:
+            _LOGGER.debug("No credentials provided for XB7, attempting without auth")
+            return False, None
+
+        try:
+            # Step 1: POST credentials to check.jst
+            login_url = f"{base_url}/check.jst"
+            login_data = {
+                "username": username,
+                "password": password,
+            }
+
+            _LOGGER.debug(f"XB7: Posting credentials to {login_url}")
+            response = session.post(login_url, data=login_data, timeout=10, allow_redirects=True)
+
+            if response.status_code != 200:
+                _LOGGER.error(f"XB7 login failed with status {response.status_code}")
+                return False, None
+
+            # Step 2: Check if we got redirected to at_a_glance.jst (successful login)
+            if "at_a_glance.jst" in response.url:
+                _LOGGER.debug("XB7: Login successful, redirected to at_a_glance.jst")
+            else:
+                _LOGGER.warning(f"XB7: Unexpected redirect to {response.url}")
+
+            # Step 3: Now fetch the network_setup.jst page with authenticated session
+            status_url = f"{base_url}/network_setup.jst"
+            _LOGGER.debug(f"XB7: Fetching {status_url} with authenticated session")
+            status_response = session.get(status_url, timeout=10)
+
+            if status_response.status_code != 200:
+                _LOGGER.error(f"XB7: Failed to fetch status page, status {status_response.status_code}")
+                return False, None
+
+            _LOGGER.info(f"XB7: Successfully authenticated and fetched status page ({len(status_response.text)} bytes)")
+            return True, status_response.text
+
+        except Exception as e:
+            _LOGGER.error(f"XB7 login exception: {e}", exc_info=True)
+            return False, None
 
     @classmethod
     def can_parse(cls, soup: BeautifulSoup, url: str, html: str) -> bool:
