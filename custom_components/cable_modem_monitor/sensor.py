@@ -31,7 +31,7 @@ def parse_uptime_to_seconds(uptime_str: str) -> int | None:
     """Parse uptime string to total seconds.
 
     Args:
-        uptime_str: Uptime string like "2 days 5 hours" or "3 hours 45 minutes"
+        uptime_str: Uptime string like "2 days 5 hours" or "0 days 08h:37m:20s"
 
     Returns:
         Total seconds or None if parsing fails
@@ -42,23 +42,23 @@ def parse_uptime_to_seconds(uptime_str: str) -> int | None:
     try:
         total_seconds = 0
 
-        ***REMOVED*** Parse days
-        days_match = re.search(r'(\d+)\s*day', uptime_str, re.IGNORECASE)
+        ***REMOVED*** Parse days (handles "2 days" or "2d")
+        days_match = re.search(r'(\d+)\s*(?:days?|d)', uptime_str, re.IGNORECASE)
         if days_match:
             total_seconds += int(days_match.group(1)) * 86400
 
-        ***REMOVED*** Parse hours
-        hours_match = re.search(r'(\d+)\s*hour', uptime_str, re.IGNORECASE)
+        ***REMOVED*** Parse hours (handles "5 hours", "5h", "05h")
+        hours_match = re.search(r'(\d+)\s*(?:hours?|h)', uptime_str, re.IGNORECASE)
         if hours_match:
             total_seconds += int(hours_match.group(1)) * 3600
 
-        ***REMOVED*** Parse minutes
-        minutes_match = re.search(r'(\d+)\s*min', uptime_str, re.IGNORECASE)
+        ***REMOVED*** Parse minutes (handles "37 minutes", "37 min", "37m")
+        minutes_match = re.search(r'(\d+)\s*(?:minutes?|mins?|m)', uptime_str, re.IGNORECASE)
         if minutes_match:
             total_seconds += int(minutes_match.group(1)) * 60
 
-        ***REMOVED*** Parse seconds
-        seconds_match = re.search(r'(\d+)\s*sec', uptime_str, re.IGNORECASE)
+        ***REMOVED*** Parse seconds (handles "20 seconds", "20 sec", "20s")
+        seconds_match = re.search(r'(\d+)\s*(?:seconds?|secs?|s)', uptime_str, re.IGNORECASE)
         if seconds_match:
             total_seconds += int(seconds_match.group(1))
 
@@ -192,7 +192,7 @@ class ModemConnectionStatusSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Cable Modem Connection Status"
+        self._attr_name = "Connection Status"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_connection_status"
         self._attr_icon = "mdi:router-network"
 
@@ -213,7 +213,7 @@ class ModemTotalCorrectedSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Cable Modem Total Corrected Errors"
+        self._attr_name = "Total Corrected Errors"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_total_corrected"
         self._attr_icon = "mdi:alert-circle-check"
         self._attr_state_class = SensorStateClass.TOTAL_INCREASING
@@ -230,7 +230,7 @@ class ModemTotalUncorrectedSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Cable Modem Total Uncorrected Errors"
+        self._attr_name = "Total Uncorrected Errors"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_total_uncorrected"
         self._attr_icon = "mdi:alert-circle"
         self._attr_state_class = SensorStateClass.TOTAL_INCREASING
@@ -250,7 +250,7 @@ class ModemDownstreamPowerSensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Cable Modem DS Ch {channel} Power"
+        self._attr_name = f"DS Ch {channel} Power"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_downstream_{channel}_power"
         self._attr_native_unit_of_measurement = "dBmV"
         self._attr_icon = "mdi:signal"
@@ -277,7 +277,7 @@ class ModemDownstreamSNRSensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Cable Modem DS Ch {channel} SNR"
+        self._attr_name = f"DS Ch {channel} SNR"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_downstream_{channel}_snr"
         self._attr_native_unit_of_measurement = "dB"
         self._attr_icon = "mdi:signal-variant"
@@ -304,7 +304,7 @@ class ModemDownstreamFrequencySensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Cable Modem DS Ch {channel} Frequency"
+        self._attr_name = f"DS Ch {channel} Frequency"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_downstream_{channel}_frequency"
         self._attr_native_unit_of_measurement = "Hz"
         self._attr_icon = "mdi:sine-wave"
@@ -332,7 +332,7 @@ class ModemDownstreamCorrectedSensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Cable Modem DS Ch {channel} Corrected"
+        self._attr_name = f"DS Ch {channel} Corrected"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_downstream_{channel}_corrected"
         self._attr_icon = "mdi:check-circle"
         self._attr_state_class = SensorStateClass.TOTAL_INCREASING
@@ -358,7 +358,7 @@ class ModemDownstreamUncorrectedSensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Cable Modem DS Ch {channel} Uncorrected"
+        self._attr_name = f"DS Ch {channel} Uncorrected"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_downstream_{channel}_uncorrected"
         self._attr_icon = "mdi:alert-circle"
         self._attr_state_class = SensorStateClass.TOTAL_INCREASING
@@ -384,7 +384,7 @@ class ModemUpstreamPowerSensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Cable Modem US Ch {channel} Power"
+        self._attr_name = f"US Ch {channel} Power"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_upstream_{channel}_power"
         self._attr_native_unit_of_measurement = "dBmV"
         self._attr_icon = "mdi:signal"
@@ -411,7 +411,7 @@ class ModemUpstreamFrequencySensor(ModemSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
-        self._attr_name = f"Cable Modem US Ch {channel} Frequency"
+        self._attr_name = f"US Ch {channel} Frequency"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_upstream_{channel}_frequency"
         self._attr_native_unit_of_measurement = "Hz"
         self._attr_icon = "mdi:sine-wave"
@@ -436,7 +436,7 @@ class ModemDownstreamChannelCountSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Cable Modem Downstream Channel Count"
+        self._attr_name = "Downstream Channel Count"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_downstream_channel_count"
         self._attr_icon = "mdi:numeric"
         self._attr_state_class = SensorStateClass.MEASUREMENT
@@ -453,7 +453,7 @@ class ModemUpstreamChannelCountSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Cable Modem Upstream Channel Count"
+        self._attr_name = "Upstream Channel Count"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_upstream_channel_count"
         self._attr_icon = "mdi:numeric"
         self._attr_state_class = SensorStateClass.MEASUREMENT
@@ -470,7 +470,7 @@ class ModemSoftwareVersionSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Cable Modem Software Version"
+        self._attr_name = "Software Version"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_software_version"
         self._attr_icon = "mdi:information-outline"
 
@@ -486,7 +486,7 @@ class ModemSystemUptimeSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Cable Modem System Uptime"
+        self._attr_name = "System Uptime"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_system_uptime"
         self._attr_icon = "mdi:clock-outline"
 
@@ -502,7 +502,7 @@ class ModemLastBootTimeSensor(ModemSensorBase):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
-        self._attr_name = "Cable Modem Last Boot Time"
+        self._attr_name = "Last Boot Time"
         self._attr_unique_id = f"{entry.entry_id}_cable_modem_last_boot_time"
         self._attr_icon = "mdi:restart"
         self._attr_device_class = SensorDeviceClass.TIMESTAMP

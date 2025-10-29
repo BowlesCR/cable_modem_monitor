@@ -77,6 +77,7 @@ class MotorolaMBParser(ModemParser):
             except Exception as e:
                 _LOGGER.error(f"Failed to fetch system info from MotoHome.asp: {e}")
 
+        _LOGGER.debug(f"Final system_info being returned: {system_info}")
         return {
             "downstream": downstream_channels,
             "upstream": upstream_channels,
