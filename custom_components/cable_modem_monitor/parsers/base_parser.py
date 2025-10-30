@@ -11,6 +11,11 @@ class ModemParser(ABC):
     manufacturer: str = "Unknown"
     models: list[str] = []  ***REMOVED*** e.g., ["MB7621", "MB8600"]
 
+    ***REMOVED*** Priority for parser selection (higher = tried first)
+    ***REMOVED*** Use 100 for model-specific parsers, 50 for generic/fallback parsers
+    ***REMOVED*** Default is 50 for backward compatibility
+    priority: int = 50
+
     ***REMOVED*** URL patterns this parser can handle
     ***REMOVED*** Each pattern is a dict with 'path' and 'auth_method'
     ***REMOVED*** auth_method can be: 'none', 'basic', 'form'

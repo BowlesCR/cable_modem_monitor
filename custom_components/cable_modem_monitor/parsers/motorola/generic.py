@@ -14,6 +14,7 @@ class MotorolaGenericParser(ModemParser):
     name = "Motorola MB Series"
     manufacturer = "Motorola"
     models = ["MB7420", "MB8600", "MB8611"]
+    priority = 50  ***REMOVED*** Generic fallback parser, try after model-specific parsers
 
     url_patterns = [
         {"path": "/MotoConnection.asp", "auth_method": "form"},

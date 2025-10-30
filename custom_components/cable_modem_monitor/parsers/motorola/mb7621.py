@@ -13,6 +13,7 @@ class MotorolaMB7621Parser(MotorolaGenericParser):
     name = "Motorola MB7621"
     manufacturer = "Motorola"
     models = ["MB7621"]
+    priority = 100  ***REMOVED*** Model-specific parser, try before generic
 
     ***REMOVED*** MB7621 uses same URL patterns as generic, but we want to check
     ***REMOVED*** the software info page first to detect MB7621-specific strings
