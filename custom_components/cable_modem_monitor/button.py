@@ -7,6 +7,7 @@ from homeassistant.components.button import ButtonEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
     DataUpdateCoordinator,
@@ -53,6 +54,7 @@ async def async_setup_entry(
     async_add_entities([
         ModemRestartButton(coordinator, entry),
         CleanupEntitiesButton(coordinator, entry),
+        ResetEntitiesButton(coordinator, entry),
     ])
 
 
@@ -309,3 +311,54 @@ class CleanupEntitiesButton(ModemButtonBase):
             )
 
         _LOGGER.info("Entity cleanup completed")
+
+
+class ResetEntitiesButton(ModemButtonBase):
+    """Button to reset all entities and reload integration."""
+
+    def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
+        """Initialize the button."""
+        super().__init__(coordinator, entry)
+        self._attr_name = "Reset Entities"
+        self._attr_unique_id = f"{entry.entry_id}_reset_entities_button"
+        self._attr_icon = "mdi:refresh"
+        self._attr_entity_category = EntityCategory.CONFIG
+
+    async def async_press(self) -> None:
+        """Handle button press - remove all entities and reload integration."""
+        from homeassistant.helpers import entity_registry as er
+
+        _LOGGER.info("Reset entities button pressed")
+
+        entity_reg = er.async_get(self.hass)
+
+        # Find all cable modem entities for this integration
+        entities_to_remove = [
+            entity_entry.entity_id
+            for entity_entry in entity_reg.entities.values()
+            if entity_entry.platform == DOMAIN and entity_entry.config_entry_id == self._entry.entry_id
+        ]
+
+        _LOGGER.info(f"Found {len(entities_to_remove)} entities to remove")
+
+        # Remove all entities
+        for entity_id in entities_to_remove:
+            entity_reg.async_remove(entity_id)
+            _LOGGER.debug(f"Removed entity: {entity_id}")
+
+        # Reload integration (recreates entities)
+        _LOGGER.info("Reloading integration to recreate entities")
+        await self.hass.config_entries.async_reload(self._entry.entry_id)
+
+        # Create notification
+        await self.hass.services.async_call(
+            "persistent_notification",
+            "create",
+            {
+                "title": "Entity Reset Complete",
+                "message": f"Successfully removed {len(entities_to_remove)} entities and reloaded the integration. New entities have been created.",
+                "notification_id": "cable_modem_reset",
+            },
+        )
+
+        _LOGGER.info("Entity reset completed")

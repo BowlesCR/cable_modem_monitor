@@ -300,6 +300,47 @@ class TestXB7SystemInfo:
         # These are optional depending on HTML structure
         assert isinstance(system_info, dict)
 
+    def test_xb7_system_uptime(self, xb7_soup):
+        """Test parsing system uptime."""
+        parser = TechnicolorXB7Parser()
+        system_info = parser._parse_system_info(xb7_soup)
+
+        assert "system_uptime" in system_info
+        assert system_info["system_uptime"] == "21 days 15h: 20m: 33s"
+
+    def test_xb7_software_version(self, xb7_soup):
+        """Test parsing Download Version as software_version."""
+        parser = TechnicolorXB7Parser()
+        system_info = parser._parse_system_info(xb7_soup)
+
+        assert "software_version" in system_info
+        assert system_info["software_version"] == "Prod_23.2_231009 & Prod_23.2_231009"
+
+    def test_xb7_last_boot_time(self, xb7_soup):
+        """Test that last_boot_time is calculated from uptime."""
+        from datetime import datetime, timedelta
+
+        parser = TechnicolorXB7Parser()
+        system_info = parser._parse_system_info(xb7_soup)
+
+        assert "last_boot_time" in system_info
+        assert system_info["last_boot_time"] is not None
+
+        # Verify boot time is approximately 21 days, 15h, 20m, 33s ago
+        boot_time = datetime.fromisoformat(system_info["last_boot_time"])
+        expected_uptime = timedelta(days=21, hours=15, minutes=20, seconds=33)
+        actual_uptime = datetime.now() - boot_time
+
+        # Allow 1 minute tolerance for test execution time
+        assert abs((actual_uptime - expected_uptime).total_seconds()) < 60
+
+    def test_xb7_primary_channel(self, xb7_soup):
+        """Test parsing primary downstream channel."""
+        parser = TechnicolorXB7Parser()
+        primary_channel = parser._parse_primary_channel(xb7_soup)
+
+        assert primary_channel == "10"
+
 
 class TestXB7Integration:
     """Test complete XB7 parsing integration."""
@@ -344,3 +385,15 @@ class TestXB7Integration:
             # XB7-specific fields
             assert "symbol_rate" in ch
             assert "channel_type" in ch
+
+    def test_xb7_system_info_includes_new_fields(self, xb7_soup):
+        """Test that full parse includes system uptime, software version, and primary channel."""
+        parser = TechnicolorXB7Parser()
+        data = parser.parse(xb7_soup)
+
+        system_info = data["system_info"]
+        assert "system_uptime" in system_info
+        assert "software_version" in system_info
+        assert "last_boot_time" in system_info
+        assert "primary_downstream_channel" in system_info
+        assert system_info["primary_downstream_channel"] == "10"

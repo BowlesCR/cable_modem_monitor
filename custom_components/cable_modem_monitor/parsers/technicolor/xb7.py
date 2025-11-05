@@ -1,5 +1,6 @@
 """Parser for Technicolor XB7 cable modem."""
 import logging
+import requests
 from bs4 import BeautifulSoup
 from ..base_parser import ModemParser
 from custom_components.cable_modem_monitor.lib.utils import extract_number, extract_float
@@ -73,8 +74,25 @@ class TechnicolorXB7Parser(ModemParser):
             _LOGGER.info(f"XB7: Successfully authenticated and fetched status page ({len(status_response.text)} bytes)")
             return True, status_response.text
 
+        except (requests.exceptions.Timeout, requests.exceptions.ReadTimeout) as e:
+            # Timeout is common when modem is busy/rebooting - log at debug level
+            _LOGGER.debug("XB7 login timeout (modem may be busy or rebooting): %s", str(e))
+            return False, None
+
+        except requests.exceptions.ConnectionError as e:
+            # Connection errors should be logged but not with full stack trace
+            _LOGGER.warning("XB7 login connection error: %s", str(e))
+            return False, None
+
+        except requests.exceptions.RequestException as e:
+            # Other request errors
+            _LOGGER.warning("XB7 login request failed: %s", str(e))
+            _LOGGER.debug("XB7 login exception details:", exc_info=True)  # Full trace only at debug
+            return False, None
+
         except Exception as e:
-            _LOGGER.error(f"XB7 login exception: {e}", exc_info=True)
+            # Unexpected errors should still log details
+            _LOGGER.error("XB7 login unexpected exception: %s", str(e), exc_info=True)
             return False, None
 
     @classmethod
@@ -105,6 +123,11 @@ class TechnicolorXB7Parser(ModemParser):
         downstream_channels = self._parse_downstream(soup)
         upstream_channels = self._parse_upstream(soup)
         system_info = self._parse_system_info(soup)
+
+        # Parse primary channel
+        primary_channel_id = self._parse_primary_channel(soup)
+        if primary_channel_id:
+            system_info["primary_downstream_channel"] = primary_channel_id
 
         return {
             "downstream": downstream_channels,
@@ -439,6 +462,17 @@ class TechnicolorXB7Parser(ModemParser):
                         system_info["downstream_status"] = value
                     elif "Upstream Ranging" in label_text:
                         system_info["upstream_status"] = value
+                    # NEW: System Uptime
+                    elif "System Uptime" in label_text:
+                        # Parse "21 days 15h: 20m: 33s" format
+                        system_info["system_uptime"] = value
+                        # Calculate last boot time from uptime
+                        boot_time = self._calculate_boot_time(value)
+                        if boot_time:
+                            system_info["last_boot_time"] = boot_time
+                    # NEW: Software Version (use Download Version, not BOOT Version)
+                    elif "Download Version" in label_text:
+                        system_info["software_version"] = value
 
         except Exception as e:
             _LOGGER.error(f"Error parsing XB7 system info: {e}", exc_info=True)
@@ -464,5 +498,68 @@ class TechnicolorXB7Parser(ModemParser):
             freq_mhz = extract_float(text)
             if freq_mhz is not None:
                 return int(freq_mhz * 1_000_000)
+
+        return None
+
+    def _calculate_boot_time(self, uptime_str: str) -> str | None:
+        """
+        Calculate boot time from uptime string.
+        Format: "21 days 15h: 20m: 33s"
+        Returns ISO format datetime string.
+        """
+        from datetime import datetime, timedelta
+        import re
+
+        try:
+            # Parse uptime string
+            days = 0
+            hours = 0
+            minutes = 0
+            seconds = 0
+
+            day_match = re.search(r'(\d+)\s*days?', uptime_str)
+            if day_match:
+                days = int(day_match.group(1))
+
+            hour_match = re.search(r'(\d+)h', uptime_str)
+            if hour_match:
+                hours = int(hour_match.group(1))
+
+            min_match = re.search(r'(\d+)m', uptime_str)
+            if min_match:
+                minutes = int(min_match.group(1))
+
+            sec_match = re.search(r'(\d+)s', uptime_str)
+            if sec_match:
+                seconds = int(sec_match.group(1))
+
+            # Calculate boot time
+            uptime_delta = timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
+            boot_time = datetime.now() - uptime_delta
+
+            return boot_time.isoformat()
+
+        except Exception as e:
+            _LOGGER.error(f"Error calculating boot time from '{uptime_str}': {e}")
+            return None
+
+    def _parse_primary_channel(self, soup: BeautifulSoup) -> str | None:
+        """
+        Parse primary channel from note: "*Channel ID 10 is the Primary channel"
+        Returns the primary channel ID as a string.
+        """
+        import re
+
+        try:
+            # Look for the note text
+            for span in soup.find_all("span", class_="readonlyLabel"):
+                text = span.get_text(strip=True)
+                if "Primary channel" in text or "primary channel" in text:
+                    # Extract channel ID: "*Channel ID 10 is the Primary channel"
+                    match = re.search(r'Channel ID (\d+) is the Primary', text, re.IGNORECASE)
+                    if match:
+                        return match.group(1)
+        except Exception as e:
+            _LOGGER.error(f"Error parsing primary channel: {e}")
 
         return None

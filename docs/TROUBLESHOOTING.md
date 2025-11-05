@@ -3,10 +3,185 @@
 Common issues and solutions for Cable Modem Monitor integration.
 
 ## Table of Contents
+- [Connection and Authentication Issues](#connection-and-authentication-issues)
 - [Entity ID Cleanup](#entity-id-cleanup)
 - [Upstream Sensors Not Appearing](#upstream-sensors-not-appearing)
 - [Duplicate Entities](#duplicate-entities)
 - [Migration Issues](#migration-issues)
+
+---
+
+## Connection and Authentication Issues
+
+### Problem: Login Failures and Timeout Errors
+
+**Symptoms:**
+- "Failed to log in to modem" error message
+- Sensors show "unavailable" or "unknown"
+- Logs show timeout or connection errors
+- XB7 users may see timeout messages in logs
+
+**Improved Logging (v2.6.0+):**
+Starting in v2.6.0, connection issues are logged with appropriate severity levels:
+- **Timeouts** - Logged at DEBUG level (modem may be busy or rebooting)
+- **Connection errors** - Logged at WARNING level (network issue)
+- **Authentication failures** - Logged at ERROR level (wrong credentials)
+
+This reduces log noise while still capturing important diagnostic information.
+
+**Common Causes & Solutions:**
+
+#### 1. Modem Rebooting or Busy
+
+**Symptoms:**
+- Intermittent timeout errors
+- Sensors occasionally unavailable
+- Happens randomly, then recovers
+
+**What's Happening:**
+Cable modems periodically reboot or become busy during channel maintenance. This is normal.
+
+**Solution:**
+- **No action needed** - Integration will retry on next poll
+- Check the Cable Modem Health Status sensor (v2.6.0+) to see modem responsiveness
+- If timeouts persist for >10 minutes, check modem power and connections
+
+#### 2. Network Issues vs. Web Server Issues
+
+**New in v2.6.0: Dual-Layer Health Monitoring**
+
+The integration now performs both ICMP ping and HTTP checks to diagnose connectivity:
+
+| ICMP Ping | HTTP HEAD | Status | Diagnosis |
+|-----------|-----------|--------|-----------|
+| ✅ Success | ✅ Success | `healthy` | Fully responsive |
+| ✅ Success | ❌ Fail | `degraded` | Web server issue |
+| ❌ Fail | ✅ Success | `icmp_blocked` | ICMP blocked (firewall) |
+| ❌ Fail | ❌ Fail | `unresponsive` | Network down / offline |
+
+**Check Health Status:**
+- Look at `sensor.cable_modem_health_status` (v2.6.0+)
+- Check `sensor.cable_modem_ping_latency_ms` for network performance
+- Check `sensor.cable_modem_http_latency_ms` for web server performance
+- Monitor `sensor.cable_modem_availability` for uptime percentage
+
+**What to Do:**
+- **Degraded**: Web server crashed, try restarting modem
+- **ICMP Blocked**: Firewall blocking ping, check network settings
+- **Unresponsive**: Check modem power, cables, and network connection
+
+#### 3. Wrong Credentials
+
+**Symptoms:**
+- Consistent login failures
+- Error message about authentication
+- Works from web browser but not from integration
+
+**Solution:**
+1. Verify credentials work in web browser
+2. Check for special characters (some parsers may need escaping)
+3. Update credentials in integration settings:
+   - Settings → Devices & Services → Cable Modem Monitor
+   - Click Configure → Update credentials
+
+#### 4. Incorrect IP Address or Port
+
+**Symptoms:**
+- Connection errors every poll
+- Never connects successfully
+- "Network unreachable" errors
+
+**Solution:**
+1. Verify modem IP address:
+   ```bash
+   ping 192.168.100.1  # or your modem IP
+   ```
+2. Check if HTTP is enabled on modem (some ISPs disable web interface)
+3. Try default gateway IP:
+   - Windows: `ipconfig | findstr "Default Gateway"`
+   - Linux/Mac: `ip route | grep default`
+
+#### 5. ISP Disabled Web Interface
+
+**Symptoms:**
+- Cannot access modem web interface from ANY device
+- Integration always fails to connect
+- Modem works for internet but no web UI
+
+**Solution:**
+- Some ISPs disable modem web interfaces (Xfinity, Rogers, etc.)
+- **No workaround available** - Contact your ISP
+- Consider using modem stats from ISP app if available
+
+### Using Health Monitoring to Diagnose Issues
+
+**New in v2.6.0: Diagnostic Sensors**
+
+Four new sensors help diagnose connectivity:
+
+1. **Cable Modem Health Status** (`sensor.cable_modem_health_status`)
+   - Shows: `healthy`, `degraded`, `icmp_blocked`, or `unresponsive`
+   - Use in automations to alert on modem issues
+
+2. **Cable Modem Ping Latency** (`sensor.cable_modem_ping_latency_ms`)
+   - Shows Layer 3 (ICMP) response time
+   - Normal: 1-10ms for local network
+   - Alert if >100ms consistently
+
+3. **Cable Modem HTTP Latency** (`sensor.cable_modem_http_latency_ms`)
+   - Shows Layer 7 (HTTP) response time
+   - Normal: 10-50ms for local network
+   - Alert if >500ms consistently
+
+4. **Cable Modem Availability** (`sensor.cable_modem_availability`)
+   - Shows percentage uptime
+   - Normal: >95%
+   - Alert if drops below 90%
+
+**Example Automation:**
+```yaml
+automation:
+  - alias: "Cable Modem Health Alert"
+    trigger:
+      - platform: state
+        entity_id: sensor.cable_modem_health_status
+        to: "unresponsive"
+        for:
+          minutes: 5
+    action:
+      - service: notify.mobile_app
+        data:
+          title: "Modem Offline"
+          message: "Cable modem is not responding. Check power and connections."
+```
+
+### Viewing Detailed Logs
+
+**Normal Logs (INFO level):**
+```
+XB7: Successfully authenticated and fetched status page
+```
+
+**Debug Logs (for troubleshooting):**
+```yaml
+# configuration.yaml
+logger:
+  default: info
+  logs:
+    custom_components.cable_modem_monitor: debug
+```
+
+**What You'll See in Debug Mode:**
+- XB7 login flow details
+- Timeout details (without stack traces)
+- Connection error details
+- Parsing debug information
+
+**After enabling debug logging:**
+1. Reload integration
+2. Wait for next poll
+3. Check logs: Settings → System → Logs
+4. Search for "cable_modem_monitor"
 
 ---
 
