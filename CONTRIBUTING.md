@@ -601,7 +601,7 @@ Maintainers will handle releases following semantic versioning:
 - **Patch (0.0.1)**: Bug fixes, backward compatible
 
 Each release includes:
-- Version bump in `manifest.json`
+- Version bump in `manifest.json` and `const.py`
 - Updated `CHANGELOG.md`
 - Git tag
 - GitHub Release with notes
