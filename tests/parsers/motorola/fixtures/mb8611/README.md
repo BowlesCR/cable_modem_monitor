@@ -7,31 +7,39 @@
 - Hardware Version: V1.0
 - Software Version: 8611-19.2.18
 - Serial: 2251-MB8611-30-1526
+- Protocol: HTTPS (port 443) with self-signed certificate
 
 ***REMOVED******REMOVED*** Files
 
 ***REMOVED******REMOVED******REMOVED*** HTML Pages (from web interface)
 
-1. **mb8611_login_page.txt**
+1. **Login.html**
+   - URL: `https://192.168.100.1/Login.html`
    - Login/authentication page
    - Shows HNAP JavaScript initialization
 
-2. **mb8611_landing_page.txt**
+2. **MotoHome.html**
+   - URL: `https://192.168.100.1/MotoHome.html`
    - Main dashboard after login
    - Size: 8.5K
 
-3. **mb8611_connection_page.txt**
-   - Connection status page (likely contains channel data)
-   - Size: 26K (largest - probably has full channel tables)
+3. **MotoStatusConnection.html**
+   - URL: `https://192.168.100.1/MotoStatusConnection.html`
+   - Connection status page (channel data)
+   - Size: 26K (largest - full channel tables)
    - Contains HNAP JavaScript references
 
-4. **mb8611_advanced_page.txt**
-   - Advanced settings page
+4. **MotoStatusSoftware.html**
+   - URL: `https://192.168.100.1/MotoStatusSoftware.html`
+   - Advanced settings/software page
    - Size: 6.7K
 
-5. **mb8611_event_log_page.txt**
+5. **MotoStatusLog.html**
+   - URL: `https://192.168.100.1/MotoStatusLog.html`
    - System event log
    - Size: 6.0K
+
+**Note:** User also mentioned `MotoStatusSecurity.html` for password reset/reboot/restart (not captured yet)
 
 ***REMOVED******REMOVED*** Notes
 
@@ -44,14 +52,26 @@
   - `GetMotoStatusConnectionInfo`
   - `GetMotoStatusStartupSequence`
 
-**What's Missing:**
+***REMOVED******REMOVED******REMOVED*** HNAP API Data (JSON format)
 
-We still need the actual HNAP SOAP request/response XML samples. These HTML files show the web interface structure, but the actual channel data comes from HNAP API calls.
+6. **hnap_full_status.json** ✅ ADDED November 5, 2025
+   - URL: `POST https://192.168.100.1/HNAP1/`
+   - Complete HNAP `GetMultipleHNAPs` response
+   - Contains: Startup sequence, connection info, downstream/upstream channels
+   - Format: JSON (HNAP uses JSON over HTTPS, not XML)
+   - Source: HAR export from user @dlindnegm
+   - Data structure:
+     - 33 downstream channels (including OFDM PLC)
+     - 4 upstream channels
+     - System uptime: "47 days 21h:15m:38s"
+     - Caret-delimited channel data: `ID^Status^Mod^ChID^Freq^Power^SNR^Corr^Uncorr^`
 
-To implement MB8611 parser (Phase 2), we need:
-- [ ] HNAP SOAP request examples (XML)
-- [ ] HNAP SOAP response examples (XML)
-- [ ] Login HNAP action (if SOAP-based)
+**Status:** ✅ **We now have complete HNAP data for Phase 2 implementation!**
+
+To implement MB8611 parser (Phase 2), we have:
+- [x] HNAP response examples (JSON) - `hnap_full_status.json`
+- [x] Channel data format documented (caret-delimited)
+- [ ] Login HNAP action (TBD during Phase 2)
 
 ***REMOVED******REMOVED*** Usage
 

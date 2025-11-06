@@ -211,11 +211,29 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         parser_name=parser_name_for_tier2,
     )
 
+    ***REMOVED*** Initialize health monitor for dual-layer diagnostics
+    from .core.health_monitor import ModemHealthMonitor
+    health_monitor = ModemHealthMonitor(max_history=100)
+
     async def async_update_data():
         """Fetch data from the modem."""
         try:
+            ***REMOVED*** Run health check first (async, non-blocking)
+            base_url = f"http://{host}"
+            health_result = await health_monitor.check_health(base_url)
+
             ***REMOVED*** Run the scraper in an executor since it uses requests (blocking I/O)
             data = await hass.async_add_executor_job(scraper.get_modem_data)
+
+            ***REMOVED*** Add health monitoring data to coordinator data
+            data["health_status"] = health_result.status
+            data["health_diagnosis"] = health_result.diagnosis
+            data["ping_success"] = health_result.ping_success
+            data["ping_latency_ms"] = health_result.ping_latency_ms
+            data["http_success"] = health_result.http_success
+            data["http_latency_ms"] = health_result.http_latency_ms
+            data["consecutive_failures"] = health_monitor.consecutive_failures
+
             return data
         except Exception as err:
             raise UpdateFailed(f"Error communicating with modem: {err}") from err
