@@ -117,26 +117,21 @@ The integration now performs both ICMP ping and HTTP checks to diagnose connecti
 
 **New in v2.6.0: Diagnostic Sensors**
 
-Four new sensors help diagnose connectivity:
+Three new sensors help diagnose connectivity:
 
 1. **Cable Modem Health Status** (`sensor.cable_modem_health_status`)
    - Shows: `healthy`, `degraded`, `icmp_blocked`, or `unresponsive`
    - Use in automations to alert on modem issues
 
-2. **Cable Modem Ping Latency** (`sensor.cable_modem_ping_latency_ms`)
-   - Shows Layer 3 (ICMP) response time
+2. **Cable Modem Ping Latency** (`sensor.cable_modem_ping_latency`)
+   - Shows Layer 3 (ICMP) response time in milliseconds
    - Normal: 1-10ms for local network
    - Alert if >100ms consistently
 
-3. **Cable Modem HTTP Latency** (`sensor.cable_modem_http_latency_ms`)
-   - Shows Layer 7 (HTTP) response time
+3. **Cable Modem HTTP Latency** (`sensor.cable_modem_http_latency`)
+   - Shows Layer 7 (HTTP) response time in milliseconds
    - Normal: 10-50ms for local network
    - Alert if >500ms consistently
-
-4. **Cable Modem Availability** (`sensor.cable_modem_availability`)
-   - Shows percentage uptime
-   - Normal: >95%
-   - Alert if drops below 90%
 
 **Example Automation:**
 ```yaml

@@ -314,7 +314,41 @@ class CleanupEntitiesButton(ModemButtonBase):
 
 
 class ResetEntitiesButton(ModemButtonBase):
-    """Button to reset all entities and reload integration."""
+    """Button to reset all entities and reload integration.
+
+    This button is useful for:
+    - Cleaning up after modem replacement (when entity names/counts change)
+    - Fixing entity registry issues or corruption
+    - Starting fresh without deleting the entire integration
+
+    Home Assistant Data Storage Architecture:
+    =========================================
+
+    HA stores entity data in TWO separate locations:
+
+    1. Entity Registry (.storage/core.entity_registry)
+       - Metadata: entity names, unique_id, entity_id, enabled state, settings
+       - What this button DELETES
+
+    2. Recorder Database (home-assistant_v2.db)
+       - Historical states, statistics, history graphs
+       - Data indexed by entity_id
+       - What this button DOES NOT touch
+
+    How Reset Works:
+    ================
+    1. Delete all entities from registry (removes metadata)
+    2. Reload integration (triggers async_setup_entry)
+    3. Integration recreates entities with SAME unique_id
+       - unique_id = f"{entry.entry_id}_cable_modem_ping_latency"
+       - entry.entry_id is STABLE (doesn't change unless integration deleted)
+    4. HA generates SAME entity_id from unique_id
+       - entity_id = "sensor.cable_modem_ping_latency"
+    5. Recorder automatically links new entity to existing historical data
+       - Lookup by entity_id matches old data
+
+    Result: Entities reset, automations work, history preserved
+    """
 
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
         """Initialize the button."""
@@ -323,9 +357,25 @@ class ResetEntitiesButton(ModemButtonBase):
         self._attr_unique_id = f"{entry.entry_id}_reset_entities_button"
         self._attr_icon = "mdi:refresh"
         self._attr_entity_category = EntityCategory.CONFIG
+        self._attr_entity_registry_enabled_default = True
+        ***REMOVED*** Add description to explain what this button does
+        self._attr_extra_state_attributes = {
+            "description": "Removes all cable modem entities from the registry and reloads the integration. Use this after replacing your modem or to fix entity issues.",
+            "entities": "Entities will be recreated with the same IDs. Automations and dashboards will continue to work.",
+            "history": "Historical data should be preserved (stored by entity ID in recorder database).",
+            "recommendation": "Create a backup before using if you want to be safe."
+        }
 
     async def async_press(self) -> None:
-        """Handle button press - remove all entities and reload integration."""
+        """Handle button press - remove all entities and reload integration.
+
+        Process:
+        1. Find all entities for this integration (by platform + config_entry_id)
+        2. Remove from entity registry (entity_reg.async_remove)
+        3. Reload integration (async_reload triggers async_setup_entry)
+        4. Integration recreates entities with same unique_id/entity_id
+        5. Historical data automatically links by entity_id
+        """
         from homeassistant.helpers import entity_registry as er
 
         _LOGGER.info("Reset entities button pressed")

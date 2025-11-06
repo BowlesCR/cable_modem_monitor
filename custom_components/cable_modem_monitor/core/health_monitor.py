@@ -161,7 +161,7 @@ class ModemHealthMonitor:
 
     async def _check_http(self, base_url: str) -> tuple[bool, Optional[float]]:
         """
-        Perform HTTP HEAD check.
+        Perform HTTP check (tries HEAD, falls back to GET).
 
         Returns:
             tuple: (success: bool, latency_ms: float | None)
@@ -170,17 +170,31 @@ class ModemHealthMonitor:
             start_time = time.time()
 
             ***REMOVED*** Use aiohttp for async HTTP request
+            ***REMOVED*** Disable SSL verification for modems with self-signed certs
             timeout = aiohttp.ClientTimeout(total=5)
-            async with aiohttp.ClientSession(timeout=timeout) as session:
-                async with session.head(base_url) as response:
-                    latency_ms = (time.time() - start_time) * 1000
-                    ***REMOVED*** Accept any response (2xx, 3xx, 4xx) as "alive"
-                    ***REMOVED*** Even 401 or 404 means the web server is running
-                    success = response.status < 500
-                    return success, latency_ms if success else None
+            connector = aiohttp.TCPConnector(ssl=False)
+
+            async with aiohttp.ClientSession(timeout=timeout, connector=connector) as session:
+                ***REMOVED*** Try HEAD first (lightweight)
+                try:
+                    async with session.head(base_url, allow_redirects=True) as response:
+                        latency_ms = (time.time() - start_time) * 1000
+                        ***REMOVED*** Accept any response (2xx, 3xx, 4xx) as "alive"
+                        success = response.status < 500
+                        return success, latency_ms if success else None
+                except (aiohttp.ClientError, asyncio.TimeoutError):
+                    ***REMOVED*** HEAD failed, try GET (some modems don't support HEAD)
+                    start_time = time.time()  ***REMOVED*** Reset timer
+                    async with session.get(base_url, allow_redirects=True) as response:
+                        latency_ms = (time.time() - start_time) * 1000
+                        success = response.status < 500
+                        return success, latency_ms if success else None
 
         except asyncio.TimeoutError:
             _LOGGER.debug("HTTP check timeout for %s", base_url)
+            return False, None
+        except aiohttp.ClientConnectorError as e:
+            _LOGGER.debug("HTTP check connection error for %s: %s", base_url, e)
             return False, None
         except Exception as e:
             _LOGGER.debug("HTTP check exception for %s: %s", base_url, e)
@@ -195,13 +209,6 @@ class ModemHealthMonitor:
             self.successful_checks += 1
         else:
             self.consecutive_failures += 1
-
-    @property
-    def availability_percent(self) -> float:
-        """Calculate availability percentage."""
-        if self.total_checks == 0:
-            return 100.0
-        return (self.successful_checks / self.total_checks) * 100
 
     @property
     def average_ping_latency(self) -> Optional[float]:
@@ -230,7 +237,6 @@ class ModemHealthMonitor:
         if not self.history:
             return {
                 "status": "unknown",
-                "availability": 100.0,
                 "consecutive_failures": 0,
                 "total_checks": 0,
             }
@@ -239,7 +245,6 @@ class ModemHealthMonitor:
         return {
             "status": latest.status,
             "diagnosis": latest.diagnosis,
-            "availability": self.availability_percent,
             "consecutive_failures": self.consecutive_failures,
             "total_checks": self.total_checks,
             "ping_success": latest.ping_success,

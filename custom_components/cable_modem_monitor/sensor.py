@@ -43,6 +43,13 @@ async def async_setup_entry(
     ***REMOVED*** Add connection status sensor
     entities.append(ModemConnectionStatusSensor(coordinator, entry))
 
+    ***REMOVED*** Add health monitoring sensors
+    entities.extend([
+        ModemHealthStatusSensor(coordinator, entry),
+        ModemPingLatencySensor(coordinator, entry),
+        ModemHttpLatencySensor(coordinator, entry),
+    ])
+
     ***REMOVED*** Add total error sensors
     entities.append(ModemTotalCorrectedSensor(coordinator, entry))
     entities.append(ModemTotalUncorrectedSensor(coordinator, entry))
@@ -580,3 +587,67 @@ class ModemLanTransmittedDropsSensor(ModemLanStatsSensor):
     def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, interface: str) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry, interface, "transmitted_drops")
+
+
+class ModemHealthStatusSensor(ModemSensorBase):
+    """Sensor for modem health status (healthy/degraded/icmp_blocked/unresponsive)."""
+
+    def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, entry)
+        self._attr_name = "Health Status"
+        self._attr_unique_id = f"{entry.entry_id}_cable_modem_health_status"
+        self._attr_icon = "mdi:heart-pulse"
+
+    @property
+    def native_value(self) -> str:
+        """Return the health status."""
+        return self.coordinator.data.get("health_status", "unknown")
+
+    @property
+    def extra_state_attributes(self) -> dict:
+        """Return additional state attributes."""
+        return {
+            "diagnosis": self.coordinator.data.get("health_diagnosis", ""),
+            "ping_success": self.coordinator.data.get("ping_success", False),
+            "http_success": self.coordinator.data.get("http_success", False),
+            "consecutive_failures": self.coordinator.data.get("consecutive_failures", 0),
+        }
+
+
+class ModemPingLatencySensor(ModemSensorBase):
+    """Sensor for ICMP ping latency in milliseconds."""
+
+    def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, entry)
+        self._attr_name = "Ping Latency"
+        self._attr_unique_id = f"{entry.entry_id}_cable_modem_ping_latency"
+        self._attr_native_unit_of_measurement = "ms"
+        self._attr_icon = "mdi:speedometer"
+        self._attr_state_class = SensorStateClass.MEASUREMENT
+        self._attr_device_class = SensorDeviceClass.DURATION
+
+    @property
+    def native_value(self) -> float | None:
+        """Return the ping latency in milliseconds."""
+        return self.coordinator.data.get("ping_latency_ms")
+
+
+class ModemHttpLatencySensor(ModemSensorBase):
+    """Sensor for HTTP HEAD request latency in milliseconds."""
+
+    def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, entry)
+        self._attr_name = "HTTP Latency"
+        self._attr_unique_id = f"{entry.entry_id}_cable_modem_http_latency"
+        self._attr_native_unit_of_measurement = "ms"
+        self._attr_icon = "mdi:web-clock"
+        self._attr_state_class = SensorStateClass.MEASUREMENT
+        self._attr_device_class = SensorDeviceClass.DURATION
+
+    @property
+    def native_value(self) -> float | None:
+        """Return the HTTP latency in milliseconds."""
+        return self.coordinator.data.get("http_latency_ms")

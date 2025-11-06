@@ -368,12 +368,16 @@ This section shows where EVERY planned feature fits into the roadmap.
 |---------|--------|--------|------------|
 | **XB7 Support** | N/A | ✅ Done (v2.5.0) | High - Community request |
 | **XB7 System Info Enhancement** | **2-3 hours** | **✅ Deployed** | **High - Complete Issue ***REMOVED***2** |
-| **Timeout/Logging + Health Monitor** | **3-4 hours** | **✅ Deployed** | **High - Complete Issue ***REMOVED***5 + Diagnostics** |
-| **Reset Entities Button** | 1-2 hours | ✅ Deployed | High - Modem replacement |
-| Documentation improvements | 2-3 hours | ✅ Deployed | Medium - Support burden |
-| Troubleshooting guide | 2-3 hours | ✅ Deployed | High - User self-service |
+| **Timeout/Logging + Health Monitor** | **3-4 hours** | **✅ Complete** | **High - Complete Issue ***REMOVED***5 + Diagnostics** |
+| **Reset Entities Button** | 1-2 hours | ✅ Complete | High - Modem replacement |
+| Documentation improvements | 2-3 hours | ✅ Complete | Medium - Support burden |
+| Troubleshooting guide | 2-3 hours | ✅ Complete | High - User self-service |
 
-**Status:** Phase 0 complete and deployed to local HA for testing (v2.6.0)
+**Status:** Phase 0 fully complete (v2.6.0)
+**Note:** Health monitoring integration completed Nov 6 - coordinator now runs dual-layer diagnostics (ICMP + HTTP) with 3 diagnostic sensors:
+- Health Status (healthy/degraded/icmp_blocked/unresponsive)
+- Ping Latency (ms)
+- HTTP Latency (ms)
 
 ---
 
@@ -415,13 +419,17 @@ This section shows where EVERY planned feature fits into the roadmap.
 | Feature | Effort | Dependencies | Notes |
 |---------|--------|--------------|-------|
 | HNAPRequestBuilder | 4 hours | HNAPAuth | SOAP envelope generation |
-| MB8611 Parser | 8 hours | HNAP complete | XML parsing |
+| MB8611 Parser | 8 hours | HNAP complete | JSON/HNAP parsing - test fixtures ready (Issue ***REMOVED***4) |
 | **Netgear CM600 Parser** | **4-6 hours** | **None** | **HTML samples provided (Issue ***REMOVED***3)** |
 | **Smart Polling Sensor** | **1-2 hours** | **None** | **Diagnostic only, foundation exists** |
-| Protocol validation | 4 hours | MB8611 | Test with real hardware |
+| Protocol validation | 4 hours | MB8611 + CM600 | Test with real hardware |
 | Documentation | 2 hours | All features | Update README |
 
 **Deliverable:** v3.0.0-beta - HNAP support + MB8611 + CM600 + Smart Polling
+
+**Test Fixtures Ready:**
+- MB8611: Complete HNAP JSON response + HTML pages (`tests/parsers/motorola/fixtures/mb8611/`)
+- CM600: HTML samples from Issue ***REMOVED***3
 
 ---
 
