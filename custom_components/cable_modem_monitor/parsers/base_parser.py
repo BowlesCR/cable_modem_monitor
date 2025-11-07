@@ -1,6 +1,10 @@
 """Base class for modem parsers."""
 from abc import ABC, abstractmethod
 from bs4 import BeautifulSoup
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from custom_components.cable_modem_monitor.core.auth_config import AuthConfig
 
 
 class ModemParser(ABC):
@@ -17,13 +21,17 @@ class ModemParser(ABC):
     priority: int = 50
 
     ***REMOVED*** URL patterns this parser can handle
-    ***REMOVED*** Each pattern is a dict with 'path' and 'auth_method'
-    ***REMOVED*** auth_method can be: 'none', 'basic', 'form'
+    ***REMOVED*** Each pattern is a dict with 'path' and optionally 'auth_required'
+    ***REMOVED*** auth_required: boolean (default True) - if False, can try without auth
     ***REMOVED*** The scraper will try URLs in the order specified
-    url_patterns: list[dict[str, str]] = []
+    url_patterns: list[dict[str, str | bool]] = []
 
     ***REMOVED*** Legacy field for backward compatibility (deprecated - use url_patterns)
     auth_type: str = 'form'
+
+    ***REMOVED*** Authentication configuration (new system - optional, for backward compatibility)
+    ***REMOVED*** Parsers should define this as a class attribute
+    auth_config: Optional["AuthConfig"] = None
 
     @classmethod
     @abstractmethod
