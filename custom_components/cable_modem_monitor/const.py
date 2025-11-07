@@ -8,7 +8,20 @@ CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
 CONF_SCAN_INTERVAL = "scan_interval"
 CONF_MODEM_CHOICE = "modem_choice"
-CONF_VERIFY_SSL = "verify_ssl"
+
+***REMOVED*** SSL/TLS Certificate Verification
+***REMOVED*** Hardcoded to False for the following reasons:
+***REMOVED*** 1. Consumer cable modems universally use self-signed certificates (no CA-signed certs)
+***REMOVED*** 2. Modems operate on private LANs (192.168.x.x) where MITM attacks are a different threat model
+***REMOVED*** 3. No known cable modem manufacturer provides valid CA-signed certificates
+***REMOVED*** 4. Enabling verification would break 99%+ of installations with no security benefit
+***REMOVED*** 5. Users on compromised LANs have larger security issues than modem HTTPS
+***REMOVED***
+***REMOVED*** Security Analysis: The risk of MITM attacks on local cable modem traffic is negligible compared to
+***REMOVED*** the usability cost. If an attacker has access to the local network to perform MITM attacks, they
+***REMOVED*** already have access to intercept unencrypted modem traffic and can compromise the network directly.
+***REMOVED*** The self-signed certificate still provides encryption in transit on the LAN.
+VERIFY_SSL = False
 
 ***REMOVED*** Modem detection cache fields
 CONF_PARSER_NAME = "parser_name"  ***REMOVED*** Cached parser class name for quick lookup
