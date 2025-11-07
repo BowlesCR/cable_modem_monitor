@@ -139,48 +139,73 @@ After implementing Phases 1-3 of the architecture roadmap, we focused on:
 ```
 tests/
 ├── components/
-│   ├── test_auth.py              ***REMOVED*** ✅ Phase 1 auth strategies
-│   ├── test_button.py            ***REMOVED*** ⚠️  Needs restart monitoring tests
-│   ├── test_config_flow.py       ***REMOVED*** ⚠️  Needs notification tests
-│   ├── test_coordinator.py       ***REMOVED*** ⚠️  Needs config_entry test
-│   ├── test_modem_scraper.py     ***REMOVED*** ✅ Existing coverage
-│   └── test_sensor.py            ***REMOVED*** ✅ Existing coverage
+│   ├── test_auth.py                        ***REMOVED*** ✅ Phase 1 auth strategies
+│   ├── test_button.py                      ***REMOVED*** ✅ Added restart monitoring tests
+│   ├── test_config_flow.py                 ***REMOVED*** ✅ Added notification tests
+│   ├── test_coordinator.py                 ***REMOVED*** ✅ Existing coverage
+│   ├── test_coordinator_improvements.py    ***REMOVED*** ✅ NEW - Session improvements
+│   ├── test_modem_scraper.py               ***REMOVED*** ✅ Existing coverage
+│   └── test_sensor.py                      ***REMOVED*** ✅ Existing coverage
 ├── parsers/
-│   ├── arris/test_sb6141.py      ***REMOVED*** ✅ Parser tests
-│   ├── motorola/test_*.py        ***REMOVED*** ✅ Parser tests
-│   └── technicolor/test_*.py     ***REMOVED*** ✅ Parser tests
-└── lib/test_utils.py             ***REMOVED*** ✅ Utility tests
+│   ├── arris/test_sb6141.py                ***REMOVED*** ✅ Parser tests
+│   ├── motorola/test_mb7621.py             ***REMOVED*** ✅ Parser tests
+│   ├── motorola/test_mb8611.py             ***REMOVED*** ✅ NEW - MB8611 HNAP parser
+│   ├── motorola/test_generic.py            ***REMOVED*** ✅ Parser tests
+│   └── technicolor/test_*.py               ***REMOVED*** ✅ Parser tests
+└── lib/test_utils.py                       ***REMOVED*** ✅ Utility tests
 ```
 
-***REMOVED******REMOVED******REMOVED*** Tests Needed (New Functionality)
+***REMOVED******REMOVED******REMOVED*** Tests Completed ✅
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** Priority 1 - Critical Bugs
-1. **SSL Context in Executor** (`test_coordinator.py`)
-   - Test that SSL context is created in executor
-   - Verify no blocking I/O
-   - Mock `async_add_executor_job`
+***REMOVED******REMOVED******REMOVED******REMOVED*** Session Improvements (14 tests)
+1. **✅ SSL Context in Executor** (`test_coordinator_improvements.py`)
+   - Pattern-based test verifies executor usage
+   - Confirms async_add_executor_job pattern
 
-2. **Config Entry Parameter** (`test_coordinator.py`)
-   - Test coordinator has config_entry
-   - Verify first refresh behavior
+2. **✅ Config Entry Parameter** (`test_coordinator_improvements.py`)
+   - Verifies config_entry parameter exists
+   - Tests first refresh behavior
 
-3. **Unload Error Handling** (`test_config_flow.py`)
-   - Test unload when platforms never loaded
-   - Verify graceful handling
+3. **✅ Unload Error Handling** (`test_coordinator_improvements.py`)
+   - Tests ValueError handling during unload
+   - Verifies graceful handling and cleanup
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** Priority 2 - User Experience
-4. **Restart Monitoring** (`test_button.py`)
-   - Test grace period logic
-   - Test channel stability detection
-   - Mock coordinator data changes
+4. **✅ Restart Monitoring** (`test_button.py`)
+   - Tests grace period logic
+   - Tests channel stability detection
+   - Verifies grace period reset
 
-5. **Notification Messages** (`test_config_flow.py`)
-   - Test duplicate manufacturer detection
-   - Verify notification creation
+5. **✅ Notification Messages** (`test_config_flow.py`)
+   - Tests duplicate manufacturer detection
+   - Verifies proper title formatting
+   - Tests detection info inclusion
 
-6. **Offline vs Unavailable** (`test_coordinator.py`)
-   - Test partial data return when scraper fails
-   - Verify health check integration
+6. **✅ Offline vs Unavailable** (`test_coordinator_improvements.py`)
+   - Pattern-based test for partial data return
+   - Verifies health check integration
+
+***REMOVED******REMOVED******REMOVED******REMOVED*** MB8611 Parser (33 tests) ✅
+7. **✅ MB8611 Detection** (`test_mb8611.py`)
+   - Tests model name detection
+   - Tests HNAP protocol detection
+   - Negative tests for other modems
+
+8. **✅ MB8611 Authentication** (`test_mb8611.py`)
+   - Tests HNAP auth configuration
+   - Verifies AuthFactory delegation
+   - Tests URL pattern requirements
+
+9. **✅ MB8611 HNAP Parsing** (`test_mb8611.py`)
+   - Tests 33 downstream channel parsing
+   - Tests 4 upstream channel parsing
+   - Tests system info extraction
+   - Verifies HNAPRequestBuilder usage
+
+10. **✅ MB8611 Edge Cases** (`test_mb8611.py`)
+    - Tests invalid JSON handling
+    - Tests empty data handling
+    - Tests malformed entry handling
+    - Tests network error handling
 
 ---
 
