@@ -1,4 +1,4 @@
-"""Parser for ARRIS SB6141 cable modem."""
+"""Parser for ARRIS SB6190 cable modem."""
 
 import logging
 
