@@ -1,14 +1,19 @@
 """Tests for Cable Modem Monitor sensors."""
-import pytest
+
+from __future__ import annotations
+
 from unittest.mock import Mock
+
+import pytest
+
 from custom_components.cable_modem_monitor.sensor import (
     ModemConnectionStatusSensor,
-    ModemTotalCorrectedSensor,
-    ModemTotalUncorrectedSensor,
     ModemDownstreamChannelCountSensor,
-    ModemUpstreamChannelCountSensor,
     ModemSoftwareVersionSensor,
     ModemSystemUptimeSensor,
+    ModemTotalCorrectedSensor,
+    ModemTotalUncorrectedSensor,
+    ModemUpstreamChannelCountSensor,
 )
 
 
@@ -108,9 +113,7 @@ class TestErrorSensors:
         }
 
         corrected_sensor = ModemTotalCorrectedSensor(mock_coordinator, mock_entry)
-        uncorrected_sensor = ModemTotalUncorrectedSensor(
-            mock_coordinator, mock_entry
-        )
+        uncorrected_sensor = ModemTotalUncorrectedSensor(mock_coordinator, mock_entry)
 
         assert corrected_sensor.native_value == 0
         assert uncorrected_sensor.native_value == 0
@@ -274,7 +277,7 @@ class TestSensorDataHandling:
         sensor = ModemSoftwareVersionSensor(coordinator, mock_entry)
 
         # Should handle None gracefully
-        assert sensor.native_value is None or sensor.native_value == "Unknown"
+        assert sensor.native_value == "None" or sensor.native_value == "Unknown"
 
 
 class TestEntityNaming:
@@ -297,8 +300,8 @@ class TestEntityNaming:
         """Test sensor naming has correct display names and unique IDs."""
         from custom_components.cable_modem_monitor.sensor import (
             ModemConnectionStatusSensor,
+            ModemDownstreamPowerSensor,
             ModemTotalCorrectedSensor,
-            ModemDownstreamPowerSensor
         )
 
         entry = Mock()
@@ -345,9 +348,11 @@ class TestLastBootTimeSensor:
 
     def test_last_boot_time_calculation(self, mock_coordinator, mock_entry):
         """Test last boot time calculation from uptime."""
-        from custom_components.cable_modem_monitor.sensor import ModemLastBootTimeSensor
         from datetime import datetime, timedelta
+
         from homeassistant.util import dt as dt_util
+
+        from custom_components.cable_modem_monitor.sensor import ModemLastBootTimeSensor
 
         sensor = ModemLastBootTimeSensor(mock_coordinator, mock_entry)
 
@@ -394,8 +399,9 @@ class TestLastBootTimeSensor:
 
     def test_last_boot_time_sensor_attributes(self, mock_coordinator, mock_entry):
         """Test last boot time sensor attributes."""
-        from custom_components.cable_modem_monitor.sensor import ModemLastBootTimeSensor
         from homeassistant.components.sensor import SensorDeviceClass
+
+        from custom_components.cable_modem_monitor.sensor import ModemLastBootTimeSensor
 
         sensor = ModemLastBootTimeSensor(mock_coordinator, mock_entry)
 

@@ -1,16 +1,18 @@
 """Parser plugin discovery and registration system."""
-import logging
+
+from __future__ import annotations
+
 import importlib
+import logging
 import os
 import pkgutil
-from typing import List, Type
 
 from .base_parser import ModemParser
 
 _LOGGER = logging.getLogger(__name__)
 
 
-def get_parsers() -> List[Type[ModemParser]]:
+def get_parsers() -> list[type[ModemParser]]:
     """Auto-discover and return all parser modules in this package."""
     parsers = []
     package_dir = os.path.dirname(__file__)
@@ -43,12 +45,15 @@ def get_parsers() -> List[Type[ModemParser]]:
                 for attr_name in dir(module):
                     attr = getattr(module, attr_name)
                     # Only register parsers defined in this module (not imported ones)
-                    if isinstance(attr, type) and issubclass(attr, ModemParser) and attr is not ModemParser:
-                        # Check if the parser is defined in this module (not imported)
-                        if attr.__module__ == module.__name__:
-                            parsers.append(attr)
-                            _LOGGER.info(f"Registered parser: {attr.name} ({attr.manufacturer}, models: {attr.models})")
-                            found_parser_in_module = True
+                    if (
+                        isinstance(attr, type)
+                        and issubclass(attr, ModemParser)
+                        and attr is not ModemParser
+                        and attr.__module__ == module.__name__
+                    ):
+                        parsers.append(attr)
+                        _LOGGER.info(f"Registered parser: {attr.name} ({attr.manufacturer}, models: {attr.models})")
+                        found_parser_in_module = True
                 if not found_parser_in_module:
                     _LOGGER.debug(f"No ModemParser subclass found in module: {full_module_name}")
             except Exception as e:

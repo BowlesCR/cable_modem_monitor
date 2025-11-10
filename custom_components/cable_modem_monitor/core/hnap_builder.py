@@ -1,7 +1,11 @@
 """HNAP/SOAP request builder utility."""
+
+from __future__ import annotations
+
 import logging
+from typing import TYPE_CHECKING
+
 import requests
-from typing import Dict, List, Optional, TYPE_CHECKING
 
 # Import Element for type checking from standard library
 if TYPE_CHECKING:
@@ -12,10 +16,11 @@ _LOGGER = logging.getLogger(__name__)
 # Use defusedxml to prevent XXE (XML External Entity) attacks
 # See: https://docs.python.org/3/library/xml.html#xml-vulnerabilities
 try:
-    from defusedxml import ElementTree as ET
+    from defusedxml import ElementTree  # type: ignore[import-untyped]
 except ImportError:
     # Fallback to standard library with warning
-    from xml.etree import ElementTree as ET
+    from xml.etree import ElementTree
+
     _LOGGER.warning(
         "defusedxml not available, using standard xml.etree.ElementTree. "
         "This may be vulnerable to XXE attacks. Install defusedxml for security."
@@ -36,13 +41,7 @@ class HNAPRequestBuilder:
         self.endpoint = endpoint
         self.namespace = namespace
 
-    def call_single(
-        self,
-        session: requests.Session,
-        base_url: str,
-        action: str,
-        params: Optional[Dict] = None
-    ) -> str:
+    def call_single(self, session: requests.Session, base_url: str, action: str, params: dict | None = None) -> str:
         """
         Make single HNAP action call.
 
@@ -63,22 +62,14 @@ class HNAPRequestBuilder:
         response = session.post(
             f"{base_url}{self.endpoint}",
             data=soap_envelope,
-            headers={
-                "SOAPAction": f'"{self.namespace}{action}"',
-                "Content-Type": "text/xml; charset=utf-8"
-            },
-            timeout=10
+            headers={"SOAPAction": f'"{self.namespace}{action}"', "Content-Type": "text/xml; charset=utf-8"},
+            timeout=10,
         )
 
         response.raise_for_status()
         return response.text
 
-    def call_multiple(
-        self,
-        session: requests.Session,
-        base_url: str,
-        actions: List[str]
-    ) -> str:
+    def call_multiple(self, session: requests.Session, base_url: str, actions: list[str]) -> str:
         """
         Make batched HNAP request (GetMultipleHNAPs).
 
@@ -98,17 +89,14 @@ class HNAPRequestBuilder:
         response = session.post(
             f"{base_url}{self.endpoint}",
             data=soap_envelope,
-            headers={
-                "SOAPAction": f'"{self.namespace}GetMultipleHNAPs"',
-                "Content-Type": "text/xml; charset=utf-8"
-            },
-            timeout=10
+            headers={"SOAPAction": f'"{self.namespace}GetMultipleHNAPs"', "Content-Type": "text/xml; charset=utf-8"},
+            timeout=10,
         )
 
         response.raise_for_status()
         return response.text
 
-    def _build_envelope(self, action: str, params: Optional[Dict]) -> str:
+    def _build_envelope(self, action: str, params: dict | None) -> str:
         """
         Build SOAP envelope XML for single action.
 
@@ -119,27 +107,27 @@ class HNAPRequestBuilder:
         Returns:
             SOAP envelope XML string
         """
-        envelope = f'''<?xml version="1.0" encoding="utf-8"?>
+        envelope = f"""<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
-    <{action} xmlns="{self.namespace}">'''
+    <{action} xmlns="{self.namespace}">"""
 
         # Add parameters if provided
         if params:
             for key, value in params.items():
                 envelope += f"\n      <{key}>{value}</{key}>"
 
-        envelope += f'''
+        envelope += f"""
     </{action}>
   </soap:Body>
-</soap:Envelope>'''
+</soap:Envelope>"""
 
         return envelope
 
-    def _build_multi_envelope(self, actions: List[str]) -> str:
+    def _build_multi_envelope(self, actions: list[str]) -> str:
         """
         Build GetMultipleHNAPs envelope.
 
@@ -152,7 +140,7 @@ class HNAPRequestBuilder:
         # Build action list
         action_list = "\n      ".join(f'<{action} xmlns="{self.namespace}"/>' for action in actions)
 
-        envelope = f'''<?xml version="1.0" encoding="utf-8"?>
+        envelope = f"""<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -162,12 +150,12 @@ class HNAPRequestBuilder:
       {action_list}
     </GetMultipleHNAPs>
   </soap:Body>
-</soap:Envelope>'''
+</soap:Envelope>"""
 
         return envelope
 
     @staticmethod
-    def parse_response(xml_text: str, action: str, namespace: str) -> Optional["Element"]:
+    def parse_response(xml_text: str, action: str, namespace: str) -> Element | None:
         """
         Parse HNAP XML response and extract action result.
 
@@ -180,29 +168,26 @@ class HNAPRequestBuilder:
             XML Element containing action response, or None if not found
         """
         try:
-            root = ET.fromstring(xml_text)
+            root = ElementTree.fromstring(xml_text)
 
             # Define namespaces for XPath
-            namespaces = {
-                'soap': 'http://schemas.xmlsoap.org/soap/envelope/',
-                'hnap': namespace
-            }
+            namespaces = {"soap": "http://schemas.xmlsoap.org/soap/envelope/", "hnap": namespace}
 
             # Find the action response in the SOAP body
-            action_response = root.find(f'.//hnap:{action}Response', namespaces)
+            action_response = root.find(f".//hnap:{action}Response", namespaces)
 
             if action_response is None:
                 # Try without namespace prefix (some responses don't use it)
-                action_response = root.find(f'.//{action}Response')
+                action_response = root.find(f".//{action}Response")
 
-            return action_response
+            return action_response  # type: ignore[no-any-return]
 
-        except ET.ParseError as e:
+        except ElementTree.ParseError as e:
             _LOGGER.error("Failed to parse HNAP XML response: %s", e)
             return None
 
     @staticmethod
-    def get_text_value(element: Optional["Element"], tag: str, default: str = "") -> str:
+    def get_text_value(element: Element | None, tag: str, default: str = "") -> str:
         """
         Get text value from XML element.
 

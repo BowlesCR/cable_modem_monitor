@@ -12,7 +12,83 @@ Thank you for your interest in contributing! This document provides guidelines f
 
 ## Development Workflow
 
-### 1. Set Up Your Environment
+You can develop using either Docker (recommended for beginners) or a local Python environment (recommended for advanced users).
+
+### Docker Development (Recommended)
+
+Docker provides an isolated, consistent development environment with Home Assistant pre-installed.
+
+#### Prerequisites
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) installed and running
+- [VS Code](https://code.visualstudio.com/) (optional, for Dev Container support)
+
+#### Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/kwschulz/cable_modem_monitor.git
+cd cable_modem_monitor
+
+# Start Home Assistant with the integration
+make docker-start
+# Or: ./scripts/dev/docker-dev.sh start
+
+# View logs
+make docker-logs
+
+# Access Home Assistant at http://localhost:8123
+```
+
+#### VS Code Dev Container (Optional)
+
+For the best development experience, use VS Code with Dev Containers:
+
+**1. Install the Dev Containers extension** (choose any method):
+
+- **From VS Code**: Open Extensions (`Ctrl+Shift+X`), search "Dev Containers", click Install
+- **Quick Install**: Press `Ctrl+P`, paste: `ext install ms-vscode-remote.remote-containers`
+- **Command Line**: `code --install-extension ms-vscode-remote.remote-containers`
+- **From Marketplace**: Visit https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
+
+**2. Verify installation**: You should see a "Remote Explorer" icon in the sidebar and "Dev Containers:" commands when pressing `F1`
+
+**3. Open the project** in VS Code and reopen in container:
+- Open the project: `code /path/to/cable_modem_monitor`
+- Press `F1` → "Dev Containers: Reopen in Container"
+- Wait for the container to build (2-3 minutes first time)
+
+See `.devcontainer/README.md` for detailed instructions and troubleshooting.
+
+#### Docker Commands
+
+```bash
+# Using Make (recommended)
+make docker-start      # Start the environment
+make docker-stop       # Stop the environment
+make docker-restart    # Restart after code changes
+make docker-logs       # View logs
+make docker-status     # Check status
+make docker-shell      # Open a shell in the container
+make docker-clean      # Remove all data
+
+# Or use the script directly
+./scripts/dev/docker-dev.sh [command]
+```
+
+#### Docker Development Workflow
+
+1. **Start the environment**: `make docker-start`
+2. **Make code changes** in your editor
+3. **Restart to load changes**: `make docker-restart`
+4. **Test in Home Assistant**: http://localhost:8123
+5. **Run tests**: Open a shell with `make docker-shell`, then run `pytest`
+
+### Local Development (Advanced)
+
+For developers who prefer working directly with Python without Docker:
+
+#### 1. Set Up Your Environment
 
 First, clone the repository and install the development dependencies. This will give you all the tools you need for testing, linting, and code formatting.
 
@@ -30,12 +106,49 @@ Make your code changes or additions on a new branch.
 
 Before committing, ensure your code is well-formatted and passes all quality checks.
 
+**Quick commands (using Make):**
+```bash
+# Run all code quality checks
+make check
+
+# Auto-fix linting issues
+make lint-fix
+
+# Format code
+make format
+
+# Run comprehensive linting (includes security)
+make lint-all
+```
+
+**Manual commands:**
 ```bash
 # Auto-format your code with Black
-black custom_components/cable_modem_monitor/ tests/
+black custom_components/cable_modem_monitor/
 
 # Check for linting issues with Ruff
-ruff check custom_components/cable_modem_monitor/ tests/
+ruff check custom_components/cable_modem_monitor/
+
+# Auto-fix linting issues
+ruff check --fix custom_components/cable_modem_monitor/
+
+# Type checking with mypy
+mypy custom_components/cable_modem_monitor/
+
+# Or use the comprehensive lint script
+bash scripts/dev/lint.sh
+# On Windows PowerShell:
+# .\scripts\dev\lint.ps1
+```
+
+**Pre-commit hooks (recommended):**
+```bash
+# Install pre-commit hooks (runs automatically on commit)
+pip install pre-commit
+pre-commit install
+
+# Run manually on all files
+pre-commit run --all-files
 ```
 
 ### 4. Run Tests
@@ -230,9 +343,43 @@ When you submit a pull request, include:
 - Use async/await for I/O operations
 
 ### Linting
+
+The project uses multiple linting tools for code quality:
+
+**Ruff** (Primary linter - fast and comprehensive):
 ```bash
+# Check for issues
 ruff check custom_components/cable_modem_monitor/
+
+# Auto-fix issues
+ruff check --fix custom_components/cable_modem_monitor/
 ```
+
+**mypy** (Type checking):
+```bash
+mypy custom_components/cable_modem_monitor/ --config-file=mypy.ini
+```
+
+**Black** (Code formatting):
+```bash
+# Format code
+black custom_components/cable_modem_monitor/
+
+# Check formatting (CI mode)
+black --check custom_components/cable_modem_monitor/
+```
+
+**Comprehensive linting:**
+```bash
+# Run all checks at once
+make check
+
+# Or use the lint script
+bash scripts/dev/lint.sh
+```
+
+See `docs/SECURITY_LINTING.md` for security-specific linting tools (Bandit, Semgrep).
+See `docs/LINTING.md` for comprehensive linting documentation.
 
 ## Testing Guide
 

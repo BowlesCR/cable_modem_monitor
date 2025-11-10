@@ -3,10 +3,13 @@
 This module helps clean up orphaned entities that may accumulate during
 upgrades from v1.x to v2.0 or after multiple integration reinstalls.
 """
+
+from __future__ import annotations
+
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, cast
 
 from homeassistant.core import HomeAssistant
 
@@ -14,7 +17,7 @@ ENTITY_REGISTRY_PATH = Path("/config/.storage/core.entity_registry")
 BACKUP_DIR = Path("/config/.storage")
 
 
-def analyze_entities(data: Dict[str, Any]) -> Dict[str, Any]:
+def analyze_entities(data: dict[str, Any]) -> dict[str, Any]:
     """Analyze cable modem entities in Home Assistant.
 
     Args:
@@ -28,39 +31,36 @@ def analyze_entities(data: Dict[str, Any]) -> Dict[str, Any]:
         - orphaned: List of orphaned cable modem entities
         - creation_dates: Entity counts grouped by creation date
     """
-    all_entities = data['data']['entities']
+    all_entities = data["data"]["entities"]
 
     # Find all cable modem entities
     cable_modem_entities = [
-        e for e in all_entities
-        if 'cable_modem' in e.get('unique_id', '').lower() or
-           e.get('platform') == 'cable_modem_monitor'
+        e
+        for e in all_entities
+        if "cable_modem" in e.get("unique_id", "").lower() or e.get("platform") == "cable_modem_monitor"
     ]
 
     # Categorize entities
-    active = [e for e in cable_modem_entities if e.get('config_entry_id')]
-    orphaned = [
-        e for e in cable_modem_entities
-        if not e.get('config_entry_id') or e.get('orphaned_timestamp')
-    ]
+    active = [e for e in cable_modem_entities if e.get("config_entry_id")]
+    orphaned = [e for e in cable_modem_entities if not e.get("config_entry_id") or e.get("orphaned_timestamp")]
 
     # Group by creation date
     creation_dates = {}
     for entity in cable_modem_entities:
-        created = entity.get('created_at', 'unknown')[:10]
+        created = entity.get("created_at", "unknown")[:10]
         if created not in creation_dates:
-            creation_dates[created] = {'active': 0, 'orphaned': 0}
+            creation_dates[created] = {"active": 0, "orphaned": 0}
         if entity in active:
-            creation_dates[created]['active'] += 1
+            creation_dates[created]["active"] += 1
         else:
-            creation_dates[created]['orphaned'] += 1
+            creation_dates[created]["orphaned"] += 1
 
     return {
-        'total_entities': len(all_entities),
-        'cable_modem_total': len(cable_modem_entities),
-        'active': active,
-        'orphaned': orphaned,
-        'creation_dates': creation_dates
+        "total_entities": len(all_entities),
+        "cable_modem_total": len(cable_modem_entities),
+        "active": active,
+        "orphaned": orphaned,
+        "creation_dates": creation_dates,
     }
 
 
@@ -73,24 +73,23 @@ def backup_entity_registry() -> Path:
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     backup_path = BACKUP_DIR / f"core.entity_registry.backup-{timestamp}"
 
-    with open(ENTITY_REGISTRY_PATH, 'r') as src:
-        with open(backup_path, 'w') as dst:
-            dst.write(src.read())
+    with open(ENTITY_REGISTRY_PATH) as src, open(backup_path, "w") as dst:
+        dst.write(src.read())
 
     return backup_path
 
 
-def cleanup_orphaned_entities(hass: HomeAssistant) -> bool:
+def cleanup_orphaned_entities(hass: HomeAssistant | None = None) -> bool:
     """Remove orphaned cable modem entities.
 
     Args:
-        hass: HomeAssistant instance
+        hass: HomeAssistant instance (unused, kept for API compatibility)
 
     Returns:
         bool: True if cleanup was successful, False otherwise
     """
     try:
-        with open(ENTITY_REGISTRY_PATH, 'r') as f:
+        with open(ENTITY_REGISTRY_PATH) as f:
             data = json.load(f)
 
         # Create backup
@@ -98,15 +97,15 @@ def cleanup_orphaned_entities(hass: HomeAssistant) -> bool:
 
         # Analyze and remove orphans
         stats = analyze_entities(data)
-        if not stats['orphaned']:
+        if not stats["orphaned"]:
             return True
 
-        all_entities = data['data']['entities']
-        entities_to_keep = [e for e in all_entities if e not in stats['orphaned']]
-        data['data']['entities'] = entities_to_keep
+        all_entities = data["data"]["entities"]
+        entities_to_keep = [e for e in all_entities if e not in stats["orphaned"]]
+        data["data"]["entities"] = entities_to_keep
 
         # Save changes
-        with open(ENTITY_REGISTRY_PATH, 'w') as f:
+        with open(ENTITY_REGISTRY_PATH, "w") as f:
             json.dump(data, f, indent=2)
 
         return True
@@ -117,20 +116,20 @@ def cleanup_orphaned_entities(hass: HomeAssistant) -> bool:
 
 async def async_cleanup_orphaned_entities(hass: HomeAssistant) -> bool:
     """Async wrapper for cleanup_orphaned_entities."""
-    return await hass.async_add_executor_job(cleanup_orphaned_entities, hass)
+    return cast(bool, await hass.async_add_executor_job(cleanup_orphaned_entities, hass))
 
 
-def remove_all_entities(hass: HomeAssistant) -> bool:
+def remove_all_entities(hass: HomeAssistant | None = None) -> bool:
     """Remove ALL cable modem entities (nuclear option).
 
     Args:
-        hass: HomeAssistant instance
+        hass: HomeAssistant instance (unused, kept for API compatibility)
 
     Returns:
         bool: True if removal was successful, False otherwise
     """
     try:
-        with open(ENTITY_REGISTRY_PATH, 'r') as f:
+        with open(ENTITY_REGISTRY_PATH) as f:
             data = json.load(f)
 
         # Create backup
@@ -138,13 +137,13 @@ def remove_all_entities(hass: HomeAssistant) -> bool:
 
         # Remove all cable modem entities
         stats = analyze_entities(data)
-        all_entities = data['data']['entities']
-        all_cable_modem = stats['active'] + stats['orphaned']
+        all_entities = data["data"]["entities"]
+        all_cable_modem = stats["active"] + stats["orphaned"]
         entities_to_keep = [e for e in all_entities if e not in all_cable_modem]
-        data['data']['entities'] = entities_to_keep
+        data["data"]["entities"] = entities_to_keep
 
         # Save changes
-        with open(ENTITY_REGISTRY_PATH, 'w') as f:
+        with open(ENTITY_REGISTRY_PATH, "w") as f:
             json.dump(data, f, indent=2)
 
         return True
@@ -155,4 +154,4 @@ def remove_all_entities(hass: HomeAssistant) -> bool:
 
 async def async_remove_all_entities(hass: HomeAssistant) -> bool:
     """Async wrapper for remove_all_entities."""
-    return await hass.async_add_executor_job(remove_all_entities, hass)
+    return cast(bool, await hass.async_add_executor_job(remove_all_entities, hass))
