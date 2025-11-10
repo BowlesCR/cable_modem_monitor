@@ -337,4 +337,3 @@ class TestConfigFlowRegistration:
         handler = config_entries.HANDLERS.get("cable_modem_monitor")
         assert handler is not None
         assert handler == CableModemMonitorConfigFlow
-
