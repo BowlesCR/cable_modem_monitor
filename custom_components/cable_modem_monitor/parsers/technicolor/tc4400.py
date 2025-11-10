@@ -1,10 +1,16 @@
 """Parser for Technicolor TC4400 cable modem."""
+
+from __future__ import annotations
+
 import logging
-from bs4 import BeautifulSoup
-from ..base_parser import ModemParser
-from custom_components.cable_modem_monitor.lib.utils import extract_number, extract_float
+
+from bs4 import BeautifulSoup, Tag
+
 from custom_components.cable_modem_monitor.core.auth_config import BasicAuthConfig
 from custom_components.cable_modem_monitor.core.authentication import AuthStrategyType
+from custom_components.cable_modem_monitor.lib.utils import extract_float, extract_number
+
+from ..base_parser import ModemParser
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -30,7 +36,11 @@ class TechnicolorTC4400Parser(ModemParser):
     @classmethod
     def can_parse(cls, soup: BeautifulSoup, url: str, html: str) -> bool:
         """Detect if this is a Technicolor TC4400 modem."""
-        return "cmconnectionstatus.html" in url.lower() or "cmswinfo.html" in url.lower() or ("Board ID:" in html and "Build Timestamp:" in html)
+        return (
+            "cmconnectionstatus.html" in url.lower()
+            or "cmswinfo.html" in url.lower()
+            or ("Board ID:" in html and "Build Timestamp:" in html)
+        )
 
     def login(self, session, base_url, username, password) -> bool:
         """
@@ -66,11 +76,25 @@ class TechnicolorTC4400Parser(ModemParser):
 
         uptime_seconds = parse_uptime_to_seconds(system_info.get("system_uptime", ""))
         is_restarting = uptime_seconds is not None and uptime_seconds < RESTART_WINDOW_SECONDS
-        _LOGGER.debug("TC4400 Uptime: %s, Seconds: {uptime_seconds}, Restarting: {is_restarting}", system_info.get('system_uptime'))
+        _LOGGER.debug(
+            "TC4400 Uptime: %s, Seconds: %s, Restarting: %s",
+            system_info.get("system_uptime"),
+            uptime_seconds,
+            is_restarting,
+        )
 
-        channels = []
+        channels: list[dict] = []
         try:
-            downstream_table = soup.find("th", string="Downstream Channel Status").find_parent("table")
+            downstream_header = soup.find("th", text="Downstream Channel Status")
+            if not downstream_header:
+                _LOGGER.warning("TC4400: Downstream Channel Status table not found")
+                return channels
+
+            downstream_table = downstream_header.find_parent("table")
+            if not downstream_table or not isinstance(downstream_table, Tag):
+                _LOGGER.warning("TC4400: Downstream table parent not found")
+                return channels
+
             for row in downstream_table.find_all("tr")[2:]:
                 cols = row.find_all("td")
                 if len(cols) == 13:
@@ -112,11 +136,25 @@ class TechnicolorTC4400Parser(ModemParser):
 
         uptime_seconds = parse_uptime_to_seconds(system_info.get("system_uptime", ""))
         is_restarting = uptime_seconds is not None and uptime_seconds < RESTART_WINDOW_SECONDS
-        _LOGGER.debug("TC4400 Uptime: %s, Seconds: {uptime_seconds}, Restarting: {is_restarting}", system_info.get('system_uptime'))
+        _LOGGER.debug(
+            "TC4400 Uptime: %s, Seconds: %s, Restarting: %s",
+            system_info.get("system_uptime"),
+            uptime_seconds,
+            is_restarting,
+        )
 
-        channels = []
+        channels: list[dict] = []
         try:
-            upstream_table = soup.find("th", string="Upstream Channel Status").find_parent("table")
+            upstream_header = soup.find("th", text="Upstream Channel Status")
+            if not upstream_header:
+                _LOGGER.warning("TC4400: Upstream Channel Status table not found")
+                return channels
+
+            upstream_table = upstream_header.find_parent("table")
+            if not upstream_table or not isinstance(upstream_table, Tag):
+                _LOGGER.warning("TC4400: Upstream table parent not found")
+                return channels
+
             for row in upstream_table.find_all("tr")[2:]:
                 cols = row.find_all("td")
                 if len(cols) == 9:
@@ -144,6 +182,19 @@ class TechnicolorTC4400Parser(ModemParser):
 
     def _parse_system_info(self, soup: BeautifulSoup) -> dict:
         """Parse system information from Technicolor TC4400."""
+        ***REMOVED*** Mapping of HTML header text to info dict keys
+        header_mapping = {
+            "Standard Specification Compliant": "standard_specification_compliant",
+            "Hardware Version": "hardware_version",
+            "Software Version": "software_version",
+            "Cable Modem MAC Address": "mac_address",
+            "System Up Time": "system_uptime",
+            "Network Access": "network_access",
+            "Cable Modem IPv4 Address": "ipv4_address",
+            "Cable Modem IPv6 Address": "ipv6_address",
+            "Board Temperature": "board_temperature",
+        }
+
         info = {}
         try:
             rows = soup.find_all("tr")
@@ -152,28 +203,11 @@ class TechnicolorTC4400Parser(ModemParser):
                 if header_cell:
                     header = header_cell.text.strip()
                     value_cell = header_cell.find_next_sibling("td")
-                    if value_cell:
-                        value = value_cell.text.strip()
-                        if header == "Standard Specification Compliant":
-                            info["standard_specification_compliant"] = value
-                        elif header == "Hardware Version":
-                            info["hardware_version"] = value
-                        elif header == "Software Version":
-                            info["software_version"] = value
-                        elif header == "Cable Modem MAC Address":
-                            info["mac_address"] = value
-                        elif header == "System Up Time":
-                            info["system_uptime"] = value
-                        elif header == "Network Access":
-                            info["network_access"] = value
-                        elif header == "Cable Modem IPv4 Address":
-                            info["ipv4_address"] = value
-                        elif header == "Cable Modem IPv6 Address":
-                            info["ipv6_address"] = value
-                        elif header == "Board Temperature":
-                            info["board_temperature"] = value
+                    if value_cell and header in header_mapping:
+                        info[header_mapping[header]] = value_cell.text.strip()
                 else:
-                    header_cell = row.find("td", string="Cable Modem Serial Number")
+                    ***REMOVED*** Special case: Serial number uses different format
+                    header_cell = row.find("td", text="Cable Modem Serial Number")
                     if header_cell:
                         value_cell = header_cell.find_next_sibling("td")
                         if value_cell:

@@ -1,7 +1,11 @@
 """Base class for modem parsers."""
+
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
+
 from bs4 import BeautifulSoup
-from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from custom_components.cable_modem_monitor.core.auth_config import AuthConfig
@@ -27,11 +31,11 @@ class ModemParser(ABC):
     url_patterns: list[dict[str, str | bool]] = []
 
     ***REMOVED*** Legacy field for backward compatibility (deprecated - use url_patterns)
-    auth_type: str = 'form'
+    auth_type: str = "form"
 
     ***REMOVED*** Authentication configuration (new system - optional, for backward compatibility)
     ***REMOVED*** Parsers should define this as a class attribute
-    auth_config: Optional["AuthConfig"] = None
+    auth_config: AuthConfig | None = None
 
     @classmethod
     @abstractmethod
@@ -53,13 +57,14 @@ class ModemParser(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def login(self, session, base_url, username, password) -> bool | tuple[bool, str]:
+    def login(self, session, base_url, username, password) -> bool | tuple[bool, str | None]:
         """
         Log in to the modem.
 
         Returns:
             bool: True if login successful (old style)
-            tuple[bool, str]: (success, html) where html is authenticated page content (new style)
+            tuple[bool, str | None]: (success, html) where html is authenticated page content
+                                     or None if no credentials provided or login failed
         """
         raise NotImplementedError
 
@@ -82,5 +87,3 @@ class ModemParser(ABC):
             }
         """
         raise NotImplementedError
-
-    

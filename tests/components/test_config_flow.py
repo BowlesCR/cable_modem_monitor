@@ -1,6 +1,18 @@
 """Tests for Cable Modem Monitor config flow."""
-import pytest
+
+from __future__ import annotations
+
 from unittest.mock import Mock, patch
+
+import pytest
+from homeassistant import config_entries
+
+from custom_components.cable_modem_monitor.config_flow import (
+    CableModemMonitorConfigFlow,
+    CannotConnectError,
+    OptionsFlowHandler,
+    validate_input,
+)
 
 ***REMOVED*** Mock constants to avoid ImportError in tests
 CONF_HOST = "host"
@@ -10,12 +22,6 @@ CONF_SCAN_INTERVAL = "scan_interval"
 DEFAULT_SCAN_INTERVAL = 600
 MIN_SCAN_INTERVAL = 60
 MAX_SCAN_INTERVAL = 1800
-
-from custom_components.cable_modem_monitor.config_flow import (
-    OptionsFlowHandler,
-    CannotConnect,
-    validate_input,
-)
 
 
 class TestConfigFlow:
@@ -40,6 +46,7 @@ class TestConfigFlow:
         ***REMOVED*** Min should be less than default, default less than max
         assert MIN_SCAN_INTERVAL < DEFAULT_SCAN_INTERVAL < MAX_SCAN_INTERVAL
 
+
 class TestValidateInput:
     """Test input validation."""
 
@@ -60,7 +67,7 @@ class TestValidateInput:
         }
 
     @pytest.mark.asyncio
-    @patch('custom_components.cable_modem_monitor.config_flow.ModemScraper')
+    @patch("custom_components.cable_modem_monitor.config_flow.ModemScraper")
     async def test_validate_input_success(self, mock_scraper_class, mock_hass, valid_input):
         """Test successful validation."""
         ***REMOVED*** Mock scraper to return valid data
@@ -87,9 +94,11 @@ class TestValidateInput:
         assert result["title"] == "Cable Modem (192.168.100.1)"
 
     @pytest.mark.asyncio
-    @patch('custom_components.cable_modem_monitor.config_flow.get_parsers')
-    @patch('custom_components.cable_modem_monitor.config_flow.ModemScraper')
-    async def test_validate_input_connection_failure(self, mock_scraper_class, mock_get_parsers, mock_hass, valid_input):
+    @patch("custom_components.cable_modem_monitor.config_flow.get_parsers")
+    @patch("custom_components.cable_modem_monitor.config_flow.ModemScraper")
+    async def test_validate_input_connection_failure(
+        self, mock_scraper_class, mock_get_parsers, mock_hass, valid_input
+    ):
         """Test validation fails when cannot connect to modem."""
         ***REMOVED*** Mock get_parsers to return a mock parser
         mock_parser = Mock()
@@ -106,7 +115,7 @@ class TestValidateInput:
 
         mock_hass.async_add_executor_job = mock_executor_job
 
-        with pytest.raises(CannotConnect):
+        with pytest.raises(CannotConnectError):
             await validate_input(mock_hass, valid_input)
 
     def test_validate_input_requires_host(self, valid_input):
@@ -121,12 +130,12 @@ class TestScanIntervalValidation:
     def test_scan_interval_below_minimum_invalid(self):
         """Test that values below minimum are invalid."""
         ***REMOVED*** 59 seconds should be below minimum
-        assert 59 < MIN_SCAN_INTERVAL
+        assert MIN_SCAN_INTERVAL > 59
 
     def test_scan_interval_above_maximum_invalid(self):
         """Test that values above maximum are invalid."""
         ***REMOVED*** 1801 seconds should be above maximum
-        assert 1801 > MAX_SCAN_INTERVAL
+        assert MAX_SCAN_INTERVAL < 1801
 
     def test_scan_interval_at_boundaries_valid(self):
         """Test that boundary values are valid."""
@@ -137,11 +146,11 @@ class TestScanIntervalValidation:
     def test_scan_interval_common_values_valid(self):
         """Test common interval values are within range."""
         common_intervals = [
-            60,    ***REMOVED*** 1 minute
-            180,   ***REMOVED*** 3 minutes
-            300,   ***REMOVED*** 5 minutes (default)
-            600,   ***REMOVED*** 10 minutes
-            900,   ***REMOVED*** 15 minutes
+            60,  ***REMOVED*** 1 minute
+            180,  ***REMOVED*** 3 minutes
+            300,  ***REMOVED*** 5 minutes (default)
+            600,  ***REMOVED*** 10 minutes
+            900,  ***REMOVED*** 15 minutes
             1800,  ***REMOVED*** 30 minutes
         ]
 
@@ -168,7 +177,7 @@ class TestModemNameFormatting:
         }
 
     @pytest.mark.asyncio
-    @patch('custom_components.cable_modem_monitor.config_flow.ModemScraper')
+    @patch("custom_components.cable_modem_monitor.config_flow.ModemScraper")
     async def test_title_without_duplicate_manufacturer(self, mock_scraper_class, mock_hass, valid_input):
         """Test that manufacturer name is not duplicated when modem name includes it."""
         mock_scraper = Mock()
@@ -193,7 +202,7 @@ class TestModemNameFormatting:
         assert result["title"] == "Motorola MB7621 (192.168.100.1)"
 
     @pytest.mark.asyncio
-    @patch('custom_components.cable_modem_monitor.config_flow.ModemScraper')
+    @patch("custom_components.cable_modem_monitor.config_flow.ModemScraper")
     async def test_title_with_manufacturer_prepended(self, mock_scraper_class, mock_hass, valid_input):
         """Test that manufacturer is prepended when not in modem name."""
         mock_scraper = Mock()
@@ -218,7 +227,7 @@ class TestModemNameFormatting:
         assert result["title"] == "Technicolor XB7 (192.168.100.1)"
 
     @pytest.mark.asyncio
-    @patch('custom_components.cable_modem_monitor.config_flow.ModemScraper')
+    @patch("custom_components.cable_modem_monitor.config_flow.ModemScraper")
     async def test_title_without_manufacturer(self, mock_scraper_class, mock_hass, valid_input):
         """Test title when manufacturer is Unknown."""
         mock_scraper = Mock()
@@ -242,7 +251,7 @@ class TestModemNameFormatting:
         assert result["title"] == "Generic Modem (192.168.100.1)"
 
     @pytest.mark.asyncio
-    @patch('custom_components.cable_modem_monitor.config_flow.ModemScraper')
+    @patch("custom_components.cable_modem_monitor.config_flow.ModemScraper")
     async def test_title_detection_info_included(self, mock_scraper_class, mock_hass, valid_input):
         """Test that detection_info is included in result."""
         mock_scraper = Mock()
@@ -307,7 +316,7 @@ class TestOptionsFlow:
 
     def test_options_flow_has_init_step(self):
         """Test that options flow has init step."""
-        assert hasattr(OptionsFlowHandler, 'async_step_init')
+        assert hasattr(OptionsFlowHandler, "async_step_init")
 
     def test_options_flow_can_instantiate_without_arguments(self):
         """Test that OptionsFlowHandler can be instantiated without arguments.
@@ -318,3 +327,13 @@ class TestOptionsFlow:
         ***REMOVED*** This should not raise TypeError
         handler = OptionsFlowHandler()
         assert handler is not None
+
+
+class TestConfigFlowRegistration:
+    """Test the config flow registration."""
+
+    def test_handler_is_registered(self):
+        """Test that the config flow handler is registered."""
+        handler = config_entries.HANDLERS.get("cable_modem_monitor")
+        assert handler is not None
+        assert handler == CableModemMonitorConfigFlow

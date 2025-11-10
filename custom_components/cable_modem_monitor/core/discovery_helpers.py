@@ -1,9 +1,15 @@
 """Helper utilities for modem discovery and detection."""
+
+from __future__ import annotations
+
 import logging
 import time
+from collections.abc import Sequence
+
 import requests
-from typing import List, Type, Optional, Tuple, Sequence
 from bs4 import BeautifulSoup
+
+from ..parsers.base_parser import ModemParser
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -13,8 +19,11 @@ class ParserHeuristics:
 
     @staticmethod
     def get_likely_parsers(
-        base_url: str, parsers: Sequence[Type], session: requests.Session, verify_ssl: bool = False
-    ) -> List[Type]:
+        base_url: str,
+        parsers: Sequence[type[ModemParser]],
+        session: requests.Session,
+        verify_ssl: bool = False,
+    ) -> list[type[ModemParser]]:
         """
         Return parsers likely to match based on quick heuristic checks.
 
@@ -27,8 +36,8 @@ class ParserHeuristics:
         Returns:
             List of parser classes, sorted by likelihood (most likely first)
         """
-        likely_parsers = []
-        unlikely_parsers = []
+        likely_parsers: list[type[ModemParser]] = []
+        unlikely_parsers: list[type[ModemParser]] = []
 
         _LOGGER.debug("Running parser heuristics to narrow search space")
 
@@ -48,8 +57,11 @@ class ParserHeuristics:
 
                     ***REMOVED*** Strong indicators (in title or prominent text)
                     if manufacturer in title or manufacturer in html[:1000]:
-                        _LOGGER.debug("Heuristics: %s is LIKELY (found '%s' in title/header)",
-                                      parser_class.name, manufacturer)
+                        _LOGGER.debug(
+                            "Heuristics: %s is LIKELY (found '%s' in title/header)",
+                            parser_class.name,
+                            manufacturer,
+                        )
                         likely_parsers.append(parser_class)
                     ***REMOVED*** Weak indicators (anywhere in page) or model numbers
                     elif any(model.lower() in html for model in parser_class.models):
@@ -59,8 +71,7 @@ class ParserHeuristics:
                         unlikely_parsers.append(parser_class)
 
             else:
-                _LOGGER.debug("Heuristics: Root page returned status %s, skipping heuristics",
-                              response.status_code)
+                _LOGGER.debug("Heuristics: Root page returned status %s, skipping heuristics", response.status_code)
                 return list(parsers)  ***REMOVED*** Return all parsers if heuristics fail
 
         except (requests.RequestException, Exception) as e:
@@ -70,8 +81,11 @@ class ParserHeuristics:
         ***REMOVED*** If we found likely parsers, return those first, then the rest
         if likely_parsers:
             result = likely_parsers + unlikely_parsers
-            _LOGGER.info("Heuristics: Narrowed search to %s likely parsers (out of %s total)",
-                         len(likely_parsers), len(parsers))
+            _LOGGER.info(
+                "Heuristics: Narrowed search to %s likely parsers (out of %s total)",
+                len(likely_parsers),
+                len(parsers),
+            )
             return result
 
         ***REMOVED*** No heuristics matched, return all parsers
@@ -80,8 +94,8 @@ class ParserHeuristics:
 
     @staticmethod
     def check_anonymous_access(
-        base_url: str, parser_class: Type, session: requests.Session, verify_ssl: bool = False
-    ) -> Optional[Tuple[str, str]]:
+        base_url: str, parser_class: type[ModemParser], session: requests.Session, verify_ssl: bool = False
+    ) -> tuple[str, str] | None:
         """
         Check if parser has public (non-authenticated) URLs that can be accessed.
 
@@ -95,25 +109,22 @@ class ParserHeuristics:
             Tuple of (html, url) if successful, None otherwise
         """
         ***REMOVED*** Check if parser has URL patterns marked as not requiring auth
-        if not hasattr(parser_class, 'url_patterns'):
+        if not hasattr(parser_class, "url_patterns"):
             return None
 
         for pattern in parser_class.url_patterns:
             ***REMOVED*** Look for patterns explicitly marked as not requiring auth
-            if not pattern.get('auth_required', True):
+            if not pattern.get("auth_required", True):
                 url = f"{base_url}{pattern['path']}"
                 try:
-                    _LOGGER.debug("Trying anonymous access to %s for parser %s",
-                                  url, parser_class.name)
+                    _LOGGER.debug("Trying anonymous access to %s for parser %s", url, parser_class.name)
                     response = session.get(url, timeout=5, verify=verify_ssl)
 
                     if response.status_code == 200:
-                        _LOGGER.info("Anonymous access successful to %s (%s bytes)",
-                                     url, len(response.text))
+                        _LOGGER.info("Anonymous access successful to %s (%s bytes)", url, len(response.text))
                         return (response.text, url)
                     else:
-                        _LOGGER.debug("Anonymous access to %s returned status %s",
-                                      url, response.status_code)
+                        _LOGGER.debug("Anonymous access to %s returned status %s", url, response.status_code)
                 except requests.RequestException as e:
                     _LOGGER.debug("Anonymous access to %s failed: %s", url, type(e).__name__)
                     continue
@@ -134,7 +145,7 @@ class DiscoveryCircuitBreaker:
         """
         self.max_attempts = max_attempts
         self.timeout = timeout_seconds
-        self.start_time = None
+        self.start_time = 0.0
         self.attempts = 0
         self._broken = False
 
@@ -149,15 +160,13 @@ class DiscoveryCircuitBreaker:
             return False
 
         ***REMOVED*** Start timer on first attempt
-        if self.start_time is None:
-            self.start_time = time.time()
+        self.start_time = time.time()
 
         ***REMOVED*** Check max attempts
         if self.attempts >= self.max_attempts:
             _LOGGER.warning(
-                "Discovery circuit breaker: Max attempts reached (%s). "
-                "Stopping detection to prevent endless loops.",
-                self.max_attempts
+                "Discovery circuit breaker: Max attempts reached (%s). " "Stopping detection to prevent endless loops.",
+                self.max_attempts,
             )
             self._broken = True
             return False
@@ -166,16 +175,16 @@ class DiscoveryCircuitBreaker:
         elapsed = time.time() - self.start_time
         if elapsed > self.timeout:
             _LOGGER.warning(
-                "Discovery circuit breaker: Timeout reached (%.1fs > %ss). "
-                "Stopping detection.",
-                elapsed, self.timeout
+                "Discovery circuit breaker: Timeout reached (%.1fs > %ss). " "Stopping detection.",
+                elapsed,
+                self.timeout,
             )
             self._broken = True
             return False
 
         return True
 
-    def record_attempt(self, parser_name: Optional[str] = None):
+    def record_attempt(self, parser_name: str | None = None):
         """
         Record an authentication/detection attempt.
 
@@ -187,14 +196,10 @@ class DiscoveryCircuitBreaker:
 
         if parser_name:
             _LOGGER.debug(
-                "Discovery attempt %s/%s (%.1fs elapsed): %s",
-                self.attempts, self.max_attempts, elapsed, parser_name
+                "Discovery attempt %s/%s (%.1fs elapsed): %s", self.attempts, self.max_attempts, elapsed, parser_name
             )
         else:
-            _LOGGER.debug(
-                "Discovery attempt %s/%s (%.1fs elapsed)",
-                self.attempts, self.max_attempts, elapsed
-            )
+            _LOGGER.debug("Discovery attempt %s/%s (%.1fs elapsed)", self.attempts, self.max_attempts, elapsed)
 
     def is_broken(self) -> bool:
         """Check if circuit is broken."""
@@ -215,7 +220,7 @@ class DiscoveryCircuitBreaker:
 class DetectionError(Exception):
     """Base exception for detection errors with diagnostic information."""
 
-    def __init__(self, message: str, diagnostics: Optional[dict] = None):
+    def __init__(self, message: str, diagnostics: dict | None = None):
         """
         Initialize detection error.
 
@@ -230,7 +235,7 @@ class DetectionError(Exception):
         """Get user-friendly error message."""
         return str(self)
 
-    def get_troubleshooting_steps(self) -> List[str]:
+    def get_troubleshooting_steps(self) -> list[str]:
         """Get list of troubleshooting steps for user."""
         return []
 
@@ -238,7 +243,7 @@ class DetectionError(Exception):
 class ParserNotFoundError(DetectionError):
     """Raised when no parser can be detected for the modem."""
 
-    def __init__(self, modem_info: Optional[dict] = None, attempted_parsers: Optional[List[str]] = None):
+    def __init__(self, modem_info: dict | None = None, attempted_parsers: list[str] | None = None):
         """
         Initialize parser not found error.
 
@@ -266,7 +271,7 @@ class ParserNotFoundError(DetectionError):
         msg += "Your modem may not be supported yet."
         return msg
 
-    def get_troubleshooting_steps(self) -> List[str]:
+    def get_troubleshooting_steps(self) -> list[str]:
         """Get troubleshooting steps."""
         return [
             "Verify the modem IP address is correct",
@@ -280,7 +285,7 @@ class ParserNotFoundError(DetectionError):
 class AuthenticationError(DetectionError):
     """Raised when authentication fails."""
 
-    def get_troubleshooting_steps(self) -> List[str]:
+    def get_troubleshooting_steps(self) -> list[str]:
         """Get troubleshooting steps."""
         return [
             "Verify username and password are correct",
@@ -294,7 +299,7 @@ class AuthenticationError(DetectionError):
 class ConnectionError(DetectionError):
     """Raised when cannot connect to modem."""
 
-    def get_troubleshooting_steps(self) -> List[str]:
+    def get_troubleshooting_steps(self) -> list[str]:
         """Get troubleshooting steps."""
         return [
             "Verify the modem IP address is correct (try 192.168.100.1 or 192.168.0.1)",
@@ -324,7 +329,7 @@ class CircuitBreakerError(DetectionError):
             f"This usually means the modem is responding slowly or authentication is failing repeatedly."
         )
 
-    def get_troubleshooting_steps(self) -> List[str]:
+    def get_troubleshooting_steps(self) -> list[str]:
         """Get troubleshooting steps."""
         return [
             "Check if modem is responsive (try accessing web interface manually)",

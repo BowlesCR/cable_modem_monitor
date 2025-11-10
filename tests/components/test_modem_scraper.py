@@ -1,10 +1,12 @@
 """Tests for Cable Modem Monitor scraper."""
+
+from __future__ import annotations
+
 import pytest
-from bs4 import BeautifulSoup
-from unittest.mock import Mock
 
 from custom_components.cable_modem_monitor.core.modem_scraper import ModemScraper
 from custom_components.cable_modem_monitor.parsers.base_parser import ModemParser
+
 
 class TestModemScraper:
     """Test the ModemScraper class."""
@@ -39,10 +41,18 @@ class TestModemScraper:
 
         scraper = ModemScraper("192.168.100.1", parser=[mock_parser_class])
         ***REMOVED*** _fetch_data now returns (html, url, parser_class)
-        mocker.patch.object(scraper, '_fetch_data', return_value=("<html></html>", "http://192.168.100.1", mock_parser_class))
+        mocker.patch.object(
+            scraper, "_fetch_data", return_value=("<html></html>", "http://192.168.100.1", mock_parser_class)
+        )
 
         ***REMOVED*** _login is called internally after parser is detected, so it should use the mock_parser_instance's login
-        mocker.patch.object(scraper, '_login', side_effect=lambda: mock_parser_instance.login(scraper.session, scraper.base_url, scraper.username, scraper.password))
+        mocker.patch.object(
+            scraper,
+            "_login",
+            side_effect=lambda: mock_parser_instance.login(
+                scraper.session, scraper.base_url, scraper.username, scraper.password
+            ),
+        )
 
         data = scraper.get_modem_data()
 
@@ -50,19 +60,22 @@ class TestModemScraper:
         mock_parser_class.can_parse.assert_called_once()
 
         ***REMOVED*** Assert that the parser instance's login method was called
-        mock_parser_instance.login.assert_called_once_with(scraper.session, scraper.base_url, scraper.username, scraper.password)
+        mock_parser_instance.login.assert_called_once_with(
+            scraper.session, scraper.base_url, scraper.username, scraper.password
+        )
         mock_parser_instance.parse.assert_called_once()
 
     def test_fetch_data_url_ordering(self, mocker):
         """Test that the scraper tries URLs in the correct order when all fail."""
         ***REMOVED*** Import parsers to get URL patterns
         from custom_components.cable_modem_monitor.parsers import get_parsers
+
         parsers = get_parsers()
 
         scraper = ModemScraper("192.168.100.1", parser=parsers)
 
         ***REMOVED*** Mock the session.get to track which URLs are tried
-        mock_get = mocker.patch.object(scraper.session, 'get')
+        mock_get = mocker.patch.object(scraper.session, "get")
         mock_response = mocker.Mock()
         mock_response.status_code = 404  ***REMOVED*** Force it to try all URLs
         mock_get.return_value = mock_response
@@ -77,24 +90,30 @@ class TestModemScraper:
         ***REMOVED*** Just verify some URLs were tried (exact order may vary based on parsers)
         assert len(calls) > 0
         ***REMOVED*** Check that at least one known URL was tried
-        assert any("/MotoConnection.asp" in call or "/network_setup.jst" in call or "/cmSignalData.htm" in call for call in calls)
+        assert any(
+            "/MotoConnection.asp" in call or "/network_setup.jst" in call or "/cmSignalData.htm" in call
+            for call in calls
+        )
 
     def test_fetch_data_stops_on_first_success(self, mocker):
         """Test that the scraper stops trying URLs after first successful response."""
         ***REMOVED*** Import parsers to get URL patterns
         from custom_components.cable_modem_monitor.parsers import get_parsers
+
         parsers = get_parsers()
 
         scraper = ModemScraper("192.168.100.1", parser=parsers)
 
         ***REMOVED*** Mock successful response on first URL
-        mock_get = mocker.patch.object(scraper.session, 'get')
+        mock_get = mocker.patch.object(scraper.session, "get")
         mock_response = mocker.Mock()
         mock_response.status_code = 200
         mock_response.text = "<html><body>Modem Data</body></html>"
         mock_get.return_value = mock_response
 
-        html, url, parser_class = scraper._fetch_data()
+        result = scraper._fetch_data()
+        assert result is not None, "Expected _fetch_data to return a tuple, got None"
+        html, url, parser_class = result
 
         ***REMOVED*** Should succeed on first try
         assert html == "<html><body>Modem Data</body></html>"
@@ -107,6 +126,7 @@ class TestModemScraper:
     def test_restart_modem_https_to_http_fallback(self, mocker):
         """Test that restart_modem falls back from HTTPS to HTTP when connection refused."""
         import requests
+
         from custom_components.cable_modem_monitor.parsers.motorola.generic import MotorolaGenericParser
 
         ***REMOVED*** Create scraper with HTTPS URL
@@ -114,10 +134,11 @@ class TestModemScraper:
 
         ***REMOVED*** Mock session.get to simulate HTTPS failure, HTTP success
         call_count = [0]
+
         def mock_get(url, **kwargs):
             call_count[0] += 1
             response = mocker.Mock()
-            if url.startswith('https://'):
+            if url.startswith("https://"):
                 ***REMOVED*** HTTPS fails with connection refused
                 raise requests.exceptions.ConnectionError(
                     "Failed to establish a new connection: [Errno 111] Connection refused"
@@ -128,17 +149,17 @@ class TestModemScraper:
                 response.text = "<html><title>Motorola Cable Modem</title></html>"
                 return response
 
-        mocker.patch.object(scraper.session, 'get', side_effect=mock_get)
+        mocker.patch.object(scraper.session, "get", side_effect=mock_get)
 
         ***REMOVED*** Mock parser instance
         mock_parser_instance = mocker.Mock()
         mock_parser_instance.restart = mocker.Mock(return_value=True)
 
         ***REMOVED*** Mock _detect_parser to return our mock parser instance
-        mocker.patch.object(scraper, '_detect_parser', return_value=mock_parser_instance)
+        mocker.patch.object(scraper, "_detect_parser", return_value=mock_parser_instance)
 
         ***REMOVED*** Mock login to return success
-        mocker.patch.object(scraper, '_login', return_value=True)
+        mocker.patch.object(scraper, "_login", return_value=True)
 
         ***REMOVED*** Call restart_modem
         result = scraper.restart_modem()
@@ -161,17 +182,21 @@ class TestModemScraper:
         mock_parser_instance.restart = mocker.Mock(return_value=True)
 
         ***REMOVED*** Mock _fetch_data to return success
-        mocker.patch.object(scraper, '_fetch_data', return_value=(
-            "<html><title>Motorola Cable Modem</title></html>",
-            "http://192.168.100.1/MotoConnection.asp",
-            MotorolaGenericParser
-        ))
+        mocker.patch.object(
+            scraper,
+            "_fetch_data",
+            return_value=(
+                "<html><title>Motorola Cable Modem</title></html>",
+                "http://192.168.100.1/MotoConnection.asp",
+                MotorolaGenericParser,
+            ),
+        )
 
         ***REMOVED*** Mock _detect_parser to return our mock parser instance
-        mocker.patch.object(scraper, '_detect_parser', return_value=mock_parser_instance)
+        mocker.patch.object(scraper, "_detect_parser", return_value=mock_parser_instance)
 
         ***REMOVED*** Mock login
-        mock_login = mocker.patch.object(scraper, '_login', return_value=True)
+        mock_login = mocker.patch.object(scraper, "_login", return_value=True)
 
         ***REMOVED*** Call restart_modem
         result = scraper.restart_modem()
@@ -195,17 +220,21 @@ class TestModemScraper:
         mock_parser_instance.restart = mocker.Mock(return_value=True)
 
         ***REMOVED*** Mock _fetch_data to return success
-        mocker.patch.object(scraper, '_fetch_data', return_value=(
-            "<html><title>Motorola Cable Modem</title></html>",
-            "http://192.168.100.1/MotoConnection.asp",
-            MotorolaGenericParser
-        ))
+        mocker.patch.object(
+            scraper,
+            "_fetch_data",
+            return_value=(
+                "<html><title>Motorola Cable Modem</title></html>",
+                "http://192.168.100.1/MotoConnection.asp",
+                MotorolaGenericParser,
+            ),
+        )
 
         ***REMOVED*** Mock _detect_parser to return our mock parser instance
-        mocker.patch.object(scraper, '_detect_parser', return_value=mock_parser_instance)
+        mocker.patch.object(scraper, "_detect_parser", return_value=mock_parser_instance)
 
         ***REMOVED*** Mock login
-        mock_login = mocker.patch.object(scraper, '_login')
+        mock_login = mocker.patch.object(scraper, "_login")
 
         ***REMOVED*** Call restart_modem
         result = scraper.restart_modem()
@@ -228,17 +257,21 @@ class TestModemScraper:
         mock_parser_instance.restart = mocker.Mock(return_value=True)
 
         ***REMOVED*** Mock _fetch_data to return success
-        mocker.patch.object(scraper, '_fetch_data', return_value=(
-            "<html><title>Motorola Cable Modem</title></html>",
-            "http://192.168.100.1/MotoConnection.asp",
-            MotorolaGenericParser
-        ))
+        mocker.patch.object(
+            scraper,
+            "_fetch_data",
+            return_value=(
+                "<html><title>Motorola Cable Modem</title></html>",
+                "http://192.168.100.1/MotoConnection.asp",
+                MotorolaGenericParser,
+            ),
+        )
 
         ***REMOVED*** Mock _detect_parser to return our mock parser instance
-        mocker.patch.object(scraper, '_detect_parser', return_value=mock_parser_instance)
+        mocker.patch.object(scraper, "_detect_parser", return_value=mock_parser_instance)
 
         ***REMOVED*** Mock login to fail (returns tuple)
-        mocker.patch.object(scraper, '_login', return_value=(False, None))
+        mocker.patch.object(scraper, "_login", return_value=(False, None))
 
         ***REMOVED*** Call restart_modem
         result = scraper.restart_modem()
@@ -255,7 +288,7 @@ class TestModemScraper:
         scraper = ModemScraper("http://192.168.100.1", parser=[MotorolaGenericParser])
 
         ***REMOVED*** Mock _fetch_data to return None (connection failed)
-        mocker.patch.object(scraper, '_fetch_data', return_value=None)
+        mocker.patch.object(scraper, "_fetch_data", return_value=None)
 
         ***REMOVED*** Call restart_modem
         result = scraper.restart_modem()
@@ -268,12 +301,12 @@ class TestModemScraper:
         scraper = ModemScraper("http://192.168.100.1", parser=[])
 
         ***REMOVED*** Mock _fetch_data to return success but no parser
-        mocker.patch.object(scraper, '_fetch_data', return_value=(
-            "<html><title>Unknown Modem</title></html>",
-            "http://192.168.100.1",
-            None
-        ))
-        mocker.patch.object(scraper, '_detect_parser', return_value=None)
+        mocker.patch.object(
+            scraper,
+            "_fetch_data",
+            return_value=("<html><title>Unknown Modem</title></html>", "http://192.168.100.1", None),
+        )
+        mocker.patch.object(scraper, "_detect_parser", return_value=None)
 
         ***REMOVED*** Call restart_modem
         result = scraper.restart_modem()
@@ -284,19 +317,19 @@ class TestModemScraper:
     def test_restart_modem_fails_when_parser_lacks_restart_method(self, mocker):
         """Test that restart_modem fails when parser doesn't support restart."""
         ***REMOVED*** Create a mock parser without restart method
-        mock_parser_instance = mocker.Mock(spec=['parse', 'login'])  ***REMOVED*** No 'restart'
+        mock_parser_instance = mocker.Mock(spec=["parse", "login"])  ***REMOVED*** No 'restart'
         mock_parser_class = mocker.Mock()
         mock_parser_class.return_value = mock_parser_instance
 
         scraper = ModemScraper("http://192.168.100.1", parser=[mock_parser_class])
 
         ***REMOVED*** Mock _fetch_data to return success
-        mocker.patch.object(scraper, '_fetch_data', return_value=(
-            "<html><title>Test Modem</title></html>",
-            "http://192.168.100.1",
-            mock_parser_class
-        ))
-        mocker.patch.object(scraper, '_detect_parser', return_value=mock_parser_instance)
+        mocker.patch.object(
+            scraper,
+            "_fetch_data",
+            return_value=("<html><title>Test Modem</title></html>", "http://192.168.100.1", mock_parser_class),
+        )
+        mocker.patch.object(scraper, "_detect_parser", return_value=mock_parser_instance)
 
         ***REMOVED*** Call restart_modem
         result = scraper.restart_modem()
@@ -326,13 +359,13 @@ class TestModemScraper:
             return (
                 "<html><title>Motorola Cable Modem</title></html>",
                 "http://192.168.100.1/MotoConnection.asp",
-                MotorolaGenericParser
+                MotorolaGenericParser,
             )
 
-        mock_fetch = mocker.patch.object(scraper, '_fetch_data', side_effect=mock_fetch_with_update)
+        mock_fetch = mocker.patch.object(scraper, "_fetch_data", side_effect=mock_fetch_with_update)
 
         ***REMOVED*** Mock login
-        mocker.patch.object(scraper, '_login', return_value=True)
+        mocker.patch.object(scraper, "_login", return_value=True)
 
         ***REMOVED*** Call restart_modem
         result = scraper.restart_modem()

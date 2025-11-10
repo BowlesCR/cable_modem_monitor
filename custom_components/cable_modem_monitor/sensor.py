@@ -1,8 +1,9 @@
 """Sensor platform for Cable Modem Monitor."""
+
 from __future__ import annotations
 
-from datetime import datetime, timedelta
 import logging
+from datetime import datetime, timedelta
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -35,19 +36,21 @@ async def async_setup_entry(
     """Set up Cable Modem Monitor sensors."""
     _LOGGER.info("async_setup_entry called for %s", entry.entry_id)
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    _LOGGER.debug("Coordinator data has %s upstream channels", len(coordinator.data.get('cable_modem_upstream', [])))
+    _LOGGER.debug("Coordinator data has %s upstream channels", len(coordinator.data.get("cable_modem_upstream", [])))
 
-    entities = []
+    entities: list[SensorEntity] = []
 
     ***REMOVED*** Add connection status sensor
     entities.append(ModemConnectionStatusSensor(coordinator, entry))
 
     ***REMOVED*** Add health monitoring sensors
-    entities.extend([
-        ModemHealthStatusSensor(coordinator, entry),
-        ModemPingLatencySensor(coordinator, entry),
-        ModemHttpLatencySensor(coordinator, entry),
-    ])
+    entities.extend(
+        [
+            ModemHealthStatusSensor(coordinator, entry),
+            ModemPingLatencySensor(coordinator, entry),
+            ModemHttpLatencySensor(coordinator, entry),
+        ]
+    )
 
     ***REMOVED*** Add total error sensors
     entities.append(ModemTotalCorrectedSensor(coordinator, entry))
@@ -77,17 +80,13 @@ async def async_setup_entry(
             )
             ***REMOVED*** Only add error sensors if the data includes them
             if "corrected" in channel:
-                entities.append(
-                    ModemDownstreamCorrectedSensor(coordinator, entry, channel_num)
-                )
+                entities.append(ModemDownstreamCorrectedSensor(coordinator, entry, channel_num))
             if "uncorrected" in channel:
-                entities.append(
-                    ModemDownstreamUncorrectedSensor(coordinator, entry, channel_num)
-                )
+                entities.append(ModemDownstreamUncorrectedSensor(coordinator, entry, channel_num))
 
     ***REMOVED*** Add per-channel upstream sensors
     if coordinator.data.get("cable_modem_upstream"):
-        _LOGGER.debug("Creating entities for %s upstream channels", len(coordinator.data['cable_modem_upstream']))
+        _LOGGER.debug("Creating entities for %s upstream channels", len(coordinator.data["cable_modem_upstream"]))
         for idx, channel in enumerate(coordinator.data["cable_modem_upstream"]):
             ***REMOVED*** v2.0+ parsers return 'channel_id', older versions used 'channel'
             ***REMOVED*** Fallback to index+1 if neither exists (shouldn't happen in practice)
@@ -98,7 +97,7 @@ async def async_setup_entry(
 
     ***REMOVED*** Add LAN stats sensors
     if coordinator.data.get("cable_modem_lan_stats"):
-        for interface, stats in coordinator.data["cable_modem_lan_stats"].items():
+        for interface, _stats in coordinator.data["cable_modem_lan_stats"].items():
             entities.extend(
                 [
                     ModemLanReceivedBytesSensor(coordinator, entry, interface),
@@ -145,10 +144,10 @@ class ModemSensorBase(CoordinatorEntity, SensorEntity):
         ***REMOVED*** This allows sensors to retain last known values during modem reboots
         ***REMOVED*** Only mark unavailable if we truly can't reach the modem
         status = self.coordinator.data.get("cable_modem_connection_status", "unknown")
-        return (
-            self.coordinator.last_update_success
-            and status in ("online", "offline")  ***REMOVED*** Available for both online and offline (just rebooting)
-        )
+        return self.coordinator.last_update_success and status in (
+            "online",
+            "offline",
+        )  ***REMOVED*** Available for both online and offline (just rebooting)
 
 
 class ModemConnectionStatusSensor(ModemSensorBase):
@@ -164,12 +163,12 @@ class ModemConnectionStatusSensor(ModemSensorBase):
     @property
     def available(self) -> bool:
         """Connection status sensor is always available to show offline state."""
-        return self.coordinator.last_update_success
+        return bool(self.coordinator.last_update_success)
 
     @property
     def native_value(self) -> str:
         """Return the state of the sensor."""
-        return self.coordinator.data.get("cable_modem_connection_status", "unknown")
+        return str(self.coordinator.data.get("cable_modem_connection_status", "unknown"))
 
 
 class ModemTotalCorrectedSensor(ModemSensorBase):
@@ -186,7 +185,7 @@ class ModemTotalCorrectedSensor(ModemSensorBase):
     @property
     def native_value(self) -> int:
         """Return the state of the sensor."""
-        return self.coordinator.data.get("cable_modem_total_corrected", 0)
+        return int(self.coordinator.data.get("cable_modem_total_corrected", 0))
 
 
 class ModemTotalUncorrectedSensor(ModemSensorBase):
@@ -203,15 +202,13 @@ class ModemTotalUncorrectedSensor(ModemSensorBase):
     @property
     def native_value(self) -> int:
         """Return the state of the sensor."""
-        return self.coordinator.data.get("cable_modem_total_uncorrected", 0)
+        return int(self.coordinator.data.get("cable_modem_total_uncorrected", 0))
 
 
 class ModemDownstreamPowerSensor(ModemSensorBase):
     """Sensor for downstream channel power."""
 
-    def __init__(
-        self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int
-    ) -> None:
+    def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
@@ -229,16 +226,14 @@ class ModemDownstreamPowerSensor(ModemSensorBase):
             ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
-                return ch.get("power")
+                return float(ch.get("power"))
         return None
 
 
 class ModemDownstreamSNRSensor(ModemSensorBase):
     """Sensor for downstream channel SNR."""
 
-    def __init__(
-        self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int
-    ) -> None:
+    def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
@@ -256,16 +251,14 @@ class ModemDownstreamSNRSensor(ModemSensorBase):
             ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
-                return ch.get("snr")
+                return float(ch.get("snr"))
         return None
 
 
 class ModemDownstreamFrequencySensor(ModemSensorBase):
     """Sensor for downstream channel frequency."""
 
-    def __init__(
-        self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int
-    ) -> None:
+    def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
@@ -284,16 +277,14 @@ class ModemDownstreamFrequencySensor(ModemSensorBase):
             ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
-                return ch.get("frequency")
+                return int(ch.get("frequency"))
         return None
 
 
 class ModemDownstreamCorrectedSensor(ModemSensorBase):
     """Sensor for downstream channel corrected errors."""
 
-    def __init__(
-        self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int
-    ) -> None:
+    def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
@@ -310,16 +301,14 @@ class ModemDownstreamCorrectedSensor(ModemSensorBase):
             ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
-                return ch.get("corrected")
+                return int(ch.get("corrected"))
         return None
 
 
 class ModemDownstreamUncorrectedSensor(ModemSensorBase):
     """Sensor for downstream channel uncorrected errors."""
 
-    def __init__(
-        self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int
-    ) -> None:
+    def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
@@ -336,16 +325,14 @@ class ModemDownstreamUncorrectedSensor(ModemSensorBase):
             ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
-                return ch.get("uncorrected")
+                return int(ch.get("uncorrected"))
         return None
 
 
 class ModemUpstreamPowerSensor(ModemSensorBase):
     """Sensor for upstream channel power."""
 
-    def __init__(
-        self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int
-    ) -> None:
+    def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
@@ -363,16 +350,14 @@ class ModemUpstreamPowerSensor(ModemSensorBase):
             ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
-                return ch.get("power")
+                return float(ch.get("power"))
         return None
 
 
 class ModemUpstreamFrequencySensor(ModemSensorBase):
     """Sensor for upstream channel frequency."""
 
-    def __init__(
-        self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int
-    ) -> None:
+    def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, channel: int) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._channel = channel
@@ -391,7 +376,7 @@ class ModemUpstreamFrequencySensor(ModemSensorBase):
             ***REMOVED*** Fallback to 0 if neither exists (will not match, returns None)
             ch_num = int(ch.get("channel_id", ch.get("channel", 0)))
             if ch_num == self._channel:
-                return ch.get("frequency")
+                return int(ch.get("frequency"))
         return None
 
 
@@ -409,7 +394,7 @@ class ModemDownstreamChannelCountSensor(ModemSensorBase):
     @property
     def native_value(self) -> int:
         """Return the state of the sensor."""
-        return self.coordinator.data.get("cable_modem_downstream_channel_count", 0)
+        return int(self.coordinator.data.get("cable_modem_downstream_channel_count", 0))
 
 
 class ModemUpstreamChannelCountSensor(ModemSensorBase):
@@ -426,7 +411,7 @@ class ModemUpstreamChannelCountSensor(ModemSensorBase):
     @property
     def native_value(self) -> int:
         """Return the state of the sensor."""
-        return self.coordinator.data.get("cable_modem_upstream_channel_count", 0)
+        return int(self.coordinator.data.get("cable_modem_upstream_channel_count", 0))
 
 
 class ModemSoftwareVersionSensor(ModemSensorBase):
@@ -442,7 +427,7 @@ class ModemSoftwareVersionSensor(ModemSensorBase):
     @property
     def native_value(self) -> str:
         """Return the state of the sensor."""
-        return self.coordinator.data.get("cable_modem_software_version", "Unknown")
+        return str(self.coordinator.data.get("cable_modem_software_version", "Unknown"))
 
 
 class ModemSystemUptimeSensor(ModemSensorBase):
@@ -458,7 +443,7 @@ class ModemSystemUptimeSensor(ModemSensorBase):
     @property
     def native_value(self) -> str:
         """Return the state of the sensor."""
-        return self.coordinator.data.get("cable_modem_system_uptime", "Unknown")
+        return str(self.coordinator.data.get("cable_modem_system_uptime", "Unknown"))
 
 
 class ModemLastBootTimeSensor(ModemSensorBase):
@@ -486,14 +471,16 @@ class ModemLastBootTimeSensor(ModemSensorBase):
 
         ***REMOVED*** Calculate last boot time: current time - uptime
         now = dt_util.now()
-        last_boot = now - timedelta(seconds=uptime_seconds)
+        last_boot: datetime | None = now - timedelta(seconds=uptime_seconds)
         return last_boot
 
 
 class ModemLanStatsSensor(ModemSensorBase):
     """Base class for LAN statistics sensors."""
 
-    def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, interface: str, sensor_type: str) -> None:
+    def __init__(
+        self, coordinator: DataUpdateCoordinator, entry: ConfigEntry, interface: str, sensor_type: str
+    ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)
         self._interface = interface
@@ -507,7 +494,7 @@ class ModemLanStatsSensor(ModemSensorBase):
         """Return the state of the sensor."""
         lan_stats = self.coordinator.data.get("cable_modem_lan_stats", {})
         if self._interface in lan_stats:
-            return lan_stats[self._interface].get(self._sensor_type)
+            return int(lan_stats[self._interface].get(self._sensor_type))
         return None
 
 
@@ -592,7 +579,7 @@ class ModemHealthStatusSensor(ModemSensorBase):
     @property
     def native_value(self) -> str:
         """Return the health status."""
-        return self.coordinator.data.get("health_status", "unknown")
+        return str(self.coordinator.data.get("health_status", "unknown"))
 
     @property
     def extra_state_attributes(self) -> dict:
@@ -621,7 +608,10 @@ class ModemPingLatencySensor(ModemSensorBase):
     @property
     def native_value(self) -> float | None:
         """Return the ping latency in milliseconds."""
-        return self.coordinator.data.get("ping_latency_ms")
+        ping_latency = self.coordinator.data.get("ping_latency_ms")
+        if ping_latency is None:
+            return None
+        return float(ping_latency)
 
 
 class ModemHttpLatencySensor(ModemSensorBase):
@@ -640,4 +630,7 @@ class ModemHttpLatencySensor(ModemSensorBase):
     @property
     def native_value(self) -> float | None:
         """Return the HTTP latency in milliseconds."""
-        return self.coordinator.data.get("http_latency_ms")
+        http_latency = self.coordinator.data.get("http_latency_ms")
+        if http_latency is None:
+            return None
+        return float(http_latency)
