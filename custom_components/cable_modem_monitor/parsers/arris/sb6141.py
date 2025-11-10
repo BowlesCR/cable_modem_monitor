@@ -47,7 +47,15 @@ class ArrisSB6141Parser(ModemParser):
     @classmethod
     def can_parse(cls, soup: BeautifulSoup, url: str, html: str) -> bool:
         """Detect if this is an ARRIS SB6141 modem."""
-        # Look for "Startup Procedure" text which is unique to ARRIS
+        # Check for SB6141 model number first (most specific)
+        if soup.find(string=lambda s: s and "SB6141" in s):
+            return True
+
+        # Exclude other known Arris models to avoid conflicts
+        if soup.find(string=lambda s: s and "SB6190" in s):
+            return False
+
+        # Look for "Startup Procedure" text which is common to ARRIS modems
         if soup.find(string="Startup Procedure"):
             return True
 
