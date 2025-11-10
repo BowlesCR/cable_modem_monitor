@@ -7,7 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***REMOVED******REMOVED*** [Unreleased]
 
+***REMOVED******REMOVED*** [3.0.0] - 2025-11-10
+
 ***REMOVED******REMOVED******REMOVED*** Added
+- **Enhanced Discovery System** - Automatic modem detection with HNAP and HTTP-based discovery
+  - HNAP protocol builder for Arris/Motorola modems
+  - Discovery helpers for automatic modem identification
+  - Detection notifications in config flow
+- **Flexible Authentication Framework** - Support for multiple authentication strategies
+  - Basic HTTP Authentication
+  - Digest Authentication
+  - HNAP Authentication (Arris/Motorola)
+  - Strategy pattern for extensible auth types
+- **MB8611 Parser** - Complete support for Motorola MB8611 cable modem
+  - HNAP-based data extraction
+  - 33 comprehensive tests for MB8611 functionality
 - **Arris SB6190 Support** - Added parser for Arris SB6190 cable modem
   - Supports both transposed and non-transposed table formats
   - Parses downstream/upstream channels and error statistics
@@ -29,49 +43,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Management script (docker-dev.sh) with start/stop/logs/clean commands
   - Comprehensive documentation (DEVELOPER_QUICKSTART.md, .devcontainer/README.md)
   - Makefile targets for Docker operations
-
-***REMOVED******REMOVED******REMOVED*** Changed
-- **UI Improvements** - Fixed modem model selection dialog labels
-  - "Modem Model" label now displays correctly in settings dialog
-  - Added proper translations for modem_choice field
-- **Documentation Enhancements**
-  - Added "Modem Model Selection" section to TROUBLESHOOTING.md
-  - Documented how to view auto-detection logs (3 different methods)
-  - Enhanced bug report template with better log collection instructions
-  - Added modem selection dropdown to bug reports
-  - Updated README.md with modem model configuration option
-  - Updated CONTRIBUTING.md with Docker workflow instructions
-
-***REMOVED******REMOVED******REMOVED*** Fixed
-- **Config Flow Handler Registration** - Fixed "Flow handler not found" error
-  - Added @config_entries.HANDLERS.register(DOMAIN) decorator
-  - Renamed ConfigFlow to CableModemMonitorConfigFlow for clarity
-- **Parser Detection** - Improved Arris SB6141 parser to avoid conflicts with SB6190
-  - Added model-specific detection checks
-  - Explicitly exclude SB6190 to prevent false positives
-
-***REMOVED******REMOVED******REMOVED*** Documentation
-- **HTML Capture Feature Specification** - Complete design document for Phase 4 implementation
-  - Two-phase approach: button entity + failed setup capture
-  - Heavy sanitization strategy for user privacy
-  - Enables community contributions for new modem support
-  - 507-line specification in docs/feature_requests/html_capture_diagnostics.md
-
-***REMOVED******REMOVED*** [3.0.0] - 2025-11-07
-
-***REMOVED******REMOVED******REMOVED*** Added
-- **Enhanced Discovery System** - Automatic modem detection with HNAP and HTTP-based discovery
-  - HNAP protocol builder for Arris/Motorola modems
-  - Discovery helpers for automatic modem identification
-  - Detection notifications in config flow
-- **Flexible Authentication Framework** - Support for multiple authentication strategies
-  - Basic HTTP Authentication
-  - Digest Authentication
-  - HNAP Authentication (Arris/Motorola)
-  - Strategy pattern for extensible auth types
-- **MB8611 Parser** - Complete support for Motorola MB8611 cable modem
-  - HNAP-based data extraction
-  - 33 comprehensive tests for MB8611 functionality
 - **Comprehensive Test Coverage** - Added extensive test suites
   - 33 new tests for MB8611 parser
   - Coordinator improvements tests
@@ -84,14 +55,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enhanced button component with better reload handling
   - Improved platform unload error handling during reload
   - Better channel synchronization detection
+- **UI Improvements** - Fixed modem model selection dialog labels
+  - "Modem Model" label now displays correctly in settings dialog
+  - Added proper translations for modem_choice field
 - **Code Quality Improvements** - Type checking and linting enhancements
   - Fixed all Pylance type checking errors
   - Fixed all Flake8 linting errors
   - Added .flake8 configuration (120-character line length)
   - Added pyproject.toml configuration
   - Removed unused imports and fixed PEP 8 formatting
+  - Modern type hints with `from __future__ import annotations`
+  - Enforced line length limits (removed E501 exception)
 
 ***REMOVED******REMOVED******REMOVED*** Fixed
+- **Config Flow Handler Registration** - Fixed "Flow handler not found" error
+  - Added @config_entries.HANDLERS.register(DOMAIN) decorator
+  - Renamed ConfigFlow to CableModemMonitorConfigFlow for clarity
+- **Parser Detection** - Improved Arris SB6141 parser to avoid conflicts with SB6190
+  - Added model-specific detection checks
+  - Explicitly exclude SB6190 to prevent false positives
 - **Type Safety** - Resolved all type annotation errors
   - Fixed dictionary access type checking errors
   - Corrected type variance issues
@@ -107,11 +89,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Phase 1, 2, 3 Implementation Summary** - Comprehensive documentation of architecture phases
 - **Session Improvements Summary** - Detailed session management enhancements
 - **Test Coverage Summary** - Overview of test additions and coverage
+- **Developer Documentation** - Enhanced contribution and setup guides
+  - Added "Modem Model Selection" section to TROUBLESHOOTING.md
+  - Documented how to view auto-detection logs (3 different methods)
+  - Enhanced bug report template with better log collection instructions
+  - Added modem selection dropdown to bug reports
+  - Updated README.md with modem model configuration option
+  - Updated CONTRIBUTING.md with Docker workflow instructions
 - **Feature Request Organization** - Organized feature requests into dedicated directory
   - Smart polling sensor template
   - Netgear CM600 parser request
   - Phase 4 JSON configs proposal
   - Phase 5 community platform proposal
+  - HTML Capture Feature Specification (507 lines)
 
 ***REMOVED******REMOVED*** [2.6.1] - 2025-11-06
 
