@@ -7,6 +7,97 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***REMOVED******REMOVED*** [Unreleased]
 
+***REMOVED******REMOVED*** [3.1.0] - 2025-11-11
+
+***REMOVED******REMOVED******REMOVED*** Added
+- **Update Modem Data Button** - Manual refresh button for on-demand data updates
+  - `button.cable_modem_update_data` - Triggers immediate coordinator refresh
+  - Useful for verifying changes after modem configuration or troubleshooting
+  - Complements automatic polling with user-controlled updates
+  - Shows notification when update is triggered
+- **HTML Capture for Diagnostics** - Capture raw modem HTML for support requests
+  - `button.cable_modem_capture_html` - Captures raw HTML responses from modem
+  - Stores captured data in memory for 5 minutes with automatic expiry
+  - Automatically sanitizes sensitive data (MACs, serials, passwords, private IPs)
+  - Included in diagnostics download when available
+  - Makes requesting support for unsupported modems much easier
+  - Notification shows capture status and reminds user to download diagnostics
+  - Diagnostic button category - grouped with other diagnostic tools
+
+***REMOVED******REMOVED******REMOVED*** Fixed
+- **MB8611 Static Parser Missing URL Patterns** - Fixed "No URL patterns available to try" error (Fixes ***REMOVED***6)
+  - Added missing `url_patterns` attribute to `MotorolaMB8611StaticParser` class
+  - Parser now properly specifies `/MotoStatusConnection.html` as the data source URL
+  - Without this attribute, the modem scraper had no URLs to fetch, causing immediate failure
+  - Users can now successfully use the "Motorola MB8611 (Static)" parser option
+- **SSL Certificate Verification Issue** - Fixed HTTPS connection failures for modems with self-signed certificates (Fixes ***REMOVED***6)
+  - Added explicit `verify=session.verify` parameter to all HTTP requests in authentication.py (6 locations)
+  - Added explicit `verify=session.verify` parameter to all HTTP requests in hnap_builder.py (2 locations)
+  - While `session.verify=False` was already configured, some requests library versions may not reliably inherit this setting
+  - Ensures SSL verification setting is explicitly passed to every HTTP request for consistent behavior
+  - Resolves HTTPS connection failures for Motorola MB8611 and other modems using self-signed certificates
+- **Diagnostics Log Retrieval** - Improved log collection for diagnostics downloads
+  - Added primary method: retrieve logs from Home Assistant's system_log integration (in-memory circular buffer)
+  - Falls back to reading home-assistant.log file if system_log unavailable
+  - Fixes issue where diagnostics showed "Log file not available" on Docker/supervised installations
+  - Fixed 'tuple' object has no attribute 'name' error by correctly parsing system_log tuple format
+  - Discovered system_log only stores errors/warnings, not INFO/DEBUG logs (by design)
+  - Updated to correctly parse tuple format: (logger_name, (file, line_num), exception_or_none)
+  - Better error messages explain that full logs require HA logs UI, journalctl, or container logs
+  - Will capture cable_modem_monitor errors when they occur for troubleshooting
+- **Version Logging on Startup** - Integration now logs version number when it starts
+  - Example: "Cable Modem Monitor version 3.1.0 is starting"
+  - Helps identify which version is loaded when troubleshooting issues
+  - Makes it easy to confirm integration loaded properly from diagnostic logs
+
+***REMOVED******REMOVED******REMOVED*** Performance
+- **Parser Loading Optimization** - Dramatically faster integration startup and modem restarts
+  - When user selects specific modem: load only that parser (8x faster than scanning all parsers)
+  - Auto-detection mode: scan filesystem once, cache results for subsequent loads (instant)
+  - Restart button: uses same optimization as startup
+  - Added `get_parser_by_name()` function for direct parser loading without discovery
+  - Added global parser cache to avoid repeated filesystem scans
+  - Parser discovery now only runs during config flow and first auto-detection
+- **Protocol Discovery Optimization** - Skips HTTP/HTTPS protocol fallback when working URL is cached
+  - First setup: tries HTTPS→HTTP fallback, saves working URL with protocol
+  - Subsequent startups: extracts protocol from cached URL, uses it directly
+  - Eliminates failed connection attempts on HTTP-only modems (faster, cleaner logs)
+  - Config changes automatically re-detect protocol when user clicks Submit
+  - Particularly beneficial for older HTTP-only modems that previously logged HTTPS errors
+
+***REMOVED******REMOVED******REMOVED*** Removed
+- **v1.x to v2.0 Entity Migration Code** - Removed automatic entity ID migration from legacy versions
+  - Deleted 127 lines of migration code that ran on every startup
+  - Removed: `async_migrate_entity_ids()`, `_migrate_config_data()`, and helper functions
+  - Users still on v1.x can perform clean reinstall (see UPGRADING.md)
+  - Reduces startup overhead and code complexity
+  - Migration was for v2.0.0 (released Oct 24, 2025) - no longer needed at v3.1.0
+
+***REMOVED******REMOVED******REMOVED*** Testing
+- **Comprehensive Test Coverage for v3.1.0 Features** - Added 20+ new test cases
+  - UpdateModemDataButton tests (initialization, press, notification)
+  - CaptureHtmlButton tests (success, failure, exception handling)
+  - HTML sanitization tests (13 test cases covering MACs, serials, IPs, passwords, tokens)
+  - Diagnostics integration tests (capture inclusion, expiry, sanitization verification)
+  - Updated button setup test to verify all 5 buttons
+- **Fixed 5 Failing Tests in test_version_and_startup.py** - All 283 tests now pass
+  - Fixed HomeAssistant mock setup with proper attributes (data, config_entries, services)
+  - Made async_add_executor_job properly execute functions and return awaitable results
+  - Added async mocks for coordinator.async_config_entry_first_refresh
+  - Patched _update_device_registry to avoid deep HA registry initialization
+  - Added ConfigEntryState.SETUP_IN_PROGRESS to mock config entries
+  - All version logging and parser selection optimization tests now pass
+
+***REMOVED******REMOVED******REMOVED*** Technical Details
+- **Files Modified**: `mb8611_static.py`, `authentication.py`, `hnap_builder.py`, `diagnostics.py`, `__init__.py`, `button.py`, `parsers/__init__.py`, `modem_scraper.py`, `const.py`, `manifest.json`
+- **HTML Capture Implementation**: Added `capture_raw` parameter to `get_modem_data()` and `_fetch_data()` methods, stores raw HTML in coordinator data with 5-minute TTL, sanitization removes MACs/serials/passwords/IPs while preserving signal data for debugging
+- **Test Coverage**: Added `test_diagnostics.py` (28 tests) and expanded `test_button.py` (+6 tests, 669 lines total)
+- **Root Cause**: The Static parser implementation was incomplete - it had parsing logic but no URL configuration
+- **Impact**: Fixes both the "no URL patterns" error and HTTPS authentication issues for MB8611 and similar modems
+- **Diagnostics**: Now works reliably across all Home Assistant installation types (Docker, supervised, core, OS)
+- **Performance**: 8x faster startup when specific modem selected, instant startup for cached auto-detection
+- **Compatibility**: No breaking changes, fully backward compatible with existing configurations
+
 ***REMOVED******REMOVED*** [3.0.0] - 2025-11-10
 
 ***REMOVED******REMOVED******REMOVED*** Added

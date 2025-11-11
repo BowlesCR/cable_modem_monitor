@@ -42,7 +42,75 @@ def _sanitize_log_message(message: str) -> str:
     return message
 
 
-def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[str, Any]]:
+def _sanitize_html(html: str) -> str:
+    """Sanitize HTML to remove sensitive information.
+
+    Args:
+        html: Raw HTML content from modem
+
+    Returns:
+        Sanitized HTML with sensitive data redacted
+    """
+    ***REMOVED*** 1. MAC Addresses
+    html = re.sub(r"\b([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}\b", "XX:XX:XX:XX:XX:XX", html)
+
+    ***REMOVED*** 2. Serial Numbers (various formats)
+    html = re.sub(
+        r"(Serial\s*Number|SN|S/N)\s*[:\s=]*(?:<[^>]*>)*\s*([a-zA-Z0-9\-]{5,})",
+        r"\1: ***REDACTED***",
+        html,
+        flags=re.IGNORECASE,
+    )
+
+    ***REMOVED*** 3. Account/Subscriber IDs
+    html = re.sub(
+        r"(Account|Subscriber|Customer|Device)\s*(ID|Number)\s*[:\s=]+\S+",
+        r"\1 \2: ***REDACTED***",
+        html,
+        flags=re.IGNORECASE,
+    )
+
+    ***REMOVED*** 4. Private IPs (except common modem IPs like 192.168.100.1, 192.168.0.1, etc.)
+    html = re.sub(
+        r"\b(?!192\.168\.100\.1\b)(?!192\.168\.0\.1\b)(?!192\.168\.1\.1\b)"
+        r"(?:10\.|172\.(?:1[6-9]|2[0-9]|3[01])\.|192\.168\.)\d{1,3}\.\d{1,3}\b",
+        "***PRIVATE_IP***",
+        html,
+    )
+
+    ***REMOVED*** 5. WiFi Passwords/Passphrases
+    html = re.sub(
+        r'(password|passphrase|psk|key|wpa[0-9]*key)\s*[=:]\s*["\']?([^"\'<>\s]+)',
+        r"\1=***REDACTED***",
+        html,
+        flags=re.IGNORECASE,
+    )
+
+    ***REMOVED*** 6. HTML Forms with password fields - redact values
+    html = re.sub(
+        r'(<input[^>]*type=["\']password["\'][^>]*value=["\'])([^"\']+)(["\'])',
+        r"\1***REDACTED***\3",
+        html,
+        flags=re.IGNORECASE,
+    )
+
+    ***REMOVED*** 7. Remove session tokens/cookies from HTML
+    ***REMOVED*** Handle session=, token=, auth=
+    html = re.sub(
+        r'(session|token|auth)\s*[=:]\s*["\']?([^"\'<>\s]{20,})', r"\1=***REDACTED***", html, flags=re.IGNORECASE
+    )
+    ***REMOVED*** Handle <meta name="csrf-token" content="...">
+    html = re.sub(
+        r'(<meta[^>]*name=["\']csrf-token["\'][^>]*content=["\'])([^"\']+)(["\'])',
+        r"\1***REDACTED***\3",
+        html,
+        flags=re.IGNORECASE,
+    )
+
+    return html
+
+
+def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[str, Any]]:  ***REMOVED*** noqa: C901
     """Get recent log records for cable_modem_monitor.
 
     Args:
@@ -56,7 +124,102 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
 
     recent_logs = []
 
-    ***REMOVED*** Try to read from Home Assistant's log file
+    ***REMOVED*** Method 1: Try to get logs from system_log integration (if available)
+    try:
+        if "system_log" in hass.data:
+            system_log = hass.data["system_log"]
+            _LOGGER.debug("system_log found in hass.data, type: %s", type(system_log))
+
+            ***REMOVED*** system_log exposes a DomainData object with a handler attribute
+            if hasattr(system_log, "handler"):
+                handler = system_log.handler
+                _LOGGER.debug("system_log.handler found, type: %s", type(handler))
+
+                if hasattr(handler, "records"):
+                    _LOGGER.debug("handler.records found, record count: %d", len(handler.records))
+                    for record in handler.records:
+                        ***REMOVED*** Filter for cable_modem_monitor logs
+                        if "cable_modem_monitor" in record.name:
+                            sanitized_message = _sanitize_log_message(record.getMessage())
+                            recent_logs.append(
+                                {
+                                    "timestamp": record.created,
+                                    "level": record.levelname,
+                                    "logger": record.name.replace("custom_components.cable_modem_monitor.", ""),
+                                    "message": sanitized_message,
+                                }
+                            )
+
+                    ***REMOVED*** If we found logs via system_log, return them
+                    if recent_logs:
+                        _LOGGER.debug("Retrieved %d logs from system_log handler", len(recent_logs))
+                        return recent_logs[-max_records:]
+                else:
+                    _LOGGER.debug("handler.records not found, attributes: %s", dir(handler))
+            ***REMOVED*** Also try direct records access (older HA versions)
+            elif hasattr(system_log, "records"):
+                _LOGGER.debug("system_log.records found (direct), record count: %d", len(system_log.records))
+
+                ***REMOVED*** system_log only stores errors/warnings, not INFO/DEBUG logs
+                ***REMOVED*** Record format is: (logger_name, (file, line_num), exception_or_none)
+                for record in system_log.records:
+                    try:
+                        if isinstance(record, tuple) and len(record) >= 3:
+                            logger_name, location_info, exception_info = record[0], record[1], record[2]
+
+                            ***REMOVED*** Filter for cable_modem_monitor logs
+                            if "cable_modem_monitor" in str(logger_name):
+                                ***REMOVED*** Extract file and line number if available
+                                file_info = ""
+                                if isinstance(location_info, tuple) and len(location_info) >= 2:
+                                    file_info = f" at {location_info[0]}:{location_info[1]}"
+
+                                ***REMOVED*** Format the message
+                                message = f"Error{file_info}"
+                                if exception_info:
+                                    message += f": {str(exception_info)[:200]}"
+
+                                sanitized_message = _sanitize_log_message(message)
+                                recent_logs.append(
+                                    {
+                                        "timestamp": 0,  ***REMOVED*** system_log doesn't store timestamp in this format
+                                        "level": "ERROR",  ***REMOVED*** system_log only stores errors/warnings
+                                        "logger": str(logger_name).replace(
+                                            "custom_components.cable_modem_monitor.", ""
+                                        ),
+                                        "message": sanitized_message,
+                                    }
+                                )
+                        elif hasattr(record, "name"):
+                            ***REMOVED*** LogRecord object format (fallback for older versions)
+                            if "cable_modem_monitor" in record.name:
+                                sanitized_message = _sanitize_log_message(record.getMessage())
+                                recent_logs.append(
+                                    {
+                                        "timestamp": record.created,
+                                        "level": record.levelname,
+                                        "logger": record.name.replace("custom_components.cable_modem_monitor.", ""),
+                                        "message": sanitized_message,
+                                    }
+                                )
+                    except (IndexError, AttributeError) as e:
+                        _LOGGER.debug("Error parsing log record: %s", e)
+                        continue
+
+                ***REMOVED*** If we found logs via system_log, return them
+                if recent_logs:
+                    _LOGGER.debug("Retrieved %d error logs from system_log (direct)", len(recent_logs))
+                    return recent_logs[-max_records:]
+                else:
+                    _LOGGER.debug("No cable_modem_monitor errors found in system_log (only errors/warnings are stored)")
+            else:
+                _LOGGER.debug("system_log found but no records/handler attribute, attributes: %s", dir(system_log))
+        else:
+            _LOGGER.debug("system_log not found in hass.data, available keys: %s", list(hass.data.keys())[:10])
+    except Exception as err:
+        _LOGGER.warning("Could not retrieve logs from system_log: %s", err, exc_info=True)
+
+    ***REMOVED*** Method 2: Try to read from Home Assistant's log file
     try:
         ***REMOVED*** Home Assistant stores logs in config/home-assistant.log
         log_file = Path(hass.config.path("home-assistant.log"))
@@ -68,7 +231,12 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
                     "timestamp": 0,
                     "level": "INFO",
                     "logger": "diagnostics",
-                    "message": "Log file not available. Check Home Assistant logs for full history.",
+                    "message": (
+                        "No logs available in diagnostics. "
+                        "Note: system_log only captures errors/warnings, not INFO/DEBUG logs. "
+                        "For full logs: 1) Check HA logs UI, 2) Use 'journalctl -u home-assistant' (supervised), "
+                        "or 3) Check container logs (Docker/dev environments)."
+                    ),
                 }
             ]
 
@@ -117,6 +285,7 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
 
         ***REMOVED*** If we found logs, return the most recent ones
         if recent_logs:
+            _LOGGER.debug("Retrieved %d logs from log file", len(recent_logs))
             return recent_logs[-max_records:]
 
     except Exception as err:
@@ -128,7 +297,12 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
             "timestamp": 0,
             "level": "INFO",
             "logger": "diagnostics",
-            "message": "Unable to retrieve recent logs. Check Home Assistant logs for full history.",
+            "message": (
+                "No logs available in diagnostics. "
+                "Note: system_log only captures errors/warnings, not INFO/DEBUG logs. "
+                "For full logs: 1) Check HA logs UI, 2) Use 'journalctl -u home-assistant' (supervised), "
+                "or 3) Check container logs (Docker/dev environments)."
+            ),
         }
     ]
 
@@ -221,5 +395,43 @@ async def async_get_config_entry_diagnostics(hass: HomeAssistant, entry: ConfigE
         ***REMOVED*** If we can't get logs, add a note but don't fail diagnostics
         _LOGGER.warning("Failed to retrieve recent logs for diagnostics: %s", err)
         diagnostics["recent_logs"] = {"note": "Unable to retrieve recent logs", "error": str(err)}
+
+    ***REMOVED*** Add raw HTML capture if available and not expired
+    if coordinator.data and "_raw_html_capture" in coordinator.data:
+        capture = coordinator.data["_raw_html_capture"]
+
+        ***REMOVED*** Check if capture has expired (5 minute TTL)
+        from datetime import datetime
+
+        try:
+            expires_at = datetime.fromisoformat(capture.get("ttl_expires", ""))
+            if datetime.now() < expires_at:
+                ***REMOVED*** Sanitize HTML in each captured URL
+                sanitized_urls = []
+                for url_data in capture.get("urls", []):
+                    sanitized_url = url_data.copy()
+                    if "html" in sanitized_url:
+                        sanitized_url["html"] = _sanitize_html(sanitized_url["html"])
+                        ***REMOVED*** Add size info for sanitized HTML
+                        sanitized_url["sanitized_size_bytes"] = len(sanitized_url["html"])
+                    sanitized_urls.append(sanitized_url)
+
+                diagnostics["raw_html_capture"] = {
+                    "captured_at": capture.get("timestamp"),
+                    "expires_at": capture.get("ttl_expires"),
+                    "trigger": capture.get("trigger", "unknown"),
+                    "note": (
+                        "Raw HTML has been sanitized to remove sensitive information "
+                        "(MACs, serials, passwords, private IPs)"
+                    ),
+                    "url_count": len(sanitized_urls),
+                    "total_size_kb": sum(u.get("size_bytes", 0) for u in sanitized_urls) / 1024,
+                    "urls": sanitized_urls,
+                }
+                _LOGGER.info("Including raw HTML capture in diagnostics (%d URLs)", len(sanitized_urls))
+            else:
+                _LOGGER.debug("Raw HTML capture has expired, not including in diagnostics")
+        except (ValueError, TypeError) as e:
+            _LOGGER.warning("Error checking HTML capture expiry: %s", e)
 
     return diagnostics

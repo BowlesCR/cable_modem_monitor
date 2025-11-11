@@ -25,6 +25,7 @@ from .const import (
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
     VERIFY_SSL,
+    VERSION,
 )
 from .core.modem_scraper import ModemScraper
 
@@ -41,133 +42,6 @@ SERVICE_CLEAR_HISTORY_SCHEMA = vol.Schema(
 
 SERVICE_CLEANUP_ENTITIES = "cleanup_entities"
 SERVICE_CLEANUP_ENTITIES_SCHEMA = vol.Schema({})
-
-
-def _get_migration_patterns() -> dict[str, str]:
-    """Get mapping of old entity ID patterns to new ones."""
-    ***REMOVED*** Mapping of old entity ID patterns to new ones
-    ***REMOVED*** This handles migration from pre-v2.0 versions to v2.0 entity naming
-    ***REMOVED*** Simplified patterns - we only support migrating from no-prefix to cable_modem_ prefix
-    return {
-        ***REMOVED*** Note: Custom/IP prefixes were never released, so we only handle no-prefix entities
-        ***REMOVED*** Downstream channels (full names)
-        r"^sensor\.downstream_ch_(\d+)_(power|snr|frequency|corrected|uncorrected)$": (
-            "sensor.cable_modem_downstream_ch_{}_{}"
-        ),
-        ***REMOVED*** Downstream channels (short names - ds_ch)
-        r"^sensor\.ds_ch_(\d+)_(power|snr|frequency|corrected|uncorrected)$": "sensor.cable_modem_ds_ch_{}_{}",
-        ***REMOVED*** Upstream channels (full names)
-        r"^sensor\.upstream_ch_(\d+)_(power|frequency)$": "sensor.cable_modem_upstream_ch_{}_{}",
-        ***REMOVED*** Upstream channels (short names - us_ch)
-        r"^sensor\.us_ch_(\d+)_(power|frequency)$": "sensor.cable_modem_us_ch_{}_{}",
-        ***REMOVED*** Summary sensors (match with or without _errors suffix)
-        r"^sensor\.total_(corrected|uncorrected)(?:_errors)?$": "sensor.cable_modem_total_{}_errors",
-        ***REMOVED*** Channel counts
-        r"^sensor\.downstream_channel_count$": "sensor.cable_modem_downstream_channel_count",
-        r"^sensor\.upstream_channel_count$": "sensor.cable_modem_upstream_channel_count",
-        r"^sensor\.ds_channel_count$": "sensor.cable_modem_ds_channel_count",
-        r"^sensor\.us_channel_count$": "sensor.cable_modem_us_channel_count",
-        ***REMOVED*** Status and info (with and without modem_ prefix)
-        r"^sensor\.modem_connection_status$": "sensor.cable_modem_connection_status",
-        r"^sensor\.connection_status$": "sensor.cable_modem_connection_status",
-        r"^sensor\.software_version$": "sensor.cable_modem_software_version",
-        r"^sensor\.system_uptime$": "sensor.cable_modem_system_uptime",
-        r"^sensor\.last_boot_time$": "sensor.cable_modem_last_boot_time",
-        ***REMOVED*** Button
-        r"^button\.restart_modem$": "button.cable_modem_restart_modem",
-        r"^button\.cleanup_entities$": "button.cable_modem_cleanup_entities",
-    }
-
-
-def _should_migrate_entity(entity_entry, entry: ConfigEntry) -> bool:
-    """Check if an entity should be migrated."""
-    if entity_entry.platform != DOMAIN:
-        return False
-
-    if entity_entry.config_entry_id != entry.entry_id:
-        return False
-
-    ***REMOVED*** Skip if already has cable_modem_ prefix
-    return "cable_modem_" not in entity_entry.entity_id
-
-
-def _find_new_entity_id(old_entity_id: str, patterns: dict[str, str]) -> str | None:
-    """Find new entity ID for an old entity ID using migration patterns."""
-    import re
-
-    for pattern, template in patterns.items():
-        match = re.match(pattern, old_entity_id)
-        if match:
-            groups = match.groups()
-            if "{}" in template:
-                return template.format(*groups)
-            return template
-
-    return None
-
-
-def _migrate_single_entity(entity_reg, entity_entry, old_entity_id: str, new_entity_id: str) -> bool:
-    """Migrate a single entity to a new entity ID."""
-    try:
-        ***REMOVED*** Check if target entity ID already exists (from another integration)
-        existing_entity = entity_reg.async_get(new_entity_id)
-        if existing_entity and existing_entity.platform != DOMAIN:
-            _LOGGER.warning(
-                "Cannot migrate %s -> %s: "
-                "Target entity ID already exists (platform: %s). "
-                "Skipping migration for this entity.",
-                old_entity_id,
-                new_entity_id,
-                existing_entity.platform,
-            )
-            return False
-
-        entity_reg.async_update_entity(entity_entry.entity_id, new_entity_id=new_entity_id)
-        _LOGGER.info("Migrated %s -> %s", old_entity_id, new_entity_id)
-        return True
-    except Exception as e:
-        _LOGGER.error("Failed to migrate %s: %s", old_entity_id, e)
-        return False
-
-
-async def async_migrate_entity_ids(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Migrate entity IDs to include cable_modem_ prefix for v2.0."""
-    from homeassistant.helpers import entity_registry as er
-
-    entity_reg = er.async_get(hass)
-    patterns = _get_migration_patterns()
-    migrations = []
-
-    ***REMOVED*** Find all entities belonging to this integration
-    for entity_entry in entity_reg.entities.values():
-        if not _should_migrate_entity(entity_entry, entry):
-            continue
-
-        old_entity_id = entity_entry.entity_id
-        new_entity_id = _find_new_entity_id(old_entity_id, patterns)
-
-        if new_entity_id:
-            migrations.append((entity_entry, old_entity_id, new_entity_id))
-
-    ***REMOVED*** Perform migrations
-    if migrations:
-        _LOGGER.info("Migrating %d entity IDs to v2.0 naming scheme", len(migrations))
-        for entity_entry, old_entity_id, new_entity_id in migrations:
-            _migrate_single_entity(entity_reg, entity_entry, old_entity_id, new_entity_id)
-
-
-def _migrate_config_data(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Remove deprecated config keys from entry data."""
-    new_data = dict(entry.data)
-    old_config_keys = ["entity_prefix", "custom_prefix"]
-    removed_keys = [key for key in old_config_keys if key in new_data]
-
-    for key in removed_keys:
-        new_data.pop(key)
-
-    if removed_keys:
-        hass.config_entries.async_update_entry(entry, data=new_data)
-        _LOGGER.info("Removed deprecated config keys: %s", removed_keys)
 
 
 def _select_parser(parsers: list, modem_choice: str):
@@ -433,9 +307,7 @@ def _create_cleanup_entities_handler(hass: HomeAssistant):
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Cable Modem Monitor from a config entry."""
-    ***REMOVED*** Migrate config data and entity IDs
-    _migrate_config_data(hass, entry)
-    await async_migrate_entity_ids(hass, entry)
+    _LOGGER.info("Cable Modem Monitor version %s is starting", VERSION)
 
     ***REMOVED*** Extract configuration
     host = entry.data[CONF_HOST]
@@ -444,14 +316,31 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     scan_interval = entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
     modem_choice = entry.data.get(CONF_MODEM_CHOICE, "auto")
 
-    ***REMOVED*** Get parsers and select appropriate one
-    from .parsers import get_parsers
+    ***REMOVED*** Optimization: Only do full parser discovery if needed
+    if modem_choice and modem_choice != "auto":
+        ***REMOVED*** User selected specific parser - load only that one (fast path)
+        from .parsers import get_parser_by_name
 
-    parsers = await hass.async_add_executor_job(get_parsers)
-    selected_parser = _select_parser(parsers, modem_choice)
+        parser_class = await hass.async_add_executor_job(get_parser_by_name, modem_choice)
+        if parser_class:
+            _LOGGER.info("Loaded specific parser: %s (skipped full discovery)", modem_choice)
+            selected_parser = parser_class()
+            parser_name_hint = None
+        else:
+            ***REMOVED*** Fallback to auto if parser not found
+            _LOGGER.warning("Parser '%s' not found, falling back to auto discovery", modem_choice)
+            from .parsers import get_parsers
 
-    ***REMOVED*** Determine parser_name hint for auto mode
-    parser_name_hint = None if selected_parser != parsers else entry.data.get(CONF_PARSER_NAME)
+            parsers = await hass.async_add_executor_job(get_parsers)
+            selected_parser = parsers
+            parser_name_hint = entry.data.get(CONF_PARSER_NAME)
+    else:
+        ***REMOVED*** Auto mode - need all parsers for discovery
+        from .parsers import get_parsers
+
+        parsers = await hass.async_add_executor_job(get_parsers)
+        selected_parser = parsers
+        parser_name_hint = entry.data.get(CONF_PARSER_NAME)
 
     ***REMOVED*** Create scraper
     scraper = ModemScraper(

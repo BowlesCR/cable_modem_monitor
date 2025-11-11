@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, cast
 
 import requests
@@ -19,6 +20,39 @@ if TYPE_CHECKING:
     from ..parsers.base_parser import ModemParser
 
 _LOGGER = logging.getLogger(__name__)
+
+
+class CapturingSession(requests.Session):
+    """Session wrapper that captures responses for diagnostics."""
+
+    def __init__(self, capture_callback: Callable[[requests.Response, str], None]):
+        """Initialize capturing session.
+
+        Args:
+            capture_callback: Function to call with each response
+        """
+        super().__init__()
+        self._capture_callback = capture_callback
+
+    def request(self, method: str, url: str, **kwargs) -> requests.Response:  ***REMOVED*** type: ignore[override]
+        """Override request to capture responses."""
+        response = super().request(method, url, **kwargs)
+
+        ***REMOVED*** Determine description based on URL
+        description = "Parser fetch"
+        if "login" in url.lower() or "auth" in url.lower():
+            description = "Login/Auth page"
+        elif "status" in url.lower():
+            description = "Status page"
+        elif "software" in url.lower() or "version" in url.lower():
+            description = "Software info page"
+        elif "log" in url.lower() or "event" in url.lower():
+            description = "Event log page"
+        elif "home" in url.lower():
+            description = "Home page"
+
+        self._capture_callback(response, description)
+        return response
 
 
 class ModemScraper:
@@ -50,6 +84,11 @@ class ModemScraper:
         ***REMOVED*** Support both plain IP addresses and full URLs (http:// or https://)
         if host.startswith(("http://", "https://")):
             self.base_url = host.rstrip("/")
+        elif cached_url and (cached_url.startswith("http://") or cached_url.startswith("https://")):
+            ***REMOVED*** Optimization: Use protocol from cached working URL (skip protocol discovery)
+            protocol = "https" if cached_url.startswith("https://") else "http"
+            self.base_url = f"{protocol}://{host}"
+            _LOGGER.debug("Using cached protocol %s from working URL: %s", protocol, cached_url)
         else:
             ***REMOVED*** Try HTTPS first (MB8611 and newer modems), fallback to HTTP
             self.base_url = f"https://{host}"
@@ -93,6 +132,40 @@ class ModemScraper:
         self.cached_url = cached_url
         self.parser_name = parser_name  ***REMOVED*** For Tier 2: load cached parser by name
         self.last_successful_url = ""
+        self._captured_urls: list[dict[str, Any]] = []  ***REMOVED*** For HTML capture feature
+        self._capture_enabled: bool = False  ***REMOVED*** Flag to enable HTML capture
+
+    def _capture_response(self, response: requests.Response, description: str = "") -> None:
+        """Capture HTTP response for diagnostics.
+
+        Args:
+            response: The HTTP response to capture
+            description: Optional description of what this request was for
+        """
+        if not self._capture_enabled:
+            return
+
+        try:
+            ***REMOVED*** Get parser name if available
+            parser_name = self.parser.name if self.parser else "unknown"
+
+            self._captured_urls.append(
+                {
+                    "url": response.url,
+                    "method": response.request.method if response.request else "GET",
+                    "status_code": response.status_code,
+                    "content_type": response.headers.get("Content-Type", "unknown"),
+                    "size_bytes": len(response.text) if hasattr(response, "text") else 0,
+                    "html": response.text if hasattr(response, "text") else "",
+                    "parser": parser_name,
+                    "description": description,
+                }
+            )
+            _LOGGER.debug("Captured response: %s (%d bytes) - %s", response.url, len(response.text), description)
+        except Exception as e:
+            _LOGGER.warning(
+                "Failed to capture response from %s: %s", response.url if hasattr(response, "url") else "unknown", e
+            )
 
     def _login(self) -> bool | tuple[bool, str | None]:
         """
@@ -225,10 +298,13 @@ class ModemScraper:
         ***REMOVED*** Tier 3: Auto-detection mode
         return self._get_tier3_urls()
 
-    def _fetch_data(self) -> tuple[str, str, type[ModemParser]] | None:
+    def _fetch_data(self, capture_raw: bool = False) -> tuple[str, str, type[ModemParser]] | None:
         """
         Fetch data from the modem using parser-defined URL patterns.
         Automatically tries both HTTPS and HTTP protocols.
+
+        Args:
+            capture_raw: If True, capture raw HTML responses for diagnostics
 
         Returns:
             tuple of (html, successful_url, parser_class) or None if failed
@@ -274,6 +350,10 @@ class ModemScraper:
                             parser_name,
                         )
                         self.last_successful_url = url
+
+                        ***REMOVED*** Capture raw HTML if requested
+                        self._capture_response(response, "Initial connection page")
+
                         ***REMOVED*** Update base_url to the working protocol
                         _LOGGER.debug("About to update base_url from %s to %s", self.base_url, current_base_url)
                         self.base_url = current_base_url
@@ -442,10 +522,30 @@ class ModemScraper:
         data = self.parser.parse(soup, session=self.session, base_url=self.base_url)
         return data
 
-    def get_modem_data(self) -> dict:
-        """Fetch and parse modem data."""
+    def get_modem_data(self, capture_raw: bool = False) -> dict:
+        """Fetch and parse modem data.
+
+        Args:
+            capture_raw: If True, capture raw HTML responses for diagnostics
+
+        Returns:
+            Dictionary with modem data and optionally raw HTML captures
+        """
+        ***REMOVED*** Clear previous captures and enable capture mode
+        self._captured_urls = []
+        self._capture_enabled = capture_raw
+
+        ***REMOVED*** Replace session with capturing session if capture is enabled
+        original_session = None
+        if capture_raw:
+            original_session = self.session
+            self.session = CapturingSession(self._capture_response)
+            ***REMOVED*** Copy SSL verification settings to capturing session
+            self.session.verify = original_session.verify
+            _LOGGER.debug("Enabled HTML capture mode with CapturingSession")
+
         try:
-            fetched_data = self._fetch_data()
+            fetched_data = self._fetch_data(capture_raw=capture_raw)
             if not fetched_data:
                 return self._create_error_response("unreachable")
 
@@ -463,11 +563,30 @@ class ModemScraper:
 
             ***REMOVED*** Parse data and build response
             data = self._parse_data(html)
-            return self._build_response(data)
+            response = self._build_response(data)
+
+            ***REMOVED*** Include captured HTML if requested
+            if capture_raw and self._captured_urls:
+                from datetime import datetime, timedelta
+
+                response["_raw_html_capture"] = {
+                    "timestamp": datetime.now().isoformat(),
+                    "trigger": "manual",
+                    "ttl_expires": (datetime.now() + timedelta(minutes=5)).isoformat(),
+                    "urls": self._captured_urls,
+                }
+                _LOGGER.info("Captured %d HTML pages for diagnostics", len(self._captured_urls))
+
+            return response
 
         except Exception as e:
             _LOGGER.error("Error fetching modem data: %s", e)
             return self._create_error_response("unreachable")
+        finally:
+            ***REMOVED*** Restore original session if we replaced it
+            if original_session is not None:
+                self.session = original_session
+                _LOGGER.debug("Restored original session")
 
     def _create_error_response(self, status: str) -> dict:
         """Create error response dictionary."""
