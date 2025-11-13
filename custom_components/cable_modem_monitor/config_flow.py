@@ -150,7 +150,13 @@ async def _connect_to_modem(hass: HomeAssistant, scraper) -> dict[str, Any]:
         _LOGGER.error("Error connecting to modem: %s", err)
         raise CannotConnectError from err
 
-    if modem_data.get("cable_modem_connection_status") in ["offline", "unreachable"]:
+    # Allow installation for various status levels:
+    # - "online": Normal operation with channel data
+    # - "limited": Fallback mode (unsupported modem)
+    # - "parser_issue": Known parser but no channel data (bridge mode, parser bug, etc.)
+    # Only reject truly offline/unreachable modems
+    status = modem_data.get("cable_modem_connection_status")
+    if status in ["offline", "unreachable"]:
         raise CannotConnectError
 
     return modem_data
@@ -206,15 +212,29 @@ class CableModemMonitorConfigFlow(config_entries.ConfigFlow):
         """Get the options flow for this handler."""
         return OptionsFlowHandler()
 
-    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> config_entries.ConfigFlowResult:
+    async def async_step_user(  # noqa: C901  # noqa: C901
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.ConfigFlowResult:
         """Handle the initial step."""
         errors: dict[str, str] = {}
 
         # Get parsers for the dropdown
         parsers = await self.hass.async_add_executor_job(get_parsers)
-        # Sort by manufacturer (alphabetical), then by priority (descending), then by name (alphabetical)
-        # The name tie-breaker ensures consistent ordering when parsers have the same priority
-        sorted_parsers = sorted(parsers, key=lambda p: (p.manufacturer, -p.priority, p.name))
+
+        # Sort by manufacturer (alphabetical), then by name (alphabetical)
+        # Generic parsers appear last within their manufacturer group
+        # Unknown/Fallback parsers appear at the very end
+        def sort_key(p):
+            # Unknown manufacturer goes last
+            if p.manufacturer == "Unknown":
+                return ("ZZZZ", "ZZZZ")  # Sort to end
+            # Within each manufacturer, Generic parsers go last
+            if "Generic" in p.name:
+                return (p.manufacturer, "ZZZZ")  # Generic last in manufacturer
+            # Regular parsers sort by manufacturer then name
+            return (p.manufacturer, p.name)
+
+        sorted_parsers = sorted(parsers, key=sort_key)
         modem_choices = ["auto"] + [p.name for p in sorted_parsers]
 
         if user_input is not None:
@@ -263,12 +283,18 @@ class CableModemMonitorConfigFlow(config_entries.ConfigFlow):
 
         from homeassistant.helpers import selector
 
+        # Preserve user input when showing form again after error
+        default_host = user_input.get(CONF_HOST, "192.168.100.1") if user_input else "192.168.100.1"
+        default_username = user_input.get(CONF_USERNAME, "") if user_input else ""
+        default_password = user_input.get(CONF_PASSWORD, "") if user_input else ""
+        default_modem = user_input.get(CONF_MODEM_CHOICE, "auto") if user_input else "auto"
+
         data_schema = vol.Schema(
             {
-                vol.Required(CONF_HOST, default="192.168.100.1"): str,
-                vol.Optional(CONF_USERNAME, default=""): str,
-                vol.Optional(CONF_PASSWORD, default=""): str,
-                vol.Required(CONF_MODEM_CHOICE, default="auto"): selector.SelectSelector(
+                vol.Required(CONF_HOST, default=default_host): str,
+                vol.Optional(CONF_USERNAME, default=default_username): str,
+                vol.Optional(CONF_PASSWORD, default=default_password): str,
+                vol.Required(CONF_MODEM_CHOICE, default=default_modem): selector.SelectSelector(
                     selector.SelectSelectorConfig(
                         options=modem_choices,
                         mode=selector.SelectSelectorMode.DROPDOWN,
@@ -333,15 +359,29 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         else:
             return f"Configured for {detected_modem}"
 
-    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> config_entries.ConfigFlowResult:
+    async def async_step_init(  # noqa: C901  # noqa: C901
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.ConfigFlowResult:
         """Manage the options."""
         errors = {}
 
         # Get parsers for the dropdown
         parsers = await self.hass.async_add_executor_job(get_parsers)
-        # Sort by manufacturer (alphabetical), then by priority (descending), then by name (alphabetical)
-        # The name tie-breaker ensures consistent ordering when parsers have the same priority
-        sorted_parsers = sorted(parsers, key=lambda p: (p.manufacturer, -p.priority, p.name))
+
+        # Sort by manufacturer (alphabetical), then by name (alphabetical)
+        # Generic parsers appear last within their manufacturer group
+        # Unknown/Fallback parsers appear at the very end
+        def sort_key(p):
+            # Unknown manufacturer goes last
+            if p.manufacturer == "Unknown":
+                return ("ZZZZ", "ZZZZ")  # Sort to end
+            # Within each manufacturer, Generic parsers go last
+            if "Generic" in p.name:
+                return (p.manufacturer, "ZZZZ")  # Generic last in manufacturer
+            # Regular parsers sort by manufacturer then name
+            return (p.manufacturer, p.name)
+
+        sorted_parsers = sorted(parsers, key=sort_key)
         modem_choices = ["auto"] + [p.name for p in sorted_parsers]
 
         if user_input is not None:
