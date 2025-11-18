@@ -1,28 +1,50 @@
 ***REMOVED*** Development dependencies for Cable Modem Monitor
+***REMOVED*** Used for local development, testing, linting, type checking, and security scanning
 
-***REMOVED*** Testing framework
-pytest>=7.4.3
-pytest-cov>=4.1.0
-pytest-asyncio>=0.21.1
-pytest-homeassistant-custom-component>=0.13.0
+***REMOVED*** -------------------------------
+***REMOVED*** 🏠 Home Assistant (install FIRST to resolve dependencies)
+***REMOVED*** -------------------------------
+homeassistant>=2025.1.0                     ***REMOVED*** Home Assistant core (for integration testing)
 
-***REMOVED*** Code quality tools
-ruff>=0.8.2
-black>=23.11.0
-pre-commit>=3.6.0
-***REMOVED*** Legacy linters (kept for compatibility, but ruff is preferred)
-pylint>=3.0.0
+***REMOVED*** -------------------------------
+***REMOVED*** ⚙️ Runtime dependencies (mirrors pyproject.toml)
+***REMOVED*** -------------------------------
+beautifulsoup4>=4.12.0,<5.0                 ***REMOVED*** HTML parsing
+lxml>=4.9.0,<5.0                            ***REMOVED*** XML/HTML parser backend
+requests>=2.31.0                            ***REMOVED*** HTTP client (HA determines version)
+aiohttp>=3.9.0                              ***REMOVED*** Async HTTP client (HA determines version)
 
-***REMOVED*** Type checking
-mypy>=1.7.0
-types-requests>=2.31.0.10
+***REMOVED*** -------------------------------
+***REMOVED*** 🧪 Testing framework and plugins
+***REMOVED*** -------------------------------
+pytest>=7.4.3                               ***REMOVED*** Core test runner (HA determines version)
+pytest-cov>=4.1.0                           ***REMOVED*** Coverage reporting (allow 5.x+ for HA compat)
+pytest-asyncio>=0.21.1                      ***REMOVED*** Async test support (allow 1.x+ for HA compat)
+pytest-homeassistant-custom-component>=0.13.0,<1.0  ***REMOVED*** HA integration test harness
+pytest-mock>=3.12.0                         ***REMOVED*** Mocking utilities (allow 4.x+ for HA compat)
 
-***REMOVED*** Security scanning
-bandit>=1.7.5
+***REMOVED*** -------------------------------
+***REMOVED*** 🧹 Code quality and formatting
+***REMOVED*** -------------------------------
+ruff>=0.8.2                                 ***REMOVED*** Linter and import sorter
+black>=23.11.0                              ***REMOVED*** Code formatter
+pre-commit>=3.6.0                           ***REMOVED*** Git hook manager
+pylint>=3.0.0                               ***REMOVED*** Optional static analysis
 
-***REMOVED*** Security-focused XML parsing (prevents XXE attacks)
-defusedxml>=0.7.1
+***REMOVED*** -------------------------------
+***REMOVED*** 🔍 Type checking
+***REMOVED*** -------------------------------
+mypy>=1.7.0                                 ***REMOVED*** Static type checker
+types-requests>=2.31.0.10                   ***REMOVED*** Type stubs for requests (HA determines version)
 
-***REMOVED*** Additional testing utilities
-freezegun>=1.2.2
-responses>=0.24.0
+***REMOVED*** -------------------------------
+***REMOVED*** 🔐 Security scanning
+***REMOVED*** -------------------------------
+bandit>=1.7.5                               ***REMOVED*** Static security analyzer
+defusedxml>=0.7.1                           ***REMOVED*** Safer XML parsing
+
+***REMOVED*** -------------------------------
+***REMOVED*** 🧪 Additional testing utilities
+***REMOVED*** -------------------------------
+freezegun>=1.2.2                            ***REMOVED*** Time-freezing for deterministic tests
+responses>=0.24.0                           ***REMOVED*** Mock HTTP responses

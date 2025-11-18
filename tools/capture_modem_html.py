@@ -18,7 +18,6 @@ Privacy:
 """
 
 import json
-import re
 import sys
 import zipfile
 from datetime import datetime
@@ -34,111 +33,92 @@ except ImportError:
     sys.exit(1)
 
 
-***REMOVED*** Common modem pages to try (covers most manufacturers)
-COMMON_PAGES = [
-    "/",  ***REMOVED*** Home page
-    "/index.html",
-    "/index.asp",
-    "/index.htm",
-    ***REMOVED*** ARRIS
-    "/cmSignalData.htm",
-    "/cmswinfo.html",
-    "/cmLogsStatus.htm",
-    ***REMOVED*** Motorola
-    "/MotoConnection.asp",
-    "/MotoHome.asp",
-    "/MotoSwInfo.asp",
-    "/MotoSaStatusConnectionInfo.asp",
-    ***REMOVED*** Netgear
-    "/cmconnectionstatus.html",
-    "/DocsisStatus.htm",
-    "/status.asp",
-    "/status.html",
-    "/cmswinfo.html",
-    ***REMOVED*** Technicolor TC4400
-    "/cmconnectionstatus.html",
-    "/cmswinfo.html",
-    ***REMOVED*** Technicolor XB7
-    "/network_setup.jst",
-    "/at_a_glance.jst",
-    ***REMOVED*** Generic
-    "/status.html",
-    "/status.asp",
-    "/status.htm",
-    "/connection.html",
-    "/signal.html",
+***REMOVED*** Generate modem page URLs dynamically using patterns
+***REMOVED*** Instead of hardcoding every variant, combine common base names with extensions.
+***REMOVED***
+***REMOVED*** Strategy:
+***REMOVED*** 1. Try priority "seed" pages first (common entry points)
+***REMOVED*** 2. Discover additional links from captured pages (link crawling)
+***REMOVED***
+***REMOVED*** To add support for new patterns:
+***REMOVED*** - New extension? Add to COMMON_EXTENSIONS (e.g., ".shtml")
+***REMOVED*** - New seed page? Add to SEED_BASES (e.g., "diagnostics")
+
+***REMOVED*** Priority seed bases - common entry points for modems
+***REMOVED*** These are generic patterns, not manufacturer-specific filenames
+SEED_BASES = [
+    "",  ***REMOVED*** Root path
+    "index",
+    "status",
+    "connection",  ***REMOVED*** Generic - catches cmconnectionstatus, MotoConnection, etc.
+]
+
+COMMON_EXTENSIONS = [
+    "",  ***REMOVED*** No extension (for root and some pages)
+    ".html",
+    ".htm",
+    ".asp",
+    ".php",
+    ".jsp",
+    ".cgi",
+    ".jst",  ***REMOVED*** Technicolor
 ]
 
 
-def sanitize_html(html: str) -> str:
-    """Remove sensitive information from HTML.
+def generate_seed_pages():
+    """Generate priority seed URLs to try first.
 
-    Args:
-        html: Raw HTML from modem
+    These are common entry points that typically link to other pages.
+    Link discovery will find manufacturer-specific pages automatically.
 
     Returns:
-        Sanitized HTML with personal info removed
+        List of seed URL paths
     """
-    ***REMOVED*** 1. MAC Addresses (various formats)
-    html = re.sub(r"\b([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}\b", "XX:XX:XX:XX:XX:XX", html)
+    pages = []
 
-    ***REMOVED*** 2. Serial Numbers
-    html = re.sub(
-        r"(Serial\s*Number|SN|S/N)\s*[:\s=]*(?:<[^>]*>)*\s*([a-zA-Z0-9\-]{5,})",
-        r"\1: ***REDACTED***",
-        html,
-        flags=re.IGNORECASE,
-    )
+    ***REMOVED*** Generate combinations of seed bases + extensions
+    for base in SEED_BASES:
+        for ext in COMMON_EXTENSIONS:
+            if base == "":
+                ***REMOVED*** Root path - only add once without extension
+                if ext == "":
+                    pages.append("/")
+            else:
+                ***REMOVED*** Regular pages - combine base + extension
+                pages.append(f"/{base}{ext}")
 
-    ***REMOVED*** 3. Account/Subscriber IDs
-    html = re.sub(
-        r"(Account|Subscriber|Customer|Device)\s*(ID|Number)\s*[:\s=]+\S+",
-        r"\1 \2: ***REDACTED***",
-        html,
-        flags=re.IGNORECASE,
-    )
+    ***REMOVED*** Remove duplicates while preserving order
+    seen = set()
+    unique_pages = []
+    for page in pages:
+        if page not in seen:
+            seen.add(page)
+            unique_pages.append(page)
 
-    ***REMOVED*** 4. Private IP addresses (keep common modem IPs for context)
-    html = re.sub(
-        r"\b(?!192\.168\.100\.1\b)(?!192\.168\.0\.1\b)(?!192\.168\.1\.1\b)"
-        r"(?:10\.|172\.(?:1[6-9]|2[0-9]|3[01])\.|192\.168\.)\d{1,3}\.\d{1,3}\b",
-        "***PRIVATE_IP***",
-        html,
-    )
+    return unique_pages
 
-    ***REMOVED*** 5. IPv6 Addresses
-    html = re.sub(r"\b([0-9a-f]{0,4}:){2,7}[0-9a-f]{0,4}\b", "***IPv6***", html, flags=re.IGNORECASE)
 
-    ***REMOVED*** 6. Passwords/Passphrases in HTML forms or text
-    html = re.sub(
-        r'(password|passphrase|psk|key|wpa[0-9]*key)\s*[=:]\s*["\']?([^"\'<>\s]+)',
-        r"\1=***REDACTED***",
-        html,
-        flags=re.IGNORECASE,
-    )
+SEED_PAGES = generate_seed_pages()
 
-    ***REMOVED*** 7. Password input fields
-    html = re.sub(
-        r'(<input[^>]*type=["\']password["\'][^>]*value=["\'])([^"\']+)(["\'])',
-        r"\1***REDACTED***\3",
-        html,
-        flags=re.IGNORECASE,
-    )
 
-    ***REMOVED*** 8. Session tokens/cookies
-    html = re.sub(
-        r'(session|token|auth)\s*[=:]\s*["\']?([^"\'<>\s]{20,})', r"\1=***REDACTED***", html, flags=re.IGNORECASE
-    )
+try:
+    ***REMOVED*** Try to import from the custom_component structure
+    from custom_components.cable_modem_monitor.utils import sanitize_html  ***REMOVED*** type: ignore[attr-defined]
+except ImportError:
+    ***REMOVED*** If running as a standalone script, adjust the path
+    try:
+        import sys
+        from pathlib import Path
 
-    ***REMOVED*** 9. CSRF tokens in meta tags
-    html = re.sub(
-        r'(<meta[^>]*name=["\']csrf-token["\'][^>]*content=["\'])([^"\']+)(["\'])',
-        r"\1***REDACTED***\3",
-        html,
-        flags=re.IGNORECASE,
-    )
-
-    return html
+        ***REMOVED*** Add the parent directory of 'tools' to the path
+        ***REMOVED*** This allows importing from custom_components
+        sys.path.append(str(Path(__file__).parent.parent))
+        from custom_components.cable_modem_monitor.utils.html_helper import sanitize_html
+    except ImportError:
+        print("ERROR: Could not import sanitize_html function.")
+        print("Please ensure the script is run from the project's root directory,")
+        print("or that the 'custom_components' directory is in the Python path.")
+        sys.exit(1)
 
 
 def fetch_page(session: requests.Session, base_url: str, path: str, timeout: int = 10) -> dict[str, Any] | None:
@@ -191,7 +171,9 @@ def fetch_page(session: requests.Session, base_url: str, path: str, timeout: int
     return None
 
 
-def capture_modem_html(host: str, username: str | None = None, password: str | None = None) -> dict[str, Any]:
+def capture_modem_html(  ***REMOVED*** noqa: C901
+    host: str, username: str | None = None, password: str | None = None
+) -> dict[str, Any]:
     """Capture HTML pages from a cable modem.
 
     Args:
@@ -218,12 +200,13 @@ def capture_modem_html(host: str, username: str | None = None, password: str | N
         print("\n📖 No authentication (trying public pages)")
 
     print(f"🌐 Connecting to: {base_url}")
-    print(f"📄 Trying {len(COMMON_PAGES)} common modem pages...\n")
+    print(f"📄 Phase 1: Trying {len(SEED_PAGES)} seed pages...\n")
 
     captured_pages = []
     failed_count = 0
 
-    for page in COMMON_PAGES:
+    ***REMOVED*** Phase 1: Fetch seed pages
+    for page in SEED_PAGES:
         result = fetch_page(session, base_url, page)
         if result:
             status = "🔒 Auth Required" if result["status_code"] == 401 else "✅ Captured"
@@ -233,8 +216,66 @@ def capture_modem_html(host: str, username: str | None = None, password: str | N
         else:
             failed_count += 1
 
-    print("\n📊 Summary:")
-    print(f"  ✅ Captured: {len(captured_pages)} pages")
+    print(f"\n📊 Phase 1 Complete: {len(captured_pages)} pages captured")
+
+    ***REMOVED*** Phase 2: Discover additional links from captured pages
+    if captured_pages:
+        print("\n📄 Phase 2: Discovering additional pages via link crawling...\n")
+
+        ***REMOVED*** Import link discovery utilities
+        from urllib.parse import urljoin, urlparse
+
+        ***REMOVED*** Extract all links from captured HTML
+        discovered_links = set()
+        captured_urls = {page["url"] for page in captured_pages}
+
+        for page in captured_pages:
+            try:
+                from bs4 import BeautifulSoup
+
+                soup = BeautifulSoup(page["html"], "html.parser")
+
+                for link_tag in soup.find_all("a", href=True):
+                    href = link_tag["href"]
+
+                    ***REMOVED*** Skip anchors, javascript, mailto
+                    if href.startswith(("***REMOVED***", "javascript:", "mailto:")):
+                        continue
+
+                    ***REMOVED*** Convert to absolute URL
+                    absolute_url = urljoin(base_url, href)
+
+                    ***REMOVED*** Only same-host links
+                    if urlparse(absolute_url).netloc != urlparse(base_url).netloc:
+                        continue
+
+                    ***REMOVED*** Skip binary files (but keep .js and .css for API/data discovery)
+                    skip_exts = [".jpg", ".png", ".gif", ".ico", ".pdf", ".zip", ".svg", ".woff", ".woff2", ".ttf"]
+                    if any(absolute_url.lower().endswith(ext) for ext in skip_exts):
+                        continue
+
+                    ***REMOVED*** Add if not already captured
+                    if absolute_url not in captured_urls:
+                        discovered_links.add(absolute_url)
+
+            except Exception as e:
+                print(f"  ⚠️  Error discovering links from {page.get('url', 'unknown')}: {e}")
+
+        print(f"  🔍 Discovered {len(discovered_links)} new pages to fetch")
+
+        ***REMOVED*** Fetch discovered pages
+        for url in discovered_links:
+            path = urlparse(url).path
+            result = fetch_page(session, base_url, path)
+            if result:
+                size_kb = result["size_bytes"] / 1024
+                print(f"  ✅ Captured: {path} ({size_kb:.1f} KB)")
+                captured_pages.append(result)
+            else:
+                failed_count += 1
+
+    print("\n📊 Final Summary:")
+    print(f"  ✅ Total Captured: {len(captured_pages)} pages")
     print(f"  ❌ Failed: {failed_count} pages")
 
     total_size = sum(p["size_bytes"] for p in captured_pages)

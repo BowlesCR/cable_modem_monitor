@@ -26,6 +26,7 @@ repos:
       - id: mypy
         additional_dependencies:
           - types-requests
+          - pytest-socket
         files: \.py$
 
   ***REMOVED*** General file checks
@@ -39,6 +40,7 @@ repos:
       - id: check-yaml
         exclude: ^\.github/workflows/
       - id: check-json
+        exclude: (devcontainer\.json|\.vscode/settings\.json)$
       - id: check-added-large-files
         args: ['--maxkb=1000']
       - id: check-merge-conflict

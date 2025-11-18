@@ -1,72 +1,103 @@
-***REMOVED*** Python project configuration for Cable Modem Monitor
+***REMOVED*** pyproject.toml
+***REMOVED*** This file defines formatting, linting, type-checking, and test configuration
+***REMOVED*** for development consistency across the cable-modem-monitor project.
 
+[project]
+name = "cable-modem-monitor"
+version = "0.1.0"
+description = "Monitor and analyze cable modem metrics with Home Assistant integration."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"  ***REMOVED*** Pin to Python 3.12 for compatibility and reproducibility
+
+dependencies = [
+    ***REMOVED*** Runtime dependencies
+    "requests>=2.31",     ***REMOVED*** HTTP client for modem polling
+    "pydantic>=2.0",      ***REMOVED*** Data validation and modeling
+]
+
+[project.optional-dependencies]
+dev = [
+    ***REMOVED*** Development tools
+    "black>=24.0",        ***REMOVED*** Code formatter
+    "ruff>=0.5.0",        ***REMOVED*** Linter and import sorter
+    "mypy>=1.10",         ***REMOVED*** Static type checker
+    "pytest>=8.0",        ***REMOVED*** Test runner
+    "pytest-cov>=5.0",    ***REMOVED*** Coverage reporting
+]
+
+***REMOVED*** -------------------------------
+***REMOVED*** Black (code formatter)
+***REMOVED*** -------------------------------
 [tool.black]
-line-length = 120
-target-version = ['py311']
-include = '\.pyi?$'
+line-length = 120                  ***REMOVED*** Match Ruff and improve readability
+target-version = ['py312']         ***REMOVED*** Align with runtime Python version
+include = '\.pyi?$'                ***REMOVED*** Format .py and .pyi files
 extend-exclude = '''
 /(
-  ***REMOVED*** Exclude test HTML files
-  tests/.*\.html
+  tests/.*\.html                   ***REMOVED*** Exclude test HTML fixture files
 )/
 '''
 
+***REMOVED*** -------------------------------
+***REMOVED*** Ruff (linter + import sorter)
+***REMOVED*** -------------------------------
 [tool.ruff]
-line-length = 120
-target-version = "py311"
-
-***REMOVED*** Exclude test HTML files and other non-Python files
+line-length = 120                  ***REMOVED*** Match Black line length
+target-version = "py312"           ***REMOVED*** Align with runtime
 exclude = [
-    "tests/*.html",
-    "__pycache__",
-    ".venv",
-    "venv",
-    ".git",
+    "tests/**/*.html",             ***REMOVED*** Ignore test fixtures
+    "__pycache__",                 ***REMOVED*** Skip Python cache
+    ".venv", "venv",               ***REMOVED*** Ignore virtual environments
+    ".git",                        ***REMOVED*** Skip Git metadata
 ]
 
 [tool.ruff.lint]
-***REMOVED*** Rule categories enabled:
-***REMOVED*** E: pycodestyle errors, F: Pyflakes, W: pycodestyle warnings
-***REMOVED*** C90: McCabe complexity, I: isort, UP: pyupgrade
-***REMOVED*** B: flake8-bugbear, SIM: flake8-simplify, TID: flake8-tidy-imports, N: pep8-naming
-select = ["E", "F", "W", "C90", "I", "UP", "B", "SIM", "TID", "N"]
+select = [
+    "E", "F", "W", "C90", "I", "UP", "B", "SIM", "TID", "N"
+]  ***REMOVED*** Enable key rule categories: style, complexity, import sorting, modern syntax
 
-***REMOVED*** Ignore specific rules
 ignore = [
-    "B008",   ***REMOVED*** Do not perform function calls in argument defaults (common in HA)
-    "B904",   ***REMOVED*** Allow `raise` without specifying exception (useful for re-raising)
-    "SIM108", ***REMOVED*** Use ternary operator (can reduce readability)
-    "TID252", ***REMOVED*** Relative imports are banned (not applicable for package structure)
-    "UP007",  ***REMOVED*** Use `X | Y` for type annotations (we use Optional for compatibility)
+    "B008",   ***REMOVED*** Allow function calls in default args (common in HA)
+    "B904",   ***REMOVED*** Allow bare `raise` for re-raising
+    "SIM108", ***REMOVED*** Avoid forced ternary expressions
+    "TID252", ***REMOVED*** Allow relative imports in HA custom components
 ]
 
 [tool.ruff.lint.mccabe]
-***REMOVED*** McCabe complexity threshold
-max-complexity = 10
+max-complexity = 10                ***REMOVED*** Keep functions readable
 
 [tool.ruff.lint.isort]
-***REMOVED*** Import sorting configuration
-known-first-party = ["custom_components.cable_modem_monitor"]
+known-first-party = ["custom_components.cable_modem_monitor"]  ***REMOVED*** Treat integration code as first-party
 split-on-trailing-comma = true
 force-wrap-aliases = true
 combine-as-imports = true
 
 [tool.ruff.lint.per-file-ignores]
-***REMOVED*** Per-file ignores for specific patterns
-"__init__.py" = ["F401"]  ***REMOVED*** Allow unused imports in __init__.py
-"tests/**/*.py" = ["B011", "S101"]  ***REMOVED*** Allow assert in tests
-"scripts/**/*.py" = ["T201"]  ***REMOVED*** Allow print statements in scripts
+"__init__.py" = ["F401"]           ***REMOVED*** Allow unused imports for package exposure
+"tests/**/*.py" = ["B011", "S101"] ***REMOVED*** Allow assert and safe eval in tests
+"scripts/**/*.py" = ["T201"]       ***REMOVED*** Allow print statements in scripts
 
 [tool.ruff.lint.flake8-type-checking]
-***REMOVED*** Type checking imports configuration
-strict = false
+strict = false                     ***REMOVED*** Avoid strict import enforcement for type-checking
 
+***REMOVED*** -------------------------------
+***REMOVED*** Mypy (static type checker)
+***REMOVED*** -------------------------------
 [tool.mypy]
-python_version = "3.11"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = false
-ignore_missing_imports = true
+python_version = "3.12"            ***REMOVED*** Match runtime
+warn_return_any = true             ***REMOVED*** Catch overly permissive return types
+warn_unused_configs = true         ***REMOVED*** Alert on unused mypy settings
+disallow_untyped_defs = true       ***REMOVED*** Enforce type hints on all function definitions
+ignore_missing_imports = true      ***REMOVED*** Avoid errors for missing stubs
 
-***REMOVED*** Limit mypy to the integration code
-files = ["custom_components/cable_modem_monitor/**/*.py"]
+files = ["custom_components/cable_modem_monitor/**/*.py"]  ***REMOVED*** Limit scope to integration code
+
+***REMOVED*** -------------------------------
+***REMOVED*** Pytest (test runner)
+***REMOVED*** -------------------------------
+[tool.pytest.ini_options]
+minversion = "8.0"                 ***REMOVED*** Ensure compatibility with latest plugins
+addopts = "-v --tb=short --cov=custom_components.cable_modem_monitor --cov-report=term-missing"
+testpaths = [
+    "tests"                        ***REMOVED*** Discover tests in this folder
+]

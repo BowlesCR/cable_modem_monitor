@@ -1,4 +1,5 @@
-***REMOVED*** Python bytecode and compiled files & extensions
+***REMOVED*** -----------------------------
+***REMOVED*** Python bytecode and compiled files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -8,6 +9,7 @@ __pycache__/
 ***REMOVED*** Python environment markers
 .Python
 
+***REMOVED*** -----------------------------
 ***REMOVED*** IDE and editor files
 .vscode/*
 !.vscode/settings.json
@@ -18,29 +20,35 @@ __pycache__/
 .DS_Store
 .claude/
 
+***REMOVED*** -----------------------------
 ***REMOVED*** Logs and temporary files
 *.log
 .pytest_cache/
 
+***REMOVED*** -----------------------------
 ***REMOVED*** Python package and distribution files
 *.egg-info/
 dist/
 build/
 
+***REMOVED*** -----------------------------
 ***REMOVED*** Virtual environments
 .venv/
 venv/
 env/
 ENV/
 
+***REMOVED*** -----------------------------
 ***REMOVED*** Code quality and linting
 .ruff_cache/
 
+***REMOVED*** -----------------------------
 ***REMOVED*** Test coverage reports
 .coverage
 coverage.xml
 htmlcov/
 
+***REMOVED*** -----------------------------
 ***REMOVED*** Home Assistant test environment
 test-ha-config/
 *.db
@@ -55,3 +63,21 @@ tts/
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+
+***REMOVED*** -----------------------------
+***REMOVED*** CodeQL artifacts
+codeql-pack.lock.yml
+db-*/
+*.testproj/
+.codeql/
+.github/codeql/
+.aider*
+
+***REMOVED*** CodeQL test outputs
+*.actual
+*.diff
+*.result
+*.sarif
+
+***REMOVED*** -----------------------------
+***REMOVED*** Miscellaneous
