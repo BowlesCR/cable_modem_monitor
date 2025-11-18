@@ -67,6 +67,61 @@ make lint               # Check code quality
 **Pros**: Fastest iteration, no Docker overhead
 **Cons**: No real Home Assistant testing, manual setup
 
+> **Note for VS Code Users**: If you choose this method, the `.vscode` directory in this repository contains recommended extensions, workspace settings, and tasks to streamline local development. However, for the best experience, the **Dev Container** method is still recommended.
+
+---
+
+## Platform-Specific Setup
+
+The project is **fully cross-platform** and works on Windows, macOS, and Linux (including Chrome OS Flex). The VSCode configuration automatically handles path differences.
+
+### Opening the Project in VSCode
+
+**Option 1: Workspace File** (Recommended)
+```bash
+# Open the workspace file
+code cable_modem_monitor.code-workspace
+```
+- Pre-configured tasks and debugging
+- Consistent settings across platforms
+
+**Option 2: Folder** (Also works)
+```bash
+# Open folder directly
+code .
+```
+- Simpler, uses .vscode/settings.json
+
+### Windows-Specific Notes
+
+- **Running Scripts**: Use Git Bash or WSL2 to run `.sh` scripts
+  ```bash
+  bash scripts/setup.sh
+  ```
+- **PowerShell Alternatives**: Some scripts have `.ps1` equivalents (e.g., `scripts/dev/lint.ps1`)
+- **Python**: Install from [python.org](https://python.org) or Microsoft Store
+- **Docker**: Install Docker Desktop for Windows
+
+### macOS-Specific Notes
+
+- **Python**: Install via Homebrew: `brew install python@3.12`
+- **Docker**: Install Docker Desktop for Mac
+- **Scripts**: Run directly: `./scripts/setup.sh`
+
+### Linux/Chrome OS Flex Notes
+
+- **Chrome OS**: Enable Linux development environment in Settings → Developers
+- **Python**: Install via apt: `sudo apt install python3.12 python3.12-venv`
+- **Docker**: Install with: `sudo apt install docker.io docker-compose`
+- **Scripts**: Make executable first: `chmod +x scripts/*.sh`
+
+### VSCode Configuration (All Platforms)
+
+The `.vscode/settings.json` is **fully cross-platform**:
+- Uses `${workspaceFolder}/.venv/bin/python` (VSCode translates automatically)
+- No platform-specific shims needed
+- Black formatter, Ruff linter, pytest all configured
+
 ---
 
 ## Common Tasks
@@ -193,33 +248,9 @@ cable_modem_monitor/
 
 ## Adding a New Modem Parser
 
-1. **Capture HTML** from your modem:
-   ```bash
-   curl http://192.168.100.1/status.html > tests/fixtures/my_modem.html
-   ```
+For a detailed guide on how to add support for a new cable modem model, please refer to the dedicated documentation:
 
-2. **Create parser** in `custom_components/cable_modem_monitor/parsers/my_modem.py`:
-   ```python
-   from .base_parser import ModemParser
-
-   class MyModemParser(ModemParser):
-       name = "My Modem Model"
-       manufacturer = "Brand"
-       models = ["Model123"]
-
-       def can_parse(cls, soup, url, html):
-           return "My Modem" in html
-
-       def parse(self, soup, session=None, base_url=None):
-           # Parse logic here
-           return {"downstream": [], "upstream": [], "system_info": {}}
-   ```
-
-3. **Create tests** in `tests/test_parser_my_modem.py`
-
-4. **Run tests**: `make test`
-
-See `CONTRIBUTING.md` for detailed parser guide.
+*   [Guide: Adding a New Modem Parser](./ADDING_NEW_PARSER.md)
 
 ---
 
