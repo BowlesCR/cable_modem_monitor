@@ -70,9 +70,14 @@ codeql-pack.lock.yml
 db-*/
 *.testproj/
 .codeql/
+.aider*
+
+# CodeQL CLI installation (local development only)
+/codeql/
+
+# GitHub CodeQL workflow artifacts
 .github/codeql/databases/
 .github/codeql/results/
-.aider*
 
 # Keep custom queries and configuration
 !.github/codeql/queries/

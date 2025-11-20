@@ -36,7 +36,7 @@ pylint>=3.0.0                               # Optional static analysis
 # 🔍 Type checking
 # -------------------------------
 mypy>=1.7.0                                 # Static type checker
-types-requests>=2.31.0.10                   # Type stubs for requests (matches CI)
+types-requests<2.31.0.10                    # Type stubs for requests (compatible with urllib3<2)
 
 # -------------------------------
 # 🔐 Security scanning

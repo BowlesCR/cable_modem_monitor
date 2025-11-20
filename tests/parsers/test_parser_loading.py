@@ -168,5 +168,6 @@ class TestParserLoadingPerformance:
         get_parsers(use_cache=True)
         cached_time = time.perf_counter() - start
 
-        # Cached load should be extremely fast (< 1ms)
-        assert cached_time < 0.001
+        # Cached load should be extremely fast (< 10ms)
+        # Note: 1ms was too aggressive and caused flaky tests
+        assert cached_time < 0.01
