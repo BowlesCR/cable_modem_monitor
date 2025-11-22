@@ -117,7 +117,7 @@ Parsers exist but have known limitations:
 ***REMOVED******REMOVED******REMOVED*** 📋 Requested Models
 Community members have requested support for these models:
 
-- **Netgear CM1000** - Awaiting diagnostics data ([Issue ***REMOVED***32](https://github.com/kwschulz/cable_modem_monitor/issues/32))
+- **Arris/CommScope S33** - HTML samples provided, parser development in progress ([Issue ***REMOVED***32](https://github.com/kwschulz/cable_modem_monitor/issues/32))
 
 ***REMOVED******REMOVED******REMOVED*** ℹ️ Motorola Generic Parser
 A generic Motorola parser may work with other Motorola DOCSIS 3.x modems that use standard HTML pages (not HNAP/SOAP). Try "auto" detection during setup.
