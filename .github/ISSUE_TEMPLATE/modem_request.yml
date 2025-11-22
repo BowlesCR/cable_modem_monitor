@@ -1,0 +1,154 @@
+name: 🖧 New Modem Support Request
+description: Request support for a cable modem model not currently supported
+title: "[Modem Request] "
+labels: ["enhancement", "new modem"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Request Support for a New Modem
+
+        Thank you for helping expand modem support! This template will guide you through providing the information needed to add support for your modem.
+
+  - type: input
+    id: modem-model
+    attributes:
+      label: Modem Model
+      description: What is the exact model number of your cable modem?
+      placeholder: "e.g., Netgear CM1000, Arris SB8200, Motorola MB8600"
+    validations:
+      required: true
+
+  - type: input
+    id: manufacturer
+    attributes:
+      label: Manufacturer
+      description: Who makes this modem?
+      placeholder: "e.g., Netgear, Arris, Motorola, Technicolor"
+    validations:
+      required: true
+
+  - type: input
+    id: modem-ip
+    attributes:
+      label: Modem IP Address
+      description: What IP address does your modem use?
+      placeholder: "e.g., 192.168.100.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: auth-required
+    attributes:
+      label: Authentication Required
+      description: Does your modem require a username/password to access the web interface?
+      options:
+        - "No - accessible without login"
+        - "Yes - requires username/password"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: textarea
+    id: auth-details
+    attributes:
+      label: Authentication Details (if required)
+      description: If authentication is required, what are the default credentials? (Usually printed on modem label)
+      placeholder: |
+        Username: admin
+        Password: (check modem label)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: diagnostics-method
+    attributes:
+      label: How are you providing data?
+      description: Choose the method you're using to share modem data
+      options:
+        - "Built-in Diagnostics (Recommended) - Download Diagnostics from HA"
+        - "Manual HTML Capture - Captured HTML files manually"
+        - "Haven't captured yet - Need instructions"
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 📥 Providing Modem Data
+
+        ### ✅ Method 1: Built-in Diagnostics (EASIEST - Recommended)
+
+        If you already have the integration installed (even if it doesn't fully work):
+
+        1. Go to **Settings → Devices & Services → Cable Modem Monitor**
+        2. Click on your **modem device**
+        3. Click **Download Diagnostics** (three dots menu)
+        4. Attach the downloaded `.json` file to this issue
+
+        The diagnostics file automatically captures all HTML pages we need!
+
+        ### 📋 Method 2: Manual HTML Capture (If diagnostics don't work)
+
+        If the integration can't be installed or diagnostics don't work:
+
+        1. Open your modem's web interface in a browser (e.g., http://192.168.100.1)
+        2. Navigate to the signal/status pages (usually something like "Connection Status", "Signal Status", or "DOCSIS Status")
+        3. For **each page that shows signal data**:
+           - Right-click → View Page Source (or press Ctrl+U)
+           - Save the HTML (File → Save As → choose "Web Page, HTML Only")
+        4. Attach all saved HTML files to this issue
+
+        See [HTML Capture Guide](https://github.com/kwschulz/cable_modem_monitor/blob/main/docs/HTML_CAPTURE_GUIDE.md) for detailed instructions.
+
+  - type: textarea
+    id: files-attached
+    attributes:
+      label: Files Attached
+      description: List the files you're attaching (drag and drop below)
+      placeholder: |
+        - diagnostics_cable_modem_monitor_xyz.json
+        OR
+        - signal_status.html
+        - connection_info.html
+        - docsis_overview.html
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Any other details that might help? (ISP, firmware version, special requirements, etc.)
+      placeholder: |
+        - ISP: Comcast/Xfinity
+        - Firmware version: 1.0.0.15
+        - Notes: Modem uses HNAP protocol
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have attached diagnostic data or HTML files from my modem
+          required: false
+        - label: I understand this may take time as it requires developing a custom parser
+          required: true
+        - label: I'm willing to test the parser once it's developed
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 🙏 Thank You!
+
+        Your contribution helps everyone with the same modem model. Once the parser is developed, we'll ask you to test it and provide feedback.
+
+        **Note:** Parser development is community-driven and happens as time allows. The more information you provide, the easier it is to add support!
