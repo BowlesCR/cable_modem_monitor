@@ -91,7 +91,7 @@ def update_manifest(repo_root: Path, version: str) -> bool:
     )
 
     try:
-        with open(manifest_path, "r", encoding="utf-8") as f:
+        with open(manifest_path, encoding="utf-8") as f:
             manifest = json.load(f)
 
         old_version = manifest.get("version", "unknown")
@@ -117,7 +117,7 @@ def update_const_py(repo_root: Path, version: str) -> bool:
     )
 
     try:
-        with open(const_path, "r", encoding="utf-8") as f:
+        with open(const_path, encoding="utf-8") as f:
             content = f.read()
 
         ***REMOVED*** Find the current version
@@ -148,7 +148,7 @@ def update_version_test(repo_root: Path, version: str) -> bool:
     test_path = repo_root / "tests" / "components" / "test_version_and_startup.py"
 
     try:
-        with open(test_path, "r", encoding="utf-8") as f:
+        with open(test_path, encoding="utf-8") as f:
             content = f.read()
 
         ***REMOVED*** Find the current version in the test
@@ -184,7 +184,7 @@ def update_changelog(repo_root: Path, version: str) -> bool:
     changelog_path = repo_root / "CHANGELOG.md"
 
     try:
-        with open(changelog_path, "r", encoding="utf-8") as f:
+        with open(changelog_path, encoding="utf-8") as f:
             content = f.read()
 
         ***REMOVED*** Check if there's an Unreleased section
@@ -296,7 +296,7 @@ def create_github_release(version: str, repo_root: Path) -> bool:
 
         ***REMOVED*** Extract release notes from CHANGELOG
         changelog_path = repo_root / "CHANGELOG.md"
-        with open(changelog_path, "r", encoding="utf-8") as f:
+        with open(changelog_path, encoding="utf-8") as f:
             content = f.read()
 
         ***REMOVED*** Find the section for this version
@@ -331,6 +331,70 @@ def create_github_release(version: str, repo_root: Path) -> bool:
         return False
 
 
+def validate_release_preconditions(version: str, repo_root: Path) -> None:
+    """Validate all preconditions for creating a release."""
+    ***REMOVED*** Validate version format
+    if not validate_version(version):
+        print_error(
+            f"Invalid version format: {version}. Must be X.Y.Z (e.g., 3.5.1)"
+        )
+        sys.exit(1)
+
+    ***REMOVED*** Check git status
+    if not check_git_clean():
+        print_error("Git working directory is not clean. Commit or stash changes first.")
+        sys.exit(1)
+
+    ***REMOVED*** Check if version tag already exists
+    try:
+        result = subprocess.run(
+            ["git", "tag", "-l", f"v{version}"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        if result.stdout.strip():
+            print_error(f"Tag v{version} already exists!")
+            sys.exit(1)
+    except subprocess.CalledProcessError:
+        pass
+
+
+def update_all_files(repo_root: Path, version: str, skip_changelog: bool) -> None:
+    """Update all version files."""
+    success = True
+    success = update_manifest(repo_root, version) and success
+    success = update_const_py(repo_root, version) and success
+    success = update_version_test(repo_root, version) and success
+
+    if not skip_changelog:
+        success = update_changelog(repo_root, version) and success
+
+    if not success:
+        print_error("Failed to update all files")
+        sys.exit(1)
+
+
+def perform_git_operations(version: str, skip_verify: bool, no_push: bool, repo_root: Path) -> None:
+    """Perform git commit, tag, push, and release operations."""
+    ***REMOVED*** Create commit
+    if not create_commit(version, skip_verify):
+        sys.exit(1)
+
+    ***REMOVED*** Create tag
+    if not create_tag(version):
+        sys.exit(1)
+
+    ***REMOVED*** Push if requested
+    if not no_push:
+        if not push_changes(version, skip_verify):
+            sys.exit(1)
+
+        ***REMOVED*** Create GitHub release
+        if not create_github_release(version, repo_root):
+            print_warning("Release created but GitHub release failed")
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -358,71 +422,25 @@ def main():
 
     print_info(f"Starting release process for version {version}")
 
-    ***REMOVED*** Validate version format
-    if not validate_version(version):
-        print_error(
-            f"Invalid version format: {version}. Must be X.Y.Z (e.g., 3.5.1)"
-        )
-        sys.exit(1)
-
     ***REMOVED*** Get repository root
     repo_root = get_repo_root()
     print_info(f"Repository root: {repo_root}")
 
-    ***REMOVED*** Check git status
-    if not check_git_clean():
-        print_error("Git working directory is not clean. Commit or stash changes first.")
-        sys.exit(1)
+    ***REMOVED*** Validate preconditions
+    validate_release_preconditions(version, repo_root)
 
-    ***REMOVED*** Check if version tag already exists
-    try:
-        result = subprocess.run(
-            ["git", "tag", "-l", f"v{version}"],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        if result.stdout.strip():
-            print_error(f"Tag v{version} already exists!")
-            sys.exit(1)
-    except subprocess.CalledProcessError:
-        pass
+    ***REMOVED*** Update all version files
+    update_all_files(repo_root, version, args.skip_changelog)
 
-    ***REMOVED*** Update files
-    success = True
-    success = update_manifest(repo_root, version) and success
-    success = update_const_py(repo_root, version) and success
-    success = update_version_test(repo_root, version) and success
+    ***REMOVED*** Perform git operations
+    perform_git_operations(version, args.skip_verify, args.no_push, repo_root)
 
-    if not args.skip_changelog:
-        success = update_changelog(repo_root, version) and success
-
-    if not success:
-        print_error("Failed to update all files")
-        sys.exit(1)
-
-    ***REMOVED*** Create commit
-    if not create_commit(version, args.skip_verify):
-        sys.exit(1)
-
-    ***REMOVED*** Create tag
-    if not create_tag(version):
-        sys.exit(1)
-
-    ***REMOVED*** Push if requested
-    if not args.no_push:
-        if not push_changes(version, args.skip_verify):
-            sys.exit(1)
-
-        ***REMOVED*** Create GitHub release
-        if not create_github_release(version, repo_root):
-            print_warning("Release created but GitHub release failed")
-
+    ***REMOVED*** Success message
     print_success(f"\n🎉 Release {version} complete!")
 
     if args.no_push:
         print_info("\nChanges not pushed (--no-push). To push:")
-        print_info(f"  git push origin main")
+        print_info("  git push origin main")
         print_info(f"  git push origin v{version}")
         print_info(f"  gh release create v{version}")
 
