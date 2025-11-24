@@ -86,9 +86,7 @@ def check_git_clean() -> bool:
 
 def update_manifest(repo_root: Path, version: str) -> bool:
     """Update version in manifest.json."""
-    manifest_path = (
-        repo_root / "custom_components" / "cable_modem_monitor" / "manifest.json"
-    )
+    manifest_path = repo_root / "custom_components" / "cable_modem_monitor" / "manifest.json"
 
     try:
         with open(manifest_path, encoding="utf-8") as f:
@@ -101,9 +99,7 @@ def update_manifest(repo_root: Path, version: str) -> bool:
             json.dump(manifest, f, indent=2)
             f.write("\n")  ***REMOVED*** Add trailing newline
 
-        print_success(
-            f"Updated manifest.json: {old_version} → {version}"
-        )
+        print_success(f"Updated manifest.json: {old_version} → {version}")
         return True
     except Exception as e:
         print_error(f"Failed to update manifest.json: {e}")
@@ -112,9 +108,7 @@ def update_manifest(repo_root: Path, version: str) -> bool:
 
 def update_const_py(repo_root: Path, version: str) -> bool:
     """Update VERSION constant in const.py."""
-    const_path = (
-        repo_root / "custom_components" / "cable_modem_monitor" / "const.py"
-    )
+    const_path = repo_root / "custom_components" / "cable_modem_monitor" / "const.py"
 
     try:
         with open(const_path, encoding="utf-8") as f:
@@ -129,9 +123,7 @@ def update_const_py(repo_root: Path, version: str) -> bool:
         old_version = version_match.group(1)
 
         ***REMOVED*** Replace the version
-        new_content = re.sub(
-            r'VERSION = "[^"]+"', f'VERSION = "{version}"', content, count=1
-        )
+        new_content = re.sub(r'VERSION = "[^"]+"', f'VERSION = "{version}"', content, count=1)
 
         with open(const_path, "w", encoding="utf-8") as f:
             f.write(new_content)
@@ -170,9 +162,7 @@ def update_version_test(repo_root: Path, version: str) -> bool:
         with open(test_path, "w", encoding="utf-8") as f:
             f.write(new_content)
 
-        print_success(
-            f"Updated test_version_and_startup.py: {old_version} → {version}"
-        )
+        print_success(f"Updated test_version_and_startup.py: {old_version} → {version}")
         return True
     except Exception as e:
         print_error(f"Failed to update version test: {e}")
@@ -251,9 +241,7 @@ def create_tag(version: str) -> bool:
         tag_name = f"v{version}"
         tag_msg = f"Release v{version}"
 
-        subprocess.run(
-            ["git", "tag", "-a", tag_name, "-m", tag_msg], check=True
-        )
+        subprocess.run(["git", "tag", "-a", tag_name, "-m", tag_msg], check=True)
 
         print_success(f"Created tag: {tag_name}")
         return True
@@ -335,9 +323,7 @@ def validate_release_preconditions(version: str, repo_root: Path) -> None:
     """Validate all preconditions for creating a release."""
     ***REMOVED*** Validate version format
     if not validate_version(version):
-        print_error(
-            f"Invalid version format: {version}. Must be X.Y.Z (e.g., 3.5.1)"
-        )
+        print_error(f"Invalid version format: {version}. Must be X.Y.Z (e.g., 3.5.1)")
         sys.exit(1)
 
     ***REMOVED*** Check git status
@@ -397,9 +383,7 @@ def perform_git_operations(version: str, skip_verify: bool, no_push: bool, repo_
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Automate Cable Modem Monitor releases"
-    )
+    parser = argparse.ArgumentParser(description="Automate Cable Modem Monitor releases")
     parser.add_argument("version", help="Version to release (e.g., 3.5.1)")
     parser.add_argument(
         "--no-push",
