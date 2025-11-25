@@ -427,6 +427,27 @@ def validate_release_preconditions(version: str, repo_root: Path) -> None:
         print_error(f"Invalid version format: {version}. Must be X.Y.Z (e.g., 3.5.1)")
         sys.exit(1)
 
+    # Check if pre-commit is installed
+    try:
+        result = subprocess.run(
+            ["git", "config", "--get", "core.hooksPath"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        hooks_path = result.stdout.strip() or ".git/hooks"
+        pre_commit_hook = (
+            repo_root / hooks_path / "pre-commit" if not hooks_path.startswith("/") else Path(hooks_path) / "pre-commit"
+        )
+
+        if not pre_commit_hook.exists():
+            print_warning("Pre-commit hooks not installed!")
+            print_warning("This may cause CI failures due to formatting/linting issues.")
+            print_warning("Install with: .venv/bin/pre-commit install")
+            print_warning("Continuing anyway...")
+    except Exception as e:
+        print_warning(f"Could not check pre-commit installation: {e}")
+
     # Check git status
     if not check_git_clean():
         print_error("Git working directory is not clean. Commit or stash changes first.")
