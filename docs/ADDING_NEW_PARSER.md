@@ -16,8 +16,9 @@ Adding a new parser involves:
 2. Implementing required methods
 3. Adding test fixtures
 4. Writing unit tests
-5. Updating the parser registry
-6. Documenting the changes
+5. Documenting the changes
+
+**Note:** Parser registry updates are **no longer required**! The discovery system automatically finds and registers new parsers.
 
 ## Step 1: Create Parser Module
 
@@ -484,27 +485,21 @@ def test_parse_malformed_html():
     assert isinstance(data, dict)
 ```
 
-## Step 5: Update Parser Registry
+## Step 5: Verify Auto-Discovery
 
-**File:** `custom_components/cable_modem_monitor/parsers/__init__.py`
+Your parser will be **automatically discovered** - no registry updates needed!
 
-Add your parser to the `_PARSER_MODULE_MAP`:
+To verify your parser is being discovered:
 
 ```python
-_PARSER_MODULE_MAP = {
-    # ... existing parsers ...
-    "[Manufacturer] [Model]": ("[manufacturer]", "[model]", "[ParserClass]"),
-}
+# In Python console or test
+from custom_components.cable_modem_monitor.parsers import get_parsers
+
+for parser in get_parsers():
+    print(f"{parser.name} ({parser.manufacturer})")
 ```
 
-Example:
-```python
-_PARSER_MODULE_MAP = {
-    "ARRIS SB6141": ("arris", "sb6141", "ARRISSb6141Parser"),
-    "Netgear CM600": ("netgear", "cm600", "NetgearCM600Parser"),
-    "Your New Parser": ("manufacturer", "model", "YourParserClass"),
-}
-```
+Your new parser should appear in the list.
 
 ## Step 6: Update Documentation
 
@@ -575,11 +570,12 @@ If you have access to the physical modem:
 ```bash
 git add custom_components/cable_modem_monitor/parsers/[manufacturer]/
 git add tests/parsers/[manufacturer]/
-git add custom_components/cable_modem_monitor/parsers/__init__.py
 git add README.md CHANGELOG.md
 
 git commit -m "feat: Add support for [Manufacturer] [Model] modem"
 ```
+
+**Note:** You don't need to modify `parsers/__init__.py` - auto-discovery handles registration.
 
 ### 9.2 Create Pull Request
 
