@@ -31,6 +31,9 @@ class AuthStrategyType(Enum):
     HNAP_SESSION = "hnap_session"
     """HNAP/SOAP session-based authentication."""
 
+    HNAP_JSON = "hnap_json"
+    """HNAP JSON-based authentication with challenge-response (e.g., MB8600)."""
+
 
 @dataclass
 class AuthConfig(ABC):

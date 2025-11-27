@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import base64
+import json
 import logging
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 import requests
 
 from .auth_config import AuthStrategyType
+from .hnap_json_builder import HNAPJsonRequestBuilder
 
 if TYPE_CHECKING:
     from .auth_config import AuthConfig, HNAPAuthConfig, RedirectFormAuthConfig
@@ -16,9 +19,10 @@ if TYPE_CHECKING:
 _LOGGER = logging.getLogger(__name__)
 
 
-class AuthStrategy:
+class AuthStrategy(ABC):
     """Abstract base class for authentication strategies."""
 
+    @abstractmethod
     def login(
         self, session: requests.Session, base_url: str, username: str | None, password: str | None, config: AuthConfig
     ) -> tuple[bool, str | None]:
@@ -447,6 +451,112 @@ class HNAPSessionAuthStrategy(AuthStrategy):
         return envelope
 
 
+class HNAPJsonAuthStrategy(AuthStrategy):
+    """HNAP JSON-based authentication with challenge-response (e.g., MB8600)."""
+
+    def login(
+        self, session: requests.Session, base_url: str, username: str | None, password: str | None, config: AuthConfig
+    ) -> tuple[bool, str | None]:
+        """
+        Authenticate using HNAP JSON challenge-response protocol.
+
+        This implements the two-step authentication process used by MB8600:
+        1. Request challenge with username
+        2. Respond with hashed password using challenge
+
+        Args:
+            session: requests.Session object
+            base_url: Modem base URL
+            username: Username for authentication
+            password: Password for authentication
+            config: HNAPAuthConfig configuration object
+
+        Returns:
+            Tuple of (success: bool, login_result: str | None)
+        """
+        if not username or not password:
+            _LOGGER.warning(
+                "HNAP JSON authentication requires credentials. Username provided: %s, Password provided: %s.",
+                bool(username),
+                bool(password),
+            )
+            return (False, None)
+
+        from .auth_config import HNAPAuthConfig
+
+        if not isinstance(config, HNAPAuthConfig):
+            _LOGGER.error("HNAPJsonAuthStrategy requires HNAPAuthConfig")
+            return (False, None)
+
+        try:
+            _LOGGER.debug("HNAP JSON: Starting authentication process")
+
+            # Step 1: Request login challenge
+            builder = HNAPJsonRequestBuilder(
+                endpoint=config.hnap_endpoint,
+                namespace=config.soap_action_namespace,
+            )
+            challenge_json = builder.call_single(
+                session,
+                base_url,
+                "Login",
+                {
+                    "Action": "request",
+                    "Username": username,
+                },
+            )
+            challenge_resp = json.loads(challenge_json).get("LoginResponse", {})
+
+            # Set cookie from initial response
+            cookie = challenge_resp.get("Cookie", "")
+            if cookie:
+                session.cookies.set("uid", cookie)
+            public_key = challenge_resp.get("PublicKey", "")
+            challenge = challenge_resp.get("Challenge", "")
+
+            if not public_key or not challenge:
+                _LOGGER.error("HNAP JSON: Missing PublicKey or Challenge in login response")
+                return (False, "Missing authentication parameters")
+            private_key = self._hmac_md5_upper(
+                f"{public_key}{password}",
+                challenge,
+            )
+            session.cookies.set("PrivateKey", private_key)
+
+            # Step 2: Complete login with hashed password
+            login_password = self._hmac_md5_upper(private_key, challenge)
+            login_json = builder.call_single(
+                session,
+                base_url,
+                "Login",
+                {
+                    "Action": "login",
+                    "Username": username,
+                    "LoginPassword": login_password,
+                },
+            )
+            login_resp = json.loads(login_json).get("LoginResponse", {})
+            login_result = login_resp.get("LoginResult", "")
+            _LOGGER.debug("HNAP JSON: Login result: %s", login_result)
+            if login_result == "OK" or login_result == "success":
+                _LOGGER.info("HNAP JSON: Authentication successful")
+                return (True, login_result)
+            else:
+                _LOGGER.warning("HNAP JSON: Authentication failed with result: %s", login_result)
+                return (False, login_result)
+        except Exception as e:
+            _LOGGER.error("HNAP JSON: Authentication error: %s", str(e), exc_info=True)
+            return (False, str(e))
+
+    @staticmethod
+    def _hmac_md5_upper(key: str, message: str) -> str:
+        import hashlib
+        import hmac
+
+        mac = hmac.new(key.encode(), message.encode(), digestmod=hashlib.md5)
+        return mac.hexdigest().upper()
+
+
 class AuthFactory:
     """Factory for creating authentication strategy instances."""
 
@@ -458,6 +568,7 @@ class AuthFactory:
         AuthStrategyType.FORM_PLAIN_AND_BASE64: FormPlainAndBase64AuthStrategy,
         AuthStrategyType.REDIRECT_FORM: RedirectFormAuthStrategy,
         AuthStrategyType.HNAP_SESSION: HNAPSessionAuthStrategy,
+        AuthStrategyType.HNAP_JSON: HNAPJsonAuthStrategy,
     }
 
     @classmethod
