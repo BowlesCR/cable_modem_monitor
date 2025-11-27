@@ -2,17 +2,14 @@
 
 from __future__ import annotations
 
-import hashlib
-import hmac
+import json
 import logging
-import time
 
 from bs4 import BeautifulSoup
 
-from custom_components.cable_modem_monitor.core.auth_config import HNAPAuthConfig
-from custom_components.cable_modem_monitor.core.authentication import AuthStrategyType
-from custom_components.cable_modem_monitor.core.hnap_builder import HNAPRequestBuilder
-from custom_components.cable_modem_monitor.core.hnap_json_builder import HNAPJsonRequestBuilder
+from ...core.auth_config import HNAPAuthConfig
+from ...core.authentication import AuthStrategyType
+from ...core.hnap_json_builder import HNAPJsonRequestBuilder
 
 from ..base_parser import ModemCapability, ModemParser
 
@@ -20,7 +17,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class MotorolaMB8600HnapParser(ModemParser):
-    """Parser for Motorola MB8600 cable modem using HNAP/SOAP protocol."""
+    """Parser for Motorola MB8600 cable modem using HNAP JSON protocol."""
 
     name = "Motorola MB8600 (HNAP)"
     manufacturer = "Motorola"
@@ -33,7 +30,7 @@ class MotorolaMB8600HnapParser(ModemParser):
 
     # HNAP authentication configuration
     auth_config = HNAPAuthConfig(
-        strategy=AuthStrategyType.HNAP_SESSION,
+        strategy=AuthStrategyType.HNAP_JSON,
         login_url="/Login.html",
         hnap_endpoint="/HNAP1/",
         session_timeout_indicator="UN-AUTH",
@@ -55,127 +52,25 @@ class MotorolaMB8600HnapParser(ModemParser):
     @classmethod
     def can_parse(cls, soup: BeautifulSoup, url: str, html: str) -> bool:
         """Detect if this is a Motorola MB8600 modem."""
-        return (
-            "MB8600" in html
-            or "MB 8600" in html
-            or (("HNAP" in html or "purenetworks.com/HNAP1" in html) and "Motorola" in html and "MB8600" in html)
-        )
-
-    @staticmethod
-    def _hmac_md5_upper(key: str, message: str) -> str:
-        """Generate HMAC-MD5 hash in uppercase (as used by MB8600)."""
-        mac = hmac.new(key.encode(), message.encode(), digestmod=hashlib.md5)
-        return mac.hexdigest().upper()
-
-    def _send_soap_action(
-        self,
-        session,
-        base_url: str,
-        action: str,
-        params: dict[str, str],
-        private_key: str = "withoutloginkey",
-    ) -> dict[str, str]:
-        """
-        Send a SOAP action using MB8600 authentication method.
-
-        Based on modemLogin.py authentication logic.
-        """
-        soap_action_uri = f'"{self.auth_config.soap_action_namespace}{action}"'
-
-        # Magic number from modem's JavaScript
-        TIME_MODULO = 2_000_000_000_000
-        current_time = str(round(time.time() * 1000) % TIME_MODULO)
-
-        # Generate HNAP_AUTH header
-        auth = f"{self._hmac_md5_upper(private_key, f'{current_time}{soap_action_uri}')} {current_time}"
-
-        endpoint_url = f"{base_url.rstrip('/')}{self.auth_config.hnap_endpoint}"
-
-        _LOGGER.debug("MB8600: Sending SOAP action %s to %s", action, endpoint_url)
-
-        response = session.post(
-            endpoint_url,
-            headers={
-                "SOAPAction": soap_action_uri,
-                "HNAP_AUTH": auth,
-            },
-            json={action: {**params}},
-            timeout=10,
-        )
-        response.raise_for_status()
-
-        json_response = response.json()
-        return json_response.get(f"{action}Response", {})
+        return ("HNAP" in html or "purenetworks.com/HNAP1" in html) and "Motorola" in html and "MB8600" in html
 
     def login(self, session, base_url, username, password) -> tuple[bool, str | None]:
+        """Perform login using HNAP JSON authentication.
+
+        Args:
+            session: Requests session
+            base_url: Modem base URL
+            username: Username for authentication
+            password: Password for authentication
+
+        Returns:
+            Tuple of (success: bool, login_result: str | None)
         """
-        Log in using MB8600 HNAP authentication.
+        from ...core.authentication import AuthFactory
 
-        This implements the two-step authentication process used by MB8600:
-        1. Request challenge with username
-        2. Respond with hashed password using challenge
-        """
-        try:
-            _LOGGER.debug("MB8600: Starting authentication process")
-
-            # Step 1: Request login challenge
-            resp = self._send_soap_action(
-                session,
-                base_url,
-                "Login",
-                {
-                    "Action": "request",
-                    "Username": username,
-                },
-            )
-
-            # Set cookie from initial response
-            cookie = resp.get("Cookie", "")
-            if cookie:
-                session.cookies.set("uid", cookie)
-
-            # Generate private key from public key, password, and challenge
-            public_key = resp.get("PublicKey", "")
-            challenge = resp.get("Challenge", "")
-
-            if not public_key or not challenge:
-                _LOGGER.error("MB8600: Missing PublicKey or Challenge in login response")
-                return (False, "Missing authentication parameters")
-
-            private_key = self._hmac_md5_upper(
-                f"{public_key}{password}",
-                challenge,
-            )
-            session.cookies.set("PrivateKey", private_key)
-
-            # Step 2: Complete login with hashed password
-            login_password = self._hmac_md5_upper(private_key, challenge)
-
-            resp = self._send_soap_action(
-                session,
-                base_url,
-                "Login",
-                {
-                    "Action": "login",
-                    "Username": username,
-                    "LoginPassword": login_password,
-                },
-                private_key=private_key,
-            )
-
-            login_result = resp.get("LoginResult", "")
-            _LOGGER.debug("MB8600: Login result: %s", login_result)
-
-            if login_result == "OK" or login_result == "success":
-                _LOGGER.info("MB8600: Authentication successful")
-                return (True, login_result)
-            else:
-                _LOGGER.warning("MB8600: Authentication failed with result: %s", login_result)
-                return (False, login_result)
-
-        except Exception as e:
-            _LOGGER.error("MB8600: Authentication error: %s", str(e), exc_info=True)
-            return (False, str(e))
+        auth_strategy = AuthFactory.get_strategy(self.auth_config.strategy)
+        success, result = auth_strategy.login(session, base_url, username, password, self.auth_config)
+        return (success, result)
 
     def _is_auth_failure(self, error: Exception) -> bool:
         """
@@ -245,13 +140,15 @@ class MotorolaMB8600HnapParser(ModemParser):
             return result
 
     def _parse_with_hnap(self, session, base_url: str) -> dict:
-        """Parse modem data using HNAP requests with MB8600 authentication."""
-        _LOGGER.debug("MB8600: Attempting HNAP communication")
+        """Parse modem data using JSON-based HNAP requests."""
+        _LOGGER.debug("MB8600: Attempting JSON-based HNAP communication")
 
-        # Get private key from session cookies for authenticated requests
-        private_key = session.cookies.get("PrivateKey", "withoutloginkey")
+        # Build JSON HNAP request builder
+        builder = HNAPJsonRequestBuilder(
+            endpoint=self.auth_config.hnap_endpoint, namespace=self.auth_config.soap_action_namespace
+        )
 
-        # Make individual HNAP requests for all data
+        # Make batched HNAP request for all data
         hnap_actions = [
             "GetMotoStatusStartupSequence",
             "GetMotoStatusConnectionInfo",
@@ -260,20 +157,21 @@ class MotorolaMB8600HnapParser(ModemParser):
             "GetMotoLagStatus",
         ]
 
-        hnap_data = {}
+        _LOGGER.debug("MB8600: Fetching modem data via JSON HNAP GetMultipleHNAPs")
+        json_response = builder.call_multiple(session, base_url, hnap_actions)
 
-        for action in hnap_actions:
-            try:
-                _LOGGER.debug("MB8600: Fetching %s", action)
-                response = self._send_soap_action(session, base_url, action, {}, private_key=private_key)
-                hnap_data[f"{action}Response"] = response
-            except Exception as e:
-                _LOGGER.warning("MB8600: Failed to fetch %s: %s", action, str(e))
-                # Continue with other actions even if one fails
-                hnap_data[f"{action}Response"] = {}
+        # Parse JSON response
+        response_data = json.loads(json_response)
+
+        # Extract nested response
+        hnap_data = response_data.get("GetMultipleHNAPsResponse", response_data)
 
         # Enhanced logging to help diagnose response structure
-        _LOGGER.debug("MB8600: HNAP responses received. Actions completed: %d", len(hnap_data))
+        _LOGGER.debug(
+            "MB8600: JSON HNAP response received. Top-level keys: %s, response size: %d bytes",
+            list(hnap_data.keys()),
+            len(json_response),
+        )
 
         # Parse channels and system info
         downstream = self._parse_downstream_from_hnap(hnap_data)
@@ -281,7 +179,7 @@ class MotorolaMB8600HnapParser(ModemParser):
         system_info = self._parse_system_info_from_hnap(hnap_data)
 
         _LOGGER.info(
-            "MB8600: Successfully parsed data using HNAP (downstream: %d channels, upstream: %d channels)",
+            "MB8600: Successfully parsed data using JSON HNAP. (downstream: %d channels, upstream: %d channels)",
             len(downstream),
             len(upstream),
         )
@@ -472,4 +370,3 @@ class MotorolaMB8600HnapParser(ModemParser):
         value = source.get(source_key, "")
         if value:
             target[target_key] = value
-
