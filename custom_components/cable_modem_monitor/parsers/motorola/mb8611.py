@@ -26,8 +26,13 @@ class MotorolaMB8611HnapParser(ModemParser):
     priority = 101  # Higher priority for the API-based method
 
     # Verification status
-    verified = False  # HNAP authentication broken
-    verification_source = "Issues #4, #6 - HNAP authentication has SSL and protocol issues"
+    verified = False
+    verification_source = "Awaiting real-world confirmation (Issues #4, #6)"
+
+    # Device metadata
+    release_date = "2020"
+    docsis_version = "3.1"
+    fixtures_path = "tests/parsers/motorola/fixtures/mb8611"
 
     # HNAP authentication configuration
     auth_config = HNAPAuthConfig(

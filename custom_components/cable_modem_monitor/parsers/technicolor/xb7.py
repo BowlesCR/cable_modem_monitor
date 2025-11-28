@@ -27,6 +27,11 @@ class TechnicolorXB7Parser(ModemParser):
     verified = False  # No confirmed user reports
     verification_source = None  # Needs user verification
 
+    # Device metadata
+    release_date = "2018"
+    docsis_version = "3.1"
+    fixtures_path = "tests/parsers/technicolor/fixtures/xb7"
+
     # New authentication configuration (declarative)
     auth_config = RedirectFormAuthConfig(
         strategy=AuthStrategyType.REDIRECT_FORM,

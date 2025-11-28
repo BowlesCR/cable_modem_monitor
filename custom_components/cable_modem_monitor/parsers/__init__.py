@@ -44,14 +44,17 @@ def get_parser_by_name(parser_name: str) -> type[ModemParser] | None:
     triggers discovery first.
 
     Args:
-        parser_name: The name of the parser (e.g., "Motorola MB8611 (Static)")
+        parser_name: The name of the parser (e.g., "Motorola MB8611")
 
     Returns:
         Parser class if found, None otherwise
     """
     global _PARSER_NAME_CACHE
 
-    _LOGGER.debug("Attempting to get parser by name: %s", parser_name)
+    # Strip " *" suffix used to mark unverified parsers in the UI
+    parser_name_clean = parser_name.rstrip(" *")
+
+    _LOGGER.debug("Attempting to get parser by name: %s", parser_name_clean)
 
     # Build the name cache if not already built
     if _PARSER_NAME_CACHE is None:
@@ -61,12 +64,12 @@ def get_parser_by_name(parser_name: str) -> type[ModemParser] | None:
             _PARSER_NAME_CACHE[cls.name] = cls
 
     # Look up in cache
-    parser_cls = _PARSER_NAME_CACHE.get(parser_name)
+    parser_cls = _PARSER_NAME_CACHE.get(parser_name_clean)
     if parser_cls:
-        _LOGGER.debug("Found parser '%s' in cache", parser_name)
+        _LOGGER.debug("Found parser '%s' in cache", parser_name_clean)
         return parser_cls
 
-    _LOGGER.warning("Parser '%s' not found in discovered parsers", parser_name)
+    _LOGGER.warning("Parser '%s' not found in discovered parsers", parser_name_clean)
     return None
 
 
