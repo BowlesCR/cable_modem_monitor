@@ -49,7 +49,7 @@ The following parsers need verification field updates:
 
 2. **Netgear C3700**
    ```python
-   verified = True  
+   verified = True
    verification_source = "kwschulz (personal verification)"
    ```
 

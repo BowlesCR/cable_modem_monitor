@@ -40,7 +40,7 @@ repos:
       - id: check-yaml
         exclude: ^\.github/workflows/
       - id: check-json
-        exclude: (devcontainer\.json|\.vscode/settings\.json)$
+        exclude: (devcontainer\.json|\.vscode/(settings|extensions)\.json)$
       - id: check-added-large-files
         args: ["--maxkb=1000"]
       - id: check-merge-conflict
@@ -80,10 +80,18 @@ repos:
         language: script
         always_run: true
         pass_filenames: false
-        stages: [commit]
+        stages: [pre-commit]
 
       - id: codeql-test
         name: Run CodeQL Tests
         entry: scripts/dev/test-codeql.sh
         language: script
         files: \.(ql|qls)$
+
+      - id: check-changelog
+        name: Check CHANGELOG.md reminder
+        entry: scripts/dev/check-changelog.sh
+        language: script
+        always_run: true
+        pass_filenames: false
+        stages: [pre-commit]

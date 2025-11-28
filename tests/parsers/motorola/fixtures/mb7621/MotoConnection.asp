@@ -48,8 +48,8 @@ else if (do_checkstr('omniweb')) browser = "omni";
 else if (do_checkstr('opera')) browser = "oper";
 else if (do_checkstr('webtv')) browser = "webt";
 else if (do_checkstr('icab')) browser = "icab";
-else if (do_checkstr('msie')) browser = "msie"; 
-  
+else if (do_checkstr('msie')) browser = "msie";
+
 //Add firefox detection
 else if(navigator.userAgent.indexOf("Firefox")!=-1){
 var versionindex=navigator.userAgent.indexOf("Firefox")+8
@@ -80,14 +80,14 @@ return browseVer;
 function showhideWan(sh)
 {
 var status;
-if (sh == 1) 
-{        
-status = "";   
-}    
-else 
-{   
-status = "none"  
-}   
+if (sh == 1)
+{
+status = "";
+}
+else
+{
+status = "none"
+}
 
 if (window.document.getElementById)
 {
@@ -121,14 +121,14 @@ if (isIPv6Only == 1)
 function showhideIpProv(sh)
 {
 var status;
-if (sh == 1) 
-{        
-status = "";   
-}    
-else 
-{   
-status = "none"  
-}   
+if (sh == 1)
+{
+status = "";
+}
+else
+{
+status = "none"
+}
 
 if (window.document.getElementById)
 {
@@ -648,7 +648,7 @@ else
       <input name="motoSecondaryDnsIpAddressIP2" type="text" size=3 maxlength=3 value=>
       <input name="motoSecondaryDnsIpAddressIP3" type="text" size=3 maxlength=3 value=>
       <input type="hidden" name="motoWanLeaseAction" value=>
--->  
+-->
   <tr>
   <td class='moto-wlan-Note' colspan='4'>
   <input type='hidden' name='motoAutoDNSAction' value=''>

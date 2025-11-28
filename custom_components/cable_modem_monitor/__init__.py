@@ -53,9 +53,12 @@ def _select_parser(parsers: list, modem_choice: str):
         ***REMOVED*** Auto mode - return all parsers
         return parsers
 
+    ***REMOVED*** Strip " *" suffix used to mark unverified parsers in the UI
+    modem_choice_clean = modem_choice.rstrip(" *")
+
     ***REMOVED*** User selected specific parser - find and instantiate it
     for parser_class in parsers:
-        if parser_class.name == modem_choice:
+        if parser_class.name == modem_choice_clean:
             _LOGGER.info("Using user-selected parser: %s", parser_class.name)
             return parser_class()
 
@@ -112,6 +115,14 @@ def _create_update_function(hass: HomeAssistant, scraper, health_monitor, host: 
                     int(ch.get("channel_id", ch.get("channel", idx + 1))): ch
                     for idx, ch in enumerate(data["cable_modem_upstream"])
                 }
+
+            ***REMOVED*** Add parser metadata for sensor attributes (works without re-adding integration)
+            detection_info = scraper.get_detection_info()
+            if detection_info:
+                data["_parser_release_date"] = detection_info.get("release_date")
+                data["_parser_docsis_version"] = detection_info.get("docsis_version")
+                data["_parser_fixtures_url"] = detection_info.get("fixtures_url")
+                data["_parser_verified"] = detection_info.get("verified", False)
 
             return data
         except Exception as err:

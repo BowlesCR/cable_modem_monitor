@@ -11,7 +11,7 @@
 
   <script type="text/javascript" src="func.js"></script>
   <script type="text/javascript" src="utility.js"></script>
-  <style type="text/css"> 
+  <style type="text/css">
 
       .warning-head{
          height:100%;
@@ -31,80 +31,80 @@
       .normal-bottom{
          height:93%;
          width:188px;
-         background-image:url('DashBottom.gif'); 
+         background-image:url('DashBottom.gif');
          background-repeat: repeat-x;
-         margin-left:2px;    
+         margin-left:2px;
          overflow:hidden;
       }
 
       .warning-bottom{
          height:100%;
          width:188px;
-         background-image:url('DashBottomY.gif'); 
+         background-image:url('DashBottomY.gif');
          background-repeat: no-repeat;
-         margin-left:2px;         
+         margin-left:2px;
       }
 
       .error-bottom{
          height:100%;
          width:188px;
-         background-image:url('DashBottomR.gif'); 
+         background-image:url('DashBottomR.gif');
          background-repeat: no-repeat;
-         margin-left:2px;         
+         margin-left:2px;
       }
 
       .Status-normal{
          font-size:14px;
          font-weight:bold;
          font-family: Arial,Simsun,Helvetica, sans-serif;;
-         color:***REMOVED***323232;     
+         color:***REMOVED***323232;
          white-space: nowrap;
-         overflow:hidden;         
+         overflow:hidden;
       }
-      
+
       .Status-unnormal{
          font-size:14px;
          font-weight:bold;
          font-family: Arial,Simsun, Helvetica, sans-serif;;
-         color:***REMOVED***ffffff;   
-         display:block;         
+         color:***REMOVED***ffffff;
+         display:block;
       }
-      
+
        .Condition-normal{
          font-size:14px;
          font-weight:bold;
          font-family: Arial,Simsun,Helvetica, sans-serif;;
-         color:***REMOVED***43A800;  
+         color:***REMOVED***43A800;
          white-space: nowrap;
-         overflow:hidden;     
+         overflow:hidden;
       }
-      
+
       .Condition-unnormal{
          font-size:12px;
          font-weight:bold;
          color:***REMOVED***ffffff;
          text-decoration:underline;
          font-family: Arial,Simsun,Helvetica, sans-serif;;
-         font-style: italic;         
-         overflow:hidden; 
+         font-style: italic;
+         overflow:hidden;
       }
 
-      .Status-wireless-normal{                
+      .Status-wireless-normal{
          font-size:14px;
          font-weight:bold;
          font-family: Arial,Simsun,Helvetica, sans-serif;;
-         color:***REMOVED***323232;     
+         color:***REMOVED***323232;
          white-space: nowrap;
-         overflow:hidden;     
+         overflow:hidden;
       }
-      
+
       .Status-wireless-unnormal{
          font-size:14px;
          font-weight:bold;
          font-family: Arial,Simsun, Helvetica, sans-serif;;
-         color:***REMOVED***ffffff;   
-         /*display:block;*/      
-      }   
+         color:***REMOVED***ffffff;
+         /*display:block;*/
+      }
 
       .subtext{
          font-family: Arial,Simsun,Helvetica, sans-serif;
@@ -116,7 +116,7 @@
          font-family: Simsun,Arial,Helvetica, sans-serif;
          font-size:20px;font-weight:bold;
          color:***REMOVED***323232
-      }  
+      }
   </style>
   <script type="text/javascript" src="jquery.js"></script>
   <script type="text/javascript">
@@ -140,12 +140,12 @@ $.fn.vAlign = function() {
 })(jQuery);
 
   $(document).ready(function(){
-      
+
       var form=document.forms[0];
       var gui_region = form.curlang.value;
-     
+
         BodyInit();
-    
+
       setInternetState();
       setWirelessState();
       setAttachedDevicesState();
@@ -153,22 +153,22 @@ $.fn.vAlign = function() {
       setReadyShareState();
       setVoiceState();
       setGuestNetworkState();
-      
+
       run_marquee();
-      
-      
+
+
       $('.subtext').each(function(){
          if(gui_region=="Chinese"){
-             $(this).addClass("subtext_pr"); 
+             $(this).addClass("subtext_pr");
          }else{
-             $(this).removeClass("subtext_pr"); 
+             $(this).removeClass("subtext_pr");
          }
-//         if($.trim($(this).text()).length >= 16){           
-//              $(this).css("font-size","15px"); 
-//              $(this).css("position","relative"); 
+//         if($.trim($(this).text()).length >= 16){
+//              $(this).css("font-size","15px");
+//              $(this).css("position","relative");
 //              $(this).css("top","6px");
 //         }else{
-              $(this).css("font-size","20px"); 
+              $(this).css("font-size","20px");
 //         }
      });
 
@@ -182,19 +182,19 @@ $.fn.vAlign = function() {
          {
               if( ethernetIp == "" || ethernetIp == "---.---.---.---")
               {
-                  $('***REMOVED***Internet_head').addClass('error-head'); 
+                  $('***REMOVED***Internet_head').addClass('error-head');
                   $('***REMOVED***Internet_bottom').addClass('error-bottom');
-                  $('***REMOVED***Internet-status').addClass('Status-unnormal'); 
+                  $('***REMOVED***Internet-status').addClass('Status-unnormal');
               }
          }
          else
          {
              if(Internet_Result == 0){
-            
+
              }else{
-                 $('***REMOVED***Internet_head').addClass('error-head'); 
+                 $('***REMOVED***Internet_head').addClass('error-head');
                  $('***REMOVED***Internet_bottom').addClass('error-bottom');
-                 $('***REMOVED***Internet-status').addClass('Status-unnormal'); 
+                 $('***REMOVED***Internet-status').addClass('Status-unnormal');
              }
          }
 
@@ -203,60 +203,60 @@ $.fn.vAlign = function() {
             $('***REMOVED***Internet').click(function(ev){
                 location.href = "BasicSettingsBottom.htm";
                 itemOnclickCssSetting("basic-int");
-            }); 
+            });
         }
         else
         {
-            $('***REMOVED***Internet').click(function(ev){ 
+            $('***REMOVED***Internet').click(function(ev){
                     location.href = "DocsisOffline.asp";
                     itemOnclickCssSetting("basic-int");
                 });
         }
 
-/*        
+/*
         if("BAS_basic.htm" != "") {
             if(Internet_Result == 0){
-                $('***REMOVED***Internet').click(function(ev){ 
+                $('***REMOVED***Internet').click(function(ev){
                     location.href = "BAS_basic.htm";
-                    
+
                     parent.$('***REMOVED***page').width(685);
                     parent.$('***REMOVED***page').height(470);
                     $('***REMOVED***page').css("margin-top","0");
-                    $('***REMOVED***page').css("margin-left","30"); 
-                    
+                    $('***REMOVED***page').css("margin-left","30");
+
                     parent.$('.menuActive').removeClass('menuActive');
-                    parent.$('***REMOVED***basic-int').addClass('menuActive'); 
+                    parent.$('***REMOVED***basic-int').addClass('menuActive');
                 });
                 parent.$('***REMOVED***INT_menu').attr("href","BAS_basic.htm");
             }else if(Internet_Result == 1){
-                $('***REMOVED***Internet').click(function(ev){ 
+                $('***REMOVED***Internet').click(function(ev){
                     location.href = "genie_down.htm";
-                    
+
                     parent.$('***REMOVED***page').width(685);
                     parent.$('***REMOVED***page').height(470);
                     parent.$('***REMOVED***page').css("margin-top","0");
                     parent.$('***REMOVED***page').css("margin-left","30");
-                    
+
                     parent.$('.menuActive').removeClass('menuActive');
                     parent.$('***REMOVED***basic-int').addClass('menuActive');
 
                 });
                 parent.$('***REMOVED***INT_menu').attr("href","genie_down.htm");
             }else{
-                $('***REMOVED***Internet').click(function(ev){ 
+                $('***REMOVED***Internet').click(function(ev){
                     location.href = "genie_detwan.htm";
-                    
+
                     parent.$('***REMOVED***page').width(685);
                     parent.$('***REMOVED***page').height(470);
                     parent.$('***REMOVED***page').css("margin-top","0");
                     parent.$('***REMOVED***page').css("margin-left","30");
-                    
+
                     parent.$('.menuActive').removeClass('menuActive');
                     parent.$('***REMOVED***basic-int').addClass('menuActive');
 
                 });
                 parent.$('***REMOVED***INT_menu').attr("href","genie_detwan.htm");
-            }               
+            }
         }
 */
      }
@@ -265,9 +265,9 @@ $.fn.vAlign = function() {
      {
 
           var Wireless_Radio_Result = document.forms[0].Radio_Result.value;
-          var Wireless_Security_Result = document.forms[0].Security_Result.value;   
+          var Wireless_Security_Result = document.forms[0].Security_Result.value;
 //          var Wireless_Radio_Result = "both";
-//          var Wireless_Security_Result = "2g";   
+//          var Wireless_Security_Result = "2g";
 
           var Wireless_Result=0;
           var Wireless_Link_Result=0;
@@ -282,9 +282,9 @@ $.fn.vAlign = function() {
               Wireless_Result = 0;
           }else if(Wireless_Security_Result=="both"){
               if(Wireless_Radio_Result != "none"){
-                  Wireless_Result = 0;                  
+                  Wireless_Result = 0;
               }else{
-                  Wireless_Result = 1; 
+                  Wireless_Result = 1;
               }
           }else if(Wireless_Radio_Result != Wireless_Security_Result){
               Wireless_Result = 1;
@@ -316,14 +316,14 @@ $.fn.vAlign = function() {
                   }
               }
           }else{
-              $('***REMOVED***Wireless_head').addClass('warning-head');                    
+              $('***REMOVED***Wireless_head').addClass('warning-head');
               $('***REMOVED***Wireless_bottom').addClass('warning-bottom');
-              $('***REMOVED***Wireless-status').addClass('Status-wireless-unnormal');             
+              $('***REMOVED***Wireless-status').addClass('Status-wireless-unnormal');
           }
 
           if(false)
           {
-              $('***REMOVED***Wireless').click(function(ev){  
+              $('***REMOVED***Wireless').click(function(ev){
                   location.href = "WirelessSettings.htm";
                   itemOnclickCssSetting("basic-wls");
               });
@@ -332,14 +332,14 @@ $.fn.vAlign = function() {
           else
           {
             if(Wireless_Link_Result == 0){
-                $('***REMOVED***Wireless').click(function(ev){  
+                $('***REMOVED***Wireless').click(function(ev){
                     location.href = "WirelessSettings.htm";
-                    itemOnclickCssSetting("basic-wls");  
+                    itemOnclickCssSetting("basic-wls");
                 });
                 parent.$('***REMOVED***WLS_menu').attr("href","WirelessSettings.htm");
             }else if(Wireless_Link_Result == 1){
-                
-                $('***REMOVED***Wireless').click(function(ev){  
+
+                $('***REMOVED***Wireless').click(function(ev){
                     if(wifiScheduleSupport)
                     {
                         location.href = "AdvancedWirelessSettingsWithSchedule.htm";
@@ -366,64 +366,64 @@ $.fn.vAlign = function() {
 
      function setAttachedDevicesState()
      {
-          
-          var AttachedDevices_Result = "";
-                    
 
-          $('***REMOVED***AttachedDevices').click(function(ev){     
+          var AttachedDevices_Result = "";
+
+
+          $('***REMOVED***AttachedDevices').click(function(ev){
               location.href = "NetworkMap.htm";
               itemOnclickCssSetting("basic-atd");
           });
-            
-       
+
+
       }
 
       function setParentalControlsState()
      {
           var ParentalControls_Result = document.forms[0].PC_Result.value;
-          var support = document.forms[0].PC_Support.value;   
-//          var ParentalControls_Result = 0;                    
+          var support = document.forms[0].PC_Support.value;
+//          var ParentalControls_Result = 0;
 //          var support = 1;
 
           if(support == 0){
-              $('***REMOVED***ParentalControls-condition').text("NOT SUPPORTED"); 
-          }else{ 
+              $('***REMOVED***ParentalControls-condition').text("NOT SUPPORTED");
+          }else{
               if(ParentalControls_Result == 1){
                   $('***REMOVED***ParentalControls-condition').text("ENABLED");
               }else{
                   $('***REMOVED***ParentalControls-condition').text("NOT ENABLED");
               }
-          } 
+          }
           if("BAS_basic.htm" != ""){
               if(support == 0){
-                  $('***REMOVED***ParentalControls').click(function(ev){     
-                       window.open("http://www.netgear.com/ lpc",'_blank','fullscreen=yes,toolbar=yes,location=yes,scrollbars=yes');                      
-                  });         
-                  parent.$('***REMOVED***PAR_menu').attr("href","http://www.netgear.com/lpc"); 
-                  parent.$('***REMOVED***PAR_menu2').attr("href","http://www.netgear.com/lpc");             
-              }else{ 
+                  $('***REMOVED***ParentalControls').click(function(ev){
+                       window.open("http://www.netgear.com/ lpc",'_blank','fullscreen=yes,toolbar=yes,location=yes,scrollbars=yes');
+                  });
+                  parent.$('***REMOVED***PAR_menu').attr("href","http://www.netgear.com/lpc");
+                  parent.$('***REMOVED***PAR_menu2').attr("href","http://www.netgear.com/lpc");
+              }else{
                   if(ParentalControls_Result == 0){
-                      $('***REMOVED***ParentalControls').click(function(ev){  
+                      $('***REMOVED***ParentalControls').click(function(ev){
                            window.open("http://www.netgear.com/lpc",'_blank','fullscreen=yes,toolbar=yes,location=yes,scrollbars=yes');
                            parent.$('.menuActive').removeClass('menuActive');
-                           parent.$('***REMOVED***basic-par').addClass('menuActive');    
+                           parent.$('***REMOVED***basic-par').addClass('menuActive');
                       });
-                      parent.$('***REMOVED***PAR_menu').attr("href","http://www.netgear.com/lpc"); 
+                      parent.$('***REMOVED***PAR_menu').attr("href","http://www.netgear.com/lpc");
                       parent.$('***REMOVED***PAR_menu2').attr("href","http://www.netgear.com/lpc");
                   }else{
                       $('***REMOVED***ParentalControls').click(function(){
                           window.open("http://netgear.opendns.com/",'_blank','fullscreen=yes,toolbar=yes,location=yes,scrollbars=yes');
                           parent.$('.menuActive').removeClass('menuActive');
-                          parent.$('***REMOVED***basic-par').addClass('menuActive');    
+                          parent.$('***REMOVED***basic-par').addClass('menuActive');
                       });
-                      parent.$('***REMOVED***PAR_menu').attr("href","http://netgear.opendns.com/"); 
+                      parent.$('***REMOVED***PAR_menu').attr("href","http://netgear.opendns.com/");
                       parent.$('***REMOVED***PAR_menu2').attr("href","http://netgear.opendns.com/");
                   }
               }
-         }  
+         }
 
-              
-         
+
+
       }
 
       function setReadyShareState()
@@ -432,20 +432,20 @@ $.fn.vAlign = function() {
           var ReadyShare_Result = document.forms[0].RS_Result.value;
 //          var ReadyShare_Result = 0;
 
-          
+
           if(ReadyShare_Result == 1){
               $('***REMOVED***ReadyShare-condition').text("READY");
           }else{
               $('***REMOVED***ReadyShare-condition').text("No USB drive");
           }
 
-          $('***REMOVED***ReadyShare').click(function(ev){     
+          $('***REMOVED***ReadyShare').click(function(ev){
               location.href = "USBBasic.htm";
 //              location.href = "USB_basic_main.htm";
               itemOnclickCssSetting("basic-rea");
           });
-          
-               
+
+
       }
 
        function setGuestNetworkState()
@@ -461,18 +461,18 @@ $.fn.vAlign = function() {
               $('***REMOVED***guest1').css("display","none");
               $('***REMOVED***guest3').css("display","none");
           }
-                            
-          $('***REMOVED***GuestNetwork').click(function(ev){     
+
+          $('***REMOVED***GuestNetwork').click(function(ev){
             location.href = "GuestNetwork.htm";
             itemOnclickCssSetting("basic-gst");
           });
-      }      
+      }
 
 
        function setVoiceState()
      {
           var Voice_Result = document.forms[0].Voice_Result.value;
-          
+
           if(Voice_Result == 1){
               $('***REMOVED***Voice-condition').text("READY");
               document.getElementsByName("VoiceImg")[0].src = "Phone.PNG";
@@ -482,10 +482,10 @@ $.fn.vAlign = function() {
               document.getElementsByName("VoiceImg")[0].src = "Phone_gray.PNG";
           }
 
-   
-          $('***REMOVED***Voice').click(function(ev){     
+
+          $('***REMOVED***Voice').click(function(ev){
             location.href = "MtaStatus.htm";
-            itemOnclickCssSetting("basic-voice");  
+            itemOnclickCssSetting("basic-voice");
           });
       }
   });
@@ -496,7 +496,7 @@ function itemOnclickCssSetting(itemId)
     parent.$('***REMOVED***page').height(parent.page_contain_height);
     parent.$('***REMOVED***page').css("margin-top","0");
     parent.$('***REMOVED***page').css("margin-left","30");
-     
+
     parent.$('.menuActive').removeClass('menuActive');
     parent.$('***REMOVED***'+itemId).addClass('menuActive');
     parent.$('***REMOVED***page').css("visibility","hidden");
@@ -518,24 +518,24 @@ function InternetDisplay(connected, comment)
             comment = "Good";
         }
     }
-    
+
     if (connected == '1')
     {
         ethernetConnect = true;
         if (comment == "Off")
-            $('***REMOVED***Internet-status1').html(vOff); 
+            $('***REMOVED***Internet-status1').html(vOff);
         else
-            $('***REMOVED***Internet-status1').html(comment); 
-        $('***REMOVED***internet2').css('display', 'none'); 
+            $('***REMOVED***Internet-status1').html(comment);
+        $('***REMOVED***internet2').css('display', 'none');
     }
     else
     {
         $('***REMOVED***Internet-status1').html('STATUS:');
 
         if (comment == "Good")
-            $('***REMOVED***Internet-status2').html(vGood); 
+            $('***REMOVED***Internet-status2').html(vGood);
         else
-            $('***REMOVED***Internet-status2').html(comment); 
+            $('***REMOVED***Internet-status2').html(comment);
 
     }
 }
@@ -553,14 +553,14 @@ function isIE7()
 	{
 		return true;
 	}
-	
+
 	return false;
 }
 
 function InitUpdateView(tagValues)
 {
     var stringTmp;
-    
+
     if(tagValues[28] == "1")
     {
         ETHERNET_SUPPORT = true;
@@ -577,9 +577,9 @@ function InitUpdateView(tagValues)
     document.getElementsByName("Internet_Status")[0].value = tagValues[0];
 
     // Internet Comment
-//    $('***REMOVED***Internet-status1').html(tagValues[1]); 
+//    $('***REMOVED***Internet-status1').html(tagValues[1]);
     InternetDisplay(tagValues[0], tagValues[1]);
-    
+
     // Wireless Radio Enable
     document.getElementsByName("Radio_Result")[0].value = tagValues[2];
 
@@ -631,7 +631,7 @@ function InitUpdateView(tagValues)
 
     // Wireless Passphrase 5g
     if(tagValues[7] == "None")
-    {   
+    {
         $('***REMOVED***wireless3_5g').html("No Security");
     }
     else if(tagValues[7] == "Enterprise")
@@ -650,7 +650,7 @@ function InitUpdateView(tagValues)
             tagValues[7] = stringTmp;
         $('***REMOVED***wirelessPassword1_5g').html(tagValues[7]);
     }
-    
+
 
     // Attached Devices Number
     $('***REMOVED***AttachedDevices-condition').html(tagValues[8]);
@@ -689,7 +689,7 @@ function InitUpdateView(tagValues)
     else
         tagValues[14] = stringTmp;
     $('***REMOVED***guestPassword1').html(tagValues[14]);
-    
+
     // Guest SSID 5g
     stringTmp = piplineDecode(tagValues[15])
     if (stringTmp.length >10)
@@ -720,20 +720,20 @@ function InitUpdateView(tagValues)
 
     // always hide nat mode webpage
     //parent.$("***REMOVED***NatMode").hide();
-    
+
     if (RgMode == "1")
     {
         // Speed Test support
         setWebSpeedTestSupport(tagValues[20]);
-    
+
         // Loopback IP
         setWebLoopbackIPSupport(tagValues[18]);
-    
+
         // 3G WAN
         setWeb3GWANSupport(tagValues[19]);
-    
+
         // GuestNetwork supported
-        if (tagValues[21] == "1")    
+        if (tagValues[21] == "1")
         {
             $("***REMOVED***GuestNetwork").hide();
             parent.$('***REMOVED***guest_set').css('display', 'none');
@@ -762,7 +762,7 @@ function InitUpdateView(tagValues)
         {
             $("***REMOVED***Voice").hide();
         }
-        
+
         parent.$("***REMOVED***router_status").show();
         parent.$("***REMOVED***eventlog").show();
         // always hide nat mode webpage
@@ -779,12 +779,12 @@ function InitUpdateView(tagValues)
     var activeLength=0;
     var heightpadding=9;
 	var oneItemHeight=21;
-	
+
 	if(isIE7())
 	{
 		oneItemHeight=24;
 	}
-	
+
     parent.$('***REMOVED***set_hdr li').each(function(){
         //alert ($(this)[0].getAttribute('id'));
         if($($(this)[0]).css("display") != "none"){
@@ -792,7 +792,7 @@ function InitUpdateView(tagValues)
         }
     });
     parent.$('***REMOVED***set_hdr').height(activeLength * oneItemHeight + heightpadding);
-        
+
     activeLength=0;
     parent.$('***REMOVED***AdminULId li').each(function(){
         //alert ($(this)[0].getAttribute('id'));
@@ -801,7 +801,7 @@ function InitUpdateView(tagValues)
         }
     });
     parent.$('***REMOVED***AdminULId').height(activeLength * oneItemHeight + heightpadding);
-    
+
     activeLength=0;
     parent.$('***REMOVED***usb_hdr li').each(function(){
         //alert ($(this)[0].getAttribute('id'));
@@ -937,7 +937,7 @@ function WirelessDisplay(enable, type)
         $('***REMOVED***wireless_none').vAlign();
         $('***REMOVED***wireless_none').css('text-align', 'center');
         $('***REMOVED***wirelessRadio').html('OFF');
-        
+
     }
     else if (type == 'none')
     {
@@ -975,7 +975,7 @@ function GuestWirelessDisplay(enable,wifiEnable)
             $('***REMOVED***guest1_none').css('display', 'block');
             $('***REMOVED***guest1_none').vAlign();
             $('***REMOVED***guest1_none').css('text-align', 'center');
-        }     
+        }
     }
     else
     {

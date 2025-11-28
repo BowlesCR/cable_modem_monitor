@@ -886,14 +886,38 @@ class ModemScraper:
             **prefixed_system_info,
         }
 
-    def get_detection_info(self) -> dict:
-        """Get information about detected modem and successful URL."""
+    def get_detection_info(self) -> dict[str, str | bool | None]:
+        """Get information about detected modem and successful URL.
+
+        Returns parser metadata including:
+        - modem_name: Parser display name
+        - manufacturer: Modem manufacturer
+        - successful_url: URL that worked for data retrieval
+        - release_date: When modem was first released (e.g., "2017")
+        - docsis_version: DOCSIS specification version (e.g., "3.1")
+        - fixtures_path: Path to test fixtures in repo
+        - fixtures_url: GitHub URL to fixtures directory
+        - verified: Whether parser has been verified by users
+        """
         if self.parser:
-            return {
+            info: dict[str, str | bool | None] = {
                 "modem_name": self.parser.name,
                 "manufacturer": self.parser.manufacturer,
                 "successful_url": self.last_successful_url,
             }
+            ***REMOVED*** Add device metadata from parser class
+            if self.parser.release_date:
+                info["release_date"] = self.parser.release_date
+            if self.parser.docsis_version:
+                info["docsis_version"] = self.parser.docsis_version
+            if self.parser.fixtures_path:
+                info["fixtures_path"] = self.parser.fixtures_path
+                ***REMOVED*** Generate GitHub URL for fixtures
+                fixtures_url = self.parser.__class__.get_fixtures_url()
+                if fixtures_url:
+                    info["fixtures_url"] = fixtures_url
+            info["verified"] = self.parser.verified
+            return info
         return {}
 
     def restart_modem(self) -> bool:

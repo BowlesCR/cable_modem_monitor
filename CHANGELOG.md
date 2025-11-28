@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***REMOVED******REMOVED*** [Unreleased]
 
+***REMOVED******REMOVED******REMOVED*** Added
+- **Parser Metadata System** - All parsers now expose device information
+  - Added `release_date`, `docsis_version`, `fixtures_path` to base parser
+  - Added `verified` status and `verification_source` for transparency
+  - New `ModemInfoSensor` exposes metadata as Home Assistant entity attributes
+
+- **MB8611 HNAP Authentication** - Challenge-response auth implementation
+  - HMAC-MD5 based authentication for Motorola MB8611/MB8612
+  - Credit: @BowlesCR (Chris Bowles) for reverse-engineering the auth flow
+  - Credit: @cvonk (Coert Vonk) for HAR capture and persistent debugging support (Issue ***REMOVED***6)
+  - Prior art: xNinjaKittyx/mb8600 repository
+  - ⚠️ UNVERIFIED - awaiting real hardware confirmation
+
+- **HNAP JSON Builder Tests** - 535 lines of comprehensive test coverage
+
+***REMOVED******REMOVED******REMOVED*** Changed
+- **MB8611 Fixture Consolidation** - Merged mb8611_hnap and mb8611_static into single mb8611 directory
+  - Removed non-functional static parser (never authenticated)
+  - Preserved MotoStatusLog.html and MotoStatusSecurity.html from static for field mapping reference
+  - Renamed `mb8611_hnap.py` to `mb8611.py`
+
+- **Standalone Capture Scripts** - Capture and sanitize scripts no longer require Home Assistant
+  - Created `scripts/utils/sanitizer.py` with standalone PII sanitization
+  - `capture_modem.py` and `sanitize_har.py` now work with just `pip install playwright`
+  - Removes friction for contributors capturing modem data (California PII laws compliance)
+
+***REMOVED******REMOVED******REMOVED*** Fixed
+- **Unverified Parser Selection** - Fixed bug where selecting an unverified parser fell back to autodiscovery
+  - The " *" suffix marking unverified parsers wasn't stripped during lookup
+  - Credit: @BowlesCR for discovering the issue (Issue ***REMOVED***40)
+- **GitHub Language Stats** - Added `.gitattributes` linguist-vendored rules
+  - HTML/JSON fixtures no longer counted as project code
+- **Pre-commit Config** - Migrated deprecated `commit` stage to `pre-commit`
+- **PII Sanitization** - Updated fixture files with redacted MAC addresses
+
 ***REMOVED******REMOVED*** [3.7.2] - 2025-11-26
 
 ***REMOVED******REMOVED******REMOVED*** Added

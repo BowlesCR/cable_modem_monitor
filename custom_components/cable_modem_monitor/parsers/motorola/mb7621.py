@@ -22,6 +22,11 @@ class MotorolaMB7621Parser(MotorolaGenericParser):
     verified = True
     verification_source = "kwschulz (maintainer's personal modem)"
 
+    ***REMOVED*** Device metadata
+    release_date = "2017"
+    docsis_version = "3.0"
+    fixtures_path = "tests/parsers/motorola/fixtures/mb7621"
+
     ***REMOVED*** Capabilities - inherits from generic, explicitly declared for clarity
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,

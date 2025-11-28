@@ -1,6 +1,9 @@
 ***REMOVED***!/usr/bin/env python3
 """Sanitize HAR files to remove PII before sharing.
 
+This script can be run standalone without Home Assistant installed.
+It removes passwords, cookies, MAC addresses, IP addresses, and other PII.
+
 Usage:
     python scripts/sanitize_har.py modem.har
 """
@@ -10,10 +13,10 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-***REMOVED*** Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
+***REMOVED*** Add scripts directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent))
 
-from custom_components.cable_modem_monitor.utils.har_sanitizer import sanitize_har_file
+from utils.sanitizer import sanitize_har_file
 
 
 def main() -> int:

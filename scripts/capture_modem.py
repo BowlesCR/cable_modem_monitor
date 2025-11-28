@@ -271,9 +271,7 @@ def _sanitize_capture(output_path: Path) -> None:
     print("Sanitizing HAR file...")
 
     try:
-        from custom_components.cable_modem_monitor.utils.har_sanitizer import (
-            sanitize_har_file,
-        )
+        from utils.sanitizer import sanitize_har_file
 
         sanitized_path = sanitize_har_file(str(output_path))
         print(f"  Sanitized HAR: {sanitized_path}")

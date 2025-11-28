@@ -41,14 +41,14 @@ function encode(Str)
       else if (isNaN(chr3))
       {
          enc4 = 64;
-      }   
+      }
       output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
       chr1 = chr2 = chr3 = "";
       enc1 = enc2 = enc3 = enc4 = "";
    } while (i < Str.length);
-   
-   return output;   
-}   
+
+   return output;
+}
 
 function CheckUsernameAndPassword(value)
 {
@@ -76,7 +76,7 @@ function Apply(value)
 
     if (CurrentNameAdmin != '' )
     {
-        if ((CurrentNameAdmin == window.document.MotoSecurity.UserId.value )&& 
+        if ((CurrentNameAdmin == window.document.MotoSecurity.UserId.value )&&
 (CurrentPwAdmin == window.document.MotoSecurity.OldPassword.value))
         {
            // if (CurrentPwAdmin == window.document.MotoSecurity.OldPassword.value)
@@ -157,7 +157,7 @@ function fillPassword()
                 window.document.MotoSecurity.Password.value = CurrentPwAdmin;
                 window.document.MotoSecurity.PasswordReEnter.value = CurrentPwAdmin;
             }
-            else if ((CurrentPwUser == window.document.MotoSecurity.OldPassword.value) 
+            else if ((CurrentPwUser == window.document.MotoSecurity.OldPassword.value)
 && (CurrentNameUser == window.document.MotoSecurity.UserId.value))
             {
                 window.document.MotoSecurity.Password.value = CurrentPwUser;

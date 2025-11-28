@@ -28,6 +28,12 @@ class ArrisSB6141Parser(ModemParser):
         "https://community.home-assistant.io/t/cable-modem-monitor-track-your-internet-signal-quality-in-home-assistant"
     )
 
+    ***REMOVED*** Device metadata
+    release_date = "2012"
+    end_of_life = "2020"  ***REMOVED*** No longer manufactured
+    docsis_version = "3.0"
+    fixtures_path = "tests/parsers/arris/fixtures/sb6141"
+
     ***REMOVED*** New authentication configuration (declarative)
     auth_config = NoAuthConfig(strategy=AuthStrategyType.NO_AUTH)
 
