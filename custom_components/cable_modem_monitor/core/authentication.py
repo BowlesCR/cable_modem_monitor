@@ -505,6 +505,7 @@ class HNAPJsonAuthStrategy(AuthStrategy):
                     "Username": username,
                 },
             )
+            _LOGGER.debug("HNAP JSON Step1: Received challenge response: %s", challenge_json)
             challenge_resp = json.loads(challenge_json).get("LoginResponse", {})
 
             # Set cookie from initial response
@@ -535,6 +536,7 @@ class HNAPJsonAuthStrategy(AuthStrategy):
                     "LoginPassword": login_password,
                 },
             )
+            _LOGGER.debug("HNAP JSON Step2: Received response: %s", login_json)
             login_resp = json.loads(login_json).get("LoginResponse", {})
             login_result = login_resp.get("LoginResult", "")
             _LOGGER.debug("HNAP JSON: Login result: %s", login_result)
