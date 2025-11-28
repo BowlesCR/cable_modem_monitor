@@ -49,6 +49,12 @@ class NetgearC3700Parser(ModemParser):
     verified = True
     verification_source = "kwschulz (personal verification)"
 
+    ***REMOVED*** Device metadata
+    release_date = "2014-09"
+    end_of_life = "2020"  ***REMOVED*** Approximate, no longer sold
+    docsis_version = "3.0"
+    fixtures_path = "tests/parsers/netgear/fixtures/c3700"
+
     ***REMOVED*** C3700 uses HTTP Basic Auth
     auth_config = BasicAuthConfig(
         strategy=AuthStrategyType.BASIC_HTTP,

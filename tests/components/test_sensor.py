@@ -598,6 +598,7 @@ class TestFallbackModeSensorCreation:
         assert "Health Status" in sensor_names
         assert "Ping Latency" in sensor_names
         assert "HTTP Latency" in sensor_names
+        assert "Modem Info" in sensor_names  ***REMOVED*** Always included (device metadata)
 
         ***REMOVED*** Should NOT include sensors that require channel/system data
         assert "Total Corrected Errors" not in sensor_names  ***REMOVED*** Skipped in fallback
@@ -607,8 +608,8 @@ class TestFallbackModeSensorCreation:
         assert "Software Version" not in sensor_names  ***REMOVED*** Skipped in fallback
         assert "System Uptime" not in sensor_names  ***REMOVED*** Skipped in fallback
 
-        ***REMOVED*** Should have exactly 4 sensors (Connection, Health, Ping, HTTP)
-        assert len(added_entities) == 4
+        ***REMOVED*** Should have exactly 5 sensors (Connection, Modem Info, Health, Ping, HTTP)
+        assert len(added_entities) == 5
 
     @pytest.mark.asyncio
     async def test_no_channel_sensors(self, mock_hass, mock_entry, mock_coordinator_fallback_mode):

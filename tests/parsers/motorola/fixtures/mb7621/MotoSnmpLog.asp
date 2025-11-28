@@ -41,7 +41,7 @@ window.document.RgEventLog.SnmpClearEventLog.value = 1;
 <td class='moto-param-title'>&nbsp;&nbsp;&nbsp;Log</td>
 <td class='moto-param-value'><img src="mototitle.jpg"/></td>
 <td class='moto-param-value'>&nbsp;</td>
-<td class="moto-param-help"><a href='javascript:void(0);'  class="tooltip"><img src="motohelp.jpg" /><span>Log:<br />The Event Log displays information about your cable modem's connection to your service provider. This information may be particularly helpful if you experience problems with your connection.</span></a>&nbsp;&nbsp;</td> 
+<td class="moto-param-help"><a href='javascript:void(0);'  class="tooltip"><img src="motohelp.jpg" /><span>Log:<br />The Event Log displays information about your cable modem's connection to your service provider. This information may be particularly helpful if you experience problems with your connection.</span></a>&nbsp;&nbsp;</td>
 </tr>
   </table>
 </td>

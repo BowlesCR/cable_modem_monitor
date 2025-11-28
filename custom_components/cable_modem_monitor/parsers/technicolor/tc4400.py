@@ -30,6 +30,11 @@ class TechnicolorTC4400Parser(ModemParser):
     verified = False  ***REMOVED*** No confirmed user reports
     verification_source = None  ***REMOVED*** Check Issue ***REMOVED***1 for status
 
+    ***REMOVED*** Device metadata
+    release_date = "2017"
+    docsis_version = "3.1"
+    fixtures_path = "tests/parsers/technicolor/fixtures/tc4400"
+
     ***REMOVED*** New authentication configuration (declarative)
     auth_config = BasicAuthConfig(strategy=AuthStrategyType.BASIC_HTTP)
 

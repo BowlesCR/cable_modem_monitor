@@ -53,6 +53,11 @@ class NetgearCM600Parser(ModemParser):
     verified = True
     verification_source = "https://github.com/kwschulz/cable_modem_monitor/issues/3 (@chairstacker)"
 
+    ***REMOVED*** Device metadata
+    release_date = "2016-03"
+    docsis_version = "3.0"
+    fixtures_path = "tests/parsers/netgear/fixtures/cm600"
+
     ***REMOVED*** CM600 uses HTTP Basic Auth
     auth_config = BasicAuthConfig(
         strategy=AuthStrategyType.BASIC_HTTP,

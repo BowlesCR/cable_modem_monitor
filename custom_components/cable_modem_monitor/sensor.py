@@ -43,6 +43,9 @@ async def async_setup_entry(
     ***REMOVED*** Add connection status sensor
     entities.append(ModemConnectionStatusSensor(coordinator, entry))
 
+    ***REMOVED*** Add modem info sensor (device metadata)
+    entities.append(ModemInfoSensor(coordinator, entry))
+
     ***REMOVED*** Add health monitoring sensors
     entities.extend(
         [
@@ -179,6 +182,41 @@ class ModemConnectionStatusSensor(ModemSensorBase):
     def native_value(self) -> str:
         """Return the state of the sensor."""
         return str(self.coordinator.data.get("cable_modem_connection_status", "unknown"))
+
+
+class ModemInfoSensor(ModemSensorBase):
+    """Sensor for modem device information and parser metadata."""
+
+    def __init__(self, coordinator: DataUpdateCoordinator, entry: ConfigEntry) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, entry)
+        self._attr_name = "Modem Info"
+        self._attr_unique_id = f"{entry.entry_id}_cable_modem_info"
+        self._attr_icon = "mdi:information-outline"
+
+    @property
+    def native_value(self) -> str:
+        """Return the detected modem model as the state."""
+        return str(self._entry.data.get("detected_modem", "Unknown"))
+
+    @property
+    def extra_state_attributes(self) -> dict:
+        """Return device metadata as attributes."""
+        attrs: dict[str, str | bool | None] = {}
+
+        ***REMOVED*** Static info from config entry
+        attrs["manufacturer"] = self._entry.data.get("detected_manufacturer", "Unknown")
+
+        ***REMOVED*** Dynamic info from coordinator (parser metadata)
+        if release_date := self.coordinator.data.get("_parser_release_date"):
+            attrs["release_date"] = release_date
+        if docsis_version := self.coordinator.data.get("_parser_docsis_version"):
+            attrs["docsis_version"] = docsis_version
+        if fixtures_url := self.coordinator.data.get("_parser_fixtures_url"):
+            attrs["fixtures_url"] = fixtures_url
+        attrs["parser_verified"] = self.coordinator.data.get("_parser_verified", False)
+
+        return attrs
 
 
 class ModemTotalCorrectedSensor(ModemSensorBase):

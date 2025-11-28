@@ -156,9 +156,9 @@ function ProcessError()
 function showQuestion1()
 {
 	var selected = [ "", "", "", "", "", "", "", "", "", ""];
-	
+
 	selected[0] = "selected";
-	
+
 	document.open();
 	document.write("<select name=\"question1\">");
 		document.write("<option " + selected[0] + " value=\"0\">Select a question<\/option>");
@@ -178,9 +178,9 @@ function showQuestion1()
 function showQuestion2()
 {
 	var selected = [ "", "", "", "", "", "", "", "", "", ""];
-	
+
 	selected[0] = "selected";
-	
+
 	document.open();
 	document.write("<select name=\"question2\">");
 		document.write("<option " + selected[0] + " value=\"0\">Select a question<\/option>");
@@ -192,9 +192,9 @@ function showQuestion2()
 		document.write("<option " + selected[6] + " value=\"6\">In what city was your mother born?<\/option>");
 		document.write("<option " + selected[7] + " value=\"7\">In what city was your father born?<\/option>");
 		document.write("<option " + selected[8] + " value=\"8\">What is your best friend's first name?<\/option>");
-	document.write("<\/select>");	
+	document.write("<\/select>");
 	document.close();
-	
+
 	return true;
 }
 
@@ -208,14 +208,14 @@ function checkData()
         alert("Password should not be set empty.");
         return false;
     }
-	
+
 	if(cf.NetgearPassword.value.length >= 1 || cf.NetgearPasswordReEnter.value.length >= 1)
 	{
 		if (cf.NetgearPassword.value.length == 33 || cf.NetgearPasswordReEnter.value.length == 33)
 		{
 
 			alert("Maximum password length is 32 characters!");
-			
+
 
 			return false;
 		}
@@ -223,21 +223,21 @@ function checkData()
 		{
 
 			msg+= "The password you typed does not match. Please enter it again.";
-			
+
 
 			cf.NetgearPasswordReEnter.focus();
 		}
-	}    
+	}
 	if (msg.length > 1)
 	{
 		alert(msg);
 		return false;
 	}
-	
+
 // we don't password recovery right now. mark the confirm msg and skip all checking
 /*
 	if(!cf.checkPassRec.checked)
-	{	
+	{
 		if(confirm("If you do not enable password recovery and forget your new password, the only way to recover the password is to reset the device to factory default.\nAre you sure you want to change the admin password without recovery option?"))
 		{
 			return true;
@@ -246,8 +246,8 @@ function checkData()
 		{
 			return false;
 		}
-	}	
-	
+	}
+
 	if(0==0)
 	{
 
@@ -261,7 +261,7 @@ function checkData()
 			alert("Please enter your answer for each question.");
 			return false;
 		}
-		
+
 
 		if(cf.question1.value == 0 || cf.question2.value == 0)
 		{
@@ -284,10 +284,10 @@ function timestamp(){
 }
 
 function checkPasswdRecovery()
-{	
-	var cf = document.forms[0];	
+{
+	var cf = document.forms[0];
 	if(cf.checkPassRec.checked)
-	{	
+	{
 		document.getElementById("PasswdRecovery").style.display="block";
 	}
 	else
@@ -298,7 +298,7 @@ function checkPasswdRecovery()
 }
 function showCheckBox()
 {
-	var cf = document.forms[0];	
+	var cf = document.forms[0];
 
 	if(0==1)
 	{
@@ -312,7 +312,7 @@ function showCheckBox()
 		document.write("<input type=\"checkbox\"  onClick=\"checkPasswdRecovery();\" name=\"checkPassRec\" value=\"1\">");
 		document.close();
 	}
-	
+
 	return true;
 }
 //-->
