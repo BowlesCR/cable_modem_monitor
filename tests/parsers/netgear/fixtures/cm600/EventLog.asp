@@ -29,9 +29,9 @@
 <link rel="stylesheet" href="form.css">
 <script type="text/javascript">
 <!--
-  
+
     $(document).ready(function()
-    {	
+    {
 // Nick Implement ASP Tag display on GUI
         BodyInit();
 // Nick Implement ASP Tag display on GUI
@@ -137,7 +137,7 @@ function convertPriorityString(priority)
         str = "Debug";
         break;
     }
-    
+
     str += " (" + priority + ") ";
     return str;
 }
@@ -145,21 +145,21 @@ function convertPriorityString(priority)
 function onAddRowCB(newRow, rowId, firstCellIdx, tags)
 {
     var cellsArray = new Array(); // No Used
- 
+
     var cellA = newRow.insertCell(-1);
     cellA.align = "center";
     cellA.innerHTML = tags[firstCellIdx + 1].split(".",1);
-    
+
 
     var cellB = newRow.insertCell(-1);
     cellB.align = "center";
     cellB.innerHTML = convertPriorityString(tags[firstCellIdx + 4]);
-    
+
 
     var cellC = newRow.insertCell(-1);
     cellC.align = "left";
     cellC.innerHTML = tags[firstCellIdx + 6];
- 
+
     return cellsArray;
 }
 

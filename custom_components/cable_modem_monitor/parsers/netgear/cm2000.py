@@ -55,6 +55,11 @@ class NetgearCM2000Parser(ModemParser):
     verified = False  # Authentication issues - see Issue #38
     verification_source = "https://github.com/kwschulz/cable_modem_monitor/issues/38 (@m4dh4tt3r-88)"
 
+    # Device metadata
+    release_date = "2020-08"
+    docsis_version = "3.1"
+    fixtures_path = "tests/parsers/netgear/fixtures/cm2000"
+
     # CM2000 uses form-based authentication
     auth_config = FormAuthConfig(
         strategy=AuthStrategyType.FORM_PLAIN,

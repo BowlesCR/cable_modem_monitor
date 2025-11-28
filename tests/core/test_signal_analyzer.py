@@ -388,8 +388,8 @@ class TestMetricsInRecommendation:
         assert "sample_count" in recommendation["metrics"]
 
         # Verify metrics are reasonable
-        assert isinstance(recommendation["metrics"]["snr_variance"], (int, float))
-        assert isinstance(recommendation["metrics"]["power_variance"], (int, float))
+        assert isinstance(recommendation["metrics"]["snr_variance"], int | float)
+        assert isinstance(recommendation["metrics"]["power_variance"], int | float)
         assert recommendation["metrics"]["error_trend"] in ["increasing", "stable", "decreasing"]
         # Sample count is 9, not 10, because filter uses > not >= (sample at exactly 24h cutoff is excluded)
         assert recommendation["metrics"]["sample_count"] == 9

@@ -10,14 +10,14 @@ function GetMultiXML_1st()
     {
 		var HNAP = new HNAP_XML();
         result_xml.Set("GetMultipleHNAPs/GetCustomerStatusStartupSequence");
-        result_xml.Set("GetMultipleHNAPs/GetCustomerStatusConnectionInfo");	
-		
+        result_xml.Set("GetMultipleHNAPs/GetCustomerStatusConnectionInfo");
+
         HNAP.SetXMLAsync("GetMultipleHNAPs", result_xml, function(xml)	{	GetMultiXML_2nd(xml);	});
     }
-    else	
-    {	
-        if (DebugMode == 1)	
-        {    alert("[!!GetXML Error!!] Function: GetMultiXML_1st"); }	
+    else
+    {
+        if (DebugMode == 1)
+        {    alert("[!!GetXML Error!!] Function: GetMultiXML_1st"); }
     }
 }
 
@@ -34,7 +34,7 @@ function GetMultiXML_2nd(result_xml)
         document.getElementById("CustomerConnBootStatus").innerHTML = result_xml.Get("GetMultipleHNAPsResponse/GetCustomerStatusStartupSequenceResponse/CustomerConnBootStatus");
         document.getElementById("CustomerConnBootComment").innerHTML = result_xml.Get("GetMultipleHNAPsResponse/GetCustomerStatusStartupSequenceResponse/CustomerConnBootComment");
         document.getElementById("CustomerConnConfigurationFileStatus").innerHTML = result_xml.Get("GetMultipleHNAPsResponse/GetCustomerStatusStartupSequenceResponse/CustomerConnConfigurationFileStatus");
-        //document.getElementById("CustomerConnConfigurationFileComment").innerHTML = result_xml.Get("GetMultipleHNAPsResponse/GetCustomerStatusStartupSequenceResponse/CustomerConnConfigurationFileComment");	
+        //document.getElementById("CustomerConnConfigurationFileComment").innerHTML = result_xml.Get("GetMultipleHNAPsResponse/GetCustomerStatusStartupSequenceResponse/CustomerConnConfigurationFileComment");
         document.getElementById("CustomerConnSecurityStatus").innerHTML = result_xml.Get("GetMultipleHNAPsResponse/GetCustomerStatusStartupSequenceResponse/CustomerConnSecurityStatus");
         document.getElementById("CustomerConnSecurityComment").innerHTML = result_xml.Get("GetMultipleHNAPsResponse/GetCustomerStatusStartupSequenceResponse/CustomerConnSecurityComment");
         document.getElementById("CustomerConnSystemUpTime").innerHTML = result_xml.Get("GetMultipleHNAPsResponse/GetCustomerStatusConnectionInfoResponse/CustomerCurSystemTime");
@@ -44,7 +44,7 @@ function GetMultiXML_2nd(result_xml)
     }
     else
     {
-        if (DebugMode == 1)	
+        if (DebugMode == 1)
             alert("[!!GetXML Error!!] Function: GetMultiXML_2nd");
     }
 }
@@ -55,14 +55,14 @@ function GetMultiXML_1st_Channel()
     if (result_xml != null)
     {
 		var HNAP = new HNAP_XML();
-        result_xml.Set("GetMultipleHNAPs/GetCustomerStatusDownstreamChannelInfo");	
-        result_xml.Set("GetMultipleHNAPs/GetCustomerStatusUpstreamChannelInfo");			
+        result_xml.Set("GetMultipleHNAPs/GetCustomerStatusDownstreamChannelInfo");
+        result_xml.Set("GetMultipleHNAPs/GetCustomerStatusUpstreamChannelInfo");
         HNAP.SetXMLAsync("GetMultipleHNAPs", result_xml, function(xml)	{	GetMultiXML_2nd_Channel(xml);	});
     }
-    else	
-    {	
-        if (DebugMode == 1)	
-        {    alert("[!!GetXML Error!!] Function: GetMultiXML_1st"); }	
+    else
+    {
+        if (DebugMode == 1)
+        {    alert("[!!GetXML Error!!] Function: GetMultiXML_1st"); }
     }
 }
 
@@ -105,9 +105,9 @@ function GetMultiXML_2nd_Channel(result_xml)
                 DSChannelHtml += "<td>"+DownstreamChanStatus[2]+"</td>";
                 DSChannelHtml += "<td>"+DownstreamChanStatus[4]+" Hz</td>";
                 DSChannelHtml += "<td>"+DownstreamChanStatus[5]+" dBmV</td>";
-                DSChannelHtml += "<td>"+DownstreamChanStatus[6]+" dB</td>";	
-                DSChannelHtml += "<td>"+DownstreamChanStatus[7]+"</td>";	
-                DSChannelHtml += "<td>"+DownstreamChanStatus[8]+"</td></tr>";				
+                DSChannelHtml += "<td>"+DownstreamChanStatus[6]+" dB</td>";
+                DSChannelHtml += "<td>"+DownstreamChanStatus[7]+"</td>";
+                DSChannelHtml += "<td>"+DownstreamChanStatus[8]+"</td></tr>";
             }
         }
         setTableInnerHTML(document.getElementById("CustomerConnDownstreamChannel"), DSChannelHtml);
@@ -144,7 +144,7 @@ function GetMultiXML_2nd_Channel(result_xml)
                 USChannelHtml += "<td>"+UpstreamChannelStatus[2]+"</td>";
                 USChannelHtml += "<td>"+UpstreamChannelStatus[5]+" Hz</td>";
                 USChannelHtml += "<td>"+UpstreamChannelStatus[4]+"</td>";
-                USChannelHtml += "<td>"+UpstreamChannelStatus[6]+" dBmV</td>";				
+                USChannelHtml += "<td>"+UpstreamChannelStatus[6]+" dBmV</td>";
             }
         }
         setTableInnerHTML(document.getElementById("CustomerConnUpstreamChannel"),USChannelHtml);
@@ -152,7 +152,7 @@ function GetMultiXML_2nd_Channel(result_xml)
     }
     else
     {
-        if (DebugMode == 1)	
+        if (DebugMode == 1)
             alert("[!!GetXML Error!!] Function: GetMultiXML_2nd");
     }
 }
@@ -161,8 +161,8 @@ $(document).ready(function()  {
     if (sessionStorage.getItem('PrivateKey') === null){
 	    window.location.replace('../Login.html');
     }
-	
-	GetMultiXML();	
+
+	GetMultiXML();
 	document.getElementById("binnacleWrapper1").style.display="none";
 	document.getElementById('binnacleWrapper2').style.display="none";
 	document.getElementById('modalUnderlayBlack').style.display="none";
@@ -177,6 +177,6 @@ $(document).ready(function()  {
 	$("#binnacleWrapper2").addClass("binnacleItems_0");
 	// Show the binnacle.
 	$("#binnacleWrapper1").show();
-	$("#binnacleWrapper2").show();		
-	FillRegister(); 
+	$("#binnacleWrapper2").show();
+	FillRegister();
 });

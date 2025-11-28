@@ -1,9 +1,24 @@
-"""JSON-based HNAP request builder for MB8611 firmwares that use JSON instead of XML/SOAP."""
+"""JSON-based HNAP request builder for MB8611 firmwares that use JSON instead of XML/SOAP.
+
+The challenge-response authentication implementation is based on reverse engineering
+work by BowlesCR (Chris Bowles) from Issue #40 and the prior art from xNinjaKittyx's mb8600
+repository. The HMAC-MD5 authentication flow was documented through HAR file analysis
+of the modem's Login.js and SOAPAction.js files, captured using our Playwright-based
+HAR capture tool (scripts/capture_modem.py).
+
+References:
+- BowlesCR's MB8600 Login PoC: https://github.com/BowlesCR/MB8600_Login
+- xNinjaKittyx's mb8600: https://github.com/xNinjaKittyx/mb8600
+- Issue #40: https://github.com/kwschulz/cable_modem_monitor/issues/40
+"""
 
 from __future__ import annotations
 
+import hashlib
+import hmac
 import json
 import logging
+import time
 from typing import TYPE_CHECKING, cast
 
 import requests
@@ -12,6 +27,14 @@ if TYPE_CHECKING:
     pass
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def _hmac_md5(key: str, message: str) -> str:
+    """Compute HMAC-MD5 and return uppercase hex string.
+
+    This matches the JavaScript hex_hmac_md5() function used by MB8611.
+    """
+    return hmac.new(key.encode("utf-8"), message.encode("utf-8"), hashlib.md5).hexdigest().upper()
 
 
 class HNAPJsonRequestBuilder:
@@ -31,6 +54,27 @@ class HNAPJsonRequestBuilder:
         """
         self.endpoint = endpoint
         self.namespace = namespace
+        self._private_key: str | None = None  # Stored after successful login for auth headers
+
+    def _get_hnap_auth(self, action: str) -> str:
+        """Generate HNAP_AUTH header for authenticated requests.
+
+        The MB8611 requires this header for all requests after login.
+        Format: HMAC_MD5(PrivateKey, timestamp + SOAPAction) + " " + timestamp
+        """
+        if not self._private_key:
+            # For login requests, use a default key
+            private_key = "withoutloginkey"
+        else:
+            private_key = self._private_key
+
+        # Timestamp must fit in 32-bit integer range, matching the JS implementation
+        current_time = int(time.time() * 1000) % 2000000000000
+        timestamp = str(current_time)
+        soap_action_uri = f'"{self.namespace}{action}"'
+
+        auth = _hmac_md5(private_key, timestamp + soap_action_uri)
+        return f"{auth} {timestamp}"
 
     def call_single(self, session: requests.Session, base_url: str, action: str, params: dict | None = None) -> str:
         """
@@ -56,6 +100,7 @@ class HNAPJsonRequestBuilder:
             json=request_data,
             headers={
                 "SOAPAction": f'"{self.namespace}{action}"',
+                "HNAP_AUTH": self._get_hnap_auth(action),
                 "Content-Type": "application/json",
             },
             timeout=10,
@@ -95,6 +140,7 @@ class HNAPJsonRequestBuilder:
             json=request_data,
             headers={
                 "SOAPAction": f'"{self.namespace}GetMultipleHNAPs"',
+                "HNAP_AUTH": self._get_hnap_auth("GetMultipleHNAPs"),
                 "Content-Type": "application/json",
             },
             timeout=10,
@@ -112,7 +158,12 @@ class HNAPJsonRequestBuilder:
 
     def login(self, session: requests.Session, base_url: str, username: str, password: str) -> tuple[bool, str]:
         """
-        Perform JSON-based HNAP login.
+        Perform JSON-based HNAP login with challenge-response authentication.
+
+        The MB8611 uses a two-step challenge-response protocol:
+        1. Request challenge: Send Action="request" to get Challenge, Cookie, PublicKey
+        2. Compute credentials using HMAC-MD5
+        3. Send login: Send Action="login" with computed LoginPassword
 
         Args:
             session: requests.Session object
@@ -123,29 +174,102 @@ class HNAPJsonRequestBuilder:
         Returns:
             Tuple of (success: bool, response_text: str)
         """
-        login_data = {
-            "Login": {
-                "Username": username,
-                "Password": password,
-                "Captcha": "",
-            }
-        }
-
         _LOGGER.debug(
-            "JSON HNAP login attempt: URL=%s%s, Username=%s (length=%d), Password length=%d",
+            "JSON HNAP login attempt: URL=%s%s, Username=%s",
             base_url,
             self.endpoint,
             username,
-            len(username),
-            len(password),
         )
 
         try:
+            # Step 1: Request challenge
+            challenge_data = {
+                "Login": {
+                    "Action": "request",
+                    "Username": username,
+                    "LoginPassword": "",
+                    "Captcha": "",
+                }
+            }
+
+            response = session.post(
+                f"{base_url}{self.endpoint}",
+                json=challenge_data,
+                headers={
+                    "SOAPAction": f'"{self.namespace}Login"',
+                    "HNAP_AUTH": self._get_hnap_auth("Login"),
+                    "Content-Type": "application/json",
+                },
+                timeout=10,
+                verify=session.verify,
+            )
+
+            if response.status_code != 200:
+                _LOGGER.error(
+                    "JSON HNAP challenge request failed with HTTP %d: %s",
+                    response.status_code,
+                    response.text[:500] if response.text else "empty",
+                )
+                return (False, response.text)
+
+            # Parse challenge response
+            try:
+                challenge_json = json.loads(response.text)
+            except json.JSONDecodeError:
+                _LOGGER.error("JSON HNAP challenge response is not valid JSON: %s", response.text[:500])
+                return (False, response.text)
+
+            login_response = challenge_json.get("LoginResponse", {})
+            challenge = login_response.get("Challenge")
+            cookie = login_response.get("Cookie")
+            public_key = login_response.get("PublicKey")
+
+            if not all([challenge, cookie, public_key]):
+                _LOGGER.error(
+                    "JSON HNAP challenge response missing required fields. "
+                    "Challenge=%s, Cookie=%s, PublicKey=%s. Response: %s",
+                    challenge is not None,
+                    cookie is not None,
+                    public_key is not None,
+                    response.text[:500],
+                )
+                return (False, response.text)
+
+            _LOGGER.debug(
+                "JSON HNAP challenge received: Challenge=%s..., PublicKey=%s...",
+                challenge[:8] if challenge else "None",
+                public_key[:8] if public_key else "None",
+            )
+
+            # Step 2: Compute credentials
+            # PrivateKey = HMAC_MD5(PublicKey + password, Challenge)
+            private_key = _hmac_md5(public_key + password, challenge)
+            self._private_key = private_key  # Store for subsequent authenticated requests
+
+            # Set the session cookie
+            session.cookies.set("uid", cookie)
+
+            # LoginPassword = HMAC_MD5(PrivateKey, Challenge)
+            login_password = _hmac_md5(private_key, challenge)
+
+            _LOGGER.debug("JSON HNAP computed credentials, sending login request")
+
+            # Step 3: Send login with computed password
+            login_data = {
+                "Login": {
+                    "Action": "login",
+                    "Username": username,
+                    "LoginPassword": login_password,
+                    "Captcha": "",
+                }
+            }
+
             response = session.post(
                 f"{base_url}{self.endpoint}",
                 json=login_data,
                 headers={
                     "SOAPAction": f'"{self.namespace}Login"',
+                    "HNAP_AUTH": self._get_hnap_auth("Login"),
                     "Content-Type": "application/json",
                 },
                 timeout=10,
@@ -160,52 +284,51 @@ class HNAPJsonRequestBuilder:
 
             if response.status_code != 200:
                 _LOGGER.error(
-                    "JSON HNAP login failed with HTTP status %s. Response preview: %s",
+                    "JSON HNAP login failed with HTTP status %s. Response: %s",
                     response.status_code,
                     response.text[:500] if response.text else "empty",
                 )
+                self._private_key = None  # Clear on failure
                 return (False, response.text)
 
-            # Try to parse JSON response to check for errors
+            # Check login result
             try:
                 response_json = json.loads(response.text)
-
-                # Check for login result
                 login_response = response_json.get("LoginResponse", {})
                 login_result = login_response.get("LoginResult", "")
 
-                if login_result == "OK" or login_result == "SUCCESS":
+                if login_result in ("OK", "SUCCESS"):
                     _LOGGER.info(
-                        "JSON HNAP login successful! Session established with modem. "
-                        "Response size: %d bytes, LoginResult: %s",
-                        len(response.text),
+                        "JSON HNAP login successful! LoginResult=%s",
                         login_result,
                     )
                     return (True, response.text)
                 else:
                     _LOGGER.warning(
-                        "JSON HNAP login failed: LoginResult=%s. Response preview: %s",
+                        "JSON HNAP login failed: LoginResult=%s. Response: %s",
                         login_result,
                         response.text[:500],
                     )
+                    self._private_key = None  # Clear on failure
                     return (False, response.text)
 
             except json.JSONDecodeError:
-                # If we can't parse JSON, treat non-error HTTP status as success
                 _LOGGER.warning(
-                    "JSON HNAP login response is not valid JSON, but HTTP status is %d. "
-                    "Treating as success. Response preview: %s",
+                    "JSON HNAP login response not valid JSON but HTTP %d. Response: %s",
                     response.status_code,
                     response.text[:500],
                 )
                 return (True, response.text)
 
         except requests.exceptions.Timeout as e:
-            _LOGGER.error("JSON HNAP login timeout - modem took too long to respond: %s", str(e))
+            _LOGGER.error("JSON HNAP login timeout: %s", str(e))
+            self._private_key = None
             return (False, "")
         except requests.exceptions.ConnectionError as e:
-            _LOGGER.error("JSON HNAP login connection error - cannot reach modem: %s", str(e))
+            _LOGGER.error("JSON HNAP login connection error: %s", str(e))
+            self._private_key = None
             return (False, "")
         except Exception as e:
             _LOGGER.error("JSON HNAP login exception: %s", str(e), exc_info=True)
+            self._private_key = None
             return (False, "")

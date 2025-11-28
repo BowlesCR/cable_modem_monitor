@@ -119,13 +119,13 @@ Basic Status and Settings
 </tr>
 </table>
 
-  
-  
-  
-    
-  
-    
-  
+
+
+
+
+
+
+
 
 <br><br>
 <table class="moto-table-title" cellspacing='0' cellpadding='0'>

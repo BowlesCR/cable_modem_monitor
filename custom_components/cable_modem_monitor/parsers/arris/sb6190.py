@@ -27,6 +27,11 @@ class ArrisSB6190Parser(ModemParser):
     verified = False  # No user reports confirming this works
     verification_source = None  # No confirmation found
 
+    # Device metadata
+    release_date = "2016"
+    docsis_version = "3.0"
+    fixtures_path = "tests/parsers/arris/fixtures/sb6190"
+
     # New authentication configuration (declarative)
     auth_config = NoAuthConfig(strategy=AuthStrategyType.NO_AUTH)
 

@@ -48,79 +48,79 @@ var DodDisable = false;
 var DodIndex = 1;
 
     $(document).ready(function()
-    {	
+    {
         var form=document.forms[0];
         var gui_region = form.curlang.value;
 
         // Nick put bodyInit in here!!
         BodyInit();
- 
-        $('#INT_setup').click(function(ev){ 
+
+        $('#INT_setup').click(function(ev){
             parent.loadPage2("BasicSettingsBottom.htm");
-        }); 
+        });
 
-        $('#wireless_setup').click(function(ev){ 
+        $('#wireless_setup').click(function(ev){
             parent.loadPage2("WirelessSettings.htm");
-        }); 
-        
-        $('#wireless_setup_5G').click(function(ev){ 
-            parent.loadPage2("WirelessSettings.htm");
-        });         
-        
-        $('#guest_setup1').click(function(ev){ 
-            parent.loadPage2("GuestNetwork.htm");
-        });         
+        });
 
-        $('#guest_setup2').click(function(ev){ 
+        $('#wireless_setup_5G').click(function(ev){
+            parent.loadPage2("WirelessSettings.htm");
+        });
+
+        $('#guest_setup1').click(function(ev){
             parent.loadPage2("GuestNetwork.htm");
-        });         
-  
-        $('#guest_setup_5G').click(function(ev){ 
+        });
+
+        $('#guest_setup2').click(function(ev){
             parent.loadPage2("GuestNetwork.htm");
-        });   
-  
-        $('#LAN_setup').click(function(ev){ 
+        });
+
+        $('#guest_setup_5G').click(function(ev){
+            parent.loadPage2("GuestNetwork.htm");
+        });
+
+        $('#LAN_setup').click(function(ev){
             parent.loadPage2("WLG_adv_dual_band.htm");
-        });          
+        });
 
-        $('#Moblile_setup').click(function(ev){ 
+        $('#Moblile_setup').click(function(ev){
             parent.loadPage2("MobileBroadbandSettings.htm");
         });
 
         $('.basic-text-menu').each(function(){
              if(gui_region=="Chinese"){
-                 $(this).addClass("basic-text-menu-pr"); 
+                 $(this).addClass("basic-text-menu-pr");
              }else{
-                 $(this).removeClass("basic-text-menu-pr"); 
+                 $(this).removeClass("basic-text-menu-pr");
              }
         });
         $('.basic-text-subTitle').each(function(){
              if(gui_region=="Chinese"){
-                 $(this).addClass("basic-text-subTitle-pr"); 
+                 $(this).addClass("basic-text-subTitle-pr");
              }else{
-                 $(this).removeClass("basic-text-subTitle-pr"); 
+                 $(this).removeClass("basic-text-subTitle-pr");
              }
         });
         $('.basic-text-content').each(function(){
              if(gui_region=="Chinese"){
-                 $(this).addClass("basic-text-content-pr"); 
+                 $(this).addClass("basic-text-content-pr");
              }else{
-                 $(this).removeClass("basic-text-content-pr"); 
+                 $(this).removeClass("basic-text-content-pr");
              }
         });
         $('.box-header-text').each(function(){
              if(gui_region=="Chinese"){
-                 $(this).addClass("box-header-text-pr"); 
+                 $(this).addClass("box-header-text-pr");
              }else{
-                 $(this).removeClass("box-header-text-pr"); 
+                 $(this).removeClass("box-header-text-pr");
              }
-        });       
+        });
         /* checking long string */
         if(trim($('.header-text1').text()).length>=36 | trim($('.header-text2').text()).length>=36){
                $('#box-header-table1').addClass("box-header-table-large");
                $('#box-header-table2').addClass("box-header-table-large");
                $('#box-header-table1').removeClass("box-header-table");
-               $('#box-header-table2').removeClass("box-header-table");                    
+               $('#box-header-table2').removeClass("box-header-table");
         }
 
 /*override
@@ -128,37 +128,37 @@ var DodIndex = 1;
                $('#box-header-table3').addClass("box-header-table-large");
                $('#box-header-table4').addClass("box-header-table-large");
                $('#box-header-table3').removeClass("box-header-table");
-               $('#box-header-table4').removeClass("box-header-table");  
-        }    
+               $('#box-header-table4').removeClass("box-header-table");
+        }
 */
         if(trim($('.header-text3').text()).length>=36 | trim($('.header-text41').text()).length>=36 | $('.header-text42').text().length>=36){
                $('#box-header-table3').addClass("box-header-table-large");
                $('#box-header-table41').addClass("box-header-table-large");
                $('#box-header-table42').addClass("box-header-table-large");
                $('#box-header-table3').removeClass("box-header-table");
-               $('#box-header-table41').removeClass("box-header-table");  
-               $('#box-header-table42').removeClass("box-header-table");  
-        }    
+               $('#box-header-table41').removeClass("box-header-table");
+               $('#box-header-table42').removeClass("box-header-table");
+        }
         if(trim($('.header-text5').text()).length>=36 | trim($('.header-text6').text()).length>=36){
                $('#box-header-table5').addClass("box-header-table-large");
                $('#box-header-table6').addClass("box-header-table-large");
                $('#box-header-table5').removeClass("box-header-table");
-               $('#box-header-table6').removeClass("box-header-table");  
-        }   		
+               $('#box-header-table6').removeClass("box-header-table");
+        }
         if(trim($('.header-text7').text()).length>=36){
                $('#box-header-table7').addClass("box-header-table-large");
                $('#box-header-table7').removeClass("box-header-table");
-        }   		
-		
+        }
+
 /* Workaround to fix buttons can't work in IE6/IE7 */
 			  if (navigator.appVersion.indexOf("MSIE") != -1 && parseFloat(navigator.appVersion.split("MSIE")[1]) < 8) {
 						document.getElementById('page-table1').style.filter="";
 						document.getElementById('page-table2').style.filter="";
 			  }
-			  
+
 			  //$('.scroll-pane').jScrollPane('scrollbarMargin:5px');
     });
-    
+
     function trim(value)
     {
         var ptntrim = /(^\s*)|(\s*$)/g;
@@ -187,16 +187,16 @@ var DodIndex = 1;
             setTimeout(setHelpIframeVisible,500);
         }
     }
-   
+
     function loadhelp(fname,anchname)
     {
         if ((loadhelp.arguments.length == 1 ) || (anchname == "" ))
             $('#page').attr("src",fname+"_h.htm");
         else
             $('#page').attr("src",fname+"_h.htm#"  + anchname);
-    }   
-    
-   
+    }
+
+
 
 function adjustPageLayout()
 {
@@ -208,33 +208,33 @@ function adjustPageLayout()
         var table_height41 = $('#page-table41')[0].clientHeight+"px";
         var table_height42 = $('#page-table42')[0].clientHeight+"px";
         var table_height5 = $('#page-table5')[0].clientHeight+"px";
-        var table_height6 = $('#page-table6')[0].clientHeight+"px";		
-    
+        var table_height6 = $('#page-table6')[0].clientHeight+"px";
+
         if($('#page-table1')[0].clientHeight >=  $('#page-table2')[0].clientHeight)
             $('#page-table2').css("height",table_height1);
         else
             $('#page-table1').css("height",table_height2);
-            
+
 /*
         if($('#page-table3')[0].clientHeight >=  $('#page-table4')[0].clientHeight)
             $('#page-table4').css("height",table_height3);
         else
-            $('#page-table3').css("height",table_height4);    
+            $('#page-table3').css("height",table_height4);
 */
         if($('#page-table3')[0].clientHeight >=  $('#page-table41')[0].clientHeight)
             $('#page-table41').css("height",table_height3);
         else
-            $('#page-table3').css("height",table_height41);    
+            $('#page-table3').css("height",table_height41);
 
         if($('#page-table3')[0].clientHeight >=  $('#page-table42')[0].clientHeight)
             $('#page-table42').css("height",table_height3);
         else
-            $('#page-table3').css("height",table_height42);    
+            $('#page-table3').css("height",table_height42);
 
         if($('#page-table5')[0].clientHeight >=  $('#page-table6')[0].clientHeight)
             $('#page-table6').css("height",table_height5);
         else
-            $('#page-table5').css("height",table_height6);    
+            $('#page-table5').css("height",table_height6);
 }
 
 function adjustButtonSize()
@@ -257,7 +257,7 @@ function advButtonClick(index){
     if(index==0) // Show Statistics
         openStatisticsWindow();
     else if(index==1)
-    {    
+    {
           openStatusWindow();
 	// document.forms[0].buttonSelect.value="1";
     }
@@ -336,8 +336,8 @@ function openStatusWindow()
 		}
 		else
 				winoptions = "width=400,height=260,status=yes,resizable=yes";
-		
-		
+
+
 		openDataSubWin('ConnectionStatusDhcp.htm',winoptions);
 		showDisablePage(parent.document.getElementById("diablePage"),datSubWinVar,parent.document.body.offsetWidth,parent.document.body.offsetHeight);
 		if(!isOnBeforeUnloadSupported())
@@ -349,10 +349,10 @@ function openStatusWindow()
 
 // We will use polling instead of onBeforeUnload in following browsers
 // PC: Opera with Presto,
-// iPad: Safari, 
+// iPad: Safari,
 // iPhone: Opera
 // Android Pad: Opera, Chrome(restoring delayed about 3 secs?), Firefox
-// Android Phone: 
+// Android Phone:
 function isOnBeforeUnloadSupported()
 {
 	if(navigator.userAgent.indexOf("Presto") > -1
@@ -363,16 +363,16 @@ function isOnBeforeUnloadSupported()
 	{
 		return false;
 	}
-	
+
 	return true;
 }
 
 // Because the following browser can't handle the window opened by itself, we will use BlockUI instead of polling or onBeforeUnload to prevent user clicking the GUI when a statistic/connection status window is opening.
-// PC: 
-// iPad: Opera Mini, 
-// iPhone: 
+// PC:
+// iPad: Opera Mini,
+// iPhone:
 // Android Pad: Dolphin Mini, UC, Safari, Native
-// Android Phone: 
+// Android Phone:
 function isUnsupportedMobileBrowser()
 {
 	/* Examples:
@@ -406,7 +406,7 @@ function isUnsupportedMobileBrowser()
 		// The browser using the lower version (<=534) of AppleWebKit can't handle the window opened by itself.
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -490,7 +490,7 @@ function modifyBtnCss()
             $(this).css("height","32px");
             var img = document.createElement("img");
             img.style.position = "absolute";
-            img.src = "img/page-table-button.gif";         
+            img.src = "img/page-table-button.gif";
             if(txt == "Reboot" || txt == "Connection Status")
                 img.style.left = 165+(txt == "Connection Status" ? $('#cableInformation')[0].offsetWidth:0)+"px";
             else
@@ -510,12 +510,12 @@ function modifyBtnCss()
 function loadSettings()
 {
     var cf=document.forms[0];
-    
+
     adjustPageLayout();
  	parent.$('#page2').css("visibility","visible");
-    parent.$('#page_contain2').removeClass('main-page-contain-loading'); 
+    parent.$('#page_contain2').removeClass('main-page-contain-loading');
     modifyBtnCss();
-/* 
+/*
 	if (cf.enable_apmode.value == 1)
     {
 
@@ -535,7 +535,7 @@ function InitTagValue()
   Hardware Version (td) | Firmware Version (td) | CableModem Serial Number (td) |
   CM certificate | Cable MAC Address | Cable IP Mask | Cable Gateway | Cable DNS | Network Access |
   Internet Mac address (td) | Internet IP Mask (td) | DHCP (td) | Internet Gateway |Internet Domain Name Server (td) |
-  LAN Mac address (td) | LAN IP Mask (td) | LAN DHCP (td) 
+  LAN Mac address (td) | LAN IP Mask (td) | LAN DHCP (td)
 2.4G  Wireless SSID (td) | Wireless Region (td) | Wireless Channel (td) | Wireless Mode (td) | Wireless AP (td) | Wireless Broadcast Name (td) | Wireless Isolation (td)
 5G    Wireless SSID (td) | Wireless Region (td) | Wireless Channel (td) | Wireless Mode (td) | Wireless AP (td) | Wireless Broadcast Name (td) | Wireless Isolation (td)
 2.4G  Guest Network SSID (td) | Guest Network AP (td)
@@ -546,9 +546,9 @@ System Up Time | Current System Time
 //    var tagValueList = 'c312|V1.01.02|12af23|1|XX:XX:XX:XX:XX:XX|***PRIVATE_IP***.173/16|***PRIVATE_IP***.254|203.0.113.1, ---.---.---.---, ---.---.---.---|Allowed|XX:XX:XX:XX:XX:XX|---.---.---.---|DHCP Client|---.---.---.---|203.0.113.1|XX:XX:XX:XX:XX:XX|192.168.0.1/24|Off||||||||||||||||||||||||||||||||0|---|---|---|---|---|---|---|---|0|0|1|0|';
 /*
     var tagValueList = "v1.0|v0.1|12345678|None" +
-                "|XX:XX:XX:XX:XX:XX|***PRIVATE_IP***.13/24|***PRIVATE_IP***.254|203.0.113.1, 203.0.113.1|Enable" + 
-                "|XX:XX:XX:XX:XX:XX|***PRIVATE_IP***/24|DHCPClient|***PRIVATE_IP***|203.0.113.1, 203.0.113.1" + 
-                 "|XX:XX:XX:XX:XX:XX|192.168.1.1/24|On" + 
+                "|XX:XX:XX:XX:XX:XX|***PRIVATE_IP***.13/24|***PRIVATE_IP***.254|203.0.113.1, 203.0.113.1|Enable" +
+                "|XX:XX:XX:XX:XX:XX|***PRIVATE_IP***/24|DHCPClient|***PRIVATE_IP***|203.0.113.1, 203.0.113.1" +
+                 "|XX:XX:XX:XX:XX:XX|192.168.1.1/24|On" +
                 "|NETGEAR_24G|North American|Auto (1)|Up to 300Mbps|Off|On|Off" +
                 "|NETGEAR_5G|North American|Auto (1)|Up to 145Mbps|Off|On|Off" +
                 "|Guest1|Off|Guest1_5G|Off" +
@@ -584,7 +584,7 @@ function InitUpdateView(tagValues)
     // Cable MAC Address
     document.getElementById("CableMACAddress").innerHTML = tagValues[4];
 
-    // Cable IP Mask 
+    // Cable IP Mask
 //    document.getElementById("CableIPMask").innerHTML = tagValues[5];
 
     /* Cable Gateway */
@@ -682,21 +682,21 @@ function InitUpdateView(tagValues)
 
     /* 2.4G SSID */
     document.getElementById("GuestNetworkName1").innerHTML = piplineDecode(tagValues[31]);
-    $('#GuestNetworkName1_B').html(piplineDecode(tagValues[31]));  
+    $('#GuestNetworkName1_B').html(piplineDecode(tagValues[31]));
 
     /* 2.4G Wireless AP */
     document.getElementById("GuestNetworkAP1").innerHTML = tagValues[32];
-    $('#GuestNetworkAP1_B').html(tagValues[32]);  
-    
+    $('#GuestNetworkAP1_B').html(tagValues[32]);
+
     /* 5G SSID */
     document.getElementById("GuestNetworkName1_an").innerHTML = piplineDecode(tagValues[33]);
-    
+
     /* 5G Wireless AP */
     document.getElementById("GuestNetworkAP1_an").innerHTML = tagValues[34];
-    
+
     /* System Up Time */
 //    document.getElementById("SystemUpTime").innerHTML = tagValues[35];
-    
+
     /* Current System Time */
 //    document.getElementById("CurrentSystemTime").innerHTML = tagValues[36];
 
@@ -708,12 +708,12 @@ function InitUpdateView(tagValues)
 
     /* 2.4G Guest1 Broadcast */
     document.getElementById("GuestNetworkBroadcast1").innerHTML = tagValues[39];
-    $('#GuestNetworkBroadcast1_B').html(tagValues[39]);  
+    $('#GuestNetworkBroadcast1_B').html(tagValues[39]);
 
     /* 2.4G Guest1 Allow Guest */
     document.getElementById("GuestNetworkAllow1").innerHTML = tagValues[40];
-    $('#GuestNetworkAllow1_B').html(tagValues[40]);  
-    
+    $('#GuestNetworkAllow1_B').html(tagValues[40]);
+
     /* 5G Guest1 Broadcast */
     document.getElementById("GuestNetworkBroadcast1_an").innerHTML = tagValues[41];
 
@@ -793,7 +793,7 @@ function InitUpdateView(tagValues)
     }
 
 
-    // Support dual band 
+    // Support dual band
     if (tagValues[47] == '1')
     {
         $("#setting_5G1").css ('display', 'none');
@@ -897,7 +897,7 @@ function hiddenWifi(statusTag)
     }
 }
 function ChangeResize()
-{    
+{
     if(navigator.userAgent.indexOf("MSIE") != -1){
         $(parent.document).find('#page2').height(parseInt(parent.document.getElementById("page_contain2").clientHeight));
     }
@@ -1098,8 +1098,8 @@ function ChangeResize()
                                                             </div>
                                                         </button>
                                                         <!-- Nick 20110927 <button type="button" class="page-table-button" style="float:left"
-                                                        onClick="advButtonClick(2);" onMouseOver="changeCursorPointer();" onMouseOut="changeCursorDefault();"><span id="reboot">Reboot</span></button>											 
-                                                        <button type="button" class="page-table-button" style="float:left" onClick="advButtonClick(3);" onMouseOver="changeCursorPointer();" onMouseOut="changeCursorDefault();"><span id="Docsis">Docsis Status</span></button>											 
+                                                        onClick="advButtonClick(2);" onMouseOver="changeCursorPointer();" onMouseOut="changeCursorDefault();"><span id="reboot">Reboot</span></button>
+                                                        <button type="button" class="page-table-button" style="float:left" onClick="advButtonClick(3);" onMouseOver="changeCursorPointer();" onMouseOut="changeCursorDefault();"><span id="Docsis">Docsis Status</span></button>
                                                         -->
                                                     </td>
                                                 </tr>
@@ -1148,7 +1148,7 @@ function ChangeResize()
                                                 <tr class="basic-text">
                                                 <td class="basic-text-menu" >DHCP </td>
                                                 <td class="basic-text-content" >On </td>
-                                                </tr>    
+                                                </tr>
                                                 -->
                                                 <tr>
                                                     <td colspan="2" class="basic-table-seperate-border">
@@ -1199,7 +1199,7 @@ function ChangeResize()
                                                 <tr class="basic-text">
                                                 <td class="basic-text-menu" >Gateway IP Address </td>
                                                 <td class="basic-text-content" >0.0.0.0 </td>
-                                                </tr>    
+                                                </tr>
                                                 -->
                                                 <tr id="interGatewayLine">
                                                     <td colspan="2" class="basic-table-seperate-border">
@@ -2051,6 +2051,3 @@ function ChangeResize()
     </form>
 </body>
 </html>
-
-
-

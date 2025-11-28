@@ -19,7 +19,7 @@ from custom_components.cable_modem_monitor.core.hnap_builder import HNAPRequestB
 from custom_components.cable_modem_monitor.core.hnap_json_builder import (
     HNAPJsonRequestBuilder,
 )
-from custom_components.cable_modem_monitor.parsers.motorola.mb8611_hnap import (
+from custom_components.cable_modem_monitor.parsers.motorola.mb8611 import (
     MotorolaMB8611HnapParser,
 )
 
@@ -27,7 +27,7 @@ from custom_components.cable_modem_monitor.parsers.motorola.mb8611_hnap import (
 @pytest.fixture
 def hnap_full_status():
     """Load hnap_full_status.json fixture."""
-    fixture_path = os.path.join(os.path.dirname(__file__), "fixtures", "mb8611_hnap", "hnap_full_status.json")
+    fixture_path = os.path.join(os.path.dirname(__file__), "fixtures", "mb8611", "hnap_full_status.json")
     with open(fixture_path) as f:
         return json.load(f)
 
@@ -35,7 +35,7 @@ def hnap_full_status():
 @pytest.fixture
 def login_html():
     """Load Login.html fixture."""
-    fixture_path = os.path.join(os.path.dirname(__file__), "fixtures", "mb8611_hnap", "Login.html")
+    fixture_path = os.path.join(os.path.dirname(__file__), "fixtures", "mb8611", "Login.html")
     with open(fixture_path) as f:
         return f.read()
 
@@ -122,7 +122,7 @@ class TestAuthentication:
         base_url = "http://192.168.100.1"
 
         # Mock AuthFactory where it's imported, not where it's defined
-        auth_path = "custom_components.cable_modem_monitor.parsers.motorola.mb8611_hnap.AuthFactory"
+        auth_path = "custom_components.cable_modem_monitor.parsers.motorola.mb8611.AuthFactory"
         with patch(auth_path) as mock_factory:
             mock_strategy = Mock()
             mock_strategy.login.return_value = (True, "Login successful")
@@ -153,7 +153,7 @@ class TestHnapParsing:
         with pytest.raises(ValueError, match=error_msg):
             parser.parse(soup, base_url="http://192.168.100.1")
 
-    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611_hnap.HNAPRequestBuilder")
+    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611.HNAPRequestBuilder")
     def test_downstream_channels(self, mock_builder_class, hnap_full_status):
         """Test parsing of downstream channels from HNAP response."""
         parser = MotorolaMB8611HnapParser()
@@ -195,7 +195,7 @@ class TestHnapParsing:
         assert ofdm_channel["corrected"] == 936482395
         assert ofdm_channel["uncorrected"] == 23115
 
-    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611_hnap.HNAPRequestBuilder")
+    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611.HNAPRequestBuilder")
     def test_upstream_channels(self, mock_builder_class, hnap_full_status):
         """Test parsing of upstream channels from HNAP response."""
         parser = MotorolaMB8611HnapParser()
@@ -235,7 +235,7 @@ class TestHnapParsing:
         assert abs(last_channel["frequency"] - 35_600_000) <= 1
         assert last_channel["power"] == 45.5
 
-    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611_hnap.HNAPRequestBuilder")
+    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611.HNAPRequestBuilder")
     def test_system_info(self, mock_builder_class, hnap_full_status):
         """Test parsing of system info from HNAP response."""
         parser = MotorolaMB8611HnapParser()
@@ -273,7 +273,7 @@ class TestHnapParsing:
         # Check downstream frequency
         assert system_info["downstream_frequency"] == "543000000 Hz"
 
-    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611_hnap.HNAPRequestBuilder")
+    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611.HNAPRequestBuilder")
     def test_builder_called_correctly(self, mock_builder_class, hnap_full_status):
         """Test that HNAPRequestBuilder is called with correct parameters."""
         parser = MotorolaMB8611HnapParser()
@@ -305,7 +305,7 @@ class TestHnapParsing:
 class TestEdgeCases:
     """Test edge cases and error handling."""
 
-    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611_hnap.HNAPRequestBuilder")
+    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611.HNAPRequestBuilder")
     def test_handles_invalid_json(self, mock_builder_class):
         """Test that parse handles invalid JSON gracefully."""
         parser = MotorolaMB8611HnapParser()
@@ -325,7 +325,7 @@ class TestEdgeCases:
         assert data["upstream"] == []
         assert data["system_info"] == {}
 
-    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611_hnap.HNAPRequestBuilder")
+    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611.HNAPRequestBuilder")
     def test_handles_missing_downstream_data(self, mock_builder_class):
         """Test that parse handles missing downstream channel data."""
         parser = MotorolaMB8611HnapParser()
@@ -352,7 +352,7 @@ class TestEdgeCases:
         # Should handle empty data
         assert data["downstream"] == []
 
-    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611_hnap.HNAPRequestBuilder")
+    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611.HNAPRequestBuilder")
     def test_handles_malformed_channel_entry(self, mock_builder_class):
         """Test that parse handles malformed channel entries."""
         parser = MotorolaMB8611HnapParser()
@@ -380,7 +380,7 @@ class TestEdgeCases:
         assert len(data["downstream"]) == 1
         assert data["downstream"][0]["channel_id"] == 2
 
-    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611_hnap.HNAPRequestBuilder")
+    @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611.HNAPRequestBuilder")
     def test_handles_exception_in_builder(self, mock_builder_class):
         """Test that parse handles exceptions from builder."""
         parser = MotorolaMB8611HnapParser()
@@ -480,8 +480,8 @@ class TestJsonHnapSupport:
 
         # Mock JSON login failure, XML/SOAP login success
         # Patch where imports are used, not where they're defined
-        json_builder_path = "custom_components.cable_modem_monitor.parsers.motorola.mb8611_hnap.HNAPJsonRequestBuilder"
-        auth_path = "custom_components.cable_modem_monitor.parsers.motorola.mb8611_hnap.AuthFactory"
+        json_builder_path = "custom_components.cable_modem_monitor.parsers.motorola.mb8611.HNAPJsonRequestBuilder"
+        auth_path = "custom_components.cable_modem_monitor.parsers.motorola.mb8611.AuthFactory"
         with patch(json_builder_path) as mock_json_builder, patch(auth_path) as mock_factory:
             # mock_json_builder is the class, .return_value is the instance created by ()
             mock_json_builder.return_value.login.return_value = (False, "")

@@ -71,6 +71,15 @@ class ModemParser(ABC):
     # Optional: Link to issue, forum post, or commit confirming verification
     verification_source: str | None = None
 
+    # Device metadata - for display and mock server
+    # Format: "YYYY-MM" or "YYYY" for approximate dates
+    release_date: str | None = None  # When modem was first released
+    end_of_life: str | None = None  # When discontinued (if applicable)
+    docsis_version: str | None = None  # e.g., "3.0", "3.1"
+    # Relative path to fixtures in repo (used by mock server and for docs link)
+    # e.g., "tests/parsers/netgear/fixtures/c3700"
+    fixtures_path: str | None = None
+
     # URL patterns this parser can handle
     # Each pattern is a dict with 'path' and optionally 'auth_required'
     # auth_required: boolean (default True) - if False, can try without auth
@@ -90,6 +99,9 @@ class ModemParser(ABC):
     # Example: capabilities = {ModemCapability.DOWNSTREAM_CHANNELS, ModemCapability.SYSTEM_UPTIME}
     capabilities: set[ModemCapability] = set()
 
+    # GitHub repo base URL for fixtures links
+    GITHUB_REPO_URL = "https://github.com/kwschulz/cable_modem_monitor"
+
     @classmethod
     def has_capability(cls, capability: ModemCapability) -> bool:
         """Check if this parser supports a specific capability.
@@ -101,6 +113,47 @@ class ModemParser(ABC):
             True if the parser declares support for this capability
         """
         return capability in cls.capabilities
+
+    @classmethod
+    def get_fixtures_url(cls) -> str | None:
+        """Get the GitHub URL for this parser's fixtures.
+
+        Returns:
+            Full GitHub URL to fixtures directory, or None if not available
+        """
+        if cls.fixtures_path:
+            return f"{cls.GITHUB_REPO_URL}/tree/main/{cls.fixtures_path}"
+        return None
+
+    @classmethod
+    def get_device_metadata(cls) -> dict:
+        """Get device metadata for display and mock server.
+
+        Returns:
+            Dictionary with all available device metadata
+        """
+        metadata = {
+            "name": cls.name,
+            "manufacturer": cls.manufacturer,
+            "models": cls.models,
+            "verified": cls.verified,
+            "docsis_version": cls.docsis_version,
+        }
+
+        if cls.release_date:
+            metadata["release_date"] = cls.release_date
+        if cls.end_of_life:
+            metadata["end_of_life"] = cls.end_of_life
+        if cls.fixtures_path:
+            metadata["fixtures_path"] = cls.fixtures_path
+            metadata["fixtures_url"] = cls.get_fixtures_url()
+        if cls.verification_source:
+            metadata["verification_source"] = cls.verification_source
+
+        # Add capabilities as list of strings
+        metadata["capabilities"] = [cap.value for cap in cls.capabilities]
+
+        return metadata
 
     @classmethod
     @abstractmethod
