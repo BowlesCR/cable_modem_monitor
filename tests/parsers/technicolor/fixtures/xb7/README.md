@@ -1,5 +1,19 @@
 ***REMOVED*** Technicolor XB7 (CGM4331COM) Test Fixtures
 
+
+<!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
+***REMOVED******REMOVED*** Quick Facts
+
+| Spec | Value |
+|------|-------|
+| **DOCSIS** | 3.1 |
+| **Released** | 2020 |
+| **Status** | Current |
+| **ISPs** | Comcast |
+| **Parser** | ⏳ Pending |
+
+<!-- END AUTO-GENERATED -->
+
 ***REMOVED******REMOVED*** Modem Information
 
 | Property | Value |

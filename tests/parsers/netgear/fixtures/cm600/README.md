@@ -1,5 +1,19 @@
 ***REMOVED*** Netgear CM600 Test Fixtures
 
+
+<!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
+***REMOVED******REMOVED*** Quick Facts
+
+| Spec | Value |
+|------|-------|
+| **DOCSIS** | 3.0 |
+| **Released** | 2016 |
+| **Status** | EOL 2023 |
+| **ISPs** | Comcast, Cox, Spectrum, TWC |
+| **Parser** | ✅ Verified |
+
+<!-- END AUTO-GENERATED -->
+
 ***REMOVED******REMOVED*** Modem Information
 
 | Property | Value |
