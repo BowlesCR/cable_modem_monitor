@@ -47,7 +47,7 @@ class NetgearC3700Parser(ModemParser):
 
     # Verification status
     verified = True
-    verification_source = "kwschulz (personal verification)"
+    verification_source = "kwschulz (maintainer)"
 
     # Device metadata
     release_date = "2014-09"

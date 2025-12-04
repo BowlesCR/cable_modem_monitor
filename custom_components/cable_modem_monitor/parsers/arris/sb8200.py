@@ -30,7 +30,7 @@ class ArrisSB8200Parser(ModemParser):
 
     # Verification status
     verified = True
-    verification_source = "https://github.com/kwschulz/cable_modem_monitor/issues/42"
+    verification_source = "https://github.com/kwschulz/cable_modem_monitor/issues/42 (@undotcom)"
 
     # Device metadata
     release_date = "2016"
