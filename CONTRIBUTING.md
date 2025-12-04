@@ -39,7 +39,7 @@ The script automatically:
 
 **Then:** [Open a modem request issue](https://github.com/kwschulz/cable_modem_monitor/issues/new?template=modem_request.yml) and attach the `.sanitized.har.gz` file.
 
-See [HAR Capture Guide](./docs/HAR_CAPTURE_GUIDE.md) for detailed instructions and alternative methods.
+See [Capture Guide](./docs/CAPTURE_GUIDE.md) for detailed instructions and alternative methods.
 
 ---
 

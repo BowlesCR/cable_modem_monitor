@@ -288,7 +288,12 @@ def extract_fixture_info(
     info: dict[str, str | int | bool | None] = {
         "path": str(fixture_dir.relative_to(base_dir)),
         "model": fixture_dir.name.upper(),
-        "manufacturer": fixture_dir.parent.parent.name.capitalize(),
+        # ARRIS is officially all caps; others use title case
+        "manufacturer": (
+            "ARRIS"
+            if fixture_dir.parent.parent.name.lower() == "arris"
+            else fixture_dir.parent.parent.name.capitalize()
+        ),
     }
 
     # 1. Load from metadata.yaml (source of truth for research data)

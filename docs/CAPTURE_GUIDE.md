@@ -33,7 +33,7 @@ This guide explains how to capture data from your modem to help developers add s
 
 **Best for:** Authentication issues, capturing full HTTP conversation including login flow.
 
-HAR files capture the complete HTTP conversation - headers, cookies, auth flow, and content.
+HAR (HTTP Archive) files capture the complete HTTP conversation - headers, cookies, auth flow, and content.
 
 ### VS Code (One-Click)
 

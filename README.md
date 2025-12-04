@@ -12,7 +12,7 @@
 
 <!-- Meta -->
 [![AI Assisted](https://img.shields.io/badge/AI-Claude%20Assisted-5A67D8.svg)](https://claude.ai)
-[![Help Add Your Modem](https://img.shields.io/badge/Help-Add%20Your%20Modem-brightgreen)](./docs/HAR_CAPTURE_GUIDE.md)
+[![Help Add Your Modem](https://img.shields.io/badge/Help-Add%20Your%20Modem-brightgreen)](./docs/CAPTURE_GUIDE.md)
 
 A custom Home Assistant integration that monitors cable modem signal quality, power levels, and error rates. Perfect for tracking your internet connection health and identifying potential issues before they cause problems.
 
@@ -269,7 +269,7 @@ This is **much more useful** than HTML alone when debugging authentication issue
 
 2. **Browser DevTools (Manual)** - Use your browser's Network tab to save HAR
 
-**📖 See the [HAR Capture Guide](./docs/HAR_CAPTURE_GUIDE.md)** for complete step-by-step instructions with screenshots.
+**📖 See the [Capture Guide](./docs/CAPTURE_GUIDE.md)** for complete step-by-step instructions with screenshots.
 
 **Privacy:** HAR files are automatically sanitized to remove passwords and sensitive data before sharing.
 
@@ -284,7 +284,7 @@ This is **much more useful** than HTML alone when debugging authentication issue
 For modems with **no authentication** or when login works but parsing fails:
 
 1. **Capture HTML Samples**: Provide us with the HTML source from your modem's status pages
-   - See the [HTML Capture Guide](./docs/HTML_CAPTURE_GUIDE.md) for detailed instructions
+   - See the [Capture Guide](./docs/CAPTURE_GUIDE.md) for detailed instructions
 2. **Open a GitHub Issue**: Create an issue with your modem model and attach the captured HTML samples
 
 **Your contribution helps everyone with the same modem model!**
@@ -800,7 +800,7 @@ Please see the [Contributing Guide](./CONTRIBUTING.md) for details on how to add
     - Hardcoded credential detection
     - SSL/TLS misconfiguration checks
     - Path traversal prevention
-- **Security Documentation**: See [CodeQL Overview](./docs/CODEQL_OVERVIEW.md) for details
+- **Security Documentation**: See [CodeQL Testing Guide](./docs/CODEQL_TESTING_GUIDE.md) for details
 - **Vulnerability Reporting**: See [SECURITY.md](./SECURITY.md) for responsible disclosure
 
 ### Authentication Support
@@ -824,9 +824,9 @@ MIT License - see LICENSE file for details
 - [Changelog](./CHANGELOG.md) - Complete version history and release notes
 - [Verification Status](./VERIFICATION_STATUS.md) - Verified modem compatibility list
 - [Contributing Guide](./CONTRIBUTING.md) - How to contribute code or add modem support
-- [CodeQL Security Overview](./docs/CODEQL_OVERVIEW.md) - Security scanning details
+- [CodeQL Testing Guide](./docs/CODEQL_TESTING_GUIDE.md) - Security scanning details
 - [Troubleshooting Guide](./docs/TROUBLESHOOTING.md) - Common issues and solutions
-- [HAR Capture Guide](./docs/HAR_CAPTURE_GUIDE.md) - Help add support for your modem
+- [Capture Guide](./docs/CAPTURE_GUIDE.md) - Help add support for your modem
 
 ### External Resources
 - [Home Assistant Releases](https://github.com/home-assistant/core/releases)

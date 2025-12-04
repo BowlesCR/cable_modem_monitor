@@ -188,4 +188,4 @@ Then check Settings → System → Logs after restarting.
 
 - [DEVELOPER_QUICKSTART.md](./DEVELOPER_QUICKSTART.md) - Local development setup
 - [CONTRIBUTING.md](../CONTRIBUTING.md) - How to contribute
-- [HAR_CAPTURE_GUIDE.md](./HAR_CAPTURE_GUIDE.md) - Capturing modem data for debugging
+- [CAPTURE_GUIDE.md](./CAPTURE_GUIDE.md) - Capturing modem data for debugging

@@ -27,7 +27,7 @@ All fixture directories should follow this structure:
 
 | Manufacturer | Model | DOCSIS | ISPs | Files | Status |
 |--------------|-------|--------|------|-------|--------|
-| Arris | [S33](arris/fixtures/s33/README.md) | 3.1 | ![COM](https://img.shields.io/badge/-COM-5588aa?style=flat-square "Comcast") ![COX](https://img.shields.io/badge/-COX-cc9966?style=flat-square "Cox Communications") ![SPEC](https://img.shields.io/badge/-SPEC-6699aa?style=flat-square "Spectrum (Charter)") | 2 | ❓ Unknown |
+| ARRIS | [S33](arris/fixtures/s33/README.md) | 3.1 | ![COM](https://img.shields.io/badge/-COM-5588aa?style=flat-square "Comcast") ![COX](https://img.shields.io/badge/-COX-cc9966?style=flat-square "Cox Communications") ![SPEC](https://img.shields.io/badge/-SPEC-6699aa?style=flat-square "Spectrum (Charter)") | 2 | ❓ Unknown |
 | ARRIS | [SB6141](arris/fixtures/sb6141/README.md) | 3.0 | ![COM](https://img.shields.io/badge/-COM-5588aa?style=flat-square "Comcast") ![COX](https://img.shields.io/badge/-COX-cc9966?style=flat-square "Cox Communications") ![SPEC](https://img.shields.io/badge/-SPEC-6699aa?style=flat-square "Spectrum (Charter)") ![TWC](https://img.shields.io/badge/-TWC-7799aa?style=flat-square "Time Warner Cable") ![MED](https://img.shields.io/badge/-MED-557799?style=flat-square "Mediacom") | 1 | ✅ Verified |
 | ARRIS | [SB6190](arris/fixtures/sb6190/README.md) | 3.0 | ![COM](https://img.shields.io/badge/-COM-5588aa?style=flat-square "Comcast") ![COX](https://img.shields.io/badge/-COX-cc9966?style=flat-square "Cox Communications") ![SPEC](https://img.shields.io/badge/-SPEC-6699aa?style=flat-square "Spectrum (Charter)") ![TWC](https://img.shields.io/badge/-TWC-7799aa?style=flat-square "Time Warner Cable") | 1 | ⏳ Pending |
 | ARRIS | [SB8200](arris/fixtures/sb8200/README.md) | 3.1 | ![COM](https://img.shields.io/badge/-COM-5588aa?style=flat-square "Comcast") ![COX](https://img.shields.io/badge/-COX-cc9966?style=flat-square "Cox Communications") ![SPEC](https://img.shields.io/badge/-SPEC-6699aa?style=flat-square "Spectrum (Charter)") | 3 | ✅ Verified |
@@ -56,7 +56,7 @@ DOCSIS 3.1
 ├── 2017  Technicolor TC4400     ░░░░░░░░░███████████   8yr  Current
 ├── 2020  Netgear     CM2000     ░░░░░░░░░░░░░███████   5yr  Current
 ├── 2020  Motorola    MB8611     ░░░░░░░░░░░░░███████   5yr  Current
-├── 2020  Arris       S33        ░░░░░░░░░░░░░███████   5yr  Current
+├── 2020  ARRIS       S33        ░░░░░░░░░░░░░███████   5yr  Current
 └── 2020  Technicolor XB7        ░░░░░░░░░░░░░███████   5yr  Current
 
 ```
