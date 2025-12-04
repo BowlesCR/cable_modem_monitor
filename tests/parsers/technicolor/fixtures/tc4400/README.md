@@ -10,7 +10,7 @@
 | **Released** | 2017 |
 | **Status** | Current |
 | **ISPs** | Comcast, Cox, Spectrum, Rogers, Shaw, Videotron |
-| **Parser** | ⏳ Pending |
+| **Parser** | ✅ Verified |
 
 <!-- END AUTO-GENERATED -->
 

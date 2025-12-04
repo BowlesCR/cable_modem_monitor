@@ -48,7 +48,6 @@ class TestParserCaching:
         assert "ARRIS SB6141" in parser_names
         assert "ARRIS SB6190" in parser_names
         assert "ARRIS SB8200" in parser_names
-        assert "Motorola MB Series (Generic)" in parser_names
         assert "Motorola MB7621" in parser_names
         assert "Motorola MB8611" in parser_names
         assert "Technicolor TC4400" in parser_names
@@ -69,14 +68,11 @@ class TestParserCaching:
         non_unknown_manufacturers = [m for m in manufacturers if m != "Unknown"]
         assert non_unknown_manufacturers == sorted(non_unknown_manufacturers)
 
-        # Within Motorola, check alphabetical ordering with Generic last
+        # Within Motorola, check alphabetical ordering
         motorola_parsers = [p for p in parsers if p.manufacturer == "Motorola"]
         motorola_names = [p.name for p in motorola_parsers]
-        # Generic should be last within Motorola group
-        assert motorola_names[-1] == "Motorola MB Series (Generic)"
-        # Others should be alphabetical
-        non_generic = [name for name in motorola_names if "Generic" not in name]
-        assert non_generic == sorted(non_generic)
+        # Motorola parsers should be in alphabetical order
+        assert motorola_names == sorted(motorola_names)
 
 
 class TestGetParserByName:

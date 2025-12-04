@@ -27,8 +27,8 @@ class TechnicolorTC4400Parser(ModemParser):
     models = ["TC4400"]
 
     # Verification status
-    verified = False  # No confirmed user reports
-    verification_source = None  # Check Issue #1 for status
+    verified = True  # Confirmed by @Mar1usW3 in #1 (v2.2.0)
+    verification_source = "https://github.com/kwschulz/cable_modem_monitor/issues/1 (@Mar1usW3)"
 
     # Device metadata
     release_date = "2017"

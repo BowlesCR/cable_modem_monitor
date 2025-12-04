@@ -24,8 +24,8 @@ class TechnicolorXB7Parser(ModemParser):
     models = ["XB7", "CGM4331COM"]
 
     # Verification status
-    verified = False  # No confirmed user reports
-    verification_source = None  # Needs user verification
+    verified = True  # Confirmed by @esand in #2 (v3.0)
+    verification_source = "https://github.com/kwschulz/cable_modem_monitor/issues/2 (@esand)"
 
     # Device metadata
     release_date = "2018"

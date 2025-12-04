@@ -1,4 +1,11 @@
-"""Parser for ARRIS SB6190 cable modem."""
+"""Parser for ARRIS SB6190 cable modem.
+
+UNTESTED: This parser was created based on SB6141 HTML structure assumptions.
+It has NOT been validated against real hardware. Need user with SB6190 or
+access to actual hardware to confirm parsing works correctly.
+
+If you have an SB6190 and can test, please open an issue with your results!
+"""
 
 from __future__ import annotations
 
@@ -24,8 +31,9 @@ class ArrisSB6190Parser(ModemParser):
     models = ["SB6190"]
 
     # Verification status
-    verified = False  # No user reports confirming this works
-    verification_source = None  # No confirmation found
+    # UNTESTED: Based on SB6141 structure, needs real hardware validation
+    verified = False
+    verification_source = None
 
     # Device metadata
     release_date = "2016"

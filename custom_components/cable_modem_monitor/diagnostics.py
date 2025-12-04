@@ -94,39 +94,38 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
             elif hasattr(system_log, "records"):
                 _LOGGER.debug("system_log.records found (direct), record count: %d", len(system_log.records))
 
-                # system_log only stores errors/warnings, not INFO/DEBUG logs
-                # Record format is: (logger_name, (file, line_num), exception_or_none)
+                # system_log stores LogRecord objects or SimpleEntry named tuples
+                # SimpleEntry format: (name, timestamp, level, message, exception, root_cause)
                 for record in system_log.records:
                     try:
-                        if isinstance(record, tuple) and len(record) >= 3:
-                            logger_name, location_info, exception_info = record[0], record[1], record[2]
+                        if hasattr(record, "name") and hasattr(record, "message"):
+                            # SimpleEntry or LogRecord-like object with name and message attrs
+                            if "cable_modem_monitor" in str(record.name):
+                                # Get level - could be int or string
+                                level = getattr(record, "level", "ERROR")
+                                if isinstance(level, int):
+                                    import logging
 
-                            # Filter for cable_modem_monitor logs
-                            if "cable_modem_monitor" in str(logger_name):
-                                # Extract file and line number if available
-                                file_info = ""
-                                if isinstance(location_info, tuple) and len(location_info) >= 2:
-                                    file_info = f" at {location_info[0]}:{location_info[1]}"
+                                    level = logging.getLevelName(level)
 
-                                # Format the message
-                                message = f"Error{file_info}"
-                                if exception_info:
-                                    message += f": {str(exception_info)[:200]}"
+                                # Get timestamp
+                                timestamp = getattr(record, "timestamp", None) or getattr(
+                                    record, "created", time.time()
+                                )
 
-                                sanitized_message = _sanitize_log_message(message)
+                                sanitized_message = _sanitize_log_message(str(record.message))
                                 recent_logs.append(
                                     {
-                                        # Collection time (original timestamp unavailable)
-                                        "timestamp": time.time(),
-                                        "level": "ERROR",  # system_log only stores errors/warnings
-                                        "logger": str(logger_name).replace(
+                                        "timestamp": timestamp,
+                                        "level": str(level),
+                                        "logger": str(record.name).replace(
                                             "custom_components.cable_modem_monitor.", ""
                                         ),
                                         "message": sanitized_message,
                                     }
                                 )
-                        elif hasattr(record, "name"):
-                            # LogRecord object format (fallback for older versions)
+                        elif hasattr(record, "getMessage"):
+                            # Standard LogRecord object
                             if "cable_modem_monitor" in record.name:
                                 sanitized_message = _sanitize_log_message(record.getMessage())
                                 recent_logs.append(
@@ -134,6 +133,30 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
                                         "timestamp": record.created,
                                         "level": record.levelname,
                                         "logger": record.name.replace("custom_components.cable_modem_monitor.", ""),
+                                        "message": sanitized_message,
+                                    }
+                                )
+                        elif isinstance(record, tuple) and len(record) >= 4:
+                            # Legacy tuple format: (name, timestamp, level, message, ...)
+                            logger_name = record[0]
+                            if "cable_modem_monitor" in str(logger_name):
+                                timestamp = record[1] if len(record) > 1 else time.time()
+                                level = record[2] if len(record) > 2 else "ERROR"
+                                message = record[3] if len(record) > 3 else "Unknown"
+
+                                if isinstance(level, int):
+                                    import logging
+
+                                    level = logging.getLevelName(level)
+
+                                sanitized_message = _sanitize_log_message(str(message))
+                                recent_logs.append(
+                                    {
+                                        "timestamp": timestamp,
+                                        "level": str(level),
+                                        "logger": str(logger_name).replace(
+                                            "custom_components.cable_modem_monitor.", ""
+                                        ),
                                         "message": sanitized_message,
                                     }
                                 )
