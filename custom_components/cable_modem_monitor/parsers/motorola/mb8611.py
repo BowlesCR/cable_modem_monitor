@@ -500,7 +500,16 @@ class MotorolaMB8611HnapParser(ModemParser):
             target[target_key] = value
 
     def restart(self, session, base_url) -> bool:
-        """Restart the MB8611 modem via HNAP SetMotoStatusDSTargetFreq action."""
+        """Restart the MB8611 modem via HNAP SetStatusSecuritySettings action.
+
+        The restart is triggered from the Security settings page (MotoStatusSecurity.html)
+        using the SetStatusSecuritySettings HNAP action with MotoStatusSecurityAction=1.
+
+        Based on analysis of modem's JavaScript in MotoStatusSecurity.html:
+        - Action 1 = Reboot
+        - Action 2 = Factory Reset
+        - Action 3 = Change password
+        """
         try:
             # Use JSON builder if available (from login), otherwise create new
             if self._json_builder is not None:
@@ -513,19 +522,21 @@ class MotorolaMB8611HnapParser(ModemParser):
                 _LOGGER.warning("MB8611: No stored JSON builder for restart - may lack auth")
 
             # Build the restart request - action=1 triggers reboot
-            # Based on modem's JavaScript: SetMotoStatusDSTargetFreq with MotoStatusConnectionAction=1
+            # Based on modem's MotoStatusSecurity.html JavaScript:
+            # result_xml.Set("SetStatusSecuritySettings/MotoStatusSecurityAction", "1");
+            # result_xml.Set("SetStatusSecuritySettings/MotoStatusSecXXX", "XXX");
             restart_data = {
-                "MotoStatusConnectionAction": "1",
-                "MotoStatusXXX": "XXX",
+                "MotoStatusSecurityAction": "1",
+                "MotoStatusSecXXX": "XXX",
             }
 
-            _LOGGER.info("MB8611: Sending restart command via HNAP")
-            response = builder.call_single(session, base_url, "SetMotoStatusDSTargetFreq", restart_data)
+            _LOGGER.info("MB8611: Sending restart command via HNAP SetStatusSecuritySettings")
+            response = builder.call_single(session, base_url, "SetStatusSecuritySettings", restart_data)
 
             # Parse response to check result
             response_data = json.loads(response)
-            result = response_data.get("SetMotoStatusDSTargetFreqResponse", {}).get(
-                "SetMotoStatusDSTargetFreqResult", ""
+            result = response_data.get("SetStatusSecuritySettingsResponse", {}).get(
+                "SetStatusSecuritySettingsResult", ""
             )
 
             if result == "OK":
