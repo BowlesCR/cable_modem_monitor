@@ -10,6 +10,7 @@
 | **Released** | 2020 |
 | **Status** | Current |
 | **ISPs** | Comcast, Cox, Spectrum |
+| **Parser** | ⏳ Pending |
 
 <!-- END AUTO-GENERATED -->
 

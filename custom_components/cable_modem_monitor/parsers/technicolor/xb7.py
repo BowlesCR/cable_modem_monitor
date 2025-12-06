@@ -11,7 +11,7 @@ from custom_components.cable_modem_monitor.core.auth_config import RedirectFormA
 from custom_components.cable_modem_monitor.core.authentication import AuthStrategyType
 from custom_components.cable_modem_monitor.lib.utils import extract_float, extract_number
 
-from ..base_parser import ModemCapability, ModemParser
+from ..base_parser import ModemCapability, ModemParser, ParserStatus
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -23,8 +23,8 @@ class TechnicolorXB7Parser(ModemParser):
     manufacturer = "Technicolor"
     models = ["XB7", "CGM4331COM"]
 
-    # Verification status
-    verified = True  # Confirmed by @esand in #2 (v3.0)
+    # Parser status
+    status = ParserStatus.VERIFIED  # Confirmed by @esand in #2 (v3.0)
     verification_source = "https://github.com/kwschulz/cable_modem_monitor/issues/2 (@esand)"
 
     # Device metadata

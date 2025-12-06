@@ -10,7 +10,7 @@
 | **Released** | 2016 |
 | **Status** | EOL 2023 |
 | **ISPs** | Comcast, Cox, Spectrum, TWC |
-| **Parser** | ⏳ Pending |
+| **Parser** | ✅ Verified |
 
 <!-- END AUTO-GENERATED -->
 

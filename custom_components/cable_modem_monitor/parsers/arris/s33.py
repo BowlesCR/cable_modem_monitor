@@ -22,7 +22,7 @@ from custom_components.cable_modem_monitor.core.auth_config import HNAPAuthConfi
 from custom_components.cable_modem_monitor.core.authentication import AuthFactory, AuthStrategyType
 from custom_components.cable_modem_monitor.core.hnap_json_builder import HNAPJsonRequestBuilder
 
-from ..base_parser import ModemCapability, ModemParser
+from ..base_parser import ModemCapability, ModemParser, ParserStatus
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -35,9 +35,9 @@ class ArrisS33HnapParser(ModemParser):
     models = ["S33", "CommScope S33", "ARRIS S33"]
     priority = 101  # Higher priority for the API-based method
 
-    # Verification status
-    verified = False
-    verification_source = "Awaiting real-world confirmation (Issue #32)"
+    # Parser status
+    status = ParserStatus.AWAITING_VERIFICATION
+    verification_source = "https://github.com/kwschulz/cable_modem_monitor/issues/32"
 
     # Device metadata
     release_date = "2020"

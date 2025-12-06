@@ -1,11 +1,4 @@
-"""Parser for ARRIS SB6190 cable modem.
-
-UNTESTED: This parser was created based on SB6141 HTML structure assumptions.
-It has NOT been validated against real hardware. Need user with SB6190 or
-access to actual hardware to confirm parsing works correctly.
-
-If you have an SB6190 and can test, please open an issue with your results!
-"""
+"""Parser for ARRIS SB6190 cable modem."""
 
 from __future__ import annotations
 
@@ -18,7 +11,7 @@ from custom_components.cable_modem_monitor.core.auth_config import NoAuthConfig
 from custom_components.cable_modem_monitor.core.authentication import AuthStrategyType
 from custom_components.cable_modem_monitor.lib.utils import extract_float, extract_number
 
-from ..base_parser import ModemCapability, ModemParser
+from ..base_parser import ModemCapability, ModemParser, ParserStatus
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -30,10 +23,9 @@ class ArrisSB6190Parser(ModemParser):
     manufacturer = "ARRIS"
     models = ["SB6190"]
 
-    # Verification status
-    # UNTESTED: Based on SB6141 structure, needs real hardware validation
-    verified = False
-    verification_source = None
+    # Parser status
+    status = ParserStatus.VERIFIED  # Confirmed by @sfennell in PR #22 (v3.0.0)
+    verification_source = "https://github.com/kwschulz/cable_modem_monitor/pull/22"
 
     # Device metadata
     release_date = "2016"

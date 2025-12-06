@@ -12,7 +12,7 @@ from custom_components.cable_modem_monitor.core.authentication import AuthFactor
 from custom_components.cable_modem_monitor.core.hnap_builder import HNAPRequestBuilder
 from custom_components.cable_modem_monitor.core.hnap_json_builder import HNAPJsonRequestBuilder
 
-from ..base_parser import ModemCapability, ModemParser
+from ..base_parser import ModemCapability, ModemParser, ParserStatus
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -25,9 +25,9 @@ class MotorolaMB8611HnapParser(ModemParser):
     models = ["MB8611", "MB8612"]
     priority = 101  # Higher priority for the API-based method
 
-    # Verification status
-    verified = False
-    verification_source = "Awaiting real-world confirmation (Issues #4, #6)"
+    # Parser status - awaiting user confirmation
+    status = ParserStatus.AWAITING_VERIFICATION
+    verification_source = "https://github.com/kwschulz/cable_modem_monitor/issues/4"
 
     # Device metadata
     release_date = "2020"

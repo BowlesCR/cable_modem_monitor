@@ -22,7 +22,7 @@ from custom_components.cable_modem_monitor.core.auth_config import FormAuthConfi
 from custom_components.cable_modem_monitor.core.authentication import AuthStrategyType
 from custom_components.cable_modem_monitor.lib.utils import extract_float, extract_number, parse_uptime_to_seconds
 
-from ..base_parser import ModemCapability, ModemParser
+from ..base_parser import ModemCapability, ModemParser, ParserStatus
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -38,8 +38,8 @@ class MotorolaMB7621Parser(ModemParser):
     manufacturer = "Motorola"
     models = ["MB7621"]
 
-    # Verification status
-    verified = True
+    # Parser status
+    status = ParserStatus.VERIFIED
     verification_source = "kwschulz (maintainer)"
 
     # Device metadata
