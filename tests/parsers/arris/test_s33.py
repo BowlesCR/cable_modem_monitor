@@ -113,8 +113,13 @@ class TestS33ParserMetadata:
         assert ArrisS33HnapParser.docsis_version == "3.1"
 
     def test_verified_status(self):
-        """Test parser is not yet verified."""
-        assert ArrisS33HnapParser.verified is False
+        """Test parser is awaiting verification (not yet verified by user)."""
+        from custom_components.cable_modem_monitor.parsers.base_parser import ParserStatus
+
+        assert ArrisS33HnapParser.status == ParserStatus.AWAITING_VERIFICATION
+        # Also test the verified property via an instance
+        parser = ArrisS33HnapParser()
+        assert parser.verified is False
 
     def test_fixtures_path(self):
         """Test fixtures path is set."""
@@ -288,3 +293,100 @@ class TestS33UrlPatterns:
         )
         assert status_pattern is not None
         assert status_pattern["auth_required"] is True
+
+
+class TestS33Restart:
+    """Test restart functionality using SetArrisConfigurationInfo."""
+
+    def test_restart_success_with_reboot_action(self):
+        """Test restart succeeds when response has REBOOT action."""
+        from unittest.mock import MagicMock
+
+        parser = ArrisS33HnapParser()
+
+        # Mock the JSON builder
+        mock_builder = MagicMock()
+        mock_builder.call_single.return_value = (
+            '{"SetArrisConfigurationInfoResponse": {'
+            '"SetArrisConfigurationInfoResult": "OK", '
+            '"SetArrisConfigurationInfoAction": "REBOOT"}}'
+        )
+        parser._json_builder = mock_builder
+
+        result = parser.restart(MagicMock(), "https://192.168.100.1")
+
+        assert result is True
+        mock_builder.call_single.assert_called_once()
+        call_args = mock_builder.call_single.call_args
+        assert call_args[0][2] == "SetArrisConfigurationInfo"
+        assert call_args[0][3]["Action"] == "reboot"
+
+    def test_restart_success_with_ok_only(self):
+        """Test restart succeeds when response has OK but no specific action."""
+        from unittest.mock import MagicMock
+
+        parser = ArrisS33HnapParser()
+
+        mock_builder = MagicMock()
+        mock_builder.call_single.return_value = (
+            '{"SetArrisConfigurationInfoResponse": {"SetArrisConfigurationInfoResult": "OK"}}'
+        )
+        parser._json_builder = mock_builder
+
+        result = parser.restart(MagicMock(), "https://192.168.100.1")
+
+        assert result is True
+
+    def test_restart_success_on_connection_reset(self):
+        """Test restart returns True on connection reset (modem rebooting)."""
+        from unittest.mock import MagicMock
+
+        parser = ArrisS33HnapParser()
+
+        mock_builder = MagicMock()
+        mock_builder.call_single.side_effect = ConnectionResetError("Connection reset by peer")
+        parser._json_builder = mock_builder
+
+        result = parser.restart(MagicMock(), "https://192.168.100.1")
+
+        assert result is True
+
+    def test_restart_failure_on_error_response(self):
+        """Test restart returns False on error response."""
+        from unittest.mock import MagicMock
+
+        parser = ArrisS33HnapParser()
+
+        mock_builder = MagicMock()
+        mock_builder.call_single.return_value = (
+            '{"SetArrisConfigurationInfoResponse": {"SetArrisConfigurationInfoResult": "ERROR"}}'
+        )
+        parser._json_builder = mock_builder
+
+        result = parser.restart(MagicMock(), "https://192.168.100.1")
+
+        assert result is False
+
+    def test_restart_sends_correct_action_fields(self):
+        """Test that restart sends the correct fields matching configuration.js."""
+        from unittest.mock import MagicMock
+
+        parser = ArrisS33HnapParser()
+
+        mock_builder = MagicMock()
+        mock_builder.call_single.return_value = (
+            '{"SetArrisConfigurationInfoResponse": {'
+            '"SetArrisConfigurationInfoResult": "OK", '
+            '"SetArrisConfigurationInfoAction": "REBOOT"}}'
+        )
+        parser._json_builder = mock_builder
+
+        parser.restart(MagicMock(), "https://192.168.100.1")
+
+        # Verify the request data matches what configuration.js sends
+        call_args = mock_builder.call_single.call_args
+        request_data = call_args[0][3]
+        assert "Action" in request_data
+        assert request_data["Action"] == "reboot"
+        assert "SetEEEEnable" in request_data
+        assert "LED_Status" in request_data

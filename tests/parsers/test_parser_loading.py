@@ -103,13 +103,18 @@ class TestGetParserByName:
 
     def test_arris_sb8200(self):
         """Test loading ARRIS SB8200 parser by name."""
+        from custom_components.cable_modem_monitor.parsers.base_parser import ParserStatus
+
         parser_class = get_parser_by_name("ARRIS SB8200")
         assert parser_class is not None
         assert issubclass(parser_class, ModemParser)
         assert parser_class.name == "ARRIS SB8200"
         assert parser_class.manufacturer == "ARRIS"
         # SB8200 is verified (Issue #42)
-        assert parser_class.verified is True
+        assert parser_class.status == ParserStatus.VERIFIED
+        # Also test the verified property via an instance
+        parser = parser_class()
+        assert parser.verified is True
 
     def test_invalid(self):
         """Test that invalid parser name returns None."""

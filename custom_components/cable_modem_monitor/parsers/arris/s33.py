@@ -65,13 +65,12 @@ class ArrisS33HnapParser(ModemParser):
     ]
 
     # Capabilities - S33 HNAP parser
-    # Note: RESTART is experimental/unverified - based on MB8611 pattern
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
         ModemCapability.SYSTEM_UPTIME,
         ModemCapability.SOFTWARE_VERSION,
-        ModemCapability.RESTART,  # Experimental - needs verification
+        ModemCapability.RESTART,  # Uses SetArrisConfigurationInfo Action="reboot"
     }
 
     @classmethod
@@ -437,37 +436,18 @@ class ArrisS33HnapParser(ModemParser):
             target[target_key] = value
 
     def restart(self, session, base_url) -> bool:
-        """Restart the S33 modem via HNAP (EXPERIMENTAL - unverified).
+        """Restart the S33 modem via HNAP SetArrisConfigurationInfo.
 
-        This is a best-effort implementation based on the MB8611 pattern.
-        The MB8611 uses SetStatusSecuritySettings with MotoStatusSecurityAction=1.
-        The S33 likely uses a similar pattern with Customer* prefix.
+        The S33 uses SetArrisConfigurationInfo with Action="reboot" to restart.
+        This was discovered from the configuration.js JavaScript in the HAR capture.
 
-        UNVERIFIED: This needs testing with a real S33 modem.
-        If it doesn't work, we need a HAR capture of the Security settings page.
-
-        Possible action names to try:
-        1. SetStatusSecuritySettings (same as MB8611)
-        2. SetCustomerStatusSecuritySettings (following S33's Customer* pattern)
-        3. SetArrisSecuritySettings (Arris-specific variant)
+        The expected response contains SetArrisConfigurationInfoAction="REBOOT"
+        when the restart command is accepted.
 
         Returns:
             True if restart command was sent successfully, False otherwise
         """
-        _LOGGER.info(
-            "S33: Attempting restart (EXPERIMENTAL - based on MB8611 pattern). "
-            "If this fails, please capture a HAR of the Security settings page."
-        )
-
-        # Try multiple possible action names
-        possible_actions = [
-            # Most likely - same as MB8611
-            ("SetStatusSecuritySettings", "MotoStatusSecurityAction", "MotoStatusSecXXX"),
-            # S33's Customer* pattern
-            ("SetCustomerStatusSecuritySettings", "CustomerStatusSecurityAction", "CustomerStatusSecXXX"),
-            # Arris-specific variant
-            ("SetArrisSecuritySettings", "ArrisSecurityAction", "ArrisSecXXX"),
-        ]
+        _LOGGER.info("S33: Sending restart command via SetArrisConfigurationInfo")
 
         # Use JSON builder if available from login
         if self._json_builder is not None:
@@ -480,79 +460,58 @@ class ArrisS33HnapParser(ModemParser):
             )
             _LOGGER.warning("S33: No stored JSON builder for restart - creating new one (may lack auth)")
 
-        for action_name, action_key, placeholder_key in possible_actions:
-            try:
+        try:
+            # Build restart request matching configuration.js pattern:
+            # result_xml.Set("SetArrisConfigurationInfo/Action", "reboot");
+            # Also include the other fields that the JS sends (even if empty/default)
+            restart_data = {
+                "Action": "reboot",
+                "SetEEEEnable": "",  # Energy Efficient Ethernet - not changing
+                "LED_Status": "",  # LED status - not changing
+            }
+
+            response = builder.call_single(session, base_url, "SetArrisConfigurationInfo", restart_data)
+
+            # Log response for debugging
+            _LOGGER.debug("S33: Restart response: %s", response[:500] if response else "empty")
+
+            # Parse response to check result
+            response_data = json.loads(response)
+            result = response_data.get("SetArrisConfigurationInfoResponse", {}).get(
+                "SetArrisConfigurationInfoResult", ""
+            )
+            action_status = response_data.get("SetArrisConfigurationInfoResponse", {}).get(
+                "SetArrisConfigurationInfoAction", ""
+            )
+
+            if result == "OK" and action_status == "REBOOT":
+                _LOGGER.info("S33: Restart command accepted - modem is rebooting")
+                return True
+            elif result == "OK":
+                # OK but no REBOOT action - might still work
                 _LOGGER.info(
-                    "S33: Trying restart with action=%s, key=%s",
-                    action_name,
-                    action_key,
-                )
-
-                # Build restart request - action=1 triggers reboot (based on MB8611)
-                restart_data = {
-                    action_key: "1",
-                    placeholder_key: "XXX",
-                }
-
-                response = builder.call_single(session, base_url, action_name, restart_data)
-
-                # Log full response for debugging
-                _LOGGER.debug("S33: Restart response for %s: %s", action_name, response[:500])
-
-                # Parse response to check result
-                response_data = json.loads(response)
-                response_key = f"{action_name}Response"
-                result_key = f"{action_name}Result"
-
-                result = response_data.get(response_key, {}).get(result_key, "")
-
-                if result == "OK":
-                    _LOGGER.info(
-                        "S33: Restart command sent successfully using %s! "
-                        "Please report this working action to GitHub Issue #32.",
-                        action_name,
-                    )
-                    return True
-                else:
-                    _LOGGER.debug(
-                        "S33: Action %s returned result=%s (not OK), trying next...",
-                        action_name,
-                        result,
-                    )
-
-            except ConnectionResetError:
-                # Connection reset often means the modem is rebooting
-                _LOGGER.info(
-                    "S33: Restart likely successful (connection reset by rebooting modem) "
-                    "using action %s. Please report to GitHub Issue #32.",
-                    action_name,
+                    "S33: Restart command returned OK (action=%s) - modem may be rebooting",
+                    action_status,
                 )
                 return True
-
-            except Exception as e:
-                error_str = str(e)
-                if "Connection aborted" in error_str or "Connection reset" in error_str:
-                    _LOGGER.info(
-                        "S33: Restart likely successful (connection reset) using action %s. "
-                        "Please report to GitHub Issue #32.",
-                        action_name,
-                    )
-                    return True
-
-                _LOGGER.debug(
-                    "S33: Action %s failed with error: %s. Trying next...",
-                    action_name,
-                    error_str[:200],
+            else:
+                _LOGGER.warning(
+                    "S33: Restart command returned unexpected result=%s, action=%s",
+                    result,
+                    action_status,
                 )
-                continue
+                return False
 
-        # All actions failed
-        _LOGGER.error(
-            "S33: All restart action variants failed. "
-            "To help us implement restart support, please: "
-            "1. Open browser DevTools (F12) → Network tab "
-            "2. Navigate to your modem's Security/Settings page "
-            "3. Click the Reboot button "
-            "4. Export the HAR file and attach to GitHub Issue #32"
-        )
-        return False
+        except ConnectionResetError:
+            # Connection reset often means the modem is rebooting
+            _LOGGER.info("S33: Restart likely successful (connection reset by rebooting modem)")
+            return True
+
+        except Exception as e:
+            error_str = str(e)
+            if "Connection aborted" in error_str or "Connection reset" in error_str:
+                _LOGGER.info("S33: Restart likely successful (connection reset)")
+                return True
+
+            _LOGGER.error("S33: Restart failed with error: %s", error_str[:200])
+            return False
