@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **S33 Uptime Parsing** - Support "X days HH:MM:SS" format returned by S33 modem (Issue ***REMOVED***32)
 - **S33 Restart** - Fetch current EEE/LED config before reboot to match browser behavior (Issue ***REMOVED***32)
 
+***REMOVED******REMOVED******REMOVED*** Documentation
+- **FIXTURES.md** - Added Protocol (HNAP/HTML) and Chipset columns to supported modems table
+
 ***REMOVED******REMOVED*** [3.9.2] - 2025-12-13
 
 ***REMOVED******REMOVED******REMOVED*** Security
