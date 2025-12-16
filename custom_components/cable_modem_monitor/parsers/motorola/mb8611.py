@@ -25,9 +25,9 @@ class MotorolaMB8611HnapParser(ModemParser):
     models = ["MB8611", "MB8612"]
     priority = 101  ***REMOVED*** Higher priority for the API-based method
 
-    ***REMOVED*** Parser status - awaiting user confirmation
-    status = ParserStatus.AWAITING_VERIFICATION
-    verification_source = "https://github.com/solentlabs/cable_modem_monitor/issues/4"
+    ***REMOVED*** Parser status - confirmed by @cvonk in Issue ***REMOVED***6 (December 2025)
+    status = ParserStatus.VERIFIED
+    verification_source = "https://github.com/solentlabs/cable_modem_monitor/issues/6"
 
     ***REMOVED*** Device metadata
     release_date = "2020"
@@ -55,9 +55,12 @@ class MotorolaMB8611HnapParser(ModemParser):
     ]
 
     ***REMOVED*** Capabilities - MB8611 HNAP parser
+    ***REMOVED*** Note: MB8611 returns OFDM channels (modulation="OFDM PLC") in the same
+    ***REMOVED*** MotoConnDownstreamChannel response as QAM channels, so they're parsed together.
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
+        ModemCapability.OFDM_DOWNSTREAM,
         ModemCapability.SYSTEM_UPTIME,
         ModemCapability.SOFTWARE_VERSION,
         ModemCapability.RESTART,

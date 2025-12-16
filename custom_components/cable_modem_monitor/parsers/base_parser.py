@@ -112,6 +112,12 @@ class ModemParser(ABC):
     ***REMOVED*** e.g., "tests/parsers/netgear/fixtures/c3700"
     fixtures_path: str | None = None
 
+    ***REMOVED*** Modem network behavior - whether the modem responds to ICMP ping
+    ***REMOVED*** Set to False for modems that block ICMP (e.g., Arris S33)
+    ***REMOVED*** When False: ping check is skipped, health status uses HTTP only,
+    ***REMOVED*** and the Ping Latency sensor is not created
+    supports_icmp: bool = True
+
     ***REMOVED*** URL patterns this parser can handle.
     ***REMOVED***
     ***REMOVED*** DETECTION CONTRACT:
