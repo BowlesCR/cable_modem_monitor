@@ -55,9 +55,12 @@ class MotorolaMB8611HnapParser(ModemParser):
     ]
 
     ***REMOVED*** Capabilities - MB8611 HNAP parser
+    ***REMOVED*** Note: MB8611 returns OFDM channels (modulation="OFDM PLC") in the same
+    ***REMOVED*** MotoConnDownstreamChannel response as QAM channels, so they're parsed together.
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
+        ModemCapability.OFDM_DOWNSTREAM,
         ModemCapability.SYSTEM_UPTIME,
         ModemCapability.SOFTWARE_VERSION,
         ModemCapability.RESTART,
