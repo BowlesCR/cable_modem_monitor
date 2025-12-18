@@ -23,23 +23,23 @@ class ArrisSB6190Parser(ModemParser):
     manufacturer = "ARRIS"
     models = ["SB6190"]
 
-    ***REMOVED*** Parser status
-    status = ParserStatus.VERIFIED  ***REMOVED*** Confirmed by @sfennell in PR ***REMOVED***22 (v3.0.0)
+    # Parser status
+    status = ParserStatus.VERIFIED  # Confirmed by @sfennell in PR #22 (v3.0.0)
     verification_source = "https://github.com/solentlabs/cable_modem_monitor/pull/22"
 
-    ***REMOVED*** Device metadata
+    # Device metadata
     release_date = "2016"
     docsis_version = "3.0"
     fixtures_path = "tests/parsers/arris/fixtures/sb6190"
 
-    ***REMOVED*** New authentication configuration (declarative)
+    # New authentication configuration (declarative)
     auth_config = NoAuthConfig(strategy=AuthStrategyType.NO_AUTH)
 
     url_patterns = [
         {"path": "/cgi-bin/status", "auth_method": "none", "auth_required": False},
     ]
 
-    ***REMOVED*** Capabilities - ARRIS SB6190 (no system info available)
+    # Capabilities - ARRIS SB6190 (no system info available)
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
@@ -63,7 +63,7 @@ class ArrisSB6190Parser(ModemParser):
     @classmethod
     def can_parse(cls, soup: BeautifulSoup, url: str, html: str) -> bool:
         """Detect if this is an ARRIS SB6190 modem."""
-        ***REMOVED*** Look for model number and Downstream Bonded Channels table
+        # Look for model number and Downstream Bonded Channels table
         return bool(soup.find(string=lambda s: s and "SB6190" in s) and soup.find(string="Downstream Bonded Channels"))
 
     def _parse_downstream(self, soup: BeautifulSoup) -> list[dict]:
@@ -142,7 +142,7 @@ class ArrisSB6190Parser(ModemParser):
     def _merge_error_stats(self, downstream_channels: list[dict], stats_rows: list) -> None:
         """Merge error statistics from signal stats table into downstream channels."""
         try:
-            ***REMOVED*** Parse stats table (also transposed)
+            # Parse stats table (also transposed)
             data_map = {}
             for row in stats_rows:
                 cells = row.find_all("td")
@@ -153,7 +153,7 @@ class ArrisSB6190Parser(ModemParser):
                 values = [cell.text.strip() for cell in cells[1:]]
                 data_map[label] = values
 
-            ***REMOVED*** Match channels by index
+            # Match channels by index
             for i, channel in enumerate(downstream_channels):
                 if "Total Correctable Codewords" in data_map and i < len(data_map["Total Correctable Codewords"]):
                     channel["corrected"] = extract_number(data_map["Total Correctable Codewords"][i])
@@ -206,7 +206,7 @@ class ArrisSB6190Parser(ModemParser):
             cells = row.find_all("td")
             if len(cells) < 7:
                 continue
-            ***REMOVED*** Frequency is in MHz, convert to Hz
+            # Frequency is in MHz, convert to Hz
             freq_text = cells[5].text.strip()
             freq_hz = None
             if "MHz" in freq_text:
@@ -218,7 +218,7 @@ class ArrisSB6190Parser(ModemParser):
                 "channel_id": cells[3].text.strip(),
                 "frequency": freq_hz,
                 "power": extract_float(cells[6].text),
-                ***REMOVED*** Add more fields as needed
+                # Add more fields as needed
             }
             if not channel["channel_id"] or channel["channel_id"] == "----":
                 continue

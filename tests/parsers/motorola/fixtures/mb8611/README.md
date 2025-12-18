@@ -1,8 +1,8 @@
-***REMOVED*** Motorola MB8611 Test Fixtures
+# Motorola MB8611 Test Fixtures
 
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -14,7 +14,7 @@
 
 <!-- END AUTO-GENERATED -->
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
@@ -29,31 +29,31 @@
 | **Captured By** | @dlindnegm |
 | **Capture Date** | October 2025 |
 
-***REMOVED******REMOVED*** Directory Structure
+## Directory Structure
 
 ```
 mb8611/
-├── Login.html               ***REMOVED*** Core - authentication
-├── MotoHome.html            ***REMOVED*** Core - dashboard/detection
-├── MotoStatusConnection.html ***REMOVED*** Core - channel data tables
-├── MotoStatusSoftware.html  ***REMOVED*** Core - hardware/software versions
-├── MotoStatusSecurity.html  ***REMOVED*** Core - restart functionality
-├── hnap_full_status.json    ***REMOVED*** Core - HNAP API response
+├── Login.html               # Core - authentication
+├── MotoHome.html            # Core - dashboard/detection
+├── MotoStatusConnection.html # Core - channel data tables
+├── MotoStatusSoftware.html  # Core - hardware/software versions
+├── MotoStatusSecurity.html  # Core - restart functionality
+├── hnap_full_status.json    # Core - HNAP API response
 ├── README.md
 └── extended/
-    └── MotoStatusLog.html      ***REMOVED*** Event logs
+    └── MotoStatusLog.html      # Event logs
 ```
 
-***REMOVED******REMOVED*** Core Fixtures
+## Core Fixtures
 
-***REMOVED******REMOVED******REMOVED*** HNAP API Response
+### HNAP API Response
 
 - **hnap_full_status.json** - Complete `GetMultipleHNAPs` response with channel data
   - 33 downstream channels (including OFDM PLC)
   - 4 upstream channels
   - Format: Caret-delimited (`ID^Status^Mod^ChID^Freq^Power^SNR^Corr^Uncorr^`)
 
-***REMOVED******REMOVED******REMOVED*** HTML Pages
+### HTML Pages
 
 | File | Purpose |
 |------|---------|
@@ -63,28 +63,28 @@ mb8611/
 | `MotoStatusSoftware.html` | Hardware/software versions |
 | `MotoStatusSecurity.html` | Restart functionality |
 
-***REMOVED******REMOVED*** Extended Fixtures (`extended/`)
+## Extended Fixtures (`extended/`)
 
 | File | Purpose |
 |------|---------|
 | `MotoStatusLog.html` | Event logs |
 
-***REMOVED******REMOVED*** Authentication
+## Authentication
 
 Uses HNAP challenge-response authentication (HMAC-MD5).
 - Default credentials: `admin` / `motorola`
 - Implementation credit: @BowlesCR (Chris Bowles)
 
-***REMOVED******REMOVED*** Parser Development Sources
+## Parser Development Sources
 
 The MB8611 HNAP parser was built using these sources:
 
-***REMOVED******REMOVED******REMOVED*** User Contributions (Issues ***REMOVED***4, ***REMOVED***6)
+### User Contributions (Issues #4, #6)
 - **@dlindnegm** - Original HTML page captures (October 2025)
 - **@cvonk (Coert Vonk)** - HAR captures, debug logs, iterative testing (November 2025)
 - Diagnostics JSON files in `RAW_DATA/MB8611/`
 
-***REMOVED******REMOVED******REMOVED*** External Reference Implementations
+### External Reference Implementations
 - **[Tatsh/mb8611](https://github.com/Tatsh/mb8611)** - Python CLI/library with typed API definitions
   - Used for HNAP action names and response field definitions
   - `GetMotoStatusSoftware` fields: `StatusSoftwareSfVer`, `StatusSoftwareSpecVer`
@@ -92,14 +92,14 @@ The MB8611 HNAP parser was built using these sources:
 - **[xNinjaKittyx/mb8600](https://github.com/xNinjaKittyx/mb8600)** - Related MB8600 implementation
 - **[BowlesCR/MB8600_Login](https://github.com/BowlesCR/MB8600_Login)** - HNAP authentication reference
 
-***REMOVED******REMOVED******REMOVED*** Modem Web Interface Analysis
+### Modem Web Interface Analysis
 - `MotoStatusConnection.html` JavaScript revealed:
   - HNAP actions: `GetMotoStatusStartupSequence`, `GetMotoStatusConnectionInfo`, etc.
   - Channel data format: `ID^Status^Mod^ChID^Freq^Power^SNR^Corr^Uncorr^|+|...`
   - Restart via `SetMotoStatusDSTargetFreq` with `MotoStatusConnectionAction=1`
 
-***REMOVED******REMOVED*** References
+## References
 
-- Issue ***REMOVED***4: Original fixture capture by @dlindnegm
-- Issue ***REMOVED***6: HNAP authentication and ongoing verification by @cvonk
+- Issue #4: Original fixture capture by @dlindnegm
+- Issue #6: HNAP authentication and ongoing verification by @cvonk
 - Prior art: xNinjaKittyx/mb8600 repository

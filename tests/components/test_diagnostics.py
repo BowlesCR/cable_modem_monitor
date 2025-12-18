@@ -59,7 +59,7 @@ class TestSanitizeHtml:
         for original in test_cases:
             sanitized = sanitize_html(original)
             assert "***REDACTED***" in sanitized
-            ***REMOVED*** Original ID should be removed (check for the digits/unique part)
+            # Original ID should be removed (check for the digits/unique part)
             assert not any(
                 char.isdigit() for word in sanitized.split("***REDACTED***") for char in word if char.isalnum()
             )
@@ -75,22 +75,22 @@ class TestSanitizeHtml:
         for original, expected in test_cases:
             sanitized = sanitize_html(original)
             assert expected in sanitized
-            ***REMOVED*** Extract the original IP and verify it's gone
+            # Extract the original IP and verify it's gone
             original_ip = original.split(": ")[1]
             assert original_ip not in sanitized
 
     def test_preserves_common_modem_ips(self):
         """Test that common modem IPs are preserved for debugging."""
         common_ips = [
-            "192.168.100.1",  ***REMOVED*** Common Motorola modem IP
-            "192.168.0.1",  ***REMOVED*** Common router IP
-            "192.168.1.1",  ***REMOVED*** Common router IP
+            "192.168.100.1",  # Common Motorola modem IP
+            "192.168.0.1",  # Common router IP
+            "192.168.1.1",  # Common router IP
         ]
 
         for ip in common_ips:
             html = f"<td>Modem IP: {ip}</td>"
             sanitized = sanitize_html(html)
-            assert ip in sanitized  ***REMOVED*** Should be preserved
+            assert ip in sanitized  # Should be preserved
 
     def test_removes_passwords(self):
         """Test that passwords and passphrases are sanitized."""
@@ -113,7 +113,7 @@ class TestSanitizeHtml:
 
         assert "MyPassword123" not in sanitized
         assert "***REDACTED***" in sanitized
-        assert 'type="password"' in sanitized  ***REMOVED*** Structure preserved
+        assert 'type="password"' in sanitized  # Structure preserved
 
     def test_removes_session_tokens(self):
         """Test that session tokens and auth tokens are sanitized."""
@@ -138,7 +138,7 @@ class TestSanitizeHtml:
         """
         sanitized = sanitize_html(html)
 
-        ***REMOVED*** Signal data should be preserved
+        # Signal data should be preserved
         assert "7.0 dBmV" in sanitized
         assert "40.0 dB" in sanitized
         assert "555000000 Hz" in sanitized
@@ -166,11 +166,11 @@ class TestSanitizeHtml:
         """
         sanitized = sanitize_html(html)
 
-        ***REMOVED*** All MACs should be sanitized
+        # All MACs should be sanitized
         assert "AA:BB:CC:DD:EE:FF" not in sanitized
         assert "11:22:33:44:55:66" not in sanitized
         assert "99-88-77-66-55-44" not in sanitized
-        ***REMOVED*** Should have 3 XX:XX:XX:XX:XX:XX replacements
+        # Should have 3 XX:XX:XX:XX:XX:XX replacements
         assert sanitized.count("XX:XX:XX:XX:XX:XX") == 3
 
     def test_handles_empty_string(self):
@@ -186,7 +186,7 @@ class TestSanitizeHtml:
         """
         sanitized = sanitize_html(html)
 
-        ***REMOVED*** Should be largely unchanged
+        # Should be largely unchanged
         assert "5.0 dBmV" in sanitized
         assert "38 dB" in sanitized
 
@@ -220,10 +220,10 @@ class TestSanitizeLogMessage:
         message = "Connecting to 10.0.0.1 and 192.168.100.1 and 172.16.5.5"
         sanitized = _sanitize_log_message(message)
 
-        ***REMOVED*** Private IPs should be sanitized except common modem IP
+        # Private IPs should be sanitized except common modem IP
         assert "10.0.0.1" not in sanitized
         assert "172.16.5.5" not in sanitized
-        assert "192.168.100.1" in sanitized  ***REMOVED*** Preserved
+        assert "192.168.100.1" in sanitized  # Preserved
         assert "***PRIVATE_IP***" in sanitized
 
 
@@ -280,7 +280,7 @@ async def test_diagnostics_basic_structure(mock_config_entry, mock_coordinator):
 
     diagnostics = await async_get_config_entry_diagnostics(hass, mock_config_entry)
 
-    ***REMOVED*** Verify basic structure
+    # Verify basic structure
     assert "_solentlabs" in diagnostics
     assert "config_entry" in diagnostics
     assert "coordinator" in diagnostics
@@ -288,19 +288,19 @@ async def test_diagnostics_basic_structure(mock_config_entry, mock_coordinator):
     assert "downstream_channels" in diagnostics
     assert "upstream_channels" in diagnostics
 
-    ***REMOVED*** Verify Solent Labs™ metadata
+    # Verify Solent Labs™ metadata
     solentlabs = diagnostics["_solentlabs"]
     assert solentlabs["tool"] == "cable_modem_monitor/diagnostics"
     assert "version" in solentlabs
     assert "captured_at" in solentlabs
     assert "Solent Labs" in solentlabs["note"]
 
-    ***REMOVED*** Verify config entry data
+    # Verify config entry data
     assert diagnostics["config_entry"]["title"] == "Test Modem"
     assert diagnostics["config_entry"]["host"] == "192.168.100.1"
     assert diagnostics["config_entry"]["has_credentials"] is True
 
-    ***REMOVED*** Verify modem data
+    # Verify modem data
     assert diagnostics["modem_data"]["connection_status"] == "online"
     assert diagnostics["modem_data"]["downstream_channel_count"] == 32
 
@@ -311,7 +311,7 @@ async def test_diagnostics_includes_html_capture_not_expired(mock_config_entry, 
     hass = Mock(spec=HomeAssistant)
     hass.data = {DOMAIN: {mock_config_entry.entry_id: mock_coordinator}}
 
-    ***REMOVED*** Add HTML capture to coordinator data (not expired)
+    # Add HTML capture to coordinator data (not expired)
     future_time = datetime.now() + timedelta(minutes=3)
     mock_coordinator.data["_raw_html_capture"] = {
         "timestamp": datetime.now().isoformat(),
@@ -338,18 +338,18 @@ async def test_diagnostics_includes_html_capture_not_expired(mock_config_entry, 
 
     diagnostics = await async_get_config_entry_diagnostics(hass, mock_config_entry)
 
-    ***REMOVED*** Verify HTML capture is included
+    # Verify HTML capture is included
     assert "raw_html_capture" in diagnostics
     assert diagnostics["raw_html_capture"]["url_count"] == 1
     assert diagnostics["raw_html_capture"]["trigger"] == "manual"
 
-    ***REMOVED*** Verify sanitization occurred
+    # Verify sanitization occurred
     captured_html = diagnostics["raw_html_capture"]["urls"][0]["content"]
-    assert "AA:BB:CC:DD:EE:FF" not in captured_html  ***REMOVED*** MAC removed
-    assert "XX:XX:XX:XX:XX:XX" in captured_html  ***REMOVED*** MAC sanitized
-    assert "ABC123XYZ" not in captured_html  ***REMOVED*** Serial removed
-    assert "***REDACTED***" in captured_html  ***REMOVED*** Serial sanitized
-    assert "7.0 dBmV" in captured_html  ***REMOVED*** Signal data preserved
+    assert "AA:BB:CC:DD:EE:FF" not in captured_html  # MAC removed
+    assert "XX:XX:XX:XX:XX:XX" in captured_html  # MAC sanitized
+    assert "ABC123XYZ" not in captured_html  # Serial removed
+    assert "***REDACTED***" in captured_html  # Serial sanitized
+    assert "7.0 dBmV" in captured_html  # Signal data preserved
 
 
 @pytest.mark.asyncio
@@ -357,7 +357,7 @@ async def test_diagnostics_includes_multiple_page_capture(mock_config_entry, moc
     hass = Mock(spec=HomeAssistant)
     hass.data = {DOMAIN: {mock_config_entry.entry_id: mock_coordinator}}
 
-    ***REMOVED*** Add HTML capture with multiple pages (login, status, software info, event log)
+    # Add HTML capture with multiple pages (login, status, software info, event log)
     future_time = datetime.now() + timedelta(minutes=3)
     mock_coordinator.data["_raw_html_capture"] = {
         "timestamp": datetime.now().isoformat(),
@@ -424,12 +424,12 @@ async def test_diagnostics_includes_multiple_page_capture(mock_config_entry, moc
 
     diagnostics = await async_get_config_entry_diagnostics(hass, mock_config_entry)
 
-    ***REMOVED*** Verify HTML capture is included with all pages
+    # Verify HTML capture is included with all pages
     assert "raw_html_capture" in diagnostics
     assert diagnostics["raw_html_capture"]["url_count"] == 5
     assert diagnostics["raw_html_capture"]["trigger"] == "manual"
 
-    ***REMOVED*** Verify all page types are present
+    # Verify all page types are present
     urls = diagnostics["raw_html_capture"]["urls"]
     descriptions = [url.get("description", "") for url in urls]
     assert "Login/Auth page" in descriptions
@@ -437,16 +437,16 @@ async def test_diagnostics_includes_multiple_page_capture(mock_config_entry, moc
     assert "Software info page" in descriptions
     assert "Event log page" in descriptions
 
-    ***REMOVED*** Verify both GET and POST methods are captured
+    # Verify both GET and POST methods are captured
     methods = [url.get("method") for url in urls]
     assert "GET" in methods
     assert "POST" in methods
 
-    ***REMOVED*** Verify sanitization occurred across all pages
+    # Verify sanitization occurred across all pages
     for url_data in urls:
         content = url_data.get("content", "")
         if "AA:BB:CC:DD:EE:FF" in mock_coordinator.data["_raw_html_capture"]["urls"][urls.index(url_data)]["content"]:
-            ***REMOVED*** Original MAC should be removed, replacement should be present
+            # Original MAC should be removed, replacement should be present
             assert "AA:BB:CC:DD:EE:FF" not in content
             assert "XX:XX:XX:XX:XX:XX" in content
 
@@ -457,7 +457,7 @@ async def test_diagnostics_excludes_expired_html_capture(mock_config_entry, mock
     hass = Mock(spec=HomeAssistant)
     hass.data = {DOMAIN: {mock_config_entry.entry_id: mock_coordinator}}
 
-    ***REMOVED*** Add HTML capture to coordinator data (expired)
+    # Add HTML capture to coordinator data (expired)
     past_time = datetime.now() - timedelta(minutes=10)
     mock_coordinator.data["_raw_html_capture"] = {
         "timestamp": past_time.isoformat(),
@@ -473,7 +473,7 @@ async def test_diagnostics_excludes_expired_html_capture(mock_config_entry, mock
 
     diagnostics = await async_get_config_entry_diagnostics(hass, mock_config_entry)
 
-    ***REMOVED*** Verify HTML capture is NOT included (expired)
+    # Verify HTML capture is NOT included (expired)
     assert "raw_html_capture" not in diagnostics
 
 
@@ -483,12 +483,12 @@ async def test_diagnostics_without_html_capture(mock_config_entry, mock_coordina
     hass = Mock(spec=HomeAssistant)
     hass.data = {DOMAIN: {mock_config_entry.entry_id: mock_coordinator}}
 
-    ***REMOVED*** Ensure no HTML capture in coordinator data
+    # Ensure no HTML capture in coordinator data
     assert "_raw_html_capture" not in mock_coordinator.data
 
     diagnostics = await async_get_config_entry_diagnostics(hass, mock_config_entry)
 
-    ***REMOVED*** Should work fine without HTML capture
+    # Should work fine without HTML capture
     assert "config_entry" in diagnostics
     assert "modem_data" in diagnostics
     assert "raw_html_capture" not in diagnostics
@@ -500,14 +500,14 @@ async def test_diagnostics_handles_missing_coordinator(mock_config_entry):
     from homeassistant.config_entries import ConfigEntryState
 
     hass = Mock(spec=HomeAssistant)
-    ***REMOVED*** Coordinator doesn't exist in hass.data (setup failed or incomplete)
+    # Coordinator doesn't exist in hass.data (setup failed or incomplete)
     hass.data = {DOMAIN: {}}
-    ***REMOVED*** Add state attribute to mock
+    # Add state attribute to mock
     mock_config_entry.state = ConfigEntryState.LOADED
 
     diagnostics = await async_get_config_entry_diagnostics(hass, mock_config_entry)
 
-    ***REMOVED*** Should return error diagnostics
+    # Should return error diagnostics
     assert "error" in diagnostics
     assert "coordinator not found" in diagnostics["error"]
     assert "config_entry" in diagnostics
@@ -518,7 +518,7 @@ async def test_diagnostics_handles_missing_coordinator(mock_config_entry):
 
 @pytest.mark.asyncio
 async def test_diagnostics_handles_coordinator_without_data(mock_config_entry, mock_coordinator):
-    ***REMOVED*** Create coordinator with no data
+    # Create coordinator with no data
     coordinator = Mock(spec=DataUpdateCoordinator)
     coordinator.last_update_success = False
     coordinator.update_interval = timedelta(seconds=600)
@@ -530,7 +530,7 @@ async def test_diagnostics_handles_coordinator_without_data(mock_config_entry, m
 
     diagnostics = await async_get_config_entry_diagnostics(hass, mock_config_entry)
 
-    ***REMOVED*** Should still return basic structure
+    # Should still return basic structure
     assert "config_entry" in diagnostics
     assert "coordinator" in diagnostics
     assert "last_error" in diagnostics
@@ -543,12 +543,12 @@ async def test_diagnostics_sanitizes_exception_messages(mock_config_entry, mock_
     hass = Mock(spec=HomeAssistant)
     hass.data = {DOMAIN: {mock_config_entry.entry_id: mock_coordinator}}
 
-    ***REMOVED*** Add exception with sensitive data
+    # Add exception with sensitive data
     mock_coordinator.last_exception = Exception("Failed to connect to 10.0.0.5 with password=secret123")
 
     diagnostics = await async_get_config_entry_diagnostics(hass, mock_config_entry)
 
-    ***REMOVED*** Verify exception is included but sanitized
+    # Verify exception is included but sanitized
     assert "last_error" in diagnostics
     error_msg = diagnostics["last_error"]["message"]
     assert "***REDACTED***" in error_msg
@@ -564,21 +564,21 @@ async def test_diagnostics_includes_parser_detection_info(mock_config_entry, moc
 
     diagnostics = await async_get_config_entry_diagnostics(hass, mock_config_entry)
 
-    ***REMOVED*** Verify parser_detection section exists
+    # Verify parser_detection section exists
     assert "config_entry" in diagnostics
     assert "parser_detection" in diagnostics["config_entry"]
 
     parser_detection = diagnostics["config_entry"]["parser_detection"]
 
-    ***REMOVED*** Verify parser detection fields
+    # Verify parser detection fields
     assert "user_selected" in parser_detection
     assert "auto_detection_used" in parser_detection
     assert "detection_method" in parser_detection
     assert "parser_class" in parser_detection
 
-    ***REMOVED*** Verify values match config entry
+    # Verify values match config entry
     assert parser_detection["user_selected"] == "Motorola MB8611"
-    assert parser_detection["auto_detection_used"] is False  ***REMOVED*** User selected specific modem
+    assert parser_detection["auto_detection_used"] is False  # User selected specific modem
     assert parser_detection["detection_method"] == "user_selected"
     assert parser_detection["parser_class"] == "Motorola MB8611 (Static)"
 
@@ -589,17 +589,17 @@ async def test_diagnostics_parser_detection_auto_mode(mock_config_entry, mock_co
     hass = Mock(spec=HomeAssistant)
     hass.data = {DOMAIN: {mock_config_entry.entry_id: mock_coordinator}}
 
-    ***REMOVED*** Set config entry to auto mode
+    # Set config entry to auto mode
     mock_config_entry.data["modem_choice"] = "auto"
 
     diagnostics = await async_get_config_entry_diagnostics(hass, mock_config_entry)
 
     parser_detection = diagnostics["config_entry"]["parser_detection"]
 
-    ***REMOVED*** Verify auto detection is indicated
+    # Verify auto detection is indicated
     assert parser_detection["user_selected"] == "auto"
     assert parser_detection["auto_detection_used"] is True
-    assert parser_detection["detection_method"] == "cached"  ***REMOVED*** Has parser_name, so cached
+    assert parser_detection["detection_method"] == "cached"  # Has parser_name, so cached
 
 
 @pytest.mark.asyncio
@@ -608,7 +608,7 @@ async def test_diagnostics_parser_detection_history(mock_config_entry, mock_coor
     hass = Mock(spec=HomeAssistant)
     hass.data = {DOMAIN: {mock_config_entry.entry_id: mock_coordinator}}
 
-    ***REMOVED*** Add parser detection history to coordinator data
+    # Add parser detection history to coordinator data
     mock_coordinator.data["_parser_detection_history"] = {
         "attempted_parsers": ["Motorola MB8611 (Static)", "Motorola MB8600", "Generic Motorola"],
         "detection_phases_run": ["anonymous_probing", "suggested_parser", "prioritized"],
@@ -617,7 +617,7 @@ async def test_diagnostics_parser_detection_history(mock_config_entry, mock_coor
 
     diagnostics = await async_get_config_entry_diagnostics(hass, mock_config_entry)
 
-    ***REMOVED*** Verify parser detection history exists
+    # Verify parser detection history exists
     assert "parser_detection_history" in diagnostics
 
     history = diagnostics["parser_detection_history"]
@@ -634,12 +634,12 @@ async def test_diagnostics_parser_detection_history_not_available(mock_config_en
     hass = Mock(spec=HomeAssistant)
     hass.data = {DOMAIN: {mock_config_entry.entry_id: mock_coordinator}}
 
-    ***REMOVED*** Ensure no parser detection history in coordinator data
+    # Ensure no parser detection history in coordinator data
     assert "_parser_detection_history" not in mock_coordinator.data
 
     diagnostics = await async_get_config_entry_diagnostics(hass, mock_config_entry)
 
-    ***REMOVED*** Verify parser detection history exists with note
+    # Verify parser detection history exists with note
     assert "parser_detection_history" in diagnostics
 
     history = diagnostics["parser_detection_history"]
@@ -729,7 +729,7 @@ class TestGetHnapAuthAttempt:
 
         result = _get_hnap_auth_attempt(coordinator)
 
-        ***REMOVED*** Password should be redacted in response
+        # Password should be redacted in response
         assert "secret123" not in result["data"]["challenge_response"]
         assert "REDACTED" in result["data"]["challenge_response"]
 
@@ -738,7 +738,7 @@ class TestGetHnapAuthAttempt:
         coordinator = Mock()
         coordinator.scraper = Mock()
         coordinator.scraper.parser = Mock()
-        ***REMOVED*** Simulate an exception
+        # Simulate an exception
         coordinator.scraper.parser._json_builder = Mock()
         coordinator.scraper.parser._json_builder.get_last_auth_attempt.side_effect = Exception("Something went wrong")
 

@@ -22,12 +22,12 @@ class TestSensorImports:
 
     def test_sensor_entity_count(self):
         """Test minimum number of base sensors created."""
-        ***REMOVED*** Should create at least:
-        ***REMOVED*** 1 connection status
-        ***REMOVED*** 2 total error sensors
-        ***REMOVED*** 2 channel count sensors
-        ***REMOVED*** 2 system info sensors
-        ***REMOVED*** = 7 base sensors (plus per-channel sensors)
+        # Should create at least:
+        # 1 connection status
+        # 2 total error sensors
+        # 2 channel count sensors
+        # 2 system info sensors
+        # = 7 base sensors (plus per-channel sensors)
         expected_base_sensors = 7
         assert expected_base_sensors == 7
 
@@ -39,7 +39,7 @@ class TestStatusSensor:
     def mock_coordinator(self):
         """Create mock coordinator with sample data."""
         coordinator = Mock()
-        ***REMOVED*** Use plain dict for data (sensors call .get() on it)
+        # Use plain dict for data (sensors call .get() on it)
         coordinator.data = {
             "cable_modem_connection_status": "online",
             "cable_modem_downstream": [{"lock_status": "Locked"}],
@@ -62,7 +62,7 @@ class TestStatusSensor:
         """Test status sensor with operational status."""
         sensor = ModemStatusSensor(mock_coordinator, mock_entry)
 
-        ***REMOVED*** Test state - unified sensor returns "Operational" when all good
+        # Test state - unified sensor returns "Operational" when all good
         assert sensor.native_value == "Operational"
 
     def test_status_unresponsive(self, mock_coordinator, mock_entry):
@@ -202,19 +202,19 @@ class TestPerChannelSensors:
 
     def test_downstream_channel_sensor_count(self):
         """Test that correct number of downstream sensors are created."""
-        ***REMOVED*** Each downstream channel should create 4 sensors:
-        ***REMOVED*** - Frequency
-        ***REMOVED*** - Power
-        ***REMOVED*** - SNR
-        ***REMOVED*** - Corrected/Uncorrected errors (if available)
+        # Each downstream channel should create 4 sensors:
+        # - Frequency
+        # - Power
+        # - SNR
+        # - Corrected/Uncorrected errors (if available)
         sensors_per_downstream_channel = 4
         assert sensors_per_downstream_channel == 4
 
     def test_upstream_channel_sensor_count(self):
         """Test that correct number of upstream sensors are created."""
-        ***REMOVED*** Each upstream channel should create 2 sensors:
-        ***REMOVED*** - Frequency
-        ***REMOVED*** - Power
+        # Each upstream channel should create 2 sensors:
+        # - Frequency
+        # - Power
         sensors_per_upstream_channel = 2
         assert sensors_per_upstream_channel == 2
 
@@ -242,7 +242,7 @@ class TestSensorAttributes:
         mock_coordinator.last_update_success = True
         sensor = ModemStatusSensor(mock_coordinator, mock_entry)
 
-        ***REMOVED*** Unique ID should be based on entry_id and sensor type
+        # Unique ID should be based on entry_id and sensor type
         assert sensor.unique_id is not None
         assert "test_entry" in sensor.unique_id
 
@@ -251,7 +251,7 @@ class TestSensorAttributes:
         mock_coordinator.last_update_success = True
         sensor = ModemStatusSensor(mock_coordinator, mock_entry)
 
-        ***REMOVED*** Device info should link sensors to the modem device
+        # Device info should link sensors to the modem device
         assert sensor.device_info is not None
 
 
@@ -269,11 +269,11 @@ class TestSensorDataHandling:
     def test_missing_data_keys(self, mock_entry):
         """Test sensors with missing data keys."""
         coordinator = Mock()
-        coordinator.data = {}  ***REMOVED*** Empty data
+        coordinator.data = {}  # Empty data
 
         sensor = ModemTotalCorrectedSensor(coordinator, mock_entry)
 
-        ***REMOVED*** Should handle missing data gracefully (return None or default)
+        # Should handle missing data gracefully (return None or default)
         result = sensor.native_value
         assert result is None or isinstance(result, int)
 
@@ -284,7 +284,7 @@ class TestSensorDataHandling:
 
         sensor = ModemSoftwareVersionSensor(coordinator, mock_entry)
 
-        ***REMOVED*** Should handle None gracefully
+        # Should handle None gracefully
         assert sensor.native_value == "None" or sensor.native_value == "Unknown"
 
 
@@ -316,17 +316,17 @@ class TestEntityNaming:
         entry.entry_id = "test"
         entry.data = {"host": "192.168.100.1"}
 
-        ***REMOVED*** Test unified status sensor
+        # Test unified status sensor
         status_sensor = ModemStatusSensor(mock_coordinator, entry)
         assert status_sensor.name == "Status"
         assert status_sensor.unique_id == "test_cable_modem_status"
 
-        ***REMOVED*** Test error sensor
+        # Test error sensor
         error_sensor = ModemTotalCorrectedSensor(mock_coordinator, entry)
         assert error_sensor.name == "Total Corrected Errors"
         assert error_sensor.unique_id == "test_cable_modem_total_corrected"
 
-        ***REMOVED*** Test channel sensor
+        # Test channel sensor
         channel_sensor = ModemDownstreamPowerSensor(mock_coordinator, entry, channel=5)
         assert channel_sensor.name == "DS Ch 5 Power"
         assert channel_sensor.unique_id == "test_cable_modem_downstream_5_power"
@@ -364,20 +364,20 @@ class TestLastBootTimeSensor:
 
         sensor = ModemLastBootTimeSensor(mock_coordinator, mock_entry)
 
-        ***REMOVED*** Get the calculated last boot time
+        # Get the calculated last boot time
         last_boot = sensor.native_value
 
-        ***REMOVED*** Should return a datetime object
+        # Should return a datetime object
         assert isinstance(last_boot, datetime)
 
-        ***REMOVED*** Calculate expected boot time (2 days 5 hours ago)
+        # Calculate expected boot time (2 days 5 hours ago)
         uptime_seconds = (2 * 86400) + (5 * 3600)
         now = dt_util.now()
         expected_boot = now - timedelta(seconds=uptime_seconds)
 
-        ***REMOVED*** Should be within a few seconds of expected (allow for execution time)
+        # Should be within a few seconds of expected (allow for execution time)
         time_diff = abs((last_boot - expected_boot).total_seconds())
-        assert time_diff < 5  ***REMOVED*** Within 5 seconds
+        assert time_diff < 5  # Within 5 seconds
 
     def test_unknown_uptime(self, mock_entry):
         """Test last boot time with unknown uptime."""
@@ -389,7 +389,7 @@ class TestLastBootTimeSensor:
 
         sensor = ModemLastBootTimeSensor(coordinator, mock_entry)
 
-        ***REMOVED*** Should return None for unknown uptime
+        # Should return None for unknown uptime
         assert sensor.native_value is None
 
     def test_missing_uptime(self, mock_entry):
@@ -397,12 +397,12 @@ class TestLastBootTimeSensor:
         from custom_components.cable_modem_monitor.sensor import ModemLastBootTimeSensor
 
         coordinator = Mock()
-        coordinator.data = {}  ***REMOVED*** No uptime data
+        coordinator.data = {}  # No uptime data
         coordinator.last_update_success = True
 
         sensor = ModemLastBootTimeSensor(coordinator, mock_entry)
 
-        ***REMOVED*** Should return None when uptime is missing
+        # Should return None when uptime is missing
         assert sensor.native_value is None
 
     def test_sensor_attributes(self, mock_coordinator, mock_entry):
@@ -413,7 +413,7 @@ class TestLastBootTimeSensor:
 
         sensor = ModemLastBootTimeSensor(mock_coordinator, mock_entry)
 
-        ***REMOVED*** Check sensor attributes
+        # Check sensor attributes
         assert sensor.name == "Last Boot Time"
         assert sensor.unique_id == "test_cable_modem_last_boot_time"
         assert sensor.icon == "mdi:restart"
@@ -511,12 +511,12 @@ class TestFallbackModeSensorCreation:
                 {"channel": "1", "frequency": 591000000, "power": 3.5, "snr": 40.5, "corrected": 0, "uncorrected": 0}
             ],
             "cable_modem_upstream": [{"channel": "1", "frequency": 36000000, "power": 45.0}],
-            ***REMOVED*** system_info keys are prefixed with cable_modem_
+            # system_info keys are prefixed with cable_modem_
             "cable_modem_model": "Test Modem",
             "cable_modem_manufacturer": "TestBrand",
             "cable_modem_software_version": "1.0.0",
             "cable_modem_uptime": "5 days",
-            "cable_modem_fallback_mode": False,  ***REMOVED*** Normal mode
+            "cable_modem_fallback_mode": False,  # Normal mode
             "health_status": "responsive",
             "ping_latency_ms": 2.5,
             "http_latency_ms": 45.0,
@@ -529,12 +529,12 @@ class TestFallbackModeSensorCreation:
         coordinator = Mock()
         coordinator.data = {
             "cable_modem_connection_status": "limited",
-            "cable_modem_downstream": [],  ***REMOVED*** No channel data in fallback
-            "cable_modem_upstream": [],  ***REMOVED*** No channel data in fallback
-            ***REMOVED*** system_info keys are prefixed with cable_modem_
+            "cable_modem_downstream": [],  # No channel data in fallback
+            "cable_modem_upstream": [],  # No channel data in fallback
+            # system_info keys are prefixed with cable_modem_
             "cable_modem_model": "Unknown Model",
             "cable_modem_manufacturer": "Unknown",
-            "cable_modem_fallback_mode": True,  ***REMOVED*** Fallback mode flag
+            "cable_modem_fallback_mode": True,  # Fallback mode flag
             "cable_modem_status_message": "Modem not fully supported...",
             "health_status": "responsive",
             "ping_latency_ms": 2.5,
@@ -549,33 +549,33 @@ class TestFallbackModeSensorCreation:
         from custom_components.cable_modem_monitor.const import DOMAIN
         from custom_components.cable_modem_monitor.sensor import async_setup_entry
 
-        ***REMOVED*** Setup hass.data
+        # Setup hass.data
         mock_hass.data = {DOMAIN: {mock_entry.entry_id: mock_coordinator_normal_mode}}
 
-        ***REMOVED*** Track entities added
+        # Track entities added
         added_entities = []
 
         def mock_add_entities(entities):
             added_entities.extend(entities)
 
-        ***REMOVED*** Call async_setup_entry
+        # Call async_setup_entry
         await async_setup_entry(mock_hass, mock_entry, mock_add_entities)
 
-        ***REMOVED*** Count sensor types
+        # Count sensor types
         sensor_names = [entity._attr_name for entity in added_entities]
 
-        ***REMOVED*** Should include ALL sensor types in normal mode
-        assert "Status" in sensor_names  ***REMOVED*** Unified status sensor (replaces Connection Status + Health Status)
+        # Should include ALL sensor types in normal mode
+        assert "Status" in sensor_names  # Unified status sensor (replaces Connection Status + Health Status)
         assert "Ping Latency" in sensor_names
         assert "HTTP Latency" in sensor_names
-        assert "Total Corrected Errors" in sensor_names  ***REMOVED*** Should be present
-        assert "Total Uncorrected Errors" in sensor_names  ***REMOVED*** Should be present
-        assert "DS Channel Count" in sensor_names  ***REMOVED*** Should be present (abbreviated name)
-        assert "US Channel Count" in sensor_names  ***REMOVED*** Should be present (abbreviated name)
-        assert "Software Version" in sensor_names  ***REMOVED*** Should be present
-        assert "System Uptime" in sensor_names  ***REMOVED*** Should be present
+        assert "Total Corrected Errors" in sensor_names  # Should be present
+        assert "Total Uncorrected Errors" in sensor_names  # Should be present
+        assert "DS Channel Count" in sensor_names  # Should be present (abbreviated name)
+        assert "US Channel Count" in sensor_names  # Should be present (abbreviated name)
+        assert "Software Version" in sensor_names  # Should be present
+        assert "System Uptime" in sensor_names  # Should be present
 
-        ***REMOVED*** Should have at least 10 base sensors + per-channel sensors
+        # Should have at least 10 base sensors + per-channel sensors
         assert len(added_entities) >= 10
 
     @pytest.mark.asyncio
@@ -585,36 +585,36 @@ class TestFallbackModeSensorCreation:
         from custom_components.cable_modem_monitor.const import DOMAIN
         from custom_components.cable_modem_monitor.sensor import async_setup_entry
 
-        ***REMOVED*** Setup hass.data
+        # Setup hass.data
         mock_hass.data = {DOMAIN: {mock_entry.entry_id: mock_coordinator_fallback_mode}}
 
-        ***REMOVED*** Track entities added
+        # Track entities added
         added_entities = []
 
         def mock_add_entities(entities):
             added_entities.extend(entities)
 
-        ***REMOVED*** Call async_setup_entry
+        # Call async_setup_entry
         await async_setup_entry(mock_hass, mock_entry, mock_add_entities)
 
-        ***REMOVED*** Count sensor types
+        # Count sensor types
         sensor_names = [entity._attr_name for entity in added_entities]
 
-        ***REMOVED*** Should include connectivity sensors (have data in fallback)
-        assert "Status" in sensor_names  ***REMOVED*** Unified status sensor
+        # Should include connectivity sensors (have data in fallback)
+        assert "Status" in sensor_names  # Unified status sensor
         assert "Ping Latency" in sensor_names
         assert "HTTP Latency" in sensor_names
-        assert "Modem Info" in sensor_names  ***REMOVED*** Always included (device metadata)
+        assert "Modem Info" in sensor_names  # Always included (device metadata)
 
-        ***REMOVED*** Should NOT include sensors that require channel/system data
-        assert "Total Corrected Errors" not in sensor_names  ***REMOVED*** Skipped in fallback
-        assert "Total Uncorrected Errors" not in sensor_names  ***REMOVED*** Skipped in fallback
-        assert "DS Channel Count" not in sensor_names  ***REMOVED*** Skipped in fallback (abbreviated name)
-        assert "US Channel Count" not in sensor_names  ***REMOVED*** Skipped in fallback (abbreviated name)
-        assert "Software Version" not in sensor_names  ***REMOVED*** Skipped in fallback
-        assert "System Uptime" not in sensor_names  ***REMOVED*** Skipped in fallback
+        # Should NOT include sensors that require channel/system data
+        assert "Total Corrected Errors" not in sensor_names  # Skipped in fallback
+        assert "Total Uncorrected Errors" not in sensor_names  # Skipped in fallback
+        assert "DS Channel Count" not in sensor_names  # Skipped in fallback (abbreviated name)
+        assert "US Channel Count" not in sensor_names  # Skipped in fallback (abbreviated name)
+        assert "Software Version" not in sensor_names  # Skipped in fallback
+        assert "System Uptime" not in sensor_names  # Skipped in fallback
 
-        ***REMOVED*** Should have exactly 4 sensors (Status, Modem Info, Ping, HTTP)
+        # Should have exactly 4 sensors (Status, Modem Info, Ping, HTTP)
         assert len(added_entities) == 4
 
     @pytest.mark.asyncio
@@ -624,24 +624,24 @@ class TestFallbackModeSensorCreation:
         from custom_components.cable_modem_monitor.const import DOMAIN
         from custom_components.cable_modem_monitor.sensor import async_setup_entry
 
-        ***REMOVED*** Setup hass.data
+        # Setup hass.data
         mock_hass.data = {DOMAIN: {mock_entry.entry_id: mock_coordinator_fallback_mode}}
 
-        ***REMOVED*** Track entities added
+        # Track entities added
         added_entities = []
 
         def mock_add_entities(entities):
             added_entities.extend(entities)
 
-        ***REMOVED*** Call async_setup_entry
+        # Call async_setup_entry
         await async_setup_entry(mock_hass, mock_entry, mock_add_entities)
 
-        ***REMOVED*** Check that no channel-specific sensors were created
+        # Check that no channel-specific sensors were created
         sensor_unique_ids = [entity._attr_unique_id for entity in added_entities]
 
-        ***REMOVED*** Should NOT have any channel-specific sensors
-        assert not any("_ds_" in uid for uid in sensor_unique_ids)  ***REMOVED*** No downstream channel sensors
-        assert not any("_us_" in uid for uid in sensor_unique_ids)  ***REMOVED*** No upstream channel sensors
+        # Should NOT have any channel-specific sensors
+        assert not any("_ds_" in uid for uid in sensor_unique_ids)  # No downstream channel sensors
+        assert not any("_us_" in uid for uid in sensor_unique_ids)  # No upstream channel sensors
 
     def test_status_shows_operational_in_fallback(self, mock_coordinator_fallback_mode, mock_entry):
         """Test that unified status sensor shows 'Operational' in fallback mode.
@@ -651,5 +651,5 @@ class TestFallbackModeSensorCreation:
         """
         sensor = ModemStatusSensor(mock_coordinator_fallback_mode, mock_entry)
 
-        ***REMOVED*** Fallback mode with responsive health = Operational
+        # Fallback mode with responsive health = Operational
         assert sensor.native_value == "Operational"

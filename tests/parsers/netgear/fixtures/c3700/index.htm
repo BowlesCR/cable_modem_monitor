@@ -27,7 +27,7 @@ var ETHERNET_SUPPORT = false;
 var ethernetConnect = false;
 function OnSubmitForm()
 {
-		var text = $('***REMOVED***searchText').val();
+		var text = $('#searchText').val();
 
 		var URItext = encodeURIComponent(text);
 
@@ -44,41 +44,41 @@ $(window).load(function() {
     var isOpera = navigator.userAgent.search("Opera") > -1;
     var isSafari = navigator.userAgent.search("Safari") > -1;
 
-    /*$('***REMOVED***lang_menu_li').css("float", "right");
-      $('***REMOVED***lang_menu_li').css("padding-right", "25px");
-      $('***REMOVED***lang_menu_li').css("margin-bottom", "10px");*/
+    /*$('#lang_menu_li').css("float", "right");
+      $('#lang_menu_li').css("padding-right", "25px");
+      $('#lang_menu_li').css("margin-bottom", "10px");*/
 
     if(1=="1" & 0)
     {
-        if($('***REMOVED***firmware-update').hasClass("firmware-update-hint-long")) {
-            $('***REMOVED***ModuleName').css("position", "relative");
-            $('***REMOVED***ModuleName').css("right", "480px");
+        if($('#firmware-update').hasClass("firmware-update-hint-long")) {
+            $('#ModuleName').css("position", "relative");
+            $('#ModuleName').css("right", "480px");
         } else if(isIE | isOpera | isSafari) {
-            $('***REMOVED***ModuleName').css("position", "relative");
-            $('***REMOVED***ModuleName').css("right", "0px");
-        } else if($('***REMOVED***firmware-update').hasClass("firmware-update-hint-long-long")) {
-            $('***REMOVED***ModuleName').css("position", "relative");
-            $('***REMOVED***ModuleName').css("right", "530px");
+            $('#ModuleName').css("position", "relative");
+            $('#ModuleName').css("right", "0px");
+        } else if($('#firmware-update').hasClass("firmware-update-hint-long-long")) {
+            $('#ModuleName').css("position", "relative");
+            $('#ModuleName').css("right", "530px");
         }  else {
-            $('***REMOVED***ModuleName').css("position", "relative");
-            $('***REMOVED***ModuleName').css("right", "410px");
+            $('#ModuleName').css("position", "relative");
+            $('#ModuleName').css("right", "410px");
         }
     }
     else
     {
-        $('***REMOVED***ModuleName').css("position", "relative");
-        $('***REMOVED***ModuleName').css("right", "0px");
+        $('#ModuleName').css("position", "relative");
+        $('#ModuleName').css("right", "0px");
     }
 
     change_size();
 
     /*
-    if((isIE && ($("***REMOVED***firmware-update").hasClass('firmware-update-hint')
-        || $("***REMOVED***firmware-update").hasClass('firmware-update-hint-long') || $("***REMOVED***firmware-update").hasClass('firmware-update-hint-long-long')))
-        || ((isFirefox || isOpera) && ($("***REMOVED***firmware-update").hasClass('firmware-update-hint-long') || $("***REMOVED***firmware-update").hasClass('firmware-update-hint-long-long'))))
+    if((isIE && ($("#firmware-update").hasClass('firmware-update-hint')
+        || $("#firmware-update").hasClass('firmware-update-hint-long') || $("#firmware-update").hasClass('firmware-update-hint-long-long')))
+        || ((isFirefox || isOpera) && ($("#firmware-update").hasClass('firmware-update-hint-long') || $("#firmware-update").hasClass('firmware-update-hint-long-long'))))
     {
-//      $('***REMOVED***lang_menu_li').css("position", "relative");
-//      $('***REMOVED***lang_menu_li').css("top", "-24px");
+//      $('#lang_menu_li').css("position", "relative");
+//      $('#lang_menu_li').css("top", "-24px");
     }
     */
 
@@ -87,7 +87,7 @@ $(window).load(function() {
          if(0)
          {
          	/* foxconn, khfan, remove, 2014/09/24
-               Defect ***REMOVED*** 126
+               Defect # 126
                C7000-100NAS: Security -- Some broken URL links are found by sortsite and error in URLs.
              */
             // loadPage("");
@@ -102,13 +102,13 @@ $(window).load(function() {
 });
 
 $(document).ready(function(){
-      //$('***REMOVED***lang_menu').removeAttr("disabled");
+      //$('#lang_menu').removeAttr("disabled");
     BodyInit();
 
     adjustPageLayout();
 
       ;
-      $("***REMOVED***second").hide();
+      $("#second").hide();
       var isie = navigator.userAgent.search("MSIE") > -1;
       var ap_mode_flag = document.getElementsByName("enable_apmode");
       var repeater_flag = document.getElementsByName("repeater");
@@ -116,25 +116,25 @@ $(document).ready(function(){
 
       if(ap_mode_flag[0].value=="1" || repeater_flag[0].value=="1" || repeater_an_flag[0].value=="1")
       {
-          if($("***REMOVED***basic-int").hasClass("basic-menu-div"))
+          if($("#basic-int").hasClass("basic-menu-div"))
           {
-              $("***REMOVED***basic-int").addClass('basic-menu-div-gray');
-              $("***REMOVED***basic-int").removeClass('basic-menu-div');
+              $("#basic-int").addClass('basic-menu-div-gray');
+              $("#basic-int").removeClass('basic-menu-div');
           }
 
-          if($("***REMOVED***basic-par").hasClass("basic-menu-div"))
+          if($("#basic-par").hasClass("basic-menu-div"))
           {
-              $("***REMOVED***basic-par").addClass('basic-menu-div-gray');
-              $("***REMOVED***basic-par").removeClass('basic-menu-div');
+              $("#basic-par").addClass('basic-menu-div-gray');
+              $("#basic-par").removeClass('basic-menu-div');
           }
       }
 
-      $('***REMOVED***AdvanceTab').click(function(ev){
-          $("***REMOVED***first").hide();
-          $("***REMOVED***second").show();
+      $('#AdvanceTab').click(function(ev){
+          $("#first").hide();
+          $("#second").show();
           $('.subHeader').hide();
           $(this).css("background","url(img/tab-active.gif) no-repeat 0");
-          $("***REMOVED***BasicTab").css("background","url(img/tab-nonactive.gif) no-repeat 0");
+          $("#BasicTab").css("background","url(img/tab-nonactive.gif) no-repeat 0");
           $('.noSubActive').removeClass('noSubActive');
           $('.noSubActiveLarge').removeClass('noSubActiveLarge');
           $('.SubMenuActive').addClass('SubMenu');
@@ -145,23 +145,23 @@ $(document).ready(function(){
           $('.SubMenuActiveLarge').removeClass('SubMenuActiveLarge');
           $('.SubActive').addClass('Sub');
           $('.SubActive').removeClass('SubActive');
-          if($('***REMOVED***adv-home').hasClass('noSubLarge'))
-            $('***REMOVED***adv-home').addClass('noSubActiveLarge');
+          if($('#adv-home').hasClass('noSubLarge'))
+            $('#adv-home').addClass('noSubActiveLarge');
           else
-            $('***REMOVED***adv-home').addClass('noSubActive');
+            $('#adv-home').addClass('noSubActive');
           $('.subHeader:visible').slideUp('fast');
           loadPage2("RouterStatus.htm");
           ChangeResize('AdvanceTab');
       });
 
-      $('***REMOVED***BasicTab').click(function(ev){
-          $("***REMOVED***second").hide();
-          $("***REMOVED***first").show();
+      $('#BasicTab').click(function(ev){
+          $("#second").hide();
+          $("#first").show();
           $(this).css("background","url(img/tab-active.gif) no-repeat 0");
-          $("***REMOVED***AdvanceTab").css("background","url(img/tab-nonactive.gif) no-repeat 0");
+          $("#AdvanceTab").css("background","url(img/tab-nonactive.gif) no-repeat 0");
           $('.subHeader').hide();
           $('.menuActive').removeClass('menuActive');
-          $('***REMOVED***basic-home').addClass('menuActive');
+          $('#basic-home').addClass('menuActive');
           loadPage("DashBoard.htm");
           ChangeResize('BasicTab');
       });
@@ -177,7 +177,7 @@ $(document).ready(function(){
 
 
       $('.noSub').live("click",function(ev){
-          $("***REMOVED***first").hide();
+          $("#first").hide();
           if( !$(this).hasClass('noSubGray') & !$(this).hasClass('noSubGrayLarge')){
                 $('.noSubActive').removeClass('noSubActive');
                 $('.noSubActiveLarge').removeClass('noSubActiveLarge');
@@ -203,7 +203,7 @@ $(document).ready(function(){
       });
 
       $('.noSubLarge').live("click",function(ev){
-          $("***REMOVED***first").hide();
+          $("#first").hide();
           if( !$(this).hasClass('noSubGray') & !$(this).hasClass('noSubGrayLarge')){
                 $('.noSubActive').removeClass('noSubActive');
                 $('.noSubActiveLarge').removeClass('noSubActiveLarge');
@@ -241,7 +241,7 @@ $(document).ready(function(){
 
 
       $('.SubMenu').live("click",function(ev){
-         $("***REMOVED***first").hide();
+         $("#first").hide();
          if( !$(this).hasClass('SubMenuDisable') && !$(this).hasClass('SubMenuLargeDisable')){
             $('.noSubActive').removeClass('noSubActive');
             $('.SubMenuActive').addClass('SubMenu');
@@ -265,7 +265,7 @@ $(document).ready(function(){
       });
 
 	  $('.SubMenuLarge').live("click",function(ev){
-         $("***REMOVED***first").hide();
+         $("#first").hide();
          if( !$(this).hasClass('SubMenuDisable') && !$(this).hasClass('SubMenuLargeDisable')){
             $('.noSubActive').removeClass('noSubActive');
             $('.SubMenuActive').addClass('SubMenu');
@@ -289,14 +289,14 @@ $(document).ready(function(){
       });
 
       $('.SubMenuActive').live("click",function(ev){
-         $("***REMOVED***first").hide();
+         $("#first").hide();
          var path = $(this).children("a").attr("href");
          loadPage2(path);
          ev.preventDefault();
       });
 
       $('.SubMenuActiveLarge').live("click",function(ev){
-         $("***REMOVED***first").hide();
+         $("#first").hide();
          var path = $(this).children("a").attr("href");
          loadPage2(path);
          ev.preventDefault();
@@ -304,8 +304,8 @@ $(document).ready(function(){
 
 
 
-      $('***REMOVED***go').click(function(ev){
-        var text = $('***REMOVED***searchText').val();
+      $('#go').click(function(ev){
+        var text = $('#searchText').val();
         var URItext = encodeURIComponent(text);
 
 
@@ -358,7 +358,7 @@ $(document).ready(function(){
          $('.subHeader').hide();
 
          $('.Sub').click(function() {
-              $('***REMOVED***first').hide();
+              $('#first').hide();
               var checkElement = $(this).next();
               if((checkElement.is('li')) && (checkElement.is(':visible'))) {
                   $('.subHeader:visible').slideUp('fast');
@@ -459,8 +459,8 @@ function adjustPageLayout()
     /*
     $('.basic-menu').css("height",adjustPageHeight);
     $('.advance-menu').css("height",adjustPageHeight);
-    $('***REMOVED***basic-table').css("height",adjustPageHeight);
-    $('***REMOVED***advance-table').css("height",adjustPageHeight);
+    $('#basic-table').css("height",adjustPageHeight);
+    $('#advance-table').css("height",adjustPageHeight);
     */
 
 	var activeLength=0;
@@ -475,7 +475,7 @@ function adjustPageLayout()
 		oneLargeItemHeight=36;
 	}
 
-	$('***REMOVED***set_hdr li').each(function(){
+	$('#set_hdr li').each(function(){
         //alert ($(this)[0].getAttribute('id'));
         if($($(this)[0]).css("display") != "none"){
 			if($($(this)[0]).hasClass("SubMenuLarge")){
@@ -488,11 +488,11 @@ function adjustPageLayout()
         }
 
     });
-    $('***REMOVED***set_hdr').height(activeLength * oneItemHeight + activeLargeLength * oneLargeItemHeight + heightpadding);
+    $('#set_hdr').height(activeLength * oneItemHeight + activeLargeLength * oneLargeItemHeight + heightpadding);
 
     activeLength=0;
 	activeLargeLength=0;
-    $('***REMOVED***AdminULId li').each(function(){
+    $('#AdminULId li').each(function(){
         //alert ($(this)[0].getAttribute('id'));
         if($($(this)[0]).css("display") != "none"){
             if($($(this)[0]).hasClass("SubMenuLarge")){
@@ -504,11 +504,11 @@ function adjustPageLayout()
 			}
         }
     });
-    $('***REMOVED***AdminULId').height(activeLength * oneItemHeight + activeLargeLength * oneLargeItemHeight + heightpadding);
+    $('#AdminULId').height(activeLength * oneItemHeight + activeLargeLength * oneLargeItemHeight + heightpadding);
 
     activeLength=0;
 	activeLargeLength=0;
-    $('***REMOVED***usb_hdr li').each(function(){
+    $('#usb_hdr li').each(function(){
         //alert ($(this)[0].getAttribute('id'));
         if($($(this)[0]).css("display") != "none"){
             if($($(this)[0]).hasClass("SubMenuLarge")){
@@ -520,11 +520,11 @@ function adjustPageLayout()
 			}
         }
     });
-    $('***REMOVED***usb_hdr').height(activeLength * oneItemHeight + activeLargeLength * oneLargeItemHeight + heightpadding);
+    $('#usb_hdr').height(activeLength * oneItemHeight + activeLargeLength * oneLargeItemHeight + heightpadding);
 
     activeLength=0;
 	activeLargeLength=0;
-    $('***REMOVED***sec_hdr li').each(function(){
+    $('#sec_hdr li').each(function(){
         //alert ($(this)[0].getAttribute('id'));
         if($($(this)[0]).css("display") != "none"){
             if($($(this)[0]).hasClass("SubMenuLarge")){
@@ -536,11 +536,11 @@ function adjustPageLayout()
 			}
         }
     });
-    $('***REMOVED***sec_hdr').height(activeLength * oneItemHeight + activeLargeLength * oneLargeItemHeight + heightpadding);
+    $('#sec_hdr').height(activeLength * oneItemHeight + activeLargeLength * oneLargeItemHeight + heightpadding);
 
 	activeLength=0;
 	activeLargeLength=0;
-    $('***REMOVED***adv_hdr li').each(function(){
+    $('#adv_hdr li').each(function(){
         if($($(this)[0]).css("display") != "none")
 		{
             if($($(this)[0]).hasClass("SubMenuLarge"))
@@ -553,11 +553,11 @@ function adjustPageLayout()
 			}
         }
     });
-    $('***REMOVED***adv_hdr').height(activeLength * oneItemHeight + activeLargeLength * oneLargeItemHeight + heightpadding);
+    $('#adv_hdr').height(activeLength * oneItemHeight + activeLargeLength * oneLargeItemHeight + heightpadding);
 }
 function checkTab(path)
 {
-    if($("***REMOVED***BasicTab").hasClass('current'))
+    if($("#BasicTab").hasClass('current'))
         loadPage(path);
     else
     	  loadPage2(path);
@@ -569,52 +569,52 @@ function loadPage(path)
         $('.basic-menu').css("height", page_contain_height);
          load_page = 1;
          if(path.search("DashBoard.htm") != -1){
-            $('***REMOVED***page_contain').width(735);
-            $('***REMOVED***page_contain').height(page_contain_height);
-            $('***REMOVED***page_contain').css("margin-top","5");
+            $('#page_contain').width(735);
+            $('#page_contain').height(page_contain_height);
+            $('#page_contain').css("margin-top","5");
             if($.browser.msie){
-               $('***REMOVED***page_contain').html('<iframe id="page" src="" scrolling="no" style="background-color:***REMOVED***E5E5E5;width:605px;height:425px;margin-top:0;margin-left:55px" frameborder="0" onFocus="this.blur()"><\/iframe>');
+               $('#page_contain').html('<iframe id="page" src="" scrolling="no" style="background-color:#E5E5E5;width:605px;height:425px;margin-top:0;margin-left:55px" frameborder="0" onFocus="this.blur()"><\/iframe>');
             }else{
-               $('***REMOVED***page').attr("scrolling","no");
-               $('***REMOVED***page').width(605);
-               $('***REMOVED***page').height(page_contain_height-45);
-               $('***REMOVED***page').css("margin-top","0px");
-               $('***REMOVED***page').css("margin-left","55px");
+               $('#page').attr("scrolling","no");
+               $('#page').width(605);
+               $('#page').height(page_contain_height-45);
+               $('#page').css("margin-top","0px");
+               $('#page').css("margin-left","55px");
 
             }
-            $('***REMOVED***page').css("visibility","hidden");
-            $('***REMOVED***page_contain').addClass('main-page-contain-loading');
-            $('***REMOVED***page').delay(1000).attr("src",path);
+            $('#page').css("visibility","hidden");
+            $('#page_contain').addClass('main-page-contain-loading');
+            $('#page').delay(1000).attr("src",path);
 
-            $('***REMOVED***page').load(function(){
-	       $('***REMOVED***page').css("visibility","visible");
-               $('***REMOVED***page_contain').removeClass('main-page-contain-loading');
+            $('#page').load(function(){
+	       $('#page').css("visibility","visible");
+               $('#page_contain').removeClass('main-page-contain-loading');
 
             })
 
          }else if(path.search("netgear") != -1){
             window.open(path,'_blank','fullscreen=yes,toolbar=yes,location=yes,scrollbars=yes');
          }else{
-            $('***REMOVED***page_contain').width(735);
-            $('***REMOVED***page_contain').height(page_contain_height);
-            $('***REMOVED***page_contain').css("margin-top","5px");
+            $('#page_contain').width(735);
+            $('#page_contain').height(page_contain_height);
+            $('#page_contain').css("margin-top","5px");
             if($.browser.msie){
-             $('***REMOVED***page_contain').html('<iframe id="page" src="" scrolling="no" style="background-color:***REMOVED***E5E5E5;width:685px;height:470px;margin-top:0px;margin-left:30px" frameborder="0" onFocus="this.blur()"><\/iframe>');
+             $('#page_contain').html('<iframe id="page" src="" scrolling="no" style="background-color:#E5E5E5;width:685px;height:470px;margin-top:0px;margin-left:30px" frameborder="0" onFocus="this.blur()"><\/iframe>');
             }else{
-               $('***REMOVED***page').attr("scrolling","no");
-               $('***REMOVED***page').width(685);
-               $('***REMOVED***page').height(page_contain_height);
-               $('***REMOVED***page').css("margin-top","0px");
-               $('***REMOVED***page').css("margin-left","30px");
+               $('#page').attr("scrolling","no");
+               $('#page').width(685);
+               $('#page').height(page_contain_height);
+               $('#page').css("margin-top","0px");
+               $('#page').css("margin-left","30px");
 
             }
-            $('***REMOVED***page').css("visibility","hidden");
-            $('***REMOVED***page_contain').addClass('main-page-contain-loading');
-            $('***REMOVED***page').attr("src",path);
-            $('***REMOVED***page').load(function()
+            $('#page').css("visibility","hidden");
+            $('#page_contain').addClass('main-page-contain-loading');
+            $('#page').attr("src",path);
+            $('#page').load(function()
             {
-	             $('***REMOVED***page').css("visibility","visible");
-	             $('***REMOVED***page_contain').removeClass('main-page-contain-loading');
+	             $('#page').css("visibility","visible");
+	             $('#page_contain').removeClass('main-page-contain-loading');
 
             });
 
@@ -631,54 +631,54 @@ function loadPage2(path) {
 		is_loading_page=1;
 		    $('.advance-menu').css("height", page_contain_height);
         if(path.search("RouterStatus.htm") != -1){
-           $('***REMOVED***page_contain2').width(700);
-           $('***REMOVED***page_contain2').height(page_contain_height);
+           $('#page_contain2').width(700);
+           $('#page_contain2').height(page_contain_height);
            if($.browser.msie){
-               $('***REMOVED***page_contain2').html('<iframe id="page2" src="" scrolling="no" style="background-color:***REMOVED***E5E5E5;width:680px;height:470px;margin-top:0;margin-left:50px" frameborder="0" onFocus="this.blur()"><\/iframe>');
+               $('#page_contain2').html('<iframe id="page2" src="" scrolling="no" style="background-color:#E5E5E5;width:680px;height:470px;margin-top:0;margin-left:50px" frameborder="0" onFocus="this.blur()"><\/iframe>');
            }else{
-               $('***REMOVED***page2').attr("scrolling","no");
-               $('***REMOVED***page2').width(680);
-               $('***REMOVED***page2').height(page_contain_height);
-               $('***REMOVED***page2').css("margin-top","0px");
-               $('***REMOVED***page2').css("margin-left","50px");
+               $('#page2').attr("scrolling","no");
+               $('#page2').width(680);
+               $('#page2').height(page_contain_height);
+               $('#page2').css("margin-top","0px");
+               $('#page2').css("margin-left","50px");
 
 
            }
-           $('***REMOVED***page2').css("visibility","hidden");
-           $('***REMOVED***page_contain2').addClass('main-page-contain-loading');
-           $('***REMOVED***page2').attr("src",path);
+           $('#page2').css("visibility","hidden");
+           $('#page_contain2').addClass('main-page-contain-loading');
+           $('#page2').attr("src",path);
 
-           $('***REMOVED***page2').load(function()
+           $('#page2').load(function()
            {
-	             $('***REMOVED***page2').css("visibility","visible");
-	             $('***REMOVED***page_contain2').removeClass('main-page-contain-loading');
+	             $('#page2').css("visibility","visible");
+	             $('#page_contain2').removeClass('main-page-contain-loading');
             });
         }else if(path.search("netgear") != -1){
             window.open(path,'_blank','fullscreen=yes,toolbar=yes,location=yes,scrollbars=yes');
         }else{
-            $('***REMOVED***page_contain2').width(700);
-            $('***REMOVED***page_contain2').height(page_contain_height);
+            $('#page_contain2').width(700);
+            $('#page_contain2').height(page_contain_height);
 
 
             if($.browser.msie){
-               $('***REMOVED***page_contain2').html('<iframe id="page2" src="" scrolling="no" style="background-color:***REMOVED***E5E5E5;width:685px;height:470px;overflow-x:hidden;margin-top:0px;margin-left:30" frameborder="0" onFocus="this.blur()"><\/iframe>');
-               $('***REMOVED***page2').css("margin-left","30px");
+               $('#page_contain2').html('<iframe id="page2" src="" scrolling="no" style="background-color:#E5E5E5;width:685px;height:470px;overflow-x:hidden;margin-top:0px;margin-left:30" frameborder="0" onFocus="this.blur()"><\/iframe>');
+               $('#page2').css("margin-left","30px");
            }else{
-               $('***REMOVED***page2').attr("scrolling","no");
-               $('***REMOVED***page2').css("overflow-x","hidden");
-               $('***REMOVED***page2').css("overflow-y","hidden");
-               $('***REMOVED***page2').width(685);
-               $('***REMOVED***page2').height(page_contain_height);
-               $('***REMOVED***page2').css("margin-top","0px");
-               $('***REMOVED***page2').css("margin-left","30px");
+               $('#page2').attr("scrolling","no");
+               $('#page2').css("overflow-x","hidden");
+               $('#page2').css("overflow-y","hidden");
+               $('#page2').width(685);
+               $('#page2').height(page_contain_height);
+               $('#page2').css("margin-top","0px");
+               $('#page2').css("margin-left","30px");
            }
-           $('***REMOVED***page2').css("visibility","hidden");
-           $('***REMOVED***page_contain2').addClass('main-page-contain-loading');
-           $('***REMOVED***page2').attr("src",path);
-           $('***REMOVED***page2').load(function()
+           $('#page2').css("visibility","hidden");
+           $('#page_contain2').addClass('main-page-contain-loading');
+           $('#page2').attr("src",path);
+           $('#page2').load(function()
            {
-	           $('***REMOVED***page2').css("visibility","visible");
-                   $('***REMOVED***page_contain2').removeClass('main-page-contain-loading');
+	           $('#page2').css("visibility","visible");
+                   $('#page_contain2').removeClass('main-page-contain-loading');
             });
 
 
@@ -696,15 +696,15 @@ function setParentalControls()
      var support = 1;
 
      if(support == 0){
-          $('***REMOVED***PAR_menu').attr("href","http://www.netgear.com/lpc");
-          $('***REMOVED***PAR_menu2').attr("href","http://www.netgear.com/lpc");
+          $('#PAR_menu').attr("href","http://www.netgear.com/lpc");
+          $('#PAR_menu2').attr("href","http://www.netgear.com/lpc");
      }else{
          if(ParentalControls_Result == 0){
-             $('***REMOVED***PAR_menu').attr("href","http://www.netgear.com/lpc");
-             $('***REMOVED***PAR_menu2').attr("href","http://www.netgear.com/lpc");
+             $('#PAR_menu').attr("href","http://www.netgear.com/lpc");
+             $('#PAR_menu2').attr("href","http://www.netgear.com/lpc");
          }else{
-             $('***REMOVED***PAR_menu').attr("href","http://netgear.opendns.com/");
-             $('***REMOVED***PAR_menu2').attr("href","http://www.netgear.com/lpc");
+             $('#PAR_menu').attr("href","http://netgear.opendns.com/");
+             $('#PAR_menu2').attr("href","http://www.netgear.com/lpc");
          }
      }
 }
@@ -816,17 +816,17 @@ function chgBrsLang()
                 if(gui_region != brslang){
                     ret = confirm("Do you want to switch from "+ gui_lang_local + ""+"( the current language ) to "+""+ brslang + "?");
                     // foxconn, khfan, remove, 2014/09/24
-                    // Defect ***REMOVED*** 126
+                    // Defect # 126
                     // C7000-100NAS: Security -- Some broken URL links are found by sortsite and error in URLs.
                     /*
                     if(ret==1){
-                        if($("***REMOVED***BasicTab").hasClass('current')){
+                        if($("#BasicTab").hasClass('current')){
                            loadPage("");
                         }else{
                            loadPage2("");
                         }
                     }else{
-                        if($("***REMOVED***BasicTab").hasClass('current')){
+                        if($("#BasicTab").hasClass('current')){
                             loadPage("");
                         }else{
                             loadPage2("");
@@ -842,12 +842,12 @@ function chgBrsLang()
 }
 
 // foxconn, khfan, remove, 2014/09/24
-// Defect ***REMOVED*** 126
+// Defect # 126
 // C7000-100NAS: Security -- Some broken URL links are found by sortsite and error in URLs.
 /*
 function fw_upgrade_hint()
 {
-    if($("***REMOVED***BasicTab").hasClass('current')){
+    if($("#BasicTab").hasClass('current')){
         loadPage("");
     }else{
         loadPage2("");
@@ -857,7 +857,7 @@ function fw_upgrade_hint()
 
 function gui_logout()
 {
-    if($("***REMOVED***BasicTab").hasClass('current')){
+    if($("#BasicTab").hasClass('current')){
         top.location.href="Logout.htm";
     }
     else
@@ -904,18 +904,18 @@ function InitUpdateView(tagValues)
     /* multilang support */
     if (tagValues[2] == "0")
     {
-        $("***REMOVED***lang_menu_li").hide();
+        $("#lang_menu_li").hide();
     }
 
     /* Rg/Bridge mode */
     if (tagValues[3] == "1")
     {
         // Basic menu
-        $("***REMOVED***basic-wls").show();
-        $("***REMOVED***basic-atd").show();
-        $("***REMOVED***basic-par").show();
-        $("***REMOVED***basic-rea").show();
-        $("***REMOVED***basic-gst").show();
+        $("#basic-wls").show();
+        $("#basic-atd").show();
+        $("#basic-par").show();
+        $("#basic-rea").show();
+        $("#basic-gst").show();
         if(tagValues[8] == "1")
         {
             ETHERNET_SUPPORT = true;
@@ -923,142 +923,142 @@ function InitUpdateView(tagValues)
             if(tagValues[9] == "1")
             {
                 ethernetConnect = true;
-                $("***REMOVED***basic-int").hide();
+                $("#basic-int").hide();
             }
         }
     }
     else
     {
         // Basic menu
-        $("***REMOVED***basic-wls").hide();
-        $("***REMOVED***basic-atd").hide();
-        $("***REMOVED***basic-par").hide();
-        $("***REMOVED***basic-rea").hide();
-        $("***REMOVED***basic-gst").hide();
+        $("#basic-wls").hide();
+        $("#basic-atd").hide();
+        $("#basic-par").hide();
+        $("#basic-rea").hide();
+        $("#basic-gst").hide();
 
-        $("***REMOVED***wps-wizard").hide();
-        $("***REMOVED***setup_header").hide();
-        $("***REMOVED***usb_header").hide();
-        $("***REMOVED***security_header").hide();
-        $("***REMOVED***AdminId li").hide();
+        $("#wps-wizard").hide();
+        $("#setup_header").hide();
+        $("#usb_header").hide();
+        $("#security_header").hide();
+        $("#AdminId li").hide();
         // always hide nat mode webpage
-        $("***REMOVED***adv_header").hide();
+        $("#adv_header").hide();
     }
 
     /* Guest Network Supported */
     if (tagValues[1] == "1")
     {
-        $("***REMOVED***basic-gst").hide();
-        $("***REMOVED***guest_set").hide();
+        $("#basic-gst").hide();
+        $("#guest_set").hide();
     }
 
     // Nick 20120507, new mta icon
     // Voice Supported
     if (tagValues[4] == "1")
     {
-        $("***REMOVED***basic-par").hide();
-        $("***REMOVED***basic-voice").show();
+        $("#basic-par").hide();
+        $("#basic-voice").show();
     }
     else
     {
         if (tagValues[3] == "1")  //parental control is not support in bridge.
-            $("***REMOVED***basic-par").show();
-        $("***REMOVED***basic-voice").hide();
+            $("#basic-par").show();
+        $("#basic-voice").hide();
     }
 
     if (tagValues[5] == "akado")
     {
-        $("***REMOVED***topleftLogo").show();
-        $("***REMOVED***topleftLogo").attr("src", "img/logo-akado.png");
+        $("#topleftLogo").show();
+        $("#topleftLogo").attr("src", "img/logo-akado.png");
 
-        $("***REMOVED***toprightLogo").show();
-        $("***REMOVED***toprightLogo").attr("src", "img/Netgeargenie.png");
+        $("#toprightLogo").show();
+        $("#toprightLogo").attr("src", "img/Netgeargenie.png");
 
-        $("***REMOVED***basic-rea").hide();
-        $("***REMOVED***usb_header").hide();
-        $("***REMOVED***advUSB").hide();
+        $("#basic-rea").hide();
+        $("#usb_header").hide();
+        $("#advUSB").hide();
     }
     else if(tagValues[5] == "retail")
     {
-        $("***REMOVED***topleftLogo").show();
-        $("***REMOVED***topleftLogo").attr("src", "img/logo_retail.png");
-        $(".topframe").css("background-color","***REMOVED***ffffff");
-        $(".topframe").css("color","***REMOVED***000000");
-        $(".tabs").css("background-color","***REMOVED***ffffff");
+        $("#topleftLogo").show();
+        $("#topleftLogo").attr("src", "img/logo_retail.png");
+        $(".topframe").css("background-color","#ffffff");
+        $(".topframe").css("color","#000000");
+        $(".tabs").css("background-color","#ffffff");
         // 20150203 Emerson add to replace the NetworkMap by AttachedDevices
-        $("***REMOVED***basic-atd").html('<a href="AttachedDevices_new.htm"><span>Attached Devices<\/span><\/a>');
-        $("***REMOVED***advNetworkMap").attr("href", "AttachedDevices_new.htm");
-        $("***REMOVED***advNetworkMap").html('<span class="subMenu_text">Attached Devices<\/span>');
+        $("#basic-atd").html('<a href="AttachedDevices_new.htm"><span>Attached Devices<\/span><\/a>');
+        $("#advNetworkMap").attr("href", "AttachedDevices_new.htm");
+        $("#advNetworkMap").html('<span class="subMenu_text">Attached Devices<\/span>');
         // 20150203 Emerson end
 
-        $("***REMOVED***toprightLogo").hide();
-        $("***REMOVED***ipv6").show();
+        $("#toprightLogo").hide();
+        $("#ipv6").show();
     }
     else if(tagValues[5] == "optus") // Optus support
     {
-        $("***REMOVED***topleftLogo").show();
-        $("***REMOVED***topleftLogo").attr("src", "img/logo_retail.png");
-        $(".topframe").css("background-color","***REMOVED***ffffff");
-        $(".topframe").css("color","***REMOVED***000000");
-        $(".tabs").css("background-color","***REMOVED***ffffff");
+        $("#topleftLogo").show();
+        $("#topleftLogo").attr("src", "img/logo_retail.png");
+        $(".topframe").css("background-color","#ffffff");
+        $(".topframe").css("color","#000000");
+        $(".tabs").css("background-color","#ffffff");
 
-        $("***REMOVED***toprightLogo").hide();
+        $("#toprightLogo").hide();
     }
     else if(tagValues[5] == "ono")
     {
-        $("***REMOVED***topleftLogo").show();
-        $("***REMOVED***topleftLogo").attr("src", "img/Netgeargenie.png");
+        $("#topleftLogo").show();
+        $("#topleftLogo").attr("src", "img/Netgeargenie.png");
 
-        $("***REMOVED***toprightLogo").hide();
-        $("***REMOVED***remote").hide();
+        $("#toprightLogo").hide();
+        $("#remote").hide();
     }
     else
     {
-        $("***REMOVED***topleftLogo").show();
-        $("***REMOVED***topleftLogo").attr("src", "img/Netgeargenie.png");
+        $("#topleftLogo").show();
+        $("#topleftLogo").attr("src", "img/Netgeargenie.png");
 
-        $("***REMOVED***toprightLogo").hide();
+        $("#toprightLogo").hide();
     }
 
     // ComHem support
     if(tagValues[5] == "comhem")
     {
-        $("***REMOVED***email").hide();
-        $("***REMOVED***parentalControls").hide();
-        $("***REMOVED***advNetworkMap").attr("href", "");
-        $("***REMOVED***advWirelssSet").html('Wireless Features');
+        $("#email").hide();
+        $("#parentalControls").hide();
+        $("#advNetworkMap").attr("href", "");
+        $("#advWirelssSet").html('Wireless Features');
         // Show wifi related pages in bridge mode
         if (tagValues[3] == "0")
         {
-            $("***REMOVED***wps-wizard").show();
-            $("***REMOVED***basic-wls").show();
-            $("***REMOVED***setup_header").show();
-            $("***REMOVED***set_hdr li").hide();
-            $("***REMOVED***wireless_set").show();
-            $("***REMOVED***adv_header").show();
-            $("***REMOVED***WirelessRadarChList").show();
-            $("***REMOVED***WirelessRadarApList").show();
-            $("***REMOVED***adv_hdr li").hide();
-            $("***REMOVED***adv_wireless_set").show();
+            $("#wps-wizard").show();
+            $("#basic-wls").show();
+            $("#setup_header").show();
+            $("#set_hdr li").hide();
+            $("#wireless_set").show();
+            $("#adv_header").show();
+            $("#WirelessRadarChList").show();
+            $("#WirelessRadarApList").show();
+            $("#adv_hdr li").hide();
+            $("#adv_wireless_set").show();
         }
     }
     else if(tagValues[5] == "yousee") // YouSee support
     {
-        $("***REMOVED***parentalControls").hide();
+        $("#parentalControls").hide();
     }
     else if(tagValues[5] == "optus") // Optus support
     {
-        $("***REMOVED***BroadbandSetup").show();
-        $("***REMOVED***QosSetup").show();
-		$("***REMOVED***QosSetup_hl").attr("href", "");
+        $("#BroadbandSetup").show();
+        $("#QosSetup").show();
+		$("#QosSetup_hl").attr("href", "");
     }
 
     // USB Hidden
     if (tagValues[6] == "1")
     {
-        $("***REMOVED***basic-rea").hide();
-        $("***REMOVED***usb_header").hide();
-        $("***REMOVED***advUSB").hide();
+        $("#basic-rea").hide();
+        $("#usb_header").hide();
+        $("#advUSB").hide();
     }
 
     // WPS Wizard
@@ -1071,27 +1071,27 @@ function InitUpdateView(tagValues)
 	// Chuck 20141001 Do not show Traffic Meter page in bridge mode
     if(tagValues[10] == "0" || tagValues[3] == "0")
     {
-        $("***REMOVED***traffic_meter").hide();
+        $("#traffic_meter").hide();
     }
     else
     {
-        $("***REMOVED***traffic_meter").show();
+        $("#traffic_meter").show();
     }
 
     // Chuck 20140610 for "Turn off wireless signal by schedule "
     if(tagValues[11] == "1")
     {
-        $("***REMOVED***adv_wireless_set").children().attr('href','AdvancedWirelessSettingsWithSchedule.htm');
+        $("#adv_wireless_set").children().attr('href','AdvancedWirelessSettingsWithSchedule.htm');
     }
 
 	  // Chuck 20140610 add for "Access Control"
 	  if(tagValues[12] == "0")
 	  {
-        $("***REMOVED***access_ctrl").hide();
+        $("#access_ctrl").hide();
 	  }
 	  else
 	  {
-		    $("***REMOVED***access_ctrl").show();
+		    $("#access_ctrl").show();
 	  }
 }
 
@@ -1106,50 +1106,50 @@ function initBridgeView(statusTag)
 {
     if(statusTag == "1")
     {
-        $("***REMOVED***RouterMode").hide();
-        $("***REMOVED***router_status_text").html("Modem Status");
-        $("***REMOVED***SetPassword").show();
+        $("#RouterMode").hide();
+        $("#router_status_text").html("Modem Status");
+        $("#SetPassword").show();
     }
 }
 function hiddenWifi(statusTag)
 {
     if(statusTag == "1")
     {
-        $("***REMOVED***basic-wls").hide();
-        $("***REMOVED***basic-gst").hide();
-        $("***REMOVED***wps-wizard").hide();
-        $("***REMOVED***wireless_set").hide();
-        $("***REMOVED***guest_set").hide();
-        $("***REMOVED***wireless_hotspot").hide();
-        $("***REMOVED***WirelessRadarChList").hide();
-        $("***REMOVED***WirelessRadarApList").hide();
-        $("***REMOVED***adv_wireless_set").hide();
+        $("#basic-wls").hide();
+        $("#basic-gst").hide();
+        $("#wps-wizard").hide();
+        $("#wireless_set").hide();
+        $("#guest_set").hide();
+        $("#wireless_hotspot").hide();
+        $("#WirelessRadarChList").hide();
+        $("#WirelessRadarApList").hide();
+        $("#adv_wireless_set").hide();
     }
 }
 function ChangeResize(tab)
 {
-    var unnecessaryHeight = $(".topframe")[0].clientHeight+$(".tabs")[0].clientHeight+$("***REMOVED***footer")[0].clientHeight+parseInt($(".basic-menu").css("margin-top").substring(0, $(".basic-menu").css("margin-top").length-2),10)+(parseInt($("***REMOVED***hideDiv")[0].clientHeight,10) == 0? 15:$("***REMOVED***hideDiv")[0].clientHeight);
+    var unnecessaryHeight = $(".topframe")[0].clientHeight+$(".tabs")[0].clientHeight+$("#footer")[0].clientHeight+parseInt($(".basic-menu").css("margin-top").substring(0, $(".basic-menu").css("margin-top").length-2),10)+(parseInt($("#hideDiv")[0].clientHeight,10) == 0? 15:$("#hideDiv")[0].clientHeight);
     page_contain_height = document.documentElement.clientHeight-unnecessaryHeight > 470+adjustPageHeight ? document.documentElement.clientHeight-unnecessaryHeight : 470+adjustPageHeight;
 
     if(!tab)
     {
-        if($("***REMOVED***BasicTab").hasClass('current'))
+        if($("#BasicTab").hasClass('current'))
             tab = "BasicTab";
         else
         	  tab = "AdvanceTab";
     }
     if(tab == "BasicTab"){
         $('.basic-menu').css("height", page_contain_height);
-        $('***REMOVED***page_contain').height(parseInt(page_contain_height));
-        $('***REMOVED***page').height(parseInt(page_contain_height));
+        $('#page_contain').height(parseInt(page_contain_height));
+        $('#page').height(parseInt(page_contain_height));
         if(navigator.userAgent.indexOf("MSIE 7") != -1)
-            $('***REMOVED***page').contents().find('body').height(parseInt(page_contain_height));
+            $('#page').contents().find('body').height(parseInt(page_contain_height));
     } else {
         $('.advance-menu').css("height", page_contain_height);
-        $('***REMOVED***page_contain2').height(parseInt(page_contain_height));
-        $('***REMOVED***page2').height(parseInt(page_contain_height));
+        $('#page_contain2').height(parseInt(page_contain_height));
+        $('#page2').height(parseInt(page_contain_height));
         if(navigator.userAgent.indexOf("MSIE 7") != -1)
-            $('***REMOVED***page2').contents().find('body').height(parseInt(page_contain_height));
+            $('#page2').contents().find('body').height(parseInt(page_contain_height));
     }
 }
 
@@ -1158,11 +1158,11 @@ function ChangeResize(tab)
 
 <META content="MSHTML 6.00.2900.6129" name=GENERATOR>
 </head>
-<body style="PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; BACKGROUND-COLOR:***REMOVED***787878;" onresize="adjustPageLayout();change_size();">
+<body style="PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; BACKGROUND-COLOR:#787878;" onresize="adjustPageLayout();change_size();">
     <table id="all" style="PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px" cellSpacing=0 cellPadding=0 width="100%">
         <tbody>
             <tr>
-                <td style="BACKGROUND-COLOR:***REMOVED***787878">
+                <td style="BACKGROUND-COLOR:#787878">
                     &nbsp;
                 </td>
                 <td style="WIDTH: 960px; HEIGHT: 610px">
@@ -1206,10 +1206,10 @@ function ChangeResize(tab)
                                 <!-- tabs -->
                                 <ul class="tabs">
                                     <li>
-                                        <a class="current" id="BasicTab" onfocus="this.blur()" href="index.htm***REMOVED***"><span>BASIC</span></a>
+                                        <a class="current" id="BasicTab" onfocus="this.blur()" href="index.htm#"><span>BASIC</span></a>
                                     </li>
                                     <li>
-                                        <a id="AdvanceTab" onfocus="this.blur()" href="index.htm***REMOVED***"><span>ADVANCED</span></a>
+                                        <a id="AdvanceTab" onfocus="this.blur()" href="index.htm#"><span>ADVANCED</span></a>
                                     </li>
                                     <!-- <li>
                                     <div class="button-rule" id="firmware-update" style="PADDING-LEFT: 10px" onclick="fw_upgrade_hint();">
@@ -1251,7 +1251,7 @@ function ChangeResize(tab)
                                     <table style="PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; HEIGHT: 480px" cellSpacing=0 cellPadding=0 width="100%">
                                         <tbody>
                                             <tr>
-                                                <td style="FONT-SIZE: 12px; WIDTH: 200px; FONT-FAMILY: Arial; BACKGROUND-COLOR:***REMOVED***e5e5e5">
+                                                <td style="FONT-SIZE: 12px; WIDTH: 200px; FONT-FAMILY: Arial; BACKGROUND-COLOR:#e5e5e5">
                                                     <div class="basic-menu">
                                                         <div class="basic-menu-div" id="basic-home">
                                                             <a href="DashBoard.htm"><span>Home</span></a>
@@ -1279,7 +1279,7 @@ function ChangeResize(tab)
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td style="WIDTH: 760px; FONT-FAMILY: Arial; HEIGHT: 480px; BACKGROUND-COLOR:***REMOVED***e5e5e5">
+                                                <td style="WIDTH: 760px; FONT-FAMILY: Arial; HEIGHT: 480px; BACKGROUND-COLOR:#e5e5e5">
                                                     <div id="page_contain">
                                                         <iframe id="page" style="MARGIN-LEFT: 55px; WIDTH: 600px; HEIGHT: 405px" name="page" src="" frameborder="0" scrolling="no">
                                                         </iframe>
@@ -1293,7 +1293,7 @@ function ChangeResize(tab)
                                     <table id="advance-table" style="BORDER-RIGHT: 0px; PADDING-RIGHT: 0px; BORDER-TOP: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; BORDER-LEFT: 0px; WIDTH: 960px; PADDING-TOP: 0px; BORDER-BOTTOM: 0px; HEIGHT: 480px" cellSpacing=0 cellPadding=0>
                                         <tbody>
                                             <tr style="HEIGHT: 480px">
-                                                <td style="WIDTH: 215px; BACKGROUND-COLOR:***REMOVED***e5e5e5">
+                                                <td style="WIDTH: 215px; BACKGROUND-COLOR:#e5e5e5">
                                                     <ul class="advance-menu">
                                                         <li class="noSub" id="adv-home">
                                                             <a href="RouterStatus.htm"><span class="nosub_text">ADVANCED Home</span></a>
@@ -1306,7 +1306,7 @@ function ChangeResize(tab)
                                                             <a href="AddWPSClient_TOP.htm"><span class="nosub_text">WPS Wizard</span></a>
                                                         </li>
                                                         <li class="Sub" id="setup_header">
-                                                            <a href="index.htm***REMOVED***"><span>Setup</span></a>
+                                                            <a href="index.htm#"><span>Setup</span></a>
                                                         </li>
                                                         <li class="subHeader" id="set_hdr">
                                                             <ul style="WIDTH: 100%; HEIGHT: 112px">
@@ -1347,7 +1347,7 @@ function ChangeResize(tab)
                                                             </ul>
                                                         </li>
                                                         <li class="Sub" id="usb_header">
-                                                            <a href="index.htm***REMOVED***"><span>USB Storage</span></a>
+                                                            <a href="index.htm#"><span>USB Storage</span></a>
                                                         </li>
                                                         <li class="subHeader">
                                                             <ul style="WIDTH: 100%; HEIGHT: 80px" id="usb_hdr">
@@ -1365,12 +1365,12 @@ function ChangeResize(tab)
                                                             </ul>
                                                         </li>
                                                         <li class="Sub" id="security_header">
-                                                            <a href="index.htm***REMOVED***"><span>Security</span></a>
+                                                            <a href="index.htm#"><span>Security</span></a>
                                                         </li>
                                                         <li class="subHeader">
                                                             <ul style="WIDTH: 100%; HEIGHT: 110px" id="sec_hdr">
                                                                 <li class="SubMenu SubMenuWDS" id="parentalControls">
-                                                                    <a id="PAR_menu2" href="index.htm***REMOVED***" target="_blank"><span class="subMenu_text" style="BORDER-RIGHT: 0px; BORDER-TOP: 0px; BORDER-LEFT: 0px; BORDER-BOTTOM: 0px">Parental Controls</span></a>
+                                                                    <a id="PAR_menu2" href="index.htm#" target="_blank"><span class="subMenu_text" style="BORDER-RIGHT: 0px; BORDER-TOP: 0px; BORDER-LEFT: 0px; BORDER-BOTTOM: 0px">Parental Controls</span></a>
                                                                 </li>
                                                                 <li class="SubMenu SubMenuWDS" id="access_ctrl">
                                                                     <a onclick="return false" href="AccessControl.htm"><span class=subMenu_text>Access Control</span></a>
@@ -1390,7 +1390,7 @@ function ChangeResize(tab)
                                                             </ul>
                                                         </li>
                                                         <li class="Sub" id="administration">
-                                                            <a href="index.htm***REMOVED***"><span>Administration</span></a>
+                                                            <a href="index.htm#"><span>Administration</span></a>
                                                         </li>
                                                         <li class="subHeader" id='AdminId'>
                                                             <ul id='AdminULId' style="WIDTH: 100%; HEIGHT: 200px">
@@ -1448,7 +1448,7 @@ function ChangeResize(tab)
                                                             </ul>
                                                         </li>
                                                         <li class="Sub" id="adv_header">
-                                                            <a href="index.htm***REMOVED***"><span>Advanced Setup</span></a>
+                                                            <a href="index.htm#"><span>Advanced Setup</span></a>
                                                         </li>
                                                         <li class="subHeader" id='adv_hdr'>
                                                             <ul id="adv_settings_header" style="DISPLAY: block; WIDTH: 100%; HEIGHT: 200px">
@@ -1504,9 +1504,9 @@ function ChangeResize(tab)
                                                         </li>
                                                     </ul>
                                                 </td>
-                                                <td style="BACKGROUND-COLOR:***REMOVED***e5e5e5">
+                                                <td style="BACKGROUND-COLOR:#e5e5e5">
                                                     <div id="page_contain2">
-                                                        <iframe id="page2" style="MARGIN-LEFT: 50px; WIDTH: 680px; HEIGHT: 405px; BACKGROUND-COLOR:***REMOVED***e5e5e5" name="page2" src="about:blank" frameborder="0" scrolling="no">
+                                                        <iframe id="page2" style="MARGIN-LEFT: 50px; WIDTH: 680px; HEIGHT: 405px; BACKGROUND-COLOR:#e5e5e5" name="page2" src="about:blank" frameborder="0" scrolling="no">
                                                         </iframe>
                                                     </div>
                                                 </td>
@@ -1520,7 +1520,7 @@ function ChangeResize(tab)
                     </table>
                     <form action="" name="searchform" onsubmit="return OnSubmitForm();" method="post"
                     target="_blank" style="margin:0px">
-                        <table id="footer" style="PADDING-RIGHT: 0px; BACKGROUND-POSITION: 10px 50%; PADDING-LEFT: 0px; BACKGROUND-IMAGE: url(img/main-page-bottom.gif); PADDING-BOTTOM: 0px; MARGIN: 0px; WIDTH: 100%; PADDING-TOP: 0px; BACKGROUND-REPEAT: no-repeat; HEIGHT: 38px; BACKGROUND-COLOR:***REMOVED***e5e5e5" cellSpacing=0 cellPadding=0>
+                        <table id="footer" style="PADDING-RIGHT: 0px; BACKGROUND-POSITION: 10px 50%; PADDING-LEFT: 0px; BACKGROUND-IMAGE: url(img/main-page-bottom.gif); PADDING-BOTTOM: 0px; MARGIN: 0px; WIDTH: 100%; PADDING-TOP: 0px; BACKGROUND-REPEAT: no-repeat; HEIGHT: 38px; BACKGROUND-COLOR:#e5e5e5" cellSpacing=0 cellPadding=0>
                             <tr>
                                 <td>
                                     &nbsp;
@@ -1531,19 +1531,19 @@ function ChangeResize(tab)
                                             Help &amp; Support&nbsp;
                                         </b>
                                     </span>
-                                    <!-- <span class="main-page-bottom-text" style="border-left-style:none;"><a style="text-decoration:none;color:***REMOVED***C0C0C0" href="http://documentation.netgear.com/C3700-100NAS/enu/202-10828-01/index.htm" target="_blank">Documentation&nbsp;</a></span>
+                                    <!-- <span class="main-page-bottom-text" style="border-left-style:none;"><a style="text-decoration:none;color:#C0C0C0" href="http://documentation.netgear.com/C3700-100NAS/enu/202-10828-01/index.htm" target="_blank">Documentation&nbsp;</a></span>
                                     -->
                                     <span class="main-page-bottom-text" style="BORDER-LEFT-STYLE: none">
-                                        <a style="COLOR: ***REMOVED***c0c0c0; TEXT-DECORATION: none;cursor: pointer;" href="document.htm" onclick="checkTab('document.htm');return false;" >Documentation&nbsp;</a>
+                                        <a style="COLOR: #c0c0c0; TEXT-DECORATION: none;cursor: pointer;" href="document.htm" onclick="checkTab('document.htm');return false;" >Documentation&nbsp;</a>
                                     </span>
                                     <span class="main-page-bottom-text" style="BORDER-LEFT-STYLE: none">
                                     |
                                     </span>
                                     <span class="main-page-bottom-text" style="BORDER-LEFT-STYLE: none">
-                                        <a style="COLOR: ***REMOVED***c0c0c0; TEXT-DECORATION: none;cursor: pointer;" href="GPL_rev1.htm" target="_blank">GNU GPL&nbsp;</a>
+                                        <a style="COLOR: #c0c0c0; TEXT-DECORATION: none;cursor: pointer;" href="GPL_rev1.htm" target="_blank">GNU GPL&nbsp;</a>
                                     </span>
-                                    <!-- <span class="main-page-bottom-text"><a style="PADDING-LEFT: 5px; COLOR: ***REMOVED***c0c0c0; TEXT-DECORATION: none" href="http://support.netgear.com/" target=_blank>Online Support</a></span>
-                                    <span class="main-page-bottom-text"><a style="PADDING-LEFT: 5px; COLOR: ***REMOVED***c0c0c0; TEXT-DECORATION: none" href="http://support.netgear.com/app/answers/detail/a_id/12923" target="_blank">Gateway FAQ</a></span>
+                                    <!-- <span class="main-page-bottom-text"><a style="PADDING-LEFT: 5px; COLOR: #c0c0c0; TEXT-DECORATION: none" href="http://support.netgear.com/" target=_blank>Online Support</a></span>
+                                    <span class="main-page-bottom-text"><a style="PADDING-LEFT: 5px; COLOR: #c0c0c0; TEXT-DECORATION: none" href="http://support.netgear.com/app/answers/detail/a_id/12923" target="_blank">Gateway FAQ</a></span>
                                     -->
                                 </td>
                                 <!-- <td style="WIDTH: 100px; TEXT-ALIGN: right; valign: middle">
@@ -1563,7 +1563,7 @@ function ChangeResize(tab)
                         </table>
                     </form>
                 </td>
-                <td style="BACKGROUND-COLOR:***REMOVED***787878">
+                <td style="BACKGROUND-COLOR:#787878">
                     &nbsp;
                 </td>
             </tr>
@@ -1604,7 +1604,7 @@ $(function() {
 
 <SCRIPT type="text/javascript">
     $(".current").css("background","url(img/tab-active.gif) no-repeat 0");
-    $("***REMOVED***AdvanceTab").css("background","url(img/tab-nonactive.gif) no-repeat 0");
+    $("#AdvanceTab").css("background","url(img/tab-nonactive.gif) no-repeat 0");
     $(".noSub").first().addClass("noSubActive");
     $('.basic-menu-div').first().addClass('menuActive');
 

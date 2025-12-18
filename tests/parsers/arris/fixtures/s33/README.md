@@ -1,8 +1,8 @@
-***REMOVED*** Arris/CommScope S33 Modem Fixtures
+# Arris/CommScope S33 Modem Fixtures
 
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -14,7 +14,7 @@
 
 <!-- END AUTO-GENERATED -->
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
@@ -24,17 +24,17 @@
 | **Release Year** | 2019 |
 | **ISPs** | Comcast, Xfinity, Cox, Spectrum |
 | **Firmware** | TB01.03.001.10_012022_212.S3 |
-| **Related Issue** | [***REMOVED***32](https://github.com/solentlabs/cable_modem_monitor/issues/32) |
+| **Related Issue** | [#32](https://github.com/solentlabs/cable_modem_monitor/issues/32) |
 | **Captured By** | @gmogoody |
 | **Capture Date** | November 2025 |
 
-***REMOVED******REMOVED*** Known URLs
+## Known URLs
 
 - **Base URL:** `http://192.168.100.1` (also works with HTTPS)
 - **Login Page:** `/Login.html` (✓ captured)
 - **Status Page:** `/Cmconnectionstatus.html` (⚠️ not captured - requires authentication)
 
-***REMOVED******REMOVED*** Authentication
+## Authentication
 
 **Type:** HNAP/SOAP (SOAP-based authentication)
 
@@ -49,24 +49,24 @@
 - Authentication method: HTTP Basic Auth attempted, but likely needs HNAP/SOAP session
 
 **Challenges:**
-- HNAP authentication has proven unreliable across multiple modems (see issues ***REMOVED***4, ***REMOVED***6)
+- HNAP authentication has proven unreliable across multiple modems (see issues #4, #6)
 - SSL certificate verification issues with self-signed certificates common
 - Status page not accessible without proper HNAP authentication
 
-***REMOVED******REMOVED*** Directory Structure
+## Directory Structure
 
 ```
 s33/
-├── Login.html              ***REMOVED*** Core - authentication page
-├── cmconnectionstatus.html ***REMOVED*** Core - channel data
+├── Login.html              # Core - authentication page
+├── cmconnectionstatus.html # Core - channel data
 ├── README.md
 └── extended/
-    └── connectionstatus.js ***REMOVED*** JS file (reference only)
+    └── connectionstatus.js # JS file (reference only)
 ```
 
-***REMOVED******REMOVED*** Core Fixtures
+## Core Fixtures
 
-***REMOVED******REMOVED******REMOVED*** Login.html
+### Login.html
 - **Source:** Diagnostics capture from fallback parser
 - **Status Code:** 200 OK
 - **Size:** 6,825 bytes
@@ -81,8 +81,8 @@ s33/
 - References to SURFboard Central mobile app
 - SOAP/HNAP JavaScript includes
 
-***REMOVED******REMOVED******REMOVED*** commscope_s33.html ✅ CAPTURED
-- **Source:** User @gmogoody via issue ***REMOVED***32
+### commscope_s33.html ✅ CAPTURED
+- **Source:** User @gmogoody via issue #32
 - **Size:** 7.5 KB
 - **Content:** Connection status page template (HTML structure only)
 - **Captured:** 2025-11-24
@@ -96,19 +96,19 @@ s33/
 
 **Important:** This is just the HTML template - actual channel data is loaded dynamically via HNAP JavaScript.
 
-***REMOVED******REMOVED******REMOVED*** commscope_s33-2.html ✅ CAPTURED (JavaScript)
-- **Source:** User @gmogoody via issue ***REMOVED***32
+### commscope_s33-2.html ✅ CAPTURED (JavaScript)
+- **Source:** User @gmogoody via issue #32
 - **Size:** 11 KB
 - **Content:** JavaScript code (`connectionstatus.js`) that populates the page
 - **Captured:** 2025-11-24
 
 **Critical Discovery:** This reveals the complete HNAP protocol and data format!
 
-***REMOVED******REMOVED*** HNAP Protocol Analysis
+## HNAP Protocol Analysis
 
 **Major Discovery:** The S33 uses **identical HNAP protocol and data format to the Motorola MB8611!**
 
-***REMOVED******REMOVED******REMOVED*** HNAP Actions Used
+### HNAP Actions Used
 
 The JavaScript makes two batched HNAP calls to `/HNAP1/`:
 
@@ -122,7 +122,7 @@ The JavaScript makes two batched HNAP calls to `/HNAP1/`:
 
 **Pattern:** S33 uses `GetCustomer...` prefix, MB8611 uses `GetMoto...` prefix, but otherwise identical!
 
-***REMOVED******REMOVED******REMOVED*** Channel Data Format
+### Channel Data Format
 
 **Downstream Channels:** (same as MB8611)
 ```
@@ -154,7 +154,7 @@ Indices:
   [6] = Power (dBmV)
 ```
 
-***REMOVED******REMOVED******REMOVED*** Authentication Flow
+### Authentication Flow
 
 JavaScript checks for session key:
 ```javascript
@@ -165,7 +165,7 @@ if (sessionStorage.getItem('PrivateKey') === null){
 
 This confirms HNAP session-based authentication is required.
 
-***REMOVED******REMOVED*** Parser Implementation Status
+## Parser Implementation Status
 
 **Current Status:** ⏸️ **ON HOLD - Pending HNAP Authentication Improvements**
 
@@ -177,7 +177,7 @@ This confirms HNAP session-based authentication is required.
 
 **All fixtures captured and documented - ready for implementation when HNAP is solid!**
 
-***REMOVED******REMOVED******REMOVED*** Option 1: HNAP-Based Parser (Reuse MB8611 Code)
+### Option 1: HNAP-Based Parser (Reuse MB8611 Code)
 
 **Pros:**
 - ✅ Data format is identical to MB8611
@@ -186,12 +186,12 @@ This confirms HNAP session-based authentication is required.
 - ✅ Complete understanding of protocol from JavaScript
 
 **Cons:**
-- ⚠️ HNAP authentication has been unreliable (issues ***REMOVED***4, ***REMOVED***6)
+- ⚠️ HNAP authentication has been unreliable (issues #4, #6)
 - ⚠️ SSL certificate issues common
 - ⚠️ Session management complexity
 - ⚠️ Harder for users to troubleshoot
 
-***REMOVED******REMOVED******REMOVED*** Option 2: Request Static HTML with Data
+### Option 2: Request Static HTML with Data
 
 **Pros:**
 - ✅ More reliable than HNAP
@@ -204,25 +204,25 @@ This confirms HNAP session-based authentication is required.
 - ⚠️ User must wait for JavaScript to populate data
 - ⚠️ Extra step for user
 
-***REMOVED******REMOVED******REMOVED*** Recommendation
+### Recommendation
 
-Given the HNAP challenges documented in issues ***REMOVED***4 and ***REMOVED***6:
+Given the HNAP challenges documented in issues #4 and #6:
 1. **First, request user to save the populated HTML page** (after JavaScript runs)
 2. If that doesn't work, implement HNAP parser using MB8611 as template
 3. Document both approaches in parser
 
-***REMOVED******REMOVED*** Future HNAP Refactoring Notes
+## Future HNAP Refactoring Notes
 
 **When tackling HNAP authentication properly, consider:**
 
-***REMOVED******REMOVED******REMOVED*** 1. Abstract Common HNAP Logic
+### 1. Abstract Common HNAP Logic
 Current MB8611 parser has hardcoded action names. Could abstract:
 ```python
 class HNAPParserBase(ModemParser):
     """Base class for HNAP-based parsers."""
 
-    ***REMOVED*** Subclasses override these
-    action_prefix = "GetMoto"  ***REMOVED*** or "GetCustomer" for S33
+    # Subclasses override these
+    action_prefix = "GetMoto"  # or "GetCustomer" for S33
 
     def get_downstream_action(self):
         return f"{self.action_prefix}StatusDownstreamChannelInfo"
@@ -231,14 +231,14 @@ class HNAPParserBase(ModemParser):
         return f"{self.action_prefix}StatusUpstreamChannelInfo"
 ```
 
-***REMOVED******REMOVED******REMOVED*** 2. Reusable Channel Data Parser
+### 2. Reusable Channel Data Parser
 Both MB8611 and S33 use identical caret-delimited format:
 - Extract parsing logic into shared utility
 - `parse_hnap_channels(data, delimiter="^", separator="|+|")`
 - Reduces duplication, easier to test
 
-***REMOVED******REMOVED******REMOVED*** 3. HNAP Authentication Strategy Improvements
-Current challenges (issues ***REMOVED***4, ***REMOVED***6):
+### 3. HNAP Authentication Strategy Improvements
+Current challenges (issues #4, #6):
 - SSL certificate verification
 - Session management/timeouts
 - Error handling and retry logic
@@ -250,14 +250,14 @@ Consider:
 - Clear user guidance when things go wrong
 - Option to bypass SSL verification (with warning)
 
-***REMOVED******REMOVED******REMOVED*** 4. Testing Framework
+### 4. Testing Framework
 With fixtures for MB8611 and S33:
 - Create mock HNAP server for testing
 - Test authentication flows without real hardware
 - Validate different firmware versions
 - Test error conditions (timeouts, bad auth, etc.)
 
-***REMOVED******REMOVED******REMOVED*** 5. When Ready to Implement S33
+### 5. When Ready to Implement S33
 
 **Simple approach (after HNAP is solid):**
 ```python
@@ -265,7 +265,7 @@ class ArrisS33Parser(HNAPParserBase):
     name = "Arris S33"
     manufacturer = "Arris"
     models = ["S33", "CommScope S33"]
-    action_prefix = "GetCustomer"  ***REMOVED*** Only difference from MB8611!
+    action_prefix = "GetCustomer"  # Only difference from MB8611!
 
     url_patterns = [
         {"path": "/HNAP1/", "auth_method": "hnap", "auth_required": True},
@@ -281,21 +281,21 @@ class ArrisS33Parser(HNAPParserBase):
 5. Test with real S33 user (@gmogoody)
 6. Document patterns for future HNAP modems
 
-***REMOVED******REMOVED*** Related Issues
+## Related Issues
 
-- **Issue ***REMOVED***32:** Arris/CommScope S33 support request (active)
-- **Issue ***REMOVED***4:** MB8611 HNAP authentication challenges (SSL certs, SOAP complexity)
-- **Issue ***REMOVED***6:** MB8611 SSL certificate verification failures (self-signed certs)
+- **Issue #32:** Arris/CommScope S33 support request (active)
+- **Issue #4:** MB8611 HNAP authentication challenges (SSL certs, SOAP complexity)
+- **Issue #6:** MB8611 SSL certificate verification failures (self-signed certs)
 
-***REMOVED******REMOVED*** Notes
+## Notes
 
 - The S33 appears to share authentication patterns with Motorola MB8611 (HNAP/SOAP)
 - However, HNAP has proven problematic in practice - prefer HTML samples if available
-- User has already provided HTML samples via issue ***REMOVED***32 attachments
+- User has already provided HTML samples via issue #32 attachments
 - Fallback parser successfully captured Login.html using Basic Auth over HTTPS
 - The modem accepts both HTTP and HTTPS connections
 
-***REMOVED******REMOVED*** Diagnostics Metadata
+## Diagnostics Metadata
 
 **Capture Details:**
 - Captured: 2025-11-24 20:31:43 UTC

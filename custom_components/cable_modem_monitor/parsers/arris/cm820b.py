@@ -23,11 +23,11 @@ class ArrisCM820BParser(ModemParser):
     manufacturer = "ARRIS"
     models = ["CM820B"]
 
-    ***REMOVED*** Parser status
-    status = ParserStatus.VERIFIED  ***REMOVED*** Verified by @dimkalinux (PR ***REMOVED***57, December 2025)
+    # Parser status
+    status = ParserStatus.VERIFIED  # Verified by @dimkalinux (PR #57, December 2025)
     verification_source = "https://github.com/solentlabs/cable_modem_monitor/pull/57"
 
-    ***REMOVED*** Device metadata
+    # Device metadata
     release_date = "2011"
     docsis_version = "3.0"
     fixtures_path = "tests/parsers/arris/fixtures/cm820b/"
@@ -52,7 +52,7 @@ class ArrisCM820BParser(ModemParser):
 
     def parse(self, soup: BeautifulSoup, session=None, base_url=None) -> dict:
         """Parse all data from the modem."""
-        ***REMOVED*** Fetch status page for channel data
+        # Fetch status page for channel data
         if session and base_url:
             try:
                 response = session.get(f"{base_url}/cgi-bin/status_cgi", timeout=10)

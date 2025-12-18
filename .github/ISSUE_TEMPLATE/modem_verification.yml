@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        ***REMOVED******REMOVED*** Thank you for helping verify modem support! 🎉
+        ## Thank you for helping verify modem support! 🎉
 
         If you successfully installed Cable Modem Monitor with a modem marked with an asterisk (*) during setup, please help verify it works!
 
@@ -102,7 +102,7 @@ body:
       value: |
         ---
 
-        ***REMOVED******REMOVED******REMOVED*** How to Download Diagnostics (Recommended)
+        ### How to Download Diagnostics (Recommended)
 
         Attaching a diagnostics file helps us verify the data structure:
 
@@ -113,7 +113,7 @@ body:
 
         The diagnostics file includes your modem data but **automatically sanitizes** sensitive information (MAC addresses, serial numbers, IPs).
 
-        ***REMOVED******REMOVED******REMOVED*** What Happens Next?
+        ### What Happens Next?
 
         - A maintainer will review your report
         - If verified, your modem will be moved to "✅ Verified Working" in the README

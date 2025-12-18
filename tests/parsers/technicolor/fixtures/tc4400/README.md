@@ -1,8 +1,8 @@
-***REMOVED*** Technicolor TC4400 Test Fixtures
+# Technicolor TC4400 Test Fixtures
 
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -14,7 +14,7 @@
 
 <!-- END AUTO-GENERATED -->
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
@@ -30,19 +30,19 @@
 | **Captured By** | @kwschulz |
 | **Capture Date** | Development |
 
-***REMOVED******REMOVED*** Links
+## Links
 
 - [Technicolor TC4400 Support](https://www.technicolor.com/)
-- [Related Issue: ***REMOVED***1](https://github.com/solentlabs/cable_modem_monitor/issues/1)
+- [Related Issue: #1](https://github.com/solentlabs/cable_modem_monitor/issues/1)
 
-***REMOVED******REMOVED*** Authentication
+## Authentication
 
 - **Method**: HTTP Basic Authentication
 - **Default Username**: `admin`
 - **Default Password**: (varies by ISP)
 - **Default IP**: `192.168.100.1`
 
-***REMOVED******REMOVED*** Fixture Files
+## Fixture Files
 
 | File | Description | Key Data |
 |------|-------------|----------|
@@ -50,9 +50,9 @@
 | `cmswinfo.html` | Software information | Hardware/firmware version, uptime |
 | `statsifc.html` | Interface statistics | Network stats |
 
-***REMOVED******REMOVED*** Data Available
+## Data Available
 
-***REMOVED******REMOVED******REMOVED*** cmswinfo.html - Software Information
+### cmswinfo.html - Software Information
 
 | Field | Example Value |
 |-------|---------------|
@@ -66,7 +66,7 @@
 | Network Access | Allowed |
 | Board Temperature | -99.0 degrees Celsius |
 
-***REMOVED******REMOVED******REMOVED*** cmconnectionstatus.html - Channel Data
+### cmconnectionstatus.html - Channel Data
 
 | Data Type | Details |
 |-----------|---------|
@@ -97,7 +97,7 @@
 - Power Level (dBmV)
 - Modulation
 
-***REMOVED******REMOVED*** Parser Capabilities
+## Parser Capabilities
 
 | Capability | Supported |
 |------------|-----------|
@@ -109,12 +109,12 @@
 | Last Boot Time | No (can be calculated) |
 | Restart | No |
 
-***REMOVED******REMOVED*** Contributor Information
+## Contributor Information
 
 - **Parser Status**: Unverified (needs user confirmation)
 - **Fixtures Captured**: Development testing
 
-***REMOVED******REMOVED*** Notes for Parser Development
+## Notes for Parser Development
 
 1. **Primary data source**: `cmconnectionstatus.html` for channel data
 2. **System info**: `cmswinfo.html` for uptime and version info

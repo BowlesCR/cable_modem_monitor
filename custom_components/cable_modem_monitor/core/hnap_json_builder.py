@@ -1,7 +1,7 @@
 """JSON-based HNAP request builder for MB8611 firmwares that use JSON instead of XML/SOAP.
 
 The challenge-response authentication implementation is based on reverse engineering
-work by BowlesCR (Chris Bowles) from Issue ***REMOVED***40 and the prior art from xNinjaKittyx's mb8600
+work by BowlesCR (Chris Bowles) from Issue #40 and the prior art from xNinjaKittyx's mb8600
 repository. The HMAC-MD5 authentication flow was documented through HAR file analysis
 of the modem's Login.js and SOAPAction.js files, captured using our Playwright-based
 HAR capture tool (scripts/capture_modem.py).
@@ -9,7 +9,7 @@ HAR capture tool (scripts/capture_modem.py).
 References:
 - BowlesCR's MB8600 Login PoC: https://github.com/BowlesCR/MB8600_Login
 - xNinjaKittyx's mb8600: https://github.com/xNinjaKittyx/mb8600
-- Issue ***REMOVED***40: https://github.com/solentlabs/cable_modem_monitor/issues/40
+- Issue #40: https://github.com/solentlabs/cable_modem_monitor/issues/40
 """
 
 from __future__ import annotations
@@ -64,8 +64,8 @@ class HNAPJsonRequestBuilder:
         self.endpoint = endpoint
         self.namespace = namespace
         self.empty_action_value = empty_action_value
-        self._private_key: str | None = None  ***REMOVED*** Stored after successful login for auth headers
-        ***REMOVED*** Store last request/response for diagnostics (passwords redacted)
+        self._private_key: str | None = None  # Stored after successful login for auth headers
+        # Store last request/response for diagnostics (passwords redacted)
         self._last_auth_attempt: dict | None = None
 
     def clear_auth_cache(self) -> None:
@@ -92,12 +92,12 @@ class HNAPJsonRequestBuilder:
         Format: HMAC_MD5(PrivateKey, timestamp + SOAPAction) + " " + timestamp
         """
         if not self._private_key:
-            ***REMOVED*** For login requests, use a default key
+            # For login requests, use a default key
             private_key = "withoutloginkey"
         else:
             private_key = self._private_key
 
-        ***REMOVED*** Timestamp must fit in 32-bit integer range, matching the JS implementation
+        # Timestamp must fit in 32-bit integer range, matching the JS implementation
         current_time = int(time.time() * 1000) % 2000000000000
         timestamp = str(current_time)
         soap_action_uri = f'"{self.namespace}{action}"'
@@ -121,7 +121,7 @@ class HNAPJsonRequestBuilder:
         Raises:
             requests.RequestException: If request fails
         """
-        ***REMOVED*** Build JSON request
+        # Build JSON request
         request_data = {action: params or {}}
 
         url = f"{base_url}{self.endpoint}"
@@ -139,7 +139,7 @@ class HNAPJsonRequestBuilder:
             verify=session.verify,
         )
 
-        ***REMOVED*** Enhanced error diagnostics for failed HTTP requests
+        # Enhanced error diagnostics for failed HTTP requests
         if not response.ok:
             _LOGGER.error(
                 "HNAP call_single failed: action=%s, status=%s, url=%s",
@@ -168,11 +168,11 @@ class HNAPJsonRequestBuilder:
         Raises:
             requests.RequestException: If request fails
         """
-        ***REMOVED*** Build JSON request with nested action objects
-        ***REMOVED*** The empty value format is modem-specific (no official HNAP JSON spec exists):
-        ***REMOVED*** - S33: uses "" (empty string), observed in HAR captures
-        ***REMOVED*** - MB8611: uses {} (empty dict), legacy behavior
-        ***REMOVED*** Reference: https://github.com/solentlabs/cable_modem_monitor/issues/32
+        # Build JSON request with nested action objects
+        # The empty value format is modem-specific (no official HNAP JSON spec exists):
+        # - S33: uses "" (empty string), observed in HAR captures
+        # - MB8611: uses {} (empty dict), legacy behavior
+        # Reference: https://github.com/solentlabs/cable_modem_monitor/issues/32
         action_objects = {action: self.empty_action_value for action in actions}
         request_data = {"GetMultipleHNAPs": action_objects}
 
@@ -203,7 +203,7 @@ class HNAPJsonRequestBuilder:
         response.raise_for_status()
         return cast(str, response.text)
 
-    def login(  ***REMOVED*** noqa: C901 - complexity from multi-step auth protocol
+    def login(  # noqa: C901 - complexity from multi-step auth protocol
         self, session: requests.Session, base_url: str, username: str, password: str
     ) -> tuple[bool, str]:
         """
@@ -231,9 +231,9 @@ class HNAPJsonRequestBuilder:
         )
 
         try:
-            ***REMOVED*** Step 1: Request challenge
-            ***REMOVED*** Note: PrivateLogin field is required for MB8611 authentication
-            ***REMOVED*** It tells the modem which field will contain the hashed password
+            # Step 1: Request challenge
+            # Note: PrivateLogin field is required for MB8611 authentication
+            # It tells the modem which field will contain the hashed password
             challenge_data = {
                 "Login": {
                     "Action": "request",
@@ -244,13 +244,13 @@ class HNAPJsonRequestBuilder:
                 }
             }
 
-            ***REMOVED*** Log request payload for debugging (helps compare with browser requests)
+            # Log request payload for debugging (helps compare with browser requests)
             _LOGGER.debug(
                 "HNAP challenge request payload: %s",
                 json.dumps(challenge_data, separators=(",", ":")),
             )
 
-            ***REMOVED*** Initialize auth attempt tracking
+            # Initialize auth attempt tracking
             self._last_auth_attempt = {
                 "challenge_request": challenge_data,
                 "challenge_response": None,
@@ -271,7 +271,7 @@ class HNAPJsonRequestBuilder:
                 verify=session.verify,
             )
 
-            ***REMOVED*** Store challenge response for diagnostics
+            # Store challenge response for diagnostics
             self._last_auth_attempt["challenge_response"] = response.text[:1000] if response.text else None
 
             if response.status_code != 200:
@@ -283,7 +283,7 @@ class HNAPJsonRequestBuilder:
                 )
                 return (False, response.text)
 
-            ***REMOVED*** Parse challenge response
+            # Parse challenge response
             try:
                 challenge_json = json.loads(response.text)
             except json.JSONDecodeError:
@@ -312,25 +312,25 @@ class HNAPJsonRequestBuilder:
                 public_key[:8] if public_key else "None",
             )
 
-            ***REMOVED*** Step 2: Compute credentials
-            ***REMOVED*** PrivateKey = HMAC_MD5(PublicKey + password, Challenge)
+            # Step 2: Compute credentials
+            # PrivateKey = HMAC_MD5(PublicKey + password, Challenge)
             private_key = _hmac_md5(public_key + password, challenge)
-            self._private_key = private_key  ***REMOVED*** Store for subsequent authenticated requests
+            self._private_key = private_key  # Store for subsequent authenticated requests
 
-            ***REMOVED*** Set the session cookies
-            ***REMOVED*** The modem's browser login (Login.js) sets both 'uid' and 'PrivateKey' cookies:
-            ***REMOVED***   $.cookie('uid', obj.Cookie, { path: '/' });
-            ***REMOVED***   $.cookie('PrivateKey', PrivateKey, {path: '/' });
-            ***REMOVED*** Both are required for authenticated actions like restart to work.
+            # Set the session cookies
+            # The modem's browser login (Login.js) sets both 'uid' and 'PrivateKey' cookies:
+            #   $.cookie('uid', obj.Cookie, { path: '/' });
+            #   $.cookie('PrivateKey', PrivateKey, {path: '/' });
+            # Both are required for authenticated actions like restart to work.
             session.cookies.set("uid", cookie)
             session.cookies.set("PrivateKey", private_key)
 
-            ***REMOVED*** LoginPassword = HMAC_MD5(PrivateKey, Challenge)
+            # LoginPassword = HMAC_MD5(PrivateKey, Challenge)
             login_password = _hmac_md5(private_key, challenge)
 
             _LOGGER.debug("JSON HNAP computed credentials, sending login request")
 
-            ***REMOVED*** Step 3: Send login with computed password
+            # Step 3: Send login with computed password
             login_data = {
                 "Login": {
                     "Action": "login",
@@ -341,7 +341,7 @@ class HNAPJsonRequestBuilder:
                 }
             }
 
-            ***REMOVED*** Log request payload with password redacted for debugging
+            # Log request payload with password redacted for debugging
             redacted_login = {
                 "Login": {
                     **login_data["Login"],
@@ -372,7 +372,7 @@ class HNAPJsonRequestBuilder:
                 len(response.text),
             )
 
-            ***REMOVED*** Store login response for diagnostics
+            # Store login response for diagnostics
             self._last_auth_attempt["login_response"] = response.text[:1000] if response.text else None
 
             if response.status_code != 200:
@@ -382,10 +382,10 @@ class HNAPJsonRequestBuilder:
                     response.status_code,
                     response.text[:500] if response.text else "empty",
                 )
-                self._private_key = None  ***REMOVED*** Clear on failure
+                self._private_key = None  # Clear on failure
                 return (False, response.text)
 
-            ***REMOVED*** Check login result
+            # Check login result
             try:
                 response_json = json.loads(response.text)
                 login_response = response_json.get("LoginResponse", {})
@@ -404,7 +404,7 @@ class HNAPJsonRequestBuilder:
                         login_result,
                         response.text[:500],
                     )
-                    self._private_key = None  ***REMOVED*** Clear on failure
+                    self._private_key = None  # Clear on failure
                     return (False, response.text)
 
             except json.JSONDecodeError:

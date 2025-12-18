@@ -54,11 +54,11 @@ var DodIndex = 1;
         BodyInit();
         $('.scroll-pane').jScrollPane('scrollbarMargin:5px');
 
-        $('***REMOVED***INT_setup').click(function(ev){
+        $('#INT_setup').click(function(ev){
             parent.loadPage2("BasicSettingsBottom.htm");
         });
 
-        $('***REMOVED***LAN_setup').click(function(ev){
+        $('#LAN_setup').click(function(ev){
             parent.loadPage2("WLG_ap_dual_band.htm");
         });
 
@@ -92,23 +92,23 @@ var DodIndex = 1;
         });
         /* checking long string */
         if($('.header-text1').text().length>=36 | $('.header-text2').text().length>=36){
-               $('***REMOVED***box-header-table1').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table2').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table1').removeClass("box-header-table");
-               $('***REMOVED***box-header-table2').removeClass("box-header-table");
+               $('#box-header-table1').addClass("box-header-table-large");
+               $('#box-header-table2').addClass("box-header-table-large");
+               $('#box-header-table1').removeClass("box-header-table");
+               $('#box-header-table2').removeClass("box-header-table");
         }
 
         if($('.header-text3').text().length>=36 | $('.header-text4').text().length>=36){
-               $('***REMOVED***box-header-table3').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table4').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table3').removeClass("box-header-table");
-               $('***REMOVED***box-header-table4').removeClass("box-header-table");
+               $('#box-header-table3').addClass("box-header-table-large");
+               $('#box-header-table4').addClass("box-header-table-large");
+               $('#box-header-table3').removeClass("box-header-table");
+               $('#box-header-table4').removeClass("box-header-table");
         }
         if($('.header-text5').text().length>=36 | $('.header-text6').text().length>=36){
-               $('***REMOVED***box-header-table5').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table6').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table5').removeClass("box-header-table");
-               $('***REMOVED***box-header-table6').removeClass("box-header-table");
+               $('#box-header-table5').addClass("box-header-table-large");
+               $('#box-header-table6').addClass("box-header-table-large");
+               $('#box-header-table5').removeClass("box-header-table");
+               $('#box-header-table6').removeClass("box-header-table");
         }
     });
 
@@ -135,48 +135,48 @@ var DodIndex = 1;
     function loadhelp(fname,anchname)
     {
         if ((loadhelp.arguments.length == 1 ) || (anchname == "" ))
-            $('***REMOVED***page').attr("src",fname+"_h.htm");
+            $('#page').attr("src",fname+"_h.htm");
         else
-            $('***REMOVED***page').attr("src",fname+"_h.htm***REMOVED***"  + anchname);
+            $('#page').attr("src",fname+"_h.htm#"  + anchname);
     }
 
 function adjustPageLayout()
 {
     adjustButtonSize();
-        var table_height1 = $('***REMOVED***page-table1')[0].clientHeight+"px";
-        var table_height2 = $('***REMOVED***page-table2')[0].clientHeight+"px";
-        var table_height3 = $('***REMOVED***page-table3')[0].clientHeight+"px";
-        var table_height4 = $('***REMOVED***page-table4')[0].clientHeight+"px";
-        var table_height5 = $('***REMOVED***page-table5')[0].clientHeight+"px";
-        var table_height6 = $('***REMOVED***page-table6')[0].clientHeight+"px";
+        var table_height1 = $('#page-table1')[0].clientHeight+"px";
+        var table_height2 = $('#page-table2')[0].clientHeight+"px";
+        var table_height3 = $('#page-table3')[0].clientHeight+"px";
+        var table_height4 = $('#page-table4')[0].clientHeight+"px";
+        var table_height5 = $('#page-table5')[0].clientHeight+"px";
+        var table_height6 = $('#page-table6')[0].clientHeight+"px";
 
-        /*if($('***REMOVED***page-table1')[0].clientHeight >=  $('***REMOVED***page-table2')[0].clientHeight)
-            $('***REMOVED***page-table2').css("height",table_height1);
+        /*if($('#page-table1')[0].clientHeight >=  $('#page-table2')[0].clientHeight)
+            $('#page-table2').css("height",table_height1);
         else
-            $('***REMOVED***page-table1').css("height",table_height2);
+            $('#page-table1').css("height",table_height2);
 
-        if($('***REMOVED***page-table3')[0].clientHeight >=  $('***REMOVED***page-table4')[0].clientHeight)
-            $('***REMOVED***page-table4').css("height",table_height3);
+        if($('#page-table3')[0].clientHeight >=  $('#page-table4')[0].clientHeight)
+            $('#page-table4').css("height",table_height3);
         else
-            $('***REMOVED***page-table3').css("height",table_height4);
-        if($('***REMOVED***page-table5')[0].clientHeight >=  $('***REMOVED***page-table6')[0].clientHeight)
-            $('***REMOVED***page-table6').css("height",table_height5);
+            $('#page-table3').css("height",table_height4);
+        if($('#page-table5')[0].clientHeight >=  $('#page-table6')[0].clientHeight)
+            $('#page-table6').css("height",table_height5);
         else
-            $('***REMOVED***page-table5').css("height",table_height6);*/
+            $('#page-table5').css("height",table_height6);*/
 }
 
 function adjustButtonSize()
 {
-    if($($('***REMOVED***reboot')[0].parentNode)[0].scrollHeight > 25 ||
-        $($('***REMOVED***statistics')[0].parentNode)[0].scrollHeight > 25 ||
-        $($('***REMOVED***status')[0].parentNode)[0].scrollHeight > 25)
+    if($($('#reboot')[0].parentNode)[0].scrollHeight > 25 ||
+        $($('#statistics')[0].parentNode)[0].scrollHeight > 25 ||
+        $($('#status')[0].parentNode)[0].scrollHeight > 25)
     {
-        //$($('***REMOVED***reboot')[0].parentNode).addClass('page-table-button-large-left');
-        //$($('***REMOVED***reboot')[0].parentNode).removeClass('page-table-button-left');
-        //$($('***REMOVED***statistics')[0].parentNode).addClass('page-table-button-large-right');
-        //$($('***REMOVED***statistics')[0].parentNode).removeClass('page-table-button-right');
-        //$($('***REMOVED***status')[0].parentNode).addClass('page-table-button-large-right');
-        //$($('***REMOVED***status')[0].parentNode).removeClass('page-table-button-right');
+        //$($('#reboot')[0].parentNode).addClass('page-table-button-large-left');
+        //$($('#reboot')[0].parentNode).removeClass('page-table-button-left');
+        //$($('#statistics')[0].parentNode).addClass('page-table-button-large-right');
+        //$($('#statistics')[0].parentNode).removeClass('page-table-button-right');
+        //$($('#status')[0].parentNode).addClass('page-table-button-large-right');
+        //$($('#status')[0].parentNode).removeClass('page-table-button-right');
     }
 }
 
@@ -257,8 +257,8 @@ function loadSettings()
     var cf=document.forms[0];
 
     adjustPageLayout();
-     parent.$('***REMOVED***page2').css("visibility","visible");
-    parent.$('***REMOVED***page_contain2').removeClass('main-page-contain-loading');
+     parent.$('#page2').css("visibility","visible");
+    parent.$('#page_contain2').removeClass('main-page-contain-loading');
 }
 
 function InitTagValue()
@@ -338,11 +338,11 @@ function InitUpdateView(tagValues)
     /* Internet Gateway */
     if ((tagValues[12] == "0.0.0.0") || (tagValues[12] == "---.---.---.---") || tagValues[8] == "Denied")
     {
-        $("***REMOVED***Internet").addClass("img_status_warning_custom");
+        $("#Internet").addClass("img_status_warning_custom");
     }
     else
     {
-        $("***REMOVED***Internet").addClass("img_status_good custom_icon");
+        $("#Internet").addClass("img_status_good custom_icon");
     }
 
     //document.getElementById("InternetGateway").innerHTML = tagValues[12];
@@ -407,11 +407,11 @@ function InitUpdateView(tagValues)
 
     /* 2.4G SSID */
     document.getElementById("GuestNetworkName1").innerHTML = piplineDecode(tagValues[29]);
-    $('***REMOVED***GuestNetworkName1_B').html(piplineDecode(tagValues[29]));
+    $('#GuestNetworkName1_B').html(piplineDecode(tagValues[29]));
 
     /* 2.4G Wireless AP */
     document.getElementById("GuestNetworkAP1").innerHTML = tagValues[30];
-    $('***REMOVED***GuestNetworkAP1_B').html(tagValues[30]);
+    $('#GuestNetworkAP1_B').html(tagValues[30]);
 
     /* 5G SSID */
     document.getElementById("GuestNetworkName1_an").innerHTML = piplineDecode(tagValues[31]);
@@ -433,11 +433,11 @@ function InitUpdateView(tagValues)
 
     /* 2.4G Guest1 Broadcast */
     document.getElementById("GuestNetworkBroadcast1").innerHTML = tagValues[37];
-    $('***REMOVED***GuestNetworkBroadcast1_B').html(tagValues[37]);
+    $('#GuestNetworkBroadcast1_B').html(tagValues[37]);
 
     /* 2.4G Guest1 Allow Guest */
     document.getElementById("GuestNetworkAllow1").innerHTML = tagValues[38];
-    $('***REMOVED***GuestNetworkAllow1_B').html(tagValues[38]);
+    $('#GuestNetworkAllow1_B').html(tagValues[38]);
 
     /* 5G Guest1 Broadcast */
     document.getElementById("GuestNetworkBroadcast1_an").innerHTML = tagValues[39];
@@ -449,68 +449,68 @@ function InitUpdateView(tagValues)
     // 2.4G
     if (tagValues[21] == "Off")
     {
-        $("***REMOVED***WiFi24G").addClass("img_status_error_red custom_icon");
+        $("#WiFi24G").addClass("img_status_error_red custom_icon");
     }
     else
     {
         if (tagValues[41] == "None")
         {
-            $("***REMOVED***WiFi24G").addClass("img_status_warning_custom");
+            $("#WiFi24G").addClass("img_status_warning_custom");
         }
         else
         {
-            $("***REMOVED***WiFi24G").addClass("img_status_good custom_icon");
+            $("#WiFi24G").addClass("img_status_good custom_icon");
         }
     }
 
     // 5G
     if (tagValues[27] == "Off")
     {
-        $("***REMOVED***WiFi5G").addClass("img_status_error_red custom_icon");
+        $("#WiFi5G").addClass("img_status_error_red custom_icon");
     }
     else
     {
         if (tagValues[42] == "None")
         {
-            $("***REMOVED***WiFi5G").addClass("img_status_warning_custom");
+            $("#WiFi5G").addClass("img_status_warning_custom");
         }
         else
         {
-            $("***REMOVED***WiFi5G").addClass("img_status_good custom_icon");
+            $("#WiFi5G").addClass("img_status_good custom_icon");
         }
     }
 
     // 2.4G WiFi Guest
     if (tagValues[30] == "Off" || tagValues[21] == "Off")
     {
-        $("***REMOVED***WiFi24GG").addClass("img_status_error_red custom_icon");
+        $("#WiFi24GG").addClass("img_status_error_red custom_icon");
     }
     else
     {
         if (tagValues[43] == "None")
         {
-            $("***REMOVED***WiFi24GG").addClass("img_status_warning_custom");
+            $("#WiFi24GG").addClass("img_status_warning_custom");
         }
         else
         {
-            $("***REMOVED***WiFi24GG").addClass("img_status_good custom_icon");
+            $("#WiFi24GG").addClass("img_status_good custom_icon");
         }
     }
 
     // 5G WiFi Guest
     if (tagValues[32] == "Off" || tagValues[27] == "Off")
     {
-        $("***REMOVED***WiFi5GG").addClass("img_status_error_red custom_icon");
+        $("#WiFi5GG").addClass("img_status_error_red custom_icon");
     }
     else
     {
         if (tagValues[44] == "None")
         {
-            $("***REMOVED***WiFi5GG").addClass("img_status_warning_custom");
+            $("#WiFi5GG").addClass("img_status_warning_custom");
         }
         else
         {
-            $("***REMOVED***WiFi5GG").addClass("img_status_good custom_icon");
+            $("#WiFi5GG").addClass("img_status_good custom_icon");
         }
     }
 
@@ -518,42 +518,42 @@ function InitUpdateView(tagValues)
     // Support dual band
     if (tagValues[45] == '1')
     {
-        $("***REMOVED***setting_main_5G").show();
-        $("***REMOVED***setting_guest_5G").show();
+        $("#setting_main_5G").show();
+        $("#setting_guest_5G").show();
     }
     else
     {
-        $("***REMOVED***setting_main_5G").hide();
-        $("***REMOVED***setting_guest_5G").hide();
+        $("#setting_main_5G").hide();
+        $("#setting_guest_5G").hide();
     }
 
     // Rg/Bridge Mode
     if (tagValues[56] == "0") // is bridge mode
     {
         // Bridge mode
-        $("***REMOVED***internetPort").css ('display', 'none');  // Internet Port box
+        $("#internetPort").css ('display', 'none');  // Internet Port box
 
         //Eason, 20130121, bridge mode do not show LAN information
-        $('***REMOVED***LANMAC').html("--:--:--:--:--:--");
-        $('***REMOVED***LANIPMASK').html("---.---.---.---");
-        $('***REMOVED***LANDHCP').html("Off");
+        $('#LANMAC').html("--:--:--:--:--:--");
+        $('#LANIPMASK').html("---.---.---.---");
+        $('#LANDHCP').html("Off");
     }
 
     if(tagValues[56] == "1") // is router mode
     {
-        $('***REMOVED***wireless_setup').click(function(ev){
+        $('#wireless_setup').click(function(ev){
             parent.loadPage2("WirelessSettings.htm");
         });
 
-        $('***REMOVED***wireless_setup_5G').click(function(ev){
+        $('#wireless_setup_5G').click(function(ev){
             parent.loadPage2("WirelessSettings.htm");
         });
 
-        $('***REMOVED***guest_setup').click(function(ev){
+        $('#guest_setup').click(function(ev){
             parent.loadPage2("");
         });
 
-        $('***REMOVED***guest_setup_5G').click(function(ev){
+        $('#guest_setup_5G').click(function(ev){
             parent.loadPage2("");
         });
     }
@@ -562,19 +562,19 @@ function InitUpdateView(tagValues)
        // Chuck 20141001 do not link wireless column to WirelessSettings in bridge mode with
     }
 
-    $('***REMOVED***ModemIdentity').html(tagValues[47]);
-    $('***REMOVED***ModemSWVersion').html(tagValues[48]);
-    $('***REMOVED***ModemDriverVersion').html(tagValues[49]);
-    $('***REMOVED***ModemStatus').html(tagValues[50]);
-    $('***REMOVED***ModemIMSI').html(tagValues[51]);
-    $('***REMOVED***ModemIMEI').html(tagValues[52]);
-    $('***REMOVED***ModemOperator').html(tagValues[53]);
-    $('***REMOVED***ModemNetworkMode').html(tagValues[54]);
+    $('#ModemIdentity').html(tagValues[47]);
+    $('#ModemSWVersion').html(tagValues[48]);
+    $('#ModemDriverVersion').html(tagValues[49]);
+    $('#ModemStatus').html(tagValues[50]);
+    $('#ModemIMSI').html(tagValues[51]);
+    $('#ModemIMEI').html(tagValues[52]);
+    $('#ModemOperator').html(tagValues[53]);
+    $('#ModemNetworkMode').html(tagValues[54]);
 
     if(tagValues["BandSteering"] == "true")
     {
-        $("***REMOVED***page-table4").show();
-        $("***REMOVED***page-table4-1").hide();
+        $("#page-table4").show();
+        $("#page-table4-1").hide();
         document.getElementById("WirelessChannel_an_bs").innerHTML = tagValues["WirelessChannel_an"];
         document.getElementById("WirelessMode_an_bs").innerHTML = tagValues["WirelessMode_an"];
     }
@@ -591,19 +591,19 @@ function initBridgeView(statusTag)
 {
     if(statusTag == "1")
     {
-        $("***REMOVED***RouterRev-table").hide();
-        $("***REMOVED***RouterRev-seperate").hide();
-        $("***REMOVED***LANPort-table").hide();
+        $("#RouterRev-table").hide();
+        $("#RouterRev-seperate").hide();
+        $("#LANPort-table").hide();
     }
 }
 function hiddenWifi(statusTag)
 {
     if(statusTag == "1")
     {
-        $("***REMOVED***setting_main_wifi").hide();
-        $("***REMOVED***setting_main_wifi_line").hide();
-        $("***REMOVED***setting_guest_wifi").hide();
-        $("***REMOVED***setting_guest_wifi_line").hide();
+        $("#setting_main_wifi").hide();
+        $("#setting_main_wifi_line").hide();
+        $("#setting_guest_wifi").hide();
+        $("#setting_guest_wifi_line").hide();
     }
 }
 
@@ -613,7 +613,7 @@ function hiddenWifi(statusTag)
 
 </head>
 
-<body onload="change_size_ADVPage();loadSettings();" bgcolor="***REMOVED***FFFFFF" class="body_custom_class" onResize="change_size_ADVPage();">
+<body onload="change_size_ADVPage();loadSettings();" bgcolor="#FFFFFF" class="body_custom_class" onResize="change_size_ADVPage();">
     <form action="/goform/RouterStatus?id=896951128" method="post" onsubmit="return false;">
     <div id="scroll-pane" class="scroll-pane">
         <table>
@@ -727,7 +727,7 @@ function hiddenWifi(statusTag)
                                             <td class="basic-text-content-bottom"></td>
                                         </tr>
                                         <!--<tr class="basic-text" style="align:center">
-                                            <td colspan="2" class="basic-table-seperate-border" style="background-color:***REMOVED***FFFFFF;">
+                                            <td colspan="2" class="basic-table-seperate-border" style="background-color:#FFFFFF;">
                                             <table >
                                             <tr>
                                             <td width="25%"></td>
@@ -863,7 +863,7 @@ function hiddenWifi(statusTag)
                                             <td class="basic-text-content-bottom"></td>
                                         </tr>
                                         <!--<tr class="basic-text" style="align:center;">
-                                            <td colspan="2" class="basic-table-seperate-border" style="background-color:***REMOVED***FFFFFF;">
+                                            <td colspan="2" class="basic-table-seperate-border" style="background-color:#FFFFFF;">
                                             <table ><tr>
                                              <td colspan="1" class="page-table-button-right" align="center"   onClick="advButtonClick(0);" onMouseOver="changeCursorPointer();" onMouseOut="changeCursorDefault();">
                                                  <span id="statistics">Show Statistics</span>
@@ -990,7 +990,7 @@ function hiddenWifi(statusTag)
                                 <tr align="left" valign="bottom"><td>
                                     <table id="page-table4" class="page-table" style="display:none">
 
-                                        <tr style="height:6px;background-color:***REMOVED***FFFFFF">
+                                        <tr style="height:6px;background-color:#FFFFFF">
                                             <td colspan="2" class="basic-table-seperate-border"></td>
                                         </tr>
 

@@ -18,7 +18,7 @@ class TestCoordinatorSSLContext:
 
         source = inspect.getsource(_create_health_monitor)
 
-        ***REMOVED*** Verify SSL context creation pattern exists
+        # Verify SSL context creation pattern exists
         assert "create_ssl_context" in source
         assert "async_add_executor_job" in source
         assert "ssl.create_default_context()" in source
@@ -29,16 +29,16 @@ class TestCoordinatorConfigEntry:
 
     def test_coordinator_has_config_entry_parameter(self):
         """Test that DataUpdateCoordinator includes config_entry parameter."""
-        ***REMOVED*** This is tested by checking the code structure
-        ***REMOVED*** The actual coordinator creation in __init__.py should have config_entry=entry
-        ***REMOVED*** This is more of a code review check, but we can verify the pattern
+        # This is tested by checking the code structure
+        # The actual coordinator creation in __init__.py should have config_entry=entry
+        # This is more of a code review check, but we can verify the pattern
         import inspect
 
         from custom_components.cable_modem_monitor import async_setup_entry
 
         source = inspect.getsource(async_setup_entry)
 
-        ***REMOVED*** Check that config_entry parameter is passed to coordinator
+        # Check that config_entry parameter is passed to coordinator
         assert "config_entry=entry" in source or "config_entry = entry" in source
 
 
@@ -53,7 +53,7 @@ class TestCoordinatorPartialData:
 
         source = inspect.getsource(_create_update_function)
 
-        ***REMOVED*** Check for partial data return pattern when scraper fails but health succeeds
+        # Check for partial data return pattern when scraper fails but health succeeds
         assert "cable_modem_connection_status" in source
         assert "offline" in source
         assert "ping_success or http_success" in source or "health_result" in source
@@ -67,26 +67,26 @@ class TestCoordinatorUnload:
         """Test that unload handles case where platforms were never loaded."""
         from custom_components.cable_modem_monitor import async_unload_entry
 
-        ***REMOVED*** Mock Home Assistant
+        # Mock Home Assistant
         mock_hass = Mock()
         mock_hass.data = {"cable_modem_monitor": {}}
 
-        ***REMOVED*** Mock config entry
+        # Mock config entry
         mock_entry = Mock()
         mock_entry.entry_id = "test_entry"
 
-        ***REMOVED*** Mock async_unload_platforms to raise ValueError (platforms never loaded)
+        # Mock async_unload_platforms to raise ValueError (platforms never loaded)
         mock_hass.config_entries.async_unload_platforms = AsyncMock(
             side_effect=ValueError("Config entry was never loaded!")
         )
 
-        ***REMOVED*** Mock service removal
+        # Mock service removal
         mock_hass.services.async_remove = Mock()
 
-        ***REMOVED*** Should handle the error gracefully and return True
+        # Should handle the error gracefully and return True
         result = await async_unload_entry(mock_hass, mock_entry)
 
-        ***REMOVED*** Should succeed even though platforms weren't loaded
+        # Should succeed even though platforms weren't loaded
         assert result is True
 
     @pytest.mark.asyncio
@@ -94,25 +94,25 @@ class TestCoordinatorUnload:
         """Test that unload removes coordinator data."""
         from custom_components.cable_modem_monitor import async_unload_entry
 
-        ***REMOVED*** Mock Home Assistant
+        # Mock Home Assistant
         mock_hass = Mock()
         entry_id = "test_entry"
         mock_hass.data = {"cable_modem_monitor": {entry_id: Mock()}}
 
-        ***REMOVED*** Mock config entry
+        # Mock config entry
         mock_entry = Mock()
         mock_entry.entry_id = entry_id
 
-        ***REMOVED*** Mock successful platform unload
+        # Mock successful platform unload
         mock_hass.config_entries.async_unload_platforms = AsyncMock(return_value=True)
 
-        ***REMOVED*** Mock service removal
+        # Mock service removal
         mock_hass.services.async_remove = Mock()
 
-        ***REMOVED*** Unload
+        # Unload
         result = await async_unload_entry(mock_hass, mock_entry)
 
-        ***REMOVED*** Should remove coordinator data
+        # Should remove coordinator data
         assert entry_id not in mock_hass.data["cable_modem_monitor"]
         assert result is True
 
@@ -128,7 +128,7 @@ class TestCoordinatorStateCheck:
 
         source = inspect.getsource(_perform_initial_refresh)
 
-        ***REMOVED*** Check for state check pattern
+        # Check for state check pattern
         assert "ConfigEntryState.SETUP_IN_PROGRESS" in source
         assert "async_config_entry_first_refresh" in source
         assert "async_refresh" in source
@@ -141,6 +141,6 @@ class TestCoordinatorStateCheck:
 
         source = inspect.getsource(_perform_initial_refresh)
 
-        ***REMOVED*** Check that both refresh methods are used conditionally
+        # Check that both refresh methods are used conditionally
         assert "else:" in source
-        ***REMOVED*** The pattern should check state and use appropriate refresh method
+        # The pattern should check state and use appropriate refresh method

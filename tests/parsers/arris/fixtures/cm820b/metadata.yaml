@@ -1,10 +1,10 @@
-***REMOVED*** Modem metadata - verified against official sources
-***REMOVED*** This file is read by scripts/generate_fixture_index.py
+# Modem metadata - verified against official sources
+# This file is read by scripts/generate_fixture_index.py
 
 release_date: 2011
-end_of_life: null ***REMOVED*** discontinued, but exact date is unknown
+end_of_life: null # discontinued, but exact date is unknown
 docsis_version: "3.0"
-protocol: HTML ***REMOVED*** HNAP = JSON API, HTML = web scraping
+protocol: HTML # HNAP = JSON API, HTML = web scraping
 chipset: Intel Puma 5
 isps:
   - Volya

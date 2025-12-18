@@ -1,4 +1,4 @@
-***REMOVED*** Getting Started with Cable Modem Monitor Development
+# Getting Started with Cable Modem Monitor Development
 
 **Choose your development environment and get coding in minutes**
 
@@ -6,26 +6,26 @@ This guide helps you set up your development environment and start contributing 
 
 ---
 
-***REMOVED******REMOVED*** TL;DR (30 seconds)
+## TL;DR (30 seconds)
 
-***REMOVED******REMOVED******REMOVED*** Want the fastest setup?
+### Want the fastest setup?
 ```bash
 git clone https://github.com/solentlabs/cable_modem_monitor.git
 cd cable_modem_monitor
-./scripts/setup.sh    ***REMOVED*** Installs dependencies in .venv
-code .                ***REMOVED*** Opens in VS Code - that's it!
+./scripts/setup.sh    # Installs dependencies in .venv
+code .                # Opens in VS Code - that's it!
 ```
 
 ✅ **Use Local Python when:** Writing code, running tests, quick iterations
 ✅ **You get:** Full IDE features, fastest test execution, native performance
 ❌ **You don't get:** Isolated environment, guaranteed consistency with CI
 
-***REMOVED******REMOVED******REMOVED*** Want zero setup hassles?
+### Want zero setup hassles?
 ```bash
 git clone https://github.com/solentlabs/cable_modem_monitor.git
 cd cable_modem_monitor
-code .                ***REMOVED*** Opens in VS Code
-***REMOVED*** Click "Reopen in Container" when prompted (wait 2-3 min first time)
+code .                # Opens in VS Code
+# Click "Reopen in Container" when prompted (wait 2-3 min first time)
 ```
 
 ✅ **Use Dev Container when:** Need exact CI environment, cross-platform team, want isolation
@@ -34,7 +34,7 @@ code .                ***REMOVED*** Opens in VS Code
 
 ---
 
-***REMOVED******REMOVED*** Quick Decision Tree
+## Quick Decision Tree
 
 ```
 Do you have dependency or environment issues?
@@ -48,7 +48,7 @@ Do you have dependency or environment issues?
 
 ---
 
-***REMOVED******REMOVED*** Development Environment Comparison
+## Development Environment Comparison
 
 | Feature | Local Python | Dev Container |
 |---------|--------------|---------------|
@@ -64,7 +64,7 @@ Do you have dependency or environment issues?
 
 ---
 
-***REMOVED******REMOVED*** Common Scenarios
+## Common Scenarios
 
 | I want to... | Use This | Why |
 |--------------|----------|-----|
@@ -78,16 +78,16 @@ Do you have dependency or environment issues?
 
 ---
 
-***REMOVED******REMOVED*** Setup Instructions
+## Setup Instructions
 
-***REMOVED******REMOVED******REMOVED*** Option 1: Local Python (Fastest)
+### Option 1: Local Python (Fastest)
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** Prerequisites
+#### Prerequisites
 - **Python 3.11+** installed on your system
 - **Git** for cloning the repository
 - **Make** (optional, but recommended)
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** Step-by-Step Setup
+#### Step-by-Step Setup
 
 1. **Clone the repository:**
    ```bash
@@ -97,9 +97,9 @@ Do you have dependency or environment issues?
 
 2. **Run the setup script:**
    ```bash
-   ./scripts/setup.sh    ***REMOVED*** Linux/Mac
-   ***REMOVED*** OR
-   bash scripts/setup.sh  ***REMOVED*** Windows (Git Bash)
+   ./scripts/setup.sh    # Linux/Mac
+   # OR
+   bash scripts/setup.sh  # Windows (Git Bash)
    ```
 
    This automatically:
@@ -136,9 +136,9 @@ Do you have dependency or environment issues?
 
 ---
 
-***REMOVED******REMOVED******REMOVED*** Option 2: Dev Container (Zero Setup)
+### Option 2: Dev Container (Zero Setup)
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** Prerequisites
+#### Prerequisites
 - **Docker Desktop** installed and running
   - Windows/Mac: [Download Docker Desktop](https://www.docker.com/products/docker-desktop)
   - Linux: [Install Docker Engine](https://docs.docker.com/engine/install/)
@@ -146,7 +146,7 @@ Do you have dependency or environment issues?
   - [Download VS Code](https://code.visualstudio.com/)
   - Install extension: `ms-vscode-remote.remote-containers`
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** Step-by-Step Setup
+#### Step-by-Step Setup
 
 1. **Clone the repository:**
    ```bash
@@ -190,9 +190,9 @@ Do you have dependency or environment issues?
 
 ---
 
-***REMOVED******REMOVED*** After Opening in VS Code
+## After Opening in VS Code
 
-***REMOVED******REMOVED******REMOVED*** What Notifications to Expect
+### What Notifications to Expect
 
 When you open the project in VS Code, you'll see notifications. Here's what to do:
 
@@ -204,11 +204,11 @@ When you open the project in VS Code, you'll see notifications. Here's what to d
 
 ---
 
-***REMOVED******REMOVED*** Validation & Testing
+## Validation & Testing
 
 No matter which environment you choose, validation works the same way:
 
-***REMOVED******REMOVED******REMOVED*** Quick Validation (30 seconds)
+### Quick Validation (30 seconds)
 
 Run before every commit to catch issues early:
 
@@ -221,13 +221,13 @@ This runs:
 - Format checking (Black)
 - Quick unit tests
 
-***REMOVED******REMOVED******REMOVED*** Full CI Validation (2-5 minutes)
+### Full CI Validation (2-5 minutes)
 
 Run before creating a pull request:
 
 ```bash
 make validate-ci
-***REMOVED*** OR
+# OR
 ./scripts/ci-check.sh
 ```
 
@@ -237,7 +237,7 @@ This runs:
 - Type checking (mypy)
 - Full test suite
 
-***REMOVED******REMOVED******REMOVED*** Using VS Code Tasks
+### Using VS Code Tasks
 
 Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac) → **"Tasks: Run Task"**:
 
@@ -249,47 +249,47 @@ Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac) → **"Tasks: Run Task"**:
 
 ---
 
-***REMOVED******REMOVED*** Switching Between Environments
+## Switching Between Environments
 
 **Good news:** You can switch anytime! Your code and git state are preserved.
 
-***REMOVED******REMOVED******REMOVED*** From Local Python to Dev Container
+### From Local Python to Dev Container
 
 1. Save your work
 2. Press `F1` → "Dev Containers: Reopen in Container"
 3. Wait for container to start (instant if previously built)
 4. Your code is unchanged, now running in container
 
-***REMOVED******REMOVED******REMOVED*** From Dev Container to Local Python
+### From Dev Container to Local Python
 
 1. Press `F1` → "Dev Containers: Reopen Folder Locally"
 2. Activate virtual environment:
    ```bash
-   source .venv/bin/activate  ***REMOVED*** Linux/Mac
-   .venv\Scripts\activate     ***REMOVED*** Windows
+   source .venv/bin/activate  # Linux/Mac
+   .venv\Scripts\activate     # Windows
    ```
 3. Your code is unchanged, now running locally
 
 ---
 
-***REMOVED******REMOVED*** Daily Workflow
+## Daily Workflow
 
-***REMOVED******REMOVED******REMOVED*** Starting Your Dev Session
+### Starting Your Dev Session
 
 **Local Python:**
 ```bash
 cd cable_modem_monitor
-source .venv/bin/activate  ***REMOVED*** Activate venv
-code .                     ***REMOVED*** Open in VS Code
+source .venv/bin/activate  # Activate venv
+code .                     # Open in VS Code
 ```
 
 **Dev Container:**
 ```bash
 cd cable_modem_monitor
-code .                     ***REMOVED*** VS Code will reopen in container automatically
+code .                     # VS Code will reopen in container automatically
 ```
 
-***REMOVED******REMOVED******REMOVED*** Making Changes
+### Making Changes
 
 1. **Create a feature branch:**
    ```bash
@@ -300,8 +300,8 @@ code .                     ***REMOVED*** VS Code will reopen in container automa
 
 3. **Run tests frequently:**
    ```bash
-   make test-quick      ***REMOVED*** Quick unit tests
-   ***REMOVED*** OR use VS Code Testing panel
+   make test-quick      # Quick unit tests
+   # OR use VS Code Testing panel
    ```
 
 4. **Validate before commit:**
@@ -326,11 +326,11 @@ code .                     ***REMOVED*** VS Code will reopen in container automa
 
 ---
 
-***REMOVED******REMOVED*** Testing Fresh Developer Experience (Optional)
+## Testing Fresh Developer Experience (Optional)
 
 **Only needed if you want to test the new developer onboarding experience.** Normal development doesn't require this.
 
-***REMOVED******REMOVED******REMOVED*** Cross-Platform Python Script (Recommended)
+### Cross-Platform Python Script (Recommended)
 
 ```bash
 python scripts/dev/fresh_start.py
@@ -349,9 +349,9 @@ After running, close VS Code and reopen with `code .` to see the fresh developer
 
 ---
 
-***REMOVED******REMOVED*** Troubleshooting
+## Troubleshooting
 
-***REMOVED******REMOVED******REMOVED*** "Cannot find Python interpreter"
+### "Cannot find Python interpreter"
 
 **Local Python:**
 1. Ensure you ran `./scripts/setup.sh`
@@ -362,7 +362,7 @@ After running, close VS Code and reopen with `code .` to see the fresh developer
 1. Ensure Docker is running: `docker ps`
 2. Rebuild container: `F1` → "Dev Containers: Rebuild Container"
 
-***REMOVED******REMOVED******REMOVED*** "Tests not showing in VS Code Testing panel"
+### "Tests not showing in VS Code Testing panel"
 
 1. **Check Python extension loaded:**
    - Bottom status bar should show Python version
@@ -377,34 +377,34 @@ After running, close VS Code and reopen with `code .` to see the fresh developer
    pip list | grep pytest
    ```
 
-***REMOVED******REMOVED******REMOVED*** "Import errors" or "Module not found"
+### "Import errors" or "Module not found"
 
 **Local Python:**
 ```bash
-***REMOVED*** Reinstall dependencies
+# Reinstall dependencies
 ./scripts/setup.sh
 ```
 
 **Dev Container:**
 ```bash
-***REMOVED*** Rebuild container
+# Rebuild container
 F1 → "Dev Containers: Rebuild Container"
 ```
 
-***REMOVED******REMOVED******REMOVED*** "Pre-commit hooks failing"
+### "Pre-commit hooks failing"
 
 ```bash
-***REMOVED*** Auto-fix most issues
+# Auto-fix most issues
 make format
 
-***REMOVED*** Check what's wrong
+# Check what's wrong
 make lint
 
-***REMOVED*** Update hooks
+# Update hooks
 pre-commit install --install-hooks
 ```
 
-***REMOVED******REMOVED******REMOVED*** "Docker container won't start"
+### "Docker container won't start"
 
 1. **Check Docker is running:**
    ```bash
@@ -418,7 +418,7 @@ pre-commit install --install-hooks
    F1 → "Dev Containers: Rebuild Container"
    ```
 
-***REMOVED******REMOVED******REMOVED*** "Which environment should I use?"
+### "Which environment should I use?"
 
 Ask yourself:
 - **Speed matters most?** → Local Python
@@ -429,9 +429,9 @@ Ask yourself:
 
 ---
 
-***REMOVED******REMOVED*** Platform-Specific Notes
+## Platform-Specific Notes
 
-***REMOVED******REMOVED******REMOVED*** Windows
+### Windows
 
 **Local Python:**
 - Use Git Bash or Windows Terminal
@@ -442,7 +442,7 @@ Ask yourself:
 - ✅ Works perfectly
 - ⚠️ Ensure WSL2 backend is enabled in Docker Desktop settings
 
-***REMOVED******REMOVED******REMOVED*** macOS
+### macOS
 
 **Local Python:**
 - ✅ Works perfectly
@@ -452,7 +452,7 @@ Ask yourself:
 - ✅ Works perfectly
 - ⚠️ Apple Silicon (M1/M2) may be slower on first build
 
-***REMOVED******REMOVED******REMOVED*** Linux
+### Linux
 
 **Local Python:**
 - ✅ Works perfectly (fastest)
@@ -463,12 +463,12 @@ Ask yourself:
 - ⚠️ Ensure your user is in the `docker` group:
   ```bash
   sudo usermod -aG docker $USER
-  ***REMOVED*** Log out and back in
+  # Log out and back in
   ```
 
 ---
 
-***REMOVED******REMOVED*** Getting Help
+## Getting Help
 
 **Setup Issues:**
 - Check [TROUBLESHOOTING.md](../TROUBLESHOOTING.md) for detailed troubleshooting
@@ -482,7 +482,7 @@ Ask yourself:
 
 ---
 
-***REMOVED******REMOVED*** Quick Command Reference
+## Quick Command Reference
 
 | Task | Command |
 |------|---------|
@@ -508,7 +508,7 @@ Ask yourself:
 
 ---
 
-***REMOVED******REMOVED*** Summary
+## Summary
 
 **Choose Local Python if:**
 - ⚡ Speed is your priority

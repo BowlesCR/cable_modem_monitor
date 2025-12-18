@@ -18,7 +18,7 @@ def get_version_from_const() -> str:
     with open(const_file_path) as f:
         for line in f:
             if line.startswith("VERSION"):
-                ***REMOVED*** Extracts the version number from a line like: VERSION = "2.4.1"
+                # Extracts the version number from a line like: VERSION = "2.4.1"
                 return line.split("=")[1].strip().strip('"')
 
     raise ValueError("VERSION constant not found in const.py")
@@ -37,7 +37,7 @@ def update_json_file(file_path: str, version: str) -> None:
 
     with open(file_path, "w") as f:
         json.dump(data, f, indent=2)
-        f.write("\n")  ***REMOVED*** Add a newline at the end of the file
+        f.write("\n")  # Add a newline at the end of the file
 
     print(f"Updated version in {file_path} to {version}")
 
@@ -49,11 +49,11 @@ def main() -> None:
 
     print(f"Syncing to version {version} from const.py...")
 
-    ***REMOVED*** Update manifest.json
+    # Update manifest.json
     manifest_path = os.path.join(project_root, "custom_components", "cable_modem_monitor", "manifest.json")
     update_json_file(manifest_path, version)
 
-    ***REMOVED*** Update hacs.json
+    # Update hacs.json
     hacs_path = os.path.join(project_root, "hacs.json")
     update_json_file(hacs_path, version)
 

@@ -31,7 +31,7 @@ from bs4 import BeautifulSoup
 _LOGGER = logging.getLogger(__name__)
 
 
-***REMOVED*** Resource types for categorization
+# Resource types for categorization
 RESOURCE_TYPE_HTML = "html"
 RESOURCE_TYPE_JS = "javascript"
 RESOURCE_TYPE_CSS = "stylesheet"
@@ -39,7 +39,7 @@ RESOURCE_TYPE_FRAGMENT = "fragment"
 RESOURCE_TYPE_API = "api"
 
 
-***REMOVED*** Default seed patterns for modem page discovery
+# Default seed patterns for modem page discovery
 DEFAULT_SEED_BASES = ["", "index", "status", "connection"]
 DEFAULT_EXTENSIONS = ["", ".html", ".htm", ".asp", ".php", ".jsp", ".cgi"]
 
@@ -73,17 +73,17 @@ def generate_seed_urls(
 
     for base in bases:
         for ext in extensions:
-            ***REMOVED*** Root path - only add once without extension
+            # Root path - only add once without extension
             if base == "":
                 if ext == "":
                     urls.append("/")
-                ***REMOVED*** Skip empty base with extensions (would create "/.html")
+                # Skip empty base with extensions (would create "/.html")
                 continue
             else:
-                ***REMOVED*** Regular pages - combine base + extension
+                # Regular pages - combine base + extension
                 urls.append(f"/{base}{ext}")
 
-    ***REMOVED*** Remove duplicates while preserving order
+    # Remove duplicates while preserving order
     seen = set()
     unique_urls = []
     for url in urls:
@@ -106,9 +106,9 @@ def normalize_url(url: str) -> str:
         Normalized URL string
     """
     parsed = urlparse(url)
-    ***REMOVED*** Remove fragment, normalize path (remove trailing slash unless it's root)
+    # Remove fragment, normalize path (remove trailing slash unless it's root)
     path = parsed.path.rstrip("/") if parsed.path != "/" else "/"
-    ***REMOVED*** Reconstruct without fragment
+    # Reconstruct without fragment
     normalized = urlunparse((parsed.scheme, parsed.netloc, path, parsed.params, parsed.query, ""))
     return normalized
 
@@ -129,28 +129,28 @@ def extract_links_from_html(html: str, base_url: str) -> set[str]:
     try:
         soup = BeautifulSoup(html, "html.parser")
 
-        ***REMOVED*** Find all <a> tags with href attributes
+        # Find all <a> tags with href attributes
         for link_tag in soup.find_all("a", href=True):
             href = link_tag["href"]
 
-            ***REMOVED*** Ensure href is a string (BeautifulSoup can return list for multi-value attrs)
+            # Ensure href is a string (BeautifulSoup can return list for multi-value attrs)
             if not isinstance(href, str):
                 continue
 
-            ***REMOVED*** Skip anchors, javascript, mailto, etc.
-            if href.startswith(("***REMOVED***", "javascript:", "mailto:")):
+            # Skip anchors, javascript, mailto, etc.
+            if href.startswith(("#", "javascript:", "mailto:")):
                 continue
 
-            ***REMOVED*** Convert relative URLs to absolute
+            # Convert relative URLs to absolute
             absolute_url = urljoin(base_url, href)
 
-            ***REMOVED*** Only include same-host links
+            # Only include same-host links
             parsed = urlparse(absolute_url)
             if parsed.netloc != base_host:
                 continue
 
-            ***REMOVED*** Skip binary/non-useful file extensions
-            ***REMOVED*** Note: .js and .css are NOT skipped - they may contain useful data or API info
+            # Skip binary/non-useful file extensions
+            # Note: .js and .css are NOT skipped - they may contain useful data or API info
             skip_extensions = [".jpg", ".png", ".gif", ".ico", ".pdf", ".zip", ".svg", ".woff", ".woff2", ".ttf"]
             if any(absolute_url.lower().endswith(ext) for ext in skip_extensions):
                 continue
@@ -184,7 +184,7 @@ def discover_links_from_pages(captured_pages: list[dict], base_url: str) -> set[
         except Exception as e:
             _LOGGER.debug("Error discovering links from %s: %s", page.get("url", "unknown"), e)
 
-    ***REMOVED*** Normalize all discovered links
+    # Normalize all discovered links
     normalized_links = {normalize_url(url) for url in all_links}
 
     _LOGGER.debug("Discovered %d unique links from %d pages", len(normalized_links), len(captured_pages))
@@ -205,16 +205,16 @@ def get_new_links_to_crawl(
     Returns:
         List of new URLs to crawl (up to max_new_links)
     """
-    ***REMOVED*** Find links not yet captured
+    # Find links not yet captured
     new_links = discovered_links - already_captured_urls
 
     _LOGGER.debug("Found %d new links to crawl (already have %d pages)", len(new_links), len(already_captured_urls))
 
-    ***REMOVED*** Return up to max_new_links
+    # Return up to max_new_links
     return list(new_links)[:max_new_links]
 
 
-def extract_all_resources_from_html(html: str, base_url: str) -> dict[str, set[str]]:  ***REMOVED*** noqa: C901
+def extract_all_resources_from_html(html: str, base_url: str) -> dict[str, set[str]]:  # noqa: C901
     """Extract ALL resources from HTML content for comprehensive capture.
 
     This goes beyond simple <a href> extraction to find:
@@ -257,7 +257,7 @@ def extract_all_resources_from_html(html: str, base_url: str) -> dict[str, set[s
     try:
         soup = BeautifulSoup(html, "html.parser")
 
-        ***REMOVED*** 1. Extract JavaScript files: <script src="...">
+        # 1. Extract JavaScript files: <script src="...">
         for script in soup.find_all("script", src=True):
             src = script.get("src", "")
             if isinstance(src, str) and src:
@@ -266,11 +266,11 @@ def extract_all_resources_from_html(html: str, base_url: str) -> dict[str, set[s
                     resources[RESOURCE_TYPE_JS].add(absolute)
                     _LOGGER.debug("Found JS: %s", absolute)
 
-        ***REMOVED*** 2. Extract CSS files: <link rel="stylesheet" href="...">
+        # 2. Extract CSS files: <link rel="stylesheet" href="...">
         for link in soup.find_all("link", href=True):
             href = link.get("href", "")
             rel: list[str] | str | None = link.get("rel") or []
-            ***REMOVED*** Check if it's a stylesheet or ends with .css
+            # Check if it's a stylesheet or ends with .css
             rel_list = rel if isinstance(rel, list) else [rel] if rel else []
             is_css = "stylesheet" in rel_list or (isinstance(href, str) and href.endswith(".css"))
             if isinstance(href, str) and href and is_css:
@@ -279,8 +279,8 @@ def extract_all_resources_from_html(html: str, base_url: str) -> dict[str, set[s
                     resources[RESOURCE_TYPE_CSS].add(absolute)
                     _LOGGER.debug("Found CSS: %s", absolute)
 
-        ***REMOVED*** 3. Extract jQuery .load() fragment URLs from inline scripts
-        ***REMOVED*** Pattern: .load("something.htm") or .load('something.htm')
+        # 3. Extract jQuery .load() fragment URLs from inline scripts
+        # Pattern: .load("something.htm") or .load('something.htm')
         load_pattern = r'\.load\s*\(\s*["\']([^"\']+)["\']'
         for match in re.finditer(load_pattern, html):
             fragment_url = match.group(1)
@@ -290,18 +290,18 @@ def extract_all_resources_from_html(html: str, base_url: str) -> dict[str, set[s
                     resources[RESOURCE_TYPE_FRAGMENT].add(absolute)
                     _LOGGER.debug("Found jQuery .load() fragment: %s", absolute)
 
-        ***REMOVED*** 4. Extract standard page links: <a href="...">
+        # 4. Extract standard page links: <a href="...">
         for link_tag in soup.find_all("a", href=True):
             href = link_tag.get("href", "")
             if not isinstance(href, str):
                 continue
-            ***REMOVED*** Skip anchors, javascript, mailto
-            if href.startswith(("***REMOVED***", "javascript:", "mailto:")):
+            # Skip anchors, javascript, mailto
+            if href.startswith(("#", "javascript:", "mailto:")):
                 continue
             absolute = make_absolute(href)
             if not is_same_host(absolute):
                 continue
-            ***REMOVED*** Skip binary files
+            # Skip binary files
             skip_ext = [".jpg", ".png", ".gif", ".ico", ".pdf", ".zip", ".svg", ".woff", ".woff2", ".ttf"]
             if any(absolute.lower().endswith(ext) for ext in skip_ext):
                 continue
@@ -323,7 +323,7 @@ def extract_all_resources_from_html(html: str, base_url: str) -> dict[str, set[s
     return resources
 
 
-def extract_urls_from_javascript(js_content: str, base_url: str) -> set[str]:  ***REMOVED*** noqa: C901
+def extract_urls_from_javascript(js_content: str, base_url: str) -> set[str]:  # noqa: C901
     """Extract page URLs from JavaScript content.
 
     Parses JS files to find URL references that wouldn't be visible in HTML.
@@ -356,10 +356,10 @@ def extract_urls_from_javascript(js_content: str, base_url: str) -> set[str]:  *
     def is_valid_url(url: str) -> bool:
         """Check if URL is valid and on same host."""
         parsed = urlparse(url)
-        ***REMOVED*** Same host or relative path
+        # Same host or relative path
         return parsed.netloc == base_host or parsed.netloc == ""
 
-    ***REMOVED*** Pattern 1: linkUrl: 'page.html' or linkUrl:'page.html' (menu configs)
+    # Pattern 1: linkUrl: 'page.html' or linkUrl:'page.html' (menu configs)
     for match in re.finditer(r"linkUrl\s*:\s*['\"]([^'\"]+)['\"]", js_content):
         path = match.group(1)
         if path:
@@ -368,7 +368,7 @@ def extract_urls_from_javascript(js_content: str, base_url: str) -> set[str]:  *
                 urls.add(absolute)
                 _LOGGER.debug("Found linkUrl in JS: %s", absolute)
 
-    ***REMOVED*** Pattern 2: href: 'page.html' or href='page.html'
+    # Pattern 2: href: 'page.html' or href='page.html'
     for match in re.finditer(r"href\s*[=:]\s*['\"]([^'\"]+\.html?)['\"]", js_content, re.IGNORECASE):
         path = match.group(1)
         if path:
@@ -376,7 +376,7 @@ def extract_urls_from_javascript(js_content: str, base_url: str) -> set[str]:  *
             if is_valid_url(absolute):
                 urls.add(absolute)
 
-    ***REMOVED*** Pattern 3: url: 'page.html' (AJAX/fetch calls)
+    # Pattern 3: url: 'page.html' (AJAX/fetch calls)
     for match in re.finditer(r"url\s*:\s*['\"]([^'\"]+\.(?:html?|asp|php|cgi))['\"]", js_content, re.IGNORECASE):
         path = match.group(1)
         if path:
@@ -384,16 +384,16 @@ def extract_urls_from_javascript(js_content: str, base_url: str) -> set[str]:  *
             if is_valid_url(absolute):
                 urls.add(absolute)
 
-    ***REMOVED*** Pattern 4: Generic .htm/.html string references (catches menu arrays etc.)
+    # Pattern 4: Generic .htm/.html string references (catches menu arrays etc.)
     for match in re.finditer(r"['\"]([a-zA-Z0-9_/-]+\.html?)['\"]", js_content, re.IGNORECASE):
         path = match.group(1)
-        ***REMOVED*** Skip obvious non-URLs (like file.html.template)
+        # Skip obvious non-URLs (like file.html.template)
         if path and not path.endswith(".html."):
             absolute = make_absolute(path)
             if is_valid_url(absolute):
                 urls.add(absolute)
 
-    ***REMOVED*** Pattern 5: window.location = 'page.html'
+    # Pattern 5: window.location = 'page.html'
     for match in re.finditer(r"(?:window\.)?location\s*=\s*['\"]([^'\"]+)['\"]", js_content):
         path = match.group(1)
         if path and not path.startswith("javascript:"):
@@ -425,23 +425,23 @@ def extract_api_endpoints_from_javascript(js_content: str, base_url: str) -> set
             return path
         return urljoin(base_url, path)
 
-    ***REMOVED*** Pattern 1: $.ajax({ url: '...' })
+    # Pattern 1: $.ajax({ url: '...' })
     for match in re.finditer(r"\$\.ajax\s*\(\s*\{[^}]*url\s*:\s*['\"]([^'\"]+)['\"]", js_content, re.DOTALL):
         endpoints.add(make_absolute(match.group(1)))
 
-    ***REMOVED*** Pattern 2: $.get('...') or $.post('...')
+    # Pattern 2: $.get('...') or $.post('...')
     for match in re.finditer(r"\$\.(?:get|post)\s*\(\s*['\"]([^'\"]+)['\"]", js_content):
         endpoints.add(make_absolute(match.group(1)))
 
-    ***REMOVED*** Pattern 3: fetch('...')
+    # Pattern 3: fetch('...')
     for match in re.finditer(r"fetch\s*\(\s*['\"]([^'\"]+)['\"]", js_content):
         endpoints.add(make_absolute(match.group(1)))
 
-    ***REMOVED*** Pattern 4: XMLHttpRequest .open('GET', '...')
+    # Pattern 4: XMLHttpRequest .open('GET', '...')
     for match in re.finditer(r"\.open\s*\(\s*['\"][^'\"]+['\"]\s*,\s*['\"]([^'\"]+)['\"]", js_content):
         endpoints.add(make_absolute(match.group(1)))
 
-    ***REMOVED*** Pattern 5: Common API path patterns
+    # Pattern 5: Common API path patterns
     for match in re.finditer(r"['\"](/(?:api|cgi-bin|data|json|xml)[^'\"]*)['\"]", js_content, re.IGNORECASE):
         endpoints.add(make_absolute(match.group(1)))
 
@@ -484,23 +484,23 @@ def discover_all_resources(
         if not content:
             continue
 
-        ***REMOVED*** Determine if this is HTML or JS based on content-type or URL
+        # Determine if this is HTML or JS based on content-type or URL
         is_javascript = "javascript" in content_type or url.endswith(".js") or content_type == "application/javascript"
 
         if is_javascript and include_js_content:
-            ***REMOVED*** Parse JavaScript for URLs and API endpoints
+            # Parse JavaScript for URLs and API endpoints
             js_urls = extract_urls_from_javascript(content, base_url)
             all_resources[RESOURCE_TYPE_HTML].update(js_urls)
 
             api_endpoints = extract_api_endpoints_from_javascript(content, base_url)
             all_resources[RESOURCE_TYPE_API].update(api_endpoints)
         else:
-            ***REMOVED*** Parse HTML for all resource types
+            # Parse HTML for all resource types
             html_resources = extract_all_resources_from_html(content, base_url)
             for resource_type, urls in html_resources.items():
                 all_resources[resource_type].update(urls)
 
-    ***REMOVED*** Log summary
+    # Log summary
     total = sum(len(urls) for urls in all_resources.values())
     _LOGGER.info(
         "Comprehensive discovery found %d resources: %d HTML, %d JS, %d CSS, %d fragments, %d API endpoints",

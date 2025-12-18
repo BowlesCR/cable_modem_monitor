@@ -62,13 +62,13 @@ def _select_parser(parsers: list, modem_choice: str):
     Returns either a single parser instance or list of all parsers.
     """
     if not modem_choice or modem_choice == "auto":
-        ***REMOVED*** Auto mode - return all parsers
+        # Auto mode - return all parsers
         return parsers
 
-    ***REMOVED*** Strip " *" suffix used to mark unverified parsers in the UI
+    # Strip " *" suffix used to mark unverified parsers in the UI
     modem_choice_clean = modem_choice.rstrip(" *")
 
-    ***REMOVED*** User selected specific parser - find and instantiate it
+    # User selected specific parser - find and instantiate it
     for parser_class in parsers:
         if parser_class.name == modem_choice_clean:
             _LOGGER.info("Using user-selected parser: %s", parser_class.name)
@@ -102,7 +102,7 @@ def _create_update_function(hass: HomeAssistant, scraper, health_monitor, host: 
         """Fetch data from the modem."""
         base_url = f"http://{host}"
 
-        ***REMOVED*** Check if parser supports ICMP ping (skip if not)
+        # Check if parser supports ICMP ping (skip if not)
         detection_info = scraper.get_detection_info()
         supports_icmp = detection_info.get("supports_icmp", True)
         health_result = await health_monitor.check_health(base_url, skip_ping=not supports_icmp)
@@ -110,7 +110,7 @@ def _create_update_function(hass: HomeAssistant, scraper, health_monitor, host: 
         try:
             data: dict[str, Any] = await hass.async_add_executor_job(scraper.get_modem_data)
 
-            ***REMOVED*** Add health monitoring data
+            # Add health monitoring data
             data["health_status"] = health_result.status
             data["health_diagnosis"] = health_result.diagnosis
             data["ping_success"] = health_result.ping_success
@@ -120,8 +120,8 @@ def _create_update_function(hass: HomeAssistant, scraper, health_monitor, host: 
             data["consecutive_failures"] = health_monitor.consecutive_failures
             data["supports_icmp"] = supports_icmp
 
-            ***REMOVED*** Create indexed lookups for O(1) channel access (performance optimization)
-            ***REMOVED*** This prevents O(n) linear searches in each sensor's native_value property
+            # Create indexed lookups for O(1) channel access (performance optimization)
+            # This prevents O(n) linear searches in each sensor's native_value property
             if "cable_modem_downstream" in data:
                 data["_downstream_by_id"] = {
                     int(ch.get("channel_id", ch.get("channel", idx + 1))): ch
@@ -133,7 +133,7 @@ def _create_update_function(hass: HomeAssistant, scraper, health_monitor, host: 
                     for idx, ch in enumerate(data["cable_modem_upstream"])
                 }
 
-            ***REMOVED*** Add parser metadata for sensor attributes (works without re-adding integration)
+            # Add parser metadata for sensor attributes (works without re-adding integration)
             detection_info = scraper.get_detection_info()
             if detection_info:
                 data["_parser_release_date"] = detection_info.get("release_date")
@@ -143,7 +143,7 @@ def _create_update_function(hass: HomeAssistant, scraper, health_monitor, host: 
 
             return data
         except Exception as err:
-            ***REMOVED*** If scraper fails but health check succeeded, return partial data
+            # If scraper fails but health check succeeded, return partial data
             if health_result.is_healthy:
                 _LOGGER.warning("Scraper failed but modem is responding to health checks: %s", err)
                 return {
@@ -169,7 +169,7 @@ async def _perform_initial_refresh(coordinator, entry: ConfigEntry) -> None:
     if entry.state == ConfigEntryState.SETUP_IN_PROGRESS:
         await coordinator.async_config_entry_first_refresh()
     else:
-        ***REMOVED*** During reload, just do a regular refresh
+        # During reload, just do a regular refresh
         await coordinator.async_refresh()
 
 
@@ -207,7 +207,7 @@ def _create_clear_history_handler(hass: HomeAssistant):
         days_to_keep = call.data.get("days_to_keep", 30)
         _LOGGER.info("Clearing cable modem history older than %s days", days_to_keep)
 
-        ***REMOVED*** Get all cable modem entities
+        # Get all cable modem entities
         entity_reg = er.async_get(hass)
         cable_modem_entities = [
             entity_entry.entity_id for entity_entry in entity_reg.entities.values() if entity_entry.platform == DOMAIN
@@ -219,7 +219,7 @@ def _create_clear_history_handler(hass: HomeAssistant):
 
         _LOGGER.info("Found %s cable modem entities to purge", len(cable_modem_entities))
 
-        ***REMOVED*** Clear history in database
+        # Clear history in database
         deleted = await hass.async_add_executor_job(_clear_db_history, hass, cable_modem_entities, days_to_keep)
 
         if deleted > 0:
@@ -364,7 +364,7 @@ def _create_generate_dashboard_handler(hass: HomeAssistant):
 
     def handle_generate_dashboard(call: ServiceCall) -> dict[str, Any]:
         """Handle the generate_dashboard service call."""
-        ***REMOVED*** Get options from call
+        # Get options from call
         opts = {
             "ds_power": call.data.get("include_downstream_power", True),
             "ds_snr": call.data.get("include_downstream_snr", True),
@@ -377,18 +377,18 @@ def _create_generate_dashboard_handler(hass: HomeAssistant):
         graph_hours = call.data.get("graph_hours", 24)
         titles = _get_dashboard_titles(call.data.get("short_titles", False))
 
-        ***REMOVED*** Get coordinator data to find actual channel IDs
+        # Get coordinator data to find actual channel IDs
         if DOMAIN not in hass.data or not hass.data[DOMAIN]:
-            return {"yaml": "***REMOVED*** Error: No cable modem configured"}
+            return {"yaml": "# Error: No cable modem configured"}
 
         entry_id = next(iter(hass.data[DOMAIN]))
         coordinator = hass.data[DOMAIN][entry_id]
         downstream_ids, upstream_ids = _get_channel_ids(coordinator)
 
-        ***REMOVED*** Build YAML
+        # Build YAML
         yaml_parts = [
-            "***REMOVED*** Cable Modem Dashboard",
-            "***REMOVED*** Copy from here, paste into: Dashboard > Add Card > Manual",
+            "# Cable Modem Dashboard",
+            "# Copy from here, paste into: Dashboard > Add Card > Manual",
             "type: vertical-stack",
             "cards:",
         ]
@@ -457,9 +457,9 @@ def _clear_db_history(hass: HomeAssistant, cable_modem_entities: list, days_to_k
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
 
-        ***REMOVED*** Find metadata IDs for entities
+        # Find metadata IDs for entities
         placeholders = ",".join("?" * len(cable_modem_entities))
-        query = f"SELECT metadata_id, entity_id FROM states_meta WHERE entity_id IN ({placeholders})"  ***REMOVED*** nosec B608
+        query = f"SELECT metadata_id, entity_id FROM states_meta WHERE entity_id IN ({placeholders})"  # nosec B608
         cursor.execute(query, cable_modem_entities)
         metadata_ids = [row[0] for row in cursor.fetchall()]
 
@@ -468,13 +468,13 @@ def _clear_db_history(hass: HomeAssistant, cable_modem_entities: list, days_to_k
             conn.close()
             return 0
 
-        ***REMOVED*** Delete old states
+        # Delete old states
         placeholders = ",".join("?" * len(metadata_ids))
-        query = f"DELETE FROM states WHERE metadata_id IN ({placeholders}) AND last_updated_ts < ?"  ***REMOVED*** nosec B608
+        query = f"DELETE FROM states WHERE metadata_id IN ({placeholders}) AND last_updated_ts < ?"  # nosec B608
         cursor.execute(query, (*metadata_ids, cutoff_ts))
         states_deleted = cursor.rowcount
 
-        ***REMOVED*** Delete old statistics
+        # Delete old statistics
         stats_deleted = _delete_statistics(cursor, cable_modem_entities, cutoff_ts)
 
         conn.commit()
@@ -498,7 +498,7 @@ def _clear_db_history(hass: HomeAssistant, cable_modem_entities: list, days_to_k
 def _delete_statistics(cursor, cable_modem_entities: list, cutoff_ts: float) -> int:
     """Delete statistics records (helper for _clear_db_history)."""
     placeholders = ",".join("?" * len(cable_modem_entities))
-    query = f"SELECT id FROM statistics_meta WHERE statistic_id IN ({placeholders})"  ***REMOVED*** nosec B608
+    query = f"SELECT id FROM statistics_meta WHERE statistic_id IN ({placeholders})"  # nosec B608
     cursor.execute(query, cable_modem_entities)
     stats_metadata_ids = [row[0] for row in cursor.fetchall()]
 
@@ -507,13 +507,13 @@ def _delete_statistics(cursor, cable_modem_entities: list, cutoff_ts: float) -> 
 
     placeholders = ",".join("?" * len(stats_metadata_ids))
 
-    ***REMOVED*** Delete from statistics table
-    query = f"DELETE FROM statistics WHERE metadata_id IN ({placeholders}) AND start_ts < ?"  ***REMOVED*** nosec B608
+    # Delete from statistics table
+    query = f"DELETE FROM statistics WHERE metadata_id IN ({placeholders}) AND start_ts < ?"  # nosec B608
     cursor.execute(query, (*stats_metadata_ids, cutoff_ts))
     stats_deleted: int = cursor.rowcount
 
-    ***REMOVED*** Delete from statistics_short_term table
-    query = f"DELETE FROM statistics_short_term WHERE metadata_id IN ({placeholders}) AND start_ts < ?"  ***REMOVED*** nosec B608
+    # Delete from statistics_short_term table
+    query = f"DELETE FROM statistics_short_term WHERE metadata_id IN ({placeholders}) AND start_ts < ?"  # nosec B608
     cursor.execute(query, (*stats_metadata_ids, cutoff_ts))
     stats_deleted += cursor.rowcount
 
@@ -524,16 +524,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Cable Modem Monitor from a config entry."""
     _LOGGER.info("Cable Modem Monitor version %s is starting", VERSION)
 
-    ***REMOVED*** Extract configuration
+    # Extract configuration
     host = entry.data[CONF_HOST]
     username = entry.data.get(CONF_USERNAME)
     password = entry.data.get(CONF_PASSWORD)
     scan_interval = entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
     modem_choice = entry.data.get(CONF_MODEM_CHOICE, "auto")
 
-    ***REMOVED*** Optimization: Only do full parser discovery if needed
+    # Optimization: Only do full parser discovery if needed
     if modem_choice and modem_choice != "auto":
-        ***REMOVED*** User selected specific parser - load only that one (fast path)
+        # User selected specific parser - load only that one (fast path)
         from .parsers import get_parser_by_name
 
         parser_class = await hass.async_add_executor_job(get_parser_by_name, modem_choice)
@@ -542,7 +542,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             selected_parser = parser_class()
             parser_name_hint = None
         else:
-            ***REMOVED*** Fallback to auto if parser not found
+            # Fallback to auto if parser not found
             _LOGGER.warning("Parser '%s' not found, falling back to auto discovery", modem_choice)
             from .parsers import get_parsers
 
@@ -550,14 +550,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             selected_parser = parsers
             parser_name_hint = entry.data.get(CONF_PARSER_NAME)
     else:
-        ***REMOVED*** Auto mode - need all parsers for discovery
+        # Auto mode - need all parsers for discovery
         from .parsers import get_parsers
 
         parsers = await hass.async_add_executor_job(get_parsers)
         selected_parser = parsers
         parser_name_hint = entry.data.get(CONF_PARSER_NAME)
 
-    ***REMOVED*** Create scraper
+    # Create scraper
     scraper = ModemScraper(
         host,
         username,
@@ -568,10 +568,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         verify_ssl=VERIFY_SSL,
     )
 
-    ***REMOVED*** Create health monitor
+    # Create health monitor
     health_monitor = await _create_health_monitor(hass)
 
-    ***REMOVED*** Create coordinator
+    # Create coordinator
     async_update_data = _create_update_function(hass, scraper, health_monitor, host)
     coordinator = DataUpdateCoordinator(
         hass,
@@ -582,26 +582,26 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         config_entry=entry,
     )
 
-    ***REMOVED*** Store scraper reference for cache invalidation after modem restart
-    coordinator.scraper = scraper  ***REMOVED*** type: ignore[attr-defined]
+    # Store scraper reference for cache invalidation after modem restart
+    coordinator.scraper = scraper  # type: ignore[attr-defined]
 
-    ***REMOVED*** Perform initial data fetch
+    # Perform initial data fetch
     await _perform_initial_refresh(coordinator, entry)
 
-    ***REMOVED*** Store coordinator
+    # Store coordinator
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
-    ***REMOVED*** Setup platforms
+    # Setup platforms
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
-    ***REMOVED*** Update device registry
+    # Update device registry
     _update_device_registry(hass, entry, host)
 
-    ***REMOVED*** Register update listener
+    # Register update listener
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
-    ***REMOVED*** Register services (only once)
+    # Register services (only once)
     if not hass.services.has_service(DOMAIN, SERVICE_CLEAR_HISTORY):
         hass.services.async_register(
             DOMAIN,
@@ -624,19 +624,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
-    ***REMOVED*** Try to unload platforms, but handle case where they were never loaded
+    # Try to unload platforms, but handle case where they were never loaded
     try:
         unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     except ValueError as err:
-        ***REMOVED*** Platforms were never loaded (setup failed before platforms were added)
+        # Platforms were never loaded (setup failed before platforms were added)
         _LOGGER.debug("Platforms were never loaded for entry %s: %s", entry.entry_id, err)
-        unload_ok = True  ***REMOVED*** Consider it successful since there's nothing to unload
+        unload_ok = True  # Consider it successful since there's nothing to unload
 
     if unload_ok:
-        ***REMOVED*** Clean up coordinator data
+        # Clean up coordinator data
         hass.data[DOMAIN].pop(entry.entry_id, None)
 
-        ***REMOVED*** Unregister services if this is the last entry
+        # Unregister services if this is the last entry
         if not hass.data[DOMAIN]:
             hass.services.async_remove(DOMAIN, SERVICE_CLEAR_HISTORY)
             hass.services.async_remove(DOMAIN, SERVICE_GENERATE_DASHBOARD)

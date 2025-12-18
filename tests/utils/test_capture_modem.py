@@ -5,7 +5,7 @@ from __future__ import annotations
 import gzip
 import json
 
-***REMOVED*** Import the module components we want to test
+# Import the module components we want to test
 import sys
 import tempfile
 from pathlib import Path
@@ -152,7 +152,7 @@ class TestFilterAndCompressHar:
         assert compressed_path.suffix == ".gz"
         assert compressed_path.exists()
 
-        ***REMOVED*** Verify it's valid gzip
+        # Verify it's valid gzip
         with gzip.open(compressed_path, "rt") as f:
             data = json.load(f)
             assert "log" in data
@@ -161,7 +161,7 @@ class TestFilterAndCompressHar:
         """Compressed file should be smaller than original."""
         from capture_modem import filter_and_compress_har
 
-        ***REMOVED*** Create a HAR with repetitive content (compresses well)
+        # Create a HAR with repetitive content (compresses well)
         large_content = "<html>" + "test " * 10000 + "</html>"
         har = self._create_har(
             [
@@ -191,7 +191,7 @@ class TestFilterAndCompressHar:
             self._write_har(har, Path(f.name))
             _, stats = filter_and_compress_har(Path(f.name))
 
-        ***REMOVED*** image.png should be filtered even with query params
+        # image.png should be filtered even with query params
         assert stats["filtered_entries"] == 1
 
     def test_stats_contain_all_fields(self):

@@ -1,4 +1,4 @@
-***REMOVED*** VS Code Dev Container Guide
+# VS Code Dev Container Guide
 
 **Comprehensive reference for dev container development**
 
@@ -10,7 +10,7 @@ This guide shows you how to use VS Code's Dev Container feature for a consistent
 
 ---
 
-***REMOVED******REMOVED*** Why Use Dev Containers?
+## Why Use Dev Containers?
 
 ✅ **Cross-platform**: Works identically on Windows, Mac, Linux, Chrome OS
 ✅ **Zero setup**: All dependencies installed automatically
@@ -20,7 +20,7 @@ This guide shows you how to use VS Code's Dev Container feature for a consistent
 
 ---
 
-***REMOVED******REMOVED*** Prerequisites
+## Prerequisites
 
 1. **Docker Desktop** installed and running
    - Windows/Mac: [Download Docker Desktop](https://www.docker.com/products/docker-desktop)
@@ -34,9 +34,9 @@ This guide shows you how to use VS Code's Dev Container feature for a consistent
 
 ---
 
-***REMOVED******REMOVED*** Quick Start (First Time)
+## Quick Start (First Time)
 
-***REMOVED******REMOVED******REMOVED*** Step 1: Open in Dev Container
+### Step 1: Open in Dev Container
 
 1. Clone the repository:
    ```bash
@@ -59,7 +59,7 @@ This guide shows you how to use VS Code's Dev Container feature for a consistent
    - Installs CodeQL CLI
    - Shows "✅ Dev environment ready!" when complete
 
-***REMOVED******REMOVED******REMOVED*** Step 2: Start Home Assistant
+### Step 2: Start Home Assistant
 
 1. **Press `Ctrl+Shift+P`** (or `Cmd+Shift+P` on Mac)
 2. Type **"Tasks: Run Task"**
@@ -67,7 +67,7 @@ This guide shows you how to use VS Code's Dev Container feature for a consistent
 4. Wait ~30 seconds for Home Assistant to start
 5. Open **http://localhost:8123** in your browser
 
-***REMOVED******REMOVED******REMOVED*** Step 3: Run Tests
+### Step 3: Run Tests
 
 **Option A: Using VS Code Testing Panel**
 - Click the **Testing** icon in the sidebar (beaker icon)
@@ -79,9 +79,9 @@ This guide shows you how to use VS Code's Dev Container feature for a consistent
 
 ---
 
-***REMOVED******REMOVED*** Daily Workflow
+## Daily Workflow
 
-***REMOVED******REMOVED******REMOVED*** Starting Your Dev Session
+### Starting Your Dev Session
 
 1. **Open VS Code** in the project folder
 2. If not already in container: `F1` → "Dev Containers: Reopen in Container"
@@ -89,14 +89,14 @@ This guide shows you how to use VS Code's Dev Container feature for a consistent
 4. **Make your changes**
 5. **Run tests** using the Testing panel
 
-***REMOVED******REMOVED******REMOVED*** After Making Changes
+### After Making Changes
 
 **Reload your integration code:**
 - `Ctrl+Shift+P` → "Tasks: Run Task" → **"HA: Restart (Reload Integration)"**
 - This restarts Home Assistant and picks up your code changes
 - Your HA configuration/data is preserved
 
-***REMOVED******REMOVED******REMOVED*** Cleaning Up
+### Cleaning Up
 
 **Stop Home Assistant when done:**
 - `Ctrl+Shift+P` → "Tasks: Run Task" → **"HA: Stop"**
@@ -107,17 +107,17 @@ This guide shows you how to use VS Code's Dev Container feature for a consistent
 
 ---
 
-***REMOVED******REMOVED*** Available VS Code Tasks
+## Available VS Code Tasks
 
 Press `Ctrl+Shift+P` → **"Tasks: Run Task"** to see all options:
 
-***REMOVED******REMOVED******REMOVED*** Testing & Code Quality
+### Testing & Code Quality
 - **Run All Tests** - Run full pytest suite
 - **Run Quick Tests** - Run fast subset of tests
 - **Lint Code** - Check code style with Ruff
 - **Format Code** - Auto-format with Black
 
-***REMOVED******REMOVED******REMOVED*** Home Assistant Management
+### Home Assistant Management
 - **HA: Start (Fresh)** - Start HA with clean state (no old data)
 - **HA: Start (Keep Data)** - Start HA keeping your users/config
 - **HA: Restart (Reload Integration)** - Reload your integration code
@@ -127,9 +127,9 @@ Press `Ctrl+Shift+P` → **"Tasks: Run Task"** to see all options:
 
 ---
 
-***REMOVED******REMOVED*** Understanding the Test Panel
+## Understanding the Test Panel
 
-***REMOVED******REMOVED******REMOVED*** Pytest Tests (Should Appear Automatically)
+### Pytest Tests (Should Appear Automatically)
 
 **Location in VS Code**: Testing icon (beaker) in sidebar
 
@@ -144,7 +144,7 @@ The VS Code Testing panel shows all **pytest** tests from the `tests/` directory
 2. Manually refresh: Testing panel → Refresh button
 3. Check Python interpreter: Bottom-left status bar should show `/usr/local/bin/python3.12`
 
-***REMOVED******REMOVED******REMOVED*** CodeQL Tests (Different System)
+### CodeQL Tests (Different System)
 
 **CodeQL tests are NOT shown in the Testing panel** - this is normal!
 
@@ -156,9 +156,9 @@ CodeQL uses its own testing system:
 
 ---
 
-***REMOVED******REMOVED*** Troubleshooting
+## Troubleshooting
 
-***REMOVED******REMOVED******REMOVED*** "Container failed to start"
+### "Container failed to start"
 
 **Check Docker is running:**
 ```bash
@@ -169,7 +169,7 @@ If you get an error, start Docker Desktop.
 **Rebuild container:**
 - `F1` → "Dev Containers: Rebuild Container"
 
-***REMOVED******REMOVED******REMOVED*** "Tests not showing in Testing panel"
+### "Tests not showing in Testing panel"
 
 1. **Check Python extension loaded:**
    - Bottom status bar should show Python version
@@ -184,7 +184,7 @@ If you get an error, start Docker Desktop.
    - Run: `pip list | grep pytest`
    - Should show pytest and pytest-homeassistant-custom-component
 
-***REMOVED******REMOVED******REMOVED*** "Port 8123 already in use"
+### "Port 8123 already in use"
 
 **Stop any running Home Assistant containers:**
 ```bash
@@ -194,7 +194,7 @@ docker stop ha-cable-modem-test
 
 Or use the task: `Ctrl+Shift+P` → "HA: Stop"
 
-***REMOVED******REMOVED******REMOVED*** "Changes not reflected in Home Assistant"
+### "Changes not reflected in Home Assistant"
 
 **Restart to reload code:**
 - `Ctrl+Shift+P` → "Tasks: Run Task" → "HA: Restart (Reload Integration)"
@@ -202,7 +202,7 @@ Or use the task: `Ctrl+Shift+P` → "HA: Stop"
 **Or restart fresh:**
 - `Ctrl+Shift+P` → "Tasks: Run Task" → "HA: Start (Fresh)"
 
-***REMOVED******REMOVED******REMOVED*** "Seeing old data/users in Home Assistant"
+### "Seeing old data/users in Home Assistant"
 
 **This is intentional!** HA keeps state in `test-ha-config/` folder.
 
@@ -212,7 +212,7 @@ Or use the task: `Ctrl+Shift+P` → "HA: Stop"
 
 ---
 
-***REMOVED******REMOVED*** What's Inside the Dev Container?
+## What's Inside the Dev Container?
 
 When you open in container, you get:
 
@@ -233,31 +233,31 @@ When you open in container, you get:
 
 ---
 
-***REMOVED******REMOVED*** Cross-Platform Notes
+## Cross-Platform Notes
 
-***REMOVED******REMOVED******REMOVED*** Windows 11 + Docker Desktop
+### Windows 11 + Docker Desktop
 
 ✅ Works perfectly
 ⚠️ Ensure WSL2 backend is enabled in Docker Desktop settings
 💡 Use Windows Terminal for best experience
 
-***REMOVED******REMOVED******REMOVED*** macOS
+### macOS
 
 ✅ Works perfectly
 ⚠️ Docker Desktop may request permissions - grant them
 💡 Apple Silicon (M1/M2) works but may be slower on first build
 
-***REMOVED******REMOVED******REMOVED*** Linux
+### Linux
 
 ✅ Works perfectly
 💡 Fastest performance
 ⚠️ Ensure your user is in the `docker` group:
 ```bash
 sudo usermod -aG docker $USER
-***REMOVED*** Then log out and back in
+# Then log out and back in
 ```
 
-***REMOVED******REMOVED******REMOVED*** Chrome OS Flex
+### Chrome OS Flex
 
 ✅ Works via Linux (Beta) container
 ⚠️ Enable Linux development environment first
@@ -266,7 +266,7 @@ sudo usermod -aG docker $USER
 
 ---
 
-***REMOVED******REMOVED*** Advanced: Working Outside the Container
+## Advanced: Working Outside the Container
 
 If you prefer not to use dev containers:
 
@@ -274,8 +274,8 @@ If you prefer not to use dev containers:
 2. **Create virtual environment**:
    ```bash
    python3 -m venv .venv
-   source .venv/bin/activate  ***REMOVED*** Linux/Mac
-   .venv\Scripts\activate     ***REMOVED*** Windows
+   source .venv/bin/activate  # Linux/Mac
+   .venv\Scripts\activate     # Windows
    ```
 3. **Install dependencies**:
    ```bash
@@ -285,23 +285,23 @@ If you prefer not to use dev containers:
 
 ---
 
-***REMOVED******REMOVED*** Tips & Best Practices
+## Tips & Best Practices
 
-***REMOVED******REMOVED******REMOVED*** 1. Start Fresh Often
+### 1. Start Fresh Often
 
 When testing, use **"HA: Start (Fresh)"** to ensure clean state:
 - No cached data from previous runs
 - Fresh Home Assistant installation
 - Easier to reproduce issues
 
-***REMOVED******REMOVED******REMOVED*** 2. Keep Data for UI Testing
+### 2. Keep Data for UI Testing
 
 Use **"HA: Start (Keep Data)"** when:
 - Testing UI changes
 - Don't want to recreate users/config
 - Continuing work from previous session
 
-***REMOVED******REMOVED******REMOVED*** 3. Watch Logs During Development
+### 3. Watch Logs During Development
 
 Use **"HA: View Logs"** task to see real-time output:
 - See integration loading
@@ -310,7 +310,7 @@ Use **"HA: View Logs"** task to see real-time output:
 
 Press `Ctrl+C` to stop watching logs.
 
-***REMOVED******REMOVED******REMOVED*** 4. Run Tests Before Committing
+### 4. Run Tests Before Committing
 
 Before pushing code:
 1. Run **"Run All Tests"** task
@@ -318,7 +318,7 @@ Before pushing code:
 3. Fix any failures
 4. Pre-commit hooks will auto-format on commit
 
-***REMOVED******REMOVED******REMOVED*** 5. Clean Up Weekly
+### 5. Clean Up Weekly
 
 Run **"HA: Clean All Data (Reset)"** weekly to:
 - Remove stale test data
@@ -327,7 +327,7 @@ Run **"HA: Clean All Data (Reset)"** weekly to:
 
 ---
 
-***REMOVED******REMOVED*** Getting Help
+## Getting Help
 
 **Dev Container Issues:**
 - [VS Code Dev Containers Documentation](https://code.visualstudio.com/docs/devcontainers/containers)
@@ -343,7 +343,7 @@ Run **"HA: Clean All Data (Reset)"** weekly to:
 
 ---
 
-***REMOVED******REMOVED*** Summary: Quick Command Reference
+## Summary: Quick Command Reference
 
 | Task | Command |
 |------|---------|

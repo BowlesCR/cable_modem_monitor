@@ -1,8 +1,8 @@
-***REMOVED*** Netgear C3700-100NAS Test Fixtures
+# Netgear C3700-100NAS Test Fixtures
 
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -16,7 +16,7 @@
 
 Complete HTML capture from a Netgear C3700-100NAS cable modem/router.
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
@@ -34,7 +34,7 @@ Complete HTML capture from a Netgear C3700-100NAS cable modem/router.
 | **Captured By** | @kwschulz |
 | **Capture Date** | November 2025 |
 
-***REMOVED******REMOVED*** Capture Details
+## Capture Details
 
 - **Initial Capture**: 2025-11-23 (modem offline, 21 pages)
 - **DocsisStatus Update**: 2025-11-23 (modem online, channel data added)
@@ -42,24 +42,24 @@ Complete HTML capture from a Netgear C3700-100NAS cable modem/router.
 - **Total Pages**: 22 HTML pages (including DocsisStatus.htm)
 - **Source**: Home Assistant diagnostics data
 
-***REMOVED******REMOVED*** Directory Structure
+## Directory Structure
 
 ```
 c3700/
-├── DocsisStatus.htm      ***REMOVED*** Core - channel data (parser essential)
-├── RouterStatus.htm      ***REMOVED*** Core - system info (parser essential)
-├── index.htm             ***REMOVED*** Core - detection/navigation
-├── DashBoard.htm         ***REMOVED*** Core - overview
-├── DocsisOffline.htm     ***REMOVED*** Core - offline state
-├── root.html             ***REMOVED*** Core - auth redirect
+├── DocsisStatus.htm      # Core - channel data (parser essential)
+├── RouterStatus.htm      # Core - system info (parser essential)
+├── index.htm             # Core - detection/navigation
+├── DashBoard.htm         # Core - overview
+├── DocsisOffline.htm     # Core - offline state
+├── root.html             # Core - auth redirect
 ├── README.md
-└── extended/             ***REMOVED*** Reference pages (not used by parser)
+└── extended/             # Reference pages (not used by parser)
     ├── WirelessSettings.htm
     ├── GuestNetwork.htm
     └── ... (17 files)
 ```
 
-***REMOVED******REMOVED*** Core Fixtures (Root)
+## Core Fixtures (Root)
 
 These files are used by the parser for detection, data extraction, and state handling:
 
@@ -72,7 +72,7 @@ These files are used by the parser for detection, data extraction, and state han
 | `DocsisOffline.htm` | 4KB | Offline state handling |
 | `root.html` | 0.4KB | Auth redirect (401) |
 
-***REMOVED******REMOVED*** Extended Fixtures (`extended/`)
+## Extended Fixtures (`extended/`)
 
 Reference pages for future features. Not used by parser but useful for documentation:
 
@@ -84,13 +84,13 @@ Reference pages for future features. Not used by parser but useful for documenta
 | **Logs** | Logs.htm, eventLog.htm, Diagnostics.htm |
 | **Other** | BackupSettings.htm, SpeedTest.htm, document.htm |
 
-***REMOVED******REMOVED*** Channel Data Format
+## Channel Data Format
 
-***REMOVED******REMOVED******REMOVED*** DocsisStatus.htm Structure
+### DocsisStatus.htm Structure
 
 The C3700 embeds channel data in JavaScript functions with pipe-delimited values:
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** Downstream Channels
+#### Downstream Channels
 ```javascript
 function InitDsTableTagValue() {
     var tagValueList = '8|1|Locked|QAM256|1|345000000 Hz|2.9|46.3|289|320|2|Locked|QAM256|2|...';
@@ -111,7 +111,7 @@ function InitDsTableTagValue() {
 8. Corrected errors (count)
 9. Uncorrected errors (count)
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** Upstream Channels
+#### Upstream Channels
 ```javascript
 function InitUsTableTagValue() {
     var tagValueList = '4|1|Locked|ATDMA|1|5120000|30840000 Hz|47.5|2|Not Locked|ATDMA|...';
@@ -130,7 +130,7 @@ function InitUsTableTagValue() {
 6. Frequency (Hz, with " Hz" suffix)
 7. Power level (dBmV)
 
-***REMOVED******REMOVED******REMOVED*** Actual Channel Data (from live modem)
+### Actual Channel Data (from live modem)
 
 **Downstream:** 8 channels active (out of 24 possible)
 - All 8 channels: **Locked** with QAM256 modulation
@@ -147,9 +147,9 @@ function InitUsTableTagValue() {
 
 **Note:** The diagnostics page shows 4 upstream channels configured, but only channel 1 has an active lock and valid frequency/power readings. This is typical when the ISP has configured bonding but not all channels are in use.
 
-***REMOVED******REMOVED*** Important Notes
+## Important Notes
 
-***REMOVED******REMOVED******REMOVED*** Multi-Page Parsing Requirement
+### Multi-Page Parsing Requirement
 
 The C3700 requires **multi-page parsing** to extract channel data:
 1. Initial page load: `/index.htm` or `/RouterStatus.htm` (detection and system info)
@@ -157,7 +157,7 @@ The C3700 requires **multi-page parsing** to extract channel data:
 
 The parser's `parse()` method accepts `session` and `base_url` parameters to fetch DocsisStatus.htm automatically
 
-***REMOVED******REMOVED******REMOVED*** Parser Implementation
+### Parser Implementation
 The parser (`custom_components/cable_modem_monitor/parsers/netgear/c3700.py`) is fully
 implemented and ready to parse channel data. It follows the same JavaScript extraction
 pattern as the Netgear CM600:
@@ -165,7 +165,7 @@ pattern as the Netgear CM600:
 - `InitUsTableTagValue()` function for upstream channels
 - Pipe-delimited data format
 
-***REMOVED******REMOVED******REMOVED*** Usage for Testing
+### Usage for Testing
 These fixtures can be used for:
 1. **Parser detection testing** - Verify C3700 is correctly identified
 2. **System info extraction** - Test hardware/firmware version parsing
@@ -173,55 +173,55 @@ These fixtures can be used for:
 4. **Future development** - Reference for implementing additional features
 5. **Device mocking** - Create mock responses for integration testing
 
-***REMOVED******REMOVED******REMOVED*** Key Differences from CM600
+### Key Differences from CM600
 - Uses `.htm` extensions instead of `.asp`
 - Combo modem/router (not modem-only)
 - Additional router-specific pages (WiFi, LAN, WAN, Guest Network)
 - More complex UI with extensive JavaScript
 
-***REMOVED******REMOVED*** Mock Server Implementation
+## Mock Server Implementation
 
 These fixtures are ideal for creating a **mock HTTP server** for testing. Benefits:
 
-***REMOVED******REMOVED******REMOVED*** Why Mock Server?
+### Why Mock Server?
 1. **Integration Testing** - Test full request/response cycle without real hardware
 2. **State Simulation** - Test online/offline transitions, channel degradation, etc.
 3. **Error Scenarios** - Simulate timeouts, auth failures, partial data
 4. **CI/CD Testing** - Run full integration tests in GitHub Actions
 5. **Development Speed** - No need for physical modem during development
 
-***REMOVED******REMOVED******REMOVED*** Implementation Approach
+### Implementation Approach
 
 ```python
-***REMOVED*** Example mock server structure
+# Example mock server structure
 class C3700MockServer:
     """Mock HTTP server simulating Netgear C3700 behavior."""
 
     def __init__(self, fixtures_path: str, state: str = "online"):
         self.fixtures = self._load_fixtures(fixtures_path)
-        self.state = state  ***REMOVED*** "online", "offline", "degraded"
+        self.state = state  # "online", "offline", "degraded"
         self.auth_required = True
 
     def handle_request(self, path: str, auth: tuple) -> tuple[int, str]:
         """Return status code and HTML content for requested path."""
-        ***REMOVED*** Simulate authentication
+        # Simulate authentication
         if self.auth_required and path not in ["/", "/index.htm"]:
             if not auth or auth != ("admin", "password"):
                 return (401, self.fixtures["root.html"])
 
-        ***REMOVED*** State-based responses
+        # State-based responses
         if self.state == "offline" and path == "/DocsisStatus.htm":
             return (200, self.fixtures["DocsisOffline.htm"])
 
         if path == "/DocsisStatus.htm" and self.state == "online":
             return (200, self.fixtures["DocsisStatus.htm"])
 
-        ***REMOVED*** Default fixture lookup
+        # Default fixture lookup
         filename = path.lstrip("/") or "index.htm"
         return (200, self.fixtures.get(filename, "404 Not Found"))
 ```
 
-***REMOVED******REMOVED******REMOVED*** Test Scenarios to Implement
+### Test Scenarios to Implement
 1. **Normal Operation** - Online modem with all channels locked
 2. **Partial Service** - Some channels locked, others degraded
 3. **Offline State** - No DOCSIS connection
@@ -229,17 +229,17 @@ class C3700MockServer:
 5. **Network Issues** - Slow responses, connection resets
 6. **Data Variations** - Different channel counts, error patterns
 
-***REMOVED******REMOVED******REMOVED*** Integration with pytest
+### Integration with pytest
 
 ```python
 @pytest.fixture
 def c3700_mock_server():
     """Provide mock C3700 server for integration tests."""
     server = C3700MockServer(fixtures_path="tests/parsers/netgear/fixtures/c3700")
-    ***REMOVED*** Start server on random port
-    ***REMOVED*** Return base_url
+    # Start server on random port
+    # Return base_url
     yield base_url
-    ***REMOVED*** Cleanup
+    # Cleanup
 
 def test_full_integration_with_mock(c3700_mock_server):
     """Test full scraper + parser flow with mock server."""
@@ -252,7 +252,7 @@ def test_full_integration_with_mock(c3700_mock_server):
     assert data["downstream_channel_count"] == 8
 ```
 
-***REMOVED******REMOVED*** Related Files
+## Related Files
 
 - Parser: `custom_components/cable_modem_monitor/parsers/netgear/c3700.py`
 - Tests: `tests/parsers/netgear/test_c3700.py`

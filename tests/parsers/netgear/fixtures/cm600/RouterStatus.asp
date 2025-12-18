@@ -55,35 +55,35 @@ var DodIndex = 1;
         // Nick put bodyInit in here!!
         BodyInit();
 
-        $('***REMOVED***INT_setup').click(function(ev){
+        $('#INT_setup').click(function(ev){
             parent.loadPage2("BasicSettingsBottom.htm");
         });
 
-        $('***REMOVED***wireless_setup').click(function(ev){
+        $('#wireless_setup').click(function(ev){
             parent.loadPage2("WirelessSettings.htm");
         });
 
-        $('***REMOVED***wireless_setup_5G').click(function(ev){
+        $('#wireless_setup_5G').click(function(ev){
             parent.loadPage2("WirelessSettings.htm");
         });
 
-        $('***REMOVED***guest_setup1').click(function(ev){
+        $('#guest_setup1').click(function(ev){
             parent.loadPage2("GuestNetwork.htm");
         });
 
-        $('***REMOVED***guest_setup2').click(function(ev){
+        $('#guest_setup2').click(function(ev){
             parent.loadPage2("GuestNetwork.htm");
         });
 
-        $('***REMOVED***guest_setup_5G').click(function(ev){
+        $('#guest_setup_5G').click(function(ev){
             parent.loadPage2("GuestNetwork.htm");
         });
 
-        $('***REMOVED***LAN_setup').click(function(ev){
+        $('#LAN_setup').click(function(ev){
             parent.loadPage2("WLG_adv_dual_band.htm");
         });
 
-        $('***REMOVED***Moblile_setup').click(function(ev){
+        $('#Moblile_setup').click(function(ev){
             parent.loadPage2("MobileBroadbandSettings.htm");
         });
 
@@ -117,37 +117,37 @@ var DodIndex = 1;
         });
         /* checking long string */
         if(trim($('.header-text1').text()).length>=36 | trim($('.header-text2').text()).length>=36){
-               $('***REMOVED***box-header-table1').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table2').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table1').removeClass("box-header-table");
-               $('***REMOVED***box-header-table2').removeClass("box-header-table");
+               $('#box-header-table1').addClass("box-header-table-large");
+               $('#box-header-table2').addClass("box-header-table-large");
+               $('#box-header-table1').removeClass("box-header-table");
+               $('#box-header-table2').removeClass("box-header-table");
         }
 
 /*override
         if($('.header-text3').text().length>=36 | $('.header-text4').text().length>=36){
-               $('***REMOVED***box-header-table3').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table4').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table3').removeClass("box-header-table");
-               $('***REMOVED***box-header-table4').removeClass("box-header-table");
+               $('#box-header-table3').addClass("box-header-table-large");
+               $('#box-header-table4').addClass("box-header-table-large");
+               $('#box-header-table3').removeClass("box-header-table");
+               $('#box-header-table4').removeClass("box-header-table");
         }
 */
         if(trim($('.header-text3').text()).length>=36 | trim($('.header-text41').text()).length>=36 | $('.header-text42').text().length>=36){
-               $('***REMOVED***box-header-table3').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table41').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table42').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table3').removeClass("box-header-table");
-               $('***REMOVED***box-header-table41').removeClass("box-header-table");
-               $('***REMOVED***box-header-table42').removeClass("box-header-table");
+               $('#box-header-table3').addClass("box-header-table-large");
+               $('#box-header-table41').addClass("box-header-table-large");
+               $('#box-header-table42').addClass("box-header-table-large");
+               $('#box-header-table3').removeClass("box-header-table");
+               $('#box-header-table41').removeClass("box-header-table");
+               $('#box-header-table42').removeClass("box-header-table");
         }
         if(trim($('.header-text5').text()).length>=36 | trim($('.header-text6').text()).length>=36){
-               $('***REMOVED***box-header-table5').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table6').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table5').removeClass("box-header-table");
-               $('***REMOVED***box-header-table6').removeClass("box-header-table");
+               $('#box-header-table5').addClass("box-header-table-large");
+               $('#box-header-table6').addClass("box-header-table-large");
+               $('#box-header-table5').removeClass("box-header-table");
+               $('#box-header-table6').removeClass("box-header-table");
         }
         if(trim($('.header-text7').text()).length>=36){
-               $('***REMOVED***box-header-table7').addClass("box-header-table-large");
-               $('***REMOVED***box-header-table7').removeClass("box-header-table");
+               $('#box-header-table7').addClass("box-header-table-large");
+               $('#box-header-table7').removeClass("box-header-table");
         }
 
 /* Workaround to fix buttons can't work in IE6/IE7 */
@@ -191,9 +191,9 @@ var DodIndex = 1;
     function loadhelp(fname,anchname)
     {
         if ((loadhelp.arguments.length == 1 ) || (anchname == "" ))
-            $('***REMOVED***page').attr("src",fname+"_h.htm");
+            $('#page').attr("src",fname+"_h.htm");
         else
-            $('***REMOVED***page').attr("src",fname+"_h.htm***REMOVED***"  + anchname);
+            $('#page').attr("src",fname+"_h.htm#"  + anchname);
     }
 
 
@@ -201,54 +201,54 @@ var DodIndex = 1;
 function adjustPageLayout()
 {
     adjustButtonSize();
-        var table_height1 = $('***REMOVED***page-table1')[0].clientHeight+"px";
-        var table_height2 = $('***REMOVED***page-table2')[0].clientHeight+"px";
-        var table_height3 = $('***REMOVED***page-table3')[0].clientHeight+"px";
-//         var table_height4 = $('***REMOVED***page-table4')[0].clientHeight+"px";
-        var table_height41 = $('***REMOVED***page-table41')[0].clientHeight+"px";
-        var table_height42 = $('***REMOVED***page-table42')[0].clientHeight+"px";
-        var table_height5 = $('***REMOVED***page-table5')[0].clientHeight+"px";
-        var table_height6 = $('***REMOVED***page-table6')[0].clientHeight+"px";
+        var table_height1 = $('#page-table1')[0].clientHeight+"px";
+        var table_height2 = $('#page-table2')[0].clientHeight+"px";
+        var table_height3 = $('#page-table3')[0].clientHeight+"px";
+//         var table_height4 = $('#page-table4')[0].clientHeight+"px";
+        var table_height41 = $('#page-table41')[0].clientHeight+"px";
+        var table_height42 = $('#page-table42')[0].clientHeight+"px";
+        var table_height5 = $('#page-table5')[0].clientHeight+"px";
+        var table_height6 = $('#page-table6')[0].clientHeight+"px";
 
-        if($('***REMOVED***page-table1')[0].clientHeight >=  $('***REMOVED***page-table2')[0].clientHeight)
-            $('***REMOVED***page-table2').css("height",table_height1);
+        if($('#page-table1')[0].clientHeight >=  $('#page-table2')[0].clientHeight)
+            $('#page-table2').css("height",table_height1);
         else
-            $('***REMOVED***page-table1').css("height",table_height2);
+            $('#page-table1').css("height",table_height2);
 
 /*
-        if($('***REMOVED***page-table3')[0].clientHeight >=  $('***REMOVED***page-table4')[0].clientHeight)
-            $('***REMOVED***page-table4').css("height",table_height3);
+        if($('#page-table3')[0].clientHeight >=  $('#page-table4')[0].clientHeight)
+            $('#page-table4').css("height",table_height3);
         else
-            $('***REMOVED***page-table3').css("height",table_height4);
+            $('#page-table3').css("height",table_height4);
 */
-        if($('***REMOVED***page-table3')[0].clientHeight >=  $('***REMOVED***page-table41')[0].clientHeight)
-            $('***REMOVED***page-table41').css("height",table_height3);
+        if($('#page-table3')[0].clientHeight >=  $('#page-table41')[0].clientHeight)
+            $('#page-table41').css("height",table_height3);
         else
-            $('***REMOVED***page-table3').css("height",table_height41);
+            $('#page-table3').css("height",table_height41);
 
-        if($('***REMOVED***page-table3')[0].clientHeight >=  $('***REMOVED***page-table42')[0].clientHeight)
-            $('***REMOVED***page-table42').css("height",table_height3);
+        if($('#page-table3')[0].clientHeight >=  $('#page-table42')[0].clientHeight)
+            $('#page-table42').css("height",table_height3);
         else
-            $('***REMOVED***page-table3').css("height",table_height42);
+            $('#page-table3').css("height",table_height42);
 
-        if($('***REMOVED***page-table5')[0].clientHeight >=  $('***REMOVED***page-table6')[0].clientHeight)
-            $('***REMOVED***page-table6').css("height",table_height5);
+        if($('#page-table5')[0].clientHeight >=  $('#page-table6')[0].clientHeight)
+            $('#page-table6').css("height",table_height5);
         else
-            $('***REMOVED***page-table5').css("height",table_height6);
+            $('#page-table5').css("height",table_height6);
 }
 
 function adjustButtonSize()
 {
-    if($('***REMOVED***reboot')[0].scrollHeight > 15 ||
-        $('***REMOVED***statistics')[0].scrollHeight > 15 ||
-        $('***REMOVED***status')[0].scrollHeight > 15)
+    if($('#reboot')[0].scrollHeight > 15 ||
+        $('#statistics')[0].scrollHeight > 15 ||
+        $('#status')[0].scrollHeight > 15)
     {
-        $($('***REMOVED***reboot')[0].parentNode).addClass('page-table-button-large');
-        $($('***REMOVED***reboot')[0].parentNode).removeClass('page-table-button');
-        $($('***REMOVED***statistics')[0].parentNode).addClass('page-table-button-large');
-        $($('***REMOVED***statistics')[0].parentNode).removeClass('page-table-button');
-        $($('***REMOVED***status')[0].parentNode).addClass('page-table-button-large');
-        $($('***REMOVED***status')[0].parentNode).removeClass('page-table-button');
+        $($('#reboot')[0].parentNode).addClass('page-table-button-large');
+        $($('#reboot')[0].parentNode).removeClass('page-table-button');
+        $($('#statistics')[0].parentNode).addClass('page-table-button-large');
+        $($('#statistics')[0].parentNode).removeClass('page-table-button');
+        $($('#status')[0].parentNode).addClass('page-table-button-large');
+        $($('#status')[0].parentNode).removeClass('page-table-button');
     }
 }
 
@@ -424,7 +424,7 @@ function openStatisticsWindow()
 	var gui_region = document.getElementsByName("curlang")[0];
 	//var gui_region = form.curlang.value;
 
-	// fix mantis***REMOVED***12486
+	// fix mantis#12486
 	if(isUnsupportedMobileBrowser())
 	{
 		top.$.blockUI({
@@ -445,7 +445,7 @@ function openStatisticsWindow()
 		   openDataSubWin('Statistic.htm',winoptions);
 		   showDisablePage(parent.document.getElementById("diablePage"),datSubWinVar,parent.document.body.offsetWidth,parent.document.body.offsetHeight);
 		}
-		// Chuck 20140902 fix mantis***REMOVED***12486
+		// Chuck 20140902 fix mantis#12486
 		if(!isOnBeforeUnloadSupported())
 		{
 			detectPoppedWindowStatus();
@@ -463,7 +463,7 @@ function reloadPage()
     {
         window.location.reload();
         parent.document.getElementById("diablePage").style.display = "none";
-		// fix mantis***REMOVED***12486
+		// fix mantis#12486
 		if(!isOnBeforeUnloadSupported())
 		{
 			clearInterval(intervalId);
@@ -471,7 +471,7 @@ function reloadPage()
     }
 }
 
-// fix mantis***REMOVED***12486
+// fix mantis#12486
 function closeIframe()
 {
 	top.$.unblockUI();
@@ -492,14 +492,14 @@ function modifyBtnCss()
             img.style.position = "absolute";
             img.src = "img/page-table-button.gif";
             if(txt == "Reboot" || txt == "Connection Status")
-                img.style.left = 165+(txt == "Connection Status" ? $('***REMOVED***cableInformation')[0].offsetWidth:0)+"px";
+                img.style.left = 165+(txt == "Connection Status" ? $('#cableInformation')[0].offsetWidth:0)+"px";
             else
-                img.style.left = 25+(txt=="Show Statistics" ? $('***REMOVED***cableInformation')[0].offsetWidth:0)+"px";
+                img.style.left = 25+(txt=="Show Statistics" ? $('#cableInformation')[0].offsetWidth:0)+"px";
             if(txt == "Reboot" || txt == "Factory reset"){
-                img.style.top = $('***REMOVED***cableInformation')[0].offsetHeight-32-$('.page-table-bottom-2')[0].offsetHeight+"px";
+                img.style.top = $('#cableInformation')[0].offsetHeight-32-$('.page-table-bottom-2')[0].offsetHeight+"px";
             }
             else{
-            	  img.style.top = $('***REMOVED***internetPort')[0].offsetHeight-32-$('.page-table-bottom-2')[0].offsetHeight+"px";
+            	  img.style.top = $('#internetPort')[0].offsetHeight-32-$('.page-table-bottom-2')[0].offsetHeight+"px";
             }
             img.style.width = "137px";
             img.style.height = "32px";
@@ -512,8 +512,8 @@ function loadSettings()
     var cf=document.forms[0];
 
     adjustPageLayout();
- 	parent.$('***REMOVED***page2').css("visibility","visible");
-    parent.$('***REMOVED***page_contain2').removeClass('main-page-contain-loading');
+ 	parent.$('#page2').css("visibility","visible");
+    parent.$('#page_contain2').removeClass('main-page-contain-loading');
     modifyBtnCss();
 /*
 	if (cf.enable_apmode.value == 1)
@@ -614,11 +614,11 @@ function InitUpdateView(tagValues)
     /* Internet Gateway */
     if ((tagValues[12] == "0.0.0.0") || (tagValues[12] == "---.---.---.---"))
     {
-        $("***REMOVED***Internet").attr("src", "img/error-icon.gif");
+        $("#Internet").attr("src", "img/error-icon.gif");
     }
     else
     {
-        $("***REMOVED***Internet").attr("src", "img/good-icon.gif");
+        $("#Internet").attr("src", "img/good-icon.gif");
     }
 
     document.getElementById("InternetGateway").innerHTML = tagValues[12];
@@ -682,11 +682,11 @@ function InitUpdateView(tagValues)
 
     /* 2.4G SSID */
     document.getElementById("GuestNetworkName1").innerHTML = piplineDecode(tagValues[31]);
-    $('***REMOVED***GuestNetworkName1_B').html(piplineDecode(tagValues[31]));
+    $('#GuestNetworkName1_B').html(piplineDecode(tagValues[31]));
 
     /* 2.4G Wireless AP */
     document.getElementById("GuestNetworkAP1").innerHTML = tagValues[32];
-    $('***REMOVED***GuestNetworkAP1_B').html(tagValues[32]);
+    $('#GuestNetworkAP1_B').html(tagValues[32]);
 
     /* 5G SSID */
     document.getElementById("GuestNetworkName1_an").innerHTML = piplineDecode(tagValues[33]);
@@ -708,11 +708,11 @@ function InitUpdateView(tagValues)
 
     /* 2.4G Guest1 Broadcast */
     document.getElementById("GuestNetworkBroadcast1").innerHTML = tagValues[39];
-    $('***REMOVED***GuestNetworkBroadcast1_B').html(tagValues[39]);
+    $('#GuestNetworkBroadcast1_B').html(tagValues[39]);
 
     /* 2.4G Guest1 Allow Guest */
     document.getElementById("GuestNetworkAllow1").innerHTML = tagValues[40];
-    $('***REMOVED***GuestNetworkAllow1_B').html(tagValues[40]);
+    $('#GuestNetworkAllow1_B').html(tagValues[40]);
 
     /* 5G Guest1 Broadcast */
     document.getElementById("GuestNetworkBroadcast1_an").innerHTML = tagValues[41];
@@ -724,71 +724,71 @@ function InitUpdateView(tagValues)
     // 2.4G
     if (tagValues[21] == "Off")
     {
-        $("***REMOVED***WiFi24G").attr("src", "img/error-icon.gif");
+        $("#WiFi24G").attr("src", "img/error-icon.gif");
     }
     else
     {
         if (tagValues[43] == "none")
         {
-            $("***REMOVED***WiFi24G").attr("src", "img/warning-icon.gif");
+            $("#WiFi24G").attr("src", "img/warning-icon.gif");
         }
         else
         {
-            $("***REMOVED***WiFi24G").attr("src", "img/good-icon.gif");
+            $("#WiFi24G").attr("src", "img/good-icon.gif");
         }
     }
 
     // 5G
     if (tagValues[28] == "Off")
     {
-        $("***REMOVED***WiFi5G").attr("src", "img/error-icon.gif");
+        $("#WiFi5G").attr("src", "img/error-icon.gif");
     }
     else
     {
         if (tagValues[44] == "none")
         {
-            $("***REMOVED***WiFi5G").attr("src", "img/warning-icon.gif");
+            $("#WiFi5G").attr("src", "img/warning-icon.gif");
         }
         else
         {
-            $("***REMOVED***WiFi5G").attr("src", "img/good-icon.gif");
+            $("#WiFi5G").attr("src", "img/good-icon.gif");
         }
     }
 
     // 2.4G WiFi Guest
     if (tagValues[32] == "Off" || tagValues[21] == "Off")
     {
-        $("***REMOVED***WiFi24GGDual").attr("src", "img/error-icon.gif");
-        $("***REMOVED***WiFi24GG").attr("src", "img/error-icon.gif");
+        $("#WiFi24GGDual").attr("src", "img/error-icon.gif");
+        $("#WiFi24GG").attr("src", "img/error-icon.gif");
     }
     else
     {
         if (tagValues[45] == "none")
         {
-            $("***REMOVED***WiFi24GGDual").attr("src", "img/warning-icon.gif");
-            $("***REMOVED***WiFi24GG").attr("src", "img/warning-icon.gif");
+            $("#WiFi24GGDual").attr("src", "img/warning-icon.gif");
+            $("#WiFi24GG").attr("src", "img/warning-icon.gif");
         }
         else
         {
-            $("***REMOVED***WiFi24GGDual").attr("src", "img/good-icon.gif");
-            $("***REMOVED***WiFi24GG").attr("src", "img/good-icon.gif");
+            $("#WiFi24GGDual").attr("src", "img/good-icon.gif");
+            $("#WiFi24GG").attr("src", "img/good-icon.gif");
         }
     }
 
     // 5G WiFi Guest
     if (tagValues[34] == "Off" || tagValues[28] == "Off")
     {
-        $("***REMOVED***WiFi5GG").attr("src", "img/error-icon.gif");
+        $("#WiFi5GG").attr("src", "img/error-icon.gif");
     }
     else
     {
         if (tagValues[46] == "none")
         {
-            $("***REMOVED***WiFi5GG").attr("src", "img/warning-icon.gif");
+            $("#WiFi5GG").attr("src", "img/warning-icon.gif");
         }
         else
         {
-            $("***REMOVED***WiFi5GG").attr("src", "img/good-icon.gif");
+            $("#WiFi5GG").attr("src", "img/good-icon.gif");
         }
     }
 
@@ -796,29 +796,29 @@ function InitUpdateView(tagValues)
     // Support dual band
     if (tagValues[47] == '1')
     {
-        $("***REMOVED***setting_5G1").css ('display', 'none');
-        $("***REMOVED***setting_5G2").css ('display', 'block');
-        $("***REMOVED***setting_5G3").css ('display', 'block');
+        $("#setting_5G1").css ('display', 'none');
+        $("#setting_5G2").css ('display', 'block');
+        $("#setting_5G3").css ('display', 'block');
         // GuestNetwork supported
         if (tagValues[57] == "1")
         {
-            $("***REMOVED***setting_5G1").css ('display', 'none');  // Guest 2.4G
-            $("***REMOVED***setting_5G2").css ('display', 'block');  // WiFi 5G
-            $("***REMOVED***setting_5G3").css ('display', 'none');  // Guest 5G
+            $("#setting_5G1").css ('display', 'none');  // Guest 2.4G
+            $("#setting_5G2").css ('display', 'block');  // WiFi 5G
+            $("#setting_5G3").css ('display', 'none');  // Guest 5G
         }
     }
     else
     {
-        $("***REMOVED***setting_5G1").css ('display', 'block');
-        $("***REMOVED***setting_5G2").css ('display', 'none');
-        $("***REMOVED***setting_5G3").css ('display', 'none');
+        $("#setting_5G1").css ('display', 'block');
+        $("#setting_5G2").css ('display', 'none');
+        $("#setting_5G3").css ('display', 'none');
 
         // GuestNetwork supported
         if (tagValues[57] == "1")
         {
-            $("***REMOVED***setting_5G1").css ('display', 'none');  // Guest 2.4G
-            $("***REMOVED***setting_5G2").css ('display', 'none');  // WiFi 5G
-            $("***REMOVED***setting_5G3").css ('display', 'none');  // Guest 5G
+            $("#setting_5G1").css ('display', 'none');  // Guest 2.4G
+            $("#setting_5G2").css ('display', 'none');  // WiFi 5G
+            $("#setting_5G3").css ('display', 'none');  // Guest 5G
         }
     }
 
@@ -826,50 +826,50 @@ function InitUpdateView(tagValues)
     if (tagValues[58] == "0")
     {
         // Bridge mode
-        $("***REMOVED***internetPort").css ('display', 'none');  // Internet Port box
+        $("#internetPort").css ('display', 'none');  // Internet Port box
         // Is not GuestNetwork supported
         if (tagValues[60] == "0")
         {
-            $("***REMOVED***setting_Wifi24G").css ('display', 'none');  // WiFi 2.4G part
-            $("***REMOVED***setting_5G3").css ('display', 'none');  // WiFi 5G part
+            $("#setting_Wifi24G").css ('display', 'none');  // WiFi 2.4G part
+            $("#setting_5G3").css ('display', 'none');  // WiFi 5G part
         }
 		//Eason, 20130121, bridge mode do not show LAN information
-		$('***REMOVED***LANMAC').html("--:--:--:--:--:--");
-		$('***REMOVED***LANIPMASK').html("---.---.---.---");
-		$('***REMOVED***LANDHCP').html("Off");
+		$('#LANMAC').html("--:--:--:--:--:--");
+		$('#LANIPMASK').html("---.---.---.---");
+		$('#LANDHCP').html("Off");
     }
 
     if (tagValues[48] == '1')
     {
-        $("***REMOVED***setting_Mobile").css ('display', 'block');
+        $("#setting_Mobile").css ('display', 'block');
     }
     else
     {
-        $("***REMOVED***setting_Mobile").css ('display', 'none');
+        $("#setting_Mobile").css ('display', 'none');
     }
 
     if (tagValues[48] == "1")
     {
-        $("***REMOVED***Attached3G").attr("src", "img/good-icon.gif");
+        $("#Attached3G").attr("src", "img/good-icon.gif");
     }
     else
     {
-        $("***REMOVED***Attached3G").attr("src", "img/error-icon.gif");
+        $("#Attached3G").attr("src", "img/error-icon.gif");
     }
 
-    $('***REMOVED***ModemIdentity').html(tagValues[49]);
-    $('***REMOVED***ModemSWVersion').html(tagValues[50]);
-    $('***REMOVED***ModemDriverVersion').html(tagValues[51]);
-    $('***REMOVED***ModemStatus').html(tagValues[52]);
-    $('***REMOVED***ModemIMSI').html(tagValues[53]);
-    $('***REMOVED***ModemIMEI').html(tagValues[54]);
-    $('***REMOVED***ModemOperator').html(tagValues[55]);
-    $('***REMOVED***ModemNetworkMode').html(tagValues[56]);
+    $('#ModemIdentity').html(tagValues[49]);
+    $('#ModemSWVersion').html(tagValues[50]);
+    $('#ModemDriverVersion').html(tagValues[51]);
+    $('#ModemStatus').html(tagValues[52]);
+    $('#ModemIMSI').html(tagValues[53]);
+    $('#ModemIMEI').html(tagValues[54]);
+    $('#ModemOperator').html(tagValues[55]);
+    $('#ModemNetworkMode').html(tagValues[56]);
 
     if (tagValues[59] == "0")
     {
-        $("***REMOVED***setting_5G1").hide();  // Guest 2.4G
-        $("***REMOVED***setting_5G3").hide();  // Guest 5G
+        $("#setting_5G1").hide();  // Guest 2.4G
+        $("#setting_5G3").hide();  // Guest 5G
     }
 
 }
@@ -885,21 +885,21 @@ function initBridgeView(statusTag)
 {
     if(statusTag == "1")
     {
-        $("***REMOVED***LANPort-table").hide();
+        $("#LANPort-table").hide();
     }
 }
 function hiddenWifi(statusTag)
 {
     if(statusTag == "1")
     {
-        $("***REMOVED***setting_Wifi24G").hide();
-        $("***REMOVED***setting_5G3").hide();
+        $("#setting_Wifi24G").hide();
+        $("#setting_5G3").hide();
     }
 }
 function ChangeResize()
 {
     if(navigator.userAgent.indexOf("MSIE") != -1){
-        $(parent.document).find('***REMOVED***page2').height(parseInt(parent.document.getElementById("page_contain2").clientHeight));
+        $(parent.document).find('#page2').height(parseInt(parent.document.getElementById("page_contain2").clientHeight));
     }
     $(".scroll-pane").css("height",document.documentElement.clientHeight+"px");
     if( !navigator.userAgent.match(/Android/i)
@@ -922,7 +922,7 @@ function ChangeResize()
 
 </head>
 
-<body onload="loadSettings();ChangeResize();" onResize="ChangeResize()" bgcolor="***REMOVED***E5E5E5" style="width:640px;margin:0px;padding:0px">
+<body onload="loadSettings();ChangeResize();" onResize="ChangeResize()" bgcolor="#E5E5E5" style="width:640px;margin:0px;padding:0px">
     <form action='/goform/RouterStatus' method="post">
         <input type="hidden" value="">
         <div id="scroll-pane" class="scroll-pane" style="height:420px;width:670px;overflow:auto;scrolling:auto">
@@ -943,11 +943,11 @@ function ChangeResize()
                                         </tr>
                                     </table>
                                 </div>
-                                <table style="width:305px;background-color:***REMOVED***FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid ***REMOVED***D0D0D0">
+                                <table style="width:305px;background-color:#FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid #D0D0D0">
                                     <tr align="left" valign="bottom">
                                         <td>
-                                            <table id="page-table1" class="page-table" style="width:300px;background-color:***REMOVED***FFFFFF;height:150px">
-                                                <tr style="height:6px;background-color:***REMOVED***FFFFFF">
+                                            <table id="page-table1" class="page-table" style="width:300px;background-color:#FFFFFF;height:150px">
+                                                <tr style="height:6px;background-color:#FFFFFF">
                                                     <td colspan="2" class="basic-table-seperate-border">
                                                     </td>
                                                 </tr>
@@ -1084,14 +1084,14 @@ function ChangeResize()
                                                     </td>
                                                 </tr>
                                                 <tr class="basic-text" style="align:center">
-                                                    <td class="basic-table-seperate-border" align="center" style="height:20px;background-color:***REMOVED***FFFFFF;padding-top:5px;width:50%">
+                                                    <td class="basic-table-seperate-border" align="center" style="height:20px;background-color:#FFFFFF;padding-top:5px;width:50%">
                                                         <button type="button" class="page-table-button" style="float:center;padding-left:15px" onClick="advButtonClick(3);" onMouseOver="changeCursorPointer();" onMouseOut="changeCursorDefault();">
                                                             <div id="reset" style="width:125px;word-break:break-all;">
                                                                 Factory reset
                                                             </div>
                                                         </button>
                                                     </td>
-                                                    <td class="basic-table-seperate-border" align="center" style="height:20px;background-color:***REMOVED***FFFFFF;padding-top:5px;width:50%">
+                                                    <td class="basic-table-seperate-border" align="center" style="height:20px;background-color:#FFFFFF;padding-top:5px;width:50%">
                                                         <button type="button" class="page-table-button" style="float:center;padding-left:4px" onClick="advButtonClick(2);" onMouseOver="changeCursorPointer();" onMouseOut="changeCursorDefault();">
                                                             <div id="reboot" style="width:125px;word-break:break-all;">
                                                                 Reboot
@@ -1125,11 +1125,11 @@ function ChangeResize()
                                         </tr>
                                     </table>
                                 </div>
-                                <table style="width:305px;background-color:***REMOVED***FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid ***REMOVED***D0D0D0">
+                                <table style="width:305px;background-color:#FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid #D0D0D0">
                                     <tr align="left" valign="bottom">
                                         <td>
-                                            <table id="page-table2" class="page-table" style="width:300px;background-color:***REMOVED***FFFFFF;">
-                                                <tr style="height:6px;background-color:***REMOVED***FFFFFF">
+                                            <table id="page-table2" class="page-table" style="width:300px;background-color:#FFFFFF;">
+                                                <tr style="height:6px;background-color:#FFFFFF">
                                                     <td colspan="2" class="basic-table-seperate-border">
                                                     </td>
                                                 </tr>
@@ -1255,14 +1255,14 @@ function ChangeResize()
                                                     </td>
                                                 </tr>
                                                 <tr class="basic-text" style="align:center">
-                                                    <td class="basic-table-seperate-border" align="center" style="height:20px;background-color:***REMOVED***FFFFFF;padding-top:5px;width:50%">
+                                                    <td class="basic-table-seperate-border" align="center" style="height:20px;background-color:#FFFFFF;padding-top:5px;width:50%">
                                                         <button type="button" class="page-table-button" style="float:left;padding-left:8px" onClick="advButtonClick(0);" onMouseOver="changeCursorPointer();" onMouseOut="changeCursorDefault();">
                                                             <div id="statistics" style="width:125px;word-break:break-all;">
                                                                 Show Statistics
                                                             </div>
                                                         </button>
                                                       </td>
-                                                      <td class="basic-table-seperate-border" align="center" style="height:20px;background-color:***REMOVED***FFFFFF;padding-top:5px;width:50%">
+                                                      <td class="basic-table-seperate-border" align="center" style="height:20px;background-color:#FFFFFF;padding-top:5px;width:50%">
                                                         <button type="button" class="page-table-button" style="float:left;padding-left:4px" onClick="advButtonClick(1);" onMouseOver="changeCursorPointer();" onMouseOut="changeCursorDefault();" id="ConnStatus" name="ConnStatus">
                                                             <div id="status" style="width:125px;word-break:break-all;">
                                                                 Connection Status
@@ -1316,11 +1316,11 @@ function ChangeResize()
                                                     </tr>
                                                 </table>
                                             </div>
-                                            <table style="width:305px;background-color:***REMOVED***FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid ***REMOVED***D0D0D0">
+                                            <table style="width:305px;background-color:#FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid #D0D0D0">
                                                 <tr align="left" valign="bottom">
                                                     <td>
-                                                        <table id="page-table3" class="page-table" style="background-color:***REMOVED***FFFFFF;width:300px;height:150px">
-                                                            <tr style="height:6px;background-color:***REMOVED***FFFFFF">
+                                                        <table id="page-table3" class="page-table" style="background-color:#FFFFFF;width:300px;height:150px">
+                                                            <tr style="height:6px;background-color:#FFFFFF">
                                                                 <td colspan="2" class="basic-table-seperate-border">
                                                                 </td>
                                                             </tr>
@@ -1453,13 +1453,13 @@ function ChangeResize()
                                                     </tr>
                                                 </table>
                                             </div>
-                                            <table style="width:305px;background-color:***REMOVED***FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid ***REMOVED***D0D0D0">
+                                            <table style="width:305px;background-color:#FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid #D0D0D0">
                                                 <tr align="left" valign="bottom">
                                                     <td>
-                                                        <!-- <table id="page-table4" class="page-table" style="background-color:***REMOVED***FFFFFF;width:300px;height:150px">
+                                                        <!-- <table id="page-table4" class="page-table" style="background-color:#FFFFFF;width:300px;height:150px">
                                                         -->
-                                                        <table id="page-table41" class="page-table" style="background-color:***REMOVED***FFFFFF;width:300px;height:150px">
-                                                            <tr style="height:6px;background-color:***REMOVED***FFFFFF">
+                                                        <table id="page-table41" class="page-table" style="background-color:#FFFFFF;width:300px;height:150px">
+                                                            <tr style="height:6px;background-color:#FFFFFF">
                                                                 <td colspan="2" class="basic-table-seperate-border">
                                                                 </td>
                                                             </tr>
@@ -1588,13 +1588,13 @@ function ChangeResize()
                                                     </tr>
                                                 </table>
                                             </div>
-                                            <table style="width:305px;background-color:***REMOVED***FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid ***REMOVED***D0D0D0">
+                                            <table style="width:305px;background-color:#FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid #D0D0D0">
                                                 <tr align="left" valign="bottom">
                                                     <td>
-                                                        <!-- Nick <table id="page-table4" class="page-table" style="background-color:***REMOVED***FFFFFF;width:300px;height:150px">
+                                                        <!-- Nick <table id="page-table4" class="page-table" style="background-color:#FFFFFF;width:300px;height:150px">
                                                         -->
-                                                        <table id="page-table42" class="page-table" style="background-color:***REMOVED***FFFFFF;width:300px;height:150px">
-                                                            <tr style="height:6px;background-color:***REMOVED***FFFFFF">
+                                                        <table id="page-table42" class="page-table" style="background-color:#FFFFFF;width:300px;height:150px">
+                                                            <tr style="height:6px;background-color:#FFFFFF">
                                                                 <td colspan="2" class="basic-table-seperate-border">
                                                                 </td>
                                                             </tr>
@@ -1715,11 +1715,11 @@ function ChangeResize()
                                                     </tr>
                                                 </table>
                                             </div>
-                                            <table style="width:305px;background-color:***REMOVED***FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid ***REMOVED***D0D0D0">
+                                            <table style="width:305px;background-color:#FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid #D0D0D0">
                                                 <tr align="left" valign="bottom">
                                                     <td>
-                                                        <table id="page-table5" class="page-table" style="background-color:***REMOVED***FFFFFF;width:300px;height:150px">
-                                                            <tr style="height:6px;background-color:***REMOVED***FFFFFF">
+                                                        <table id="page-table5" class="page-table" style="background-color:#FFFFFF;width:300px;height:150px">
+                                                            <tr style="height:6px;background-color:#FFFFFF">
                                                                 <td colspan="2" class="basic-table-seperate-border">
                                                                 </td>
                                                             </tr>
@@ -1796,11 +1796,11 @@ function ChangeResize()
                                                     </tr>
                                                 </table>
                                             </div>
-                                            <table style="width:305px;background-color:***REMOVED***FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid ***REMOVED***D0D0D0">
+                                            <table style="width:305px;background-color:#FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid #D0D0D0">
                                                 <tr align="left" valign="bottom">
                                                     <td>
-                                                        <table id="page-table6" class="page-table" style="background-color:***REMOVED***FFFFFF;width:300px;height:150px">
-                                                            <tr style="height:6px;background-color:***REMOVED***FFFFFF">
+                                                        <table id="page-table6" class="page-table" style="background-color:#FFFFFF;width:300px;height:150px">
+                                                            <tr style="height:6px;background-color:#FFFFFF">
                                                                 <td colspan="2" class="basic-table-seperate-border">
                                                                 </td>
                                                             </tr>
@@ -1905,11 +1905,11 @@ function ChangeResize()
                                                     </tr>
                                                 </table>
                                             </div>
-                                            <table style="width:305px;background-color:***REMOVED***FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid ***REMOVED***D0D0D0">
+                                            <table style="width:305px;background-color:#FFFFFF;margin-left:5px;border-collapse:collapse;border-right:3px solid #D0D0D0">
                                                 <tr align="left" valign="bottom">
                                                     <td>
-                                                        <table id="page-table7" class="page-table" style="background-color:***REMOVED***FFFFFF;width:300px;height:150px">
-                                                            <tr style="height:6px;background-color:***REMOVED***FFFFFF">
+                                                        <table id="page-table7" class="page-table" style="background-color:#FFFFFF;width:300px;height:150px">
+                                                            <tr style="height:6px;background-color:#FFFFFF">
                                                                 <td colspan="2" class="basic-table-seperate-border">
                                                                 </td>
                                                             </tr>

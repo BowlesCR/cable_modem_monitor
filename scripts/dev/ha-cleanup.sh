@@ -1,14 +1,14 @@
-***REMOVED***!/bin/bash
-***REMOVED*** Clean up any processes or containers blocking Home Assistant ports
+#!/bin/bash
+# Clean up any processes or containers blocking Home Assistant ports
 
 set -e
 
 echo "🧹 Cleaning up Home Assistant environment..."
 echo ""
 
-***REMOVED*** Function to check if port 8123 is in use
+# Function to check if port 8123 is in use
 check_port_in_use() {
-    ***REMOVED*** Try multiple methods to check port usage
+    # Try multiple methods to check port usage
     if command -v lsof &> /dev/null; then
         if lsof -i :8123 &> /dev/null || sudo lsof -i :8123 &> /dev/null 2>&1; then
             return 0
@@ -30,11 +30,11 @@ check_port_in_use() {
     return 1
 }
 
-***REMOVED*** Function to kill processes using port 8123
+# Function to kill processes using port 8123
 kill_port_processes() {
     local killed=0
 
-    ***REMOVED*** Try fuser first - most reliable method
+    # Try fuser first - most reliable method
     if command -v fuser &> /dev/null; then
         if fuser -k 8123/tcp 2>/dev/null || sudo fuser -k 8123/tcp 2>/dev/null; then
             echo "   Killed process using port 8123 (via fuser)"
@@ -42,7 +42,7 @@ kill_port_processes() {
         fi
     fi
 
-    ***REMOVED*** Try lsof as fallback
+    # Try lsof as fallback
     if [ $killed -eq 0 ] && command -v lsof &> /dev/null; then
         PIDS=$(lsof -ti :8123 2>/dev/null || sudo lsof -ti :8123 2>/dev/null || true)
         if [ -n "$PIDS" ]; then
@@ -55,7 +55,7 @@ kill_port_processes() {
         fi
     fi
 
-    ***REMOVED*** Try ss as last resort (handles 127.0.0.1:8123 format)
+    # Try ss as last resort (handles 127.0.0.1:8123 format)
     if [ $killed -eq 0 ] && command -v ss &> /dev/null; then
         PIDS=$(sudo ss -tlnp 2>/dev/null | grep -E ":8123\b" | grep -oP 'pid=\K[0-9]+' | sort -u || true)
         if [ -n "$PIDS" ]; then
@@ -73,13 +73,13 @@ kill_port_processes() {
     return $killed
 }
 
-***REMOVED*** Check if port 8123 is in use
+# Check if port 8123 is in use
 if check_port_in_use; then
     echo "⚠️  Port 8123 is in use. Finding and stopping processes..."
 
     if kill_port_processes; then
         echo "✅ Stopped processes using port 8123"
-        ***REMOVED*** Give the OS a moment to fully release the port
+        # Give the OS a moment to fully release the port
         sleep 1
     else
         echo "❌ Could not find/kill processes using port 8123"
@@ -91,7 +91,7 @@ fi
 
 echo ""
 
-***REMOVED*** Stop any running HA containers
+# Stop any running HA containers
 echo "🐳 Checking for running Home Assistant containers..."
 HA_CONTAINERS=$(docker ps -q --filter "name=ha-cable-modem" 2>/dev/null || true)
 
@@ -106,7 +106,7 @@ fi
 
 echo ""
 
-***REMOVED*** Clean up ALL HA containers (running, stopped, created, etc.)
+# Clean up ALL HA containers (running, stopped, created, etc.)
 echo "🗑️  Removing all Home Assistant containers..."
 ALL_CONTAINERS=$(docker ps -aq --filter "name=ha-cable-modem" 2>/dev/null || true)
 
@@ -114,11 +114,11 @@ if [ -n "$ALL_CONTAINERS" ]; then
     docker rm -f $ALL_CONTAINERS 2>/dev/null || true
     echo "✅ Removed all Home Assistant containers"
 
-    ***REMOVED*** Wait for Docker to fully release port 8123
+    # Wait for Docker to fully release port 8123
     echo "   Waiting for port 8123 to be released..."
     max_wait=10
     for i in $(seq 1 $max_wait); do
-        ***REMOVED*** Check if port is free using multiple methods
+        # Check if port is free using multiple methods
         port_free=true
 
         if command -v lsof &> /dev/null && (lsof -i :8123 &> /dev/null || sudo lsof -i :8123 &> /dev/null 2>&1); then

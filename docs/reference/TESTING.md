@@ -1,26 +1,26 @@
-***REMOVED*** Testing Guide
+# Testing Guide
 
 This guide explains how to run tests locally before pushing to GitHub, preventing CI failures and speeding up development.
 
-***REMOVED******REMOVED*** Automated Testing Status
+## Automated Testing Status
 
 [![Tests](https://github.com/solentlabs/cable_modem_monitor/actions/workflows/tests.yml/badge.svg)](https://github.com/solentlabs/cable_modem_monitor/actions/workflows/tests.yml)
 
 ---
 
-***REMOVED******REMOVED*** Prerequisites
+## Prerequisites
 
 Before running tests locally, ensure you have:
 
 ```bash
-***REMOVED*** Check Python version (3.11+ required)
+# Check Python version (3.11+ required)
 python3 --version
 
-***REMOVED*** Install required system packages (Ubuntu/Debian/WSL)
+# Install required system packages (Ubuntu/Debian/WSL)
 sudo apt update
 sudo apt install python3-pip python3-venv
 
-***REMOVED*** Verify installation
+# Verify installation
 python3 -m pip --version
 python3 -m venv --help
 ```
@@ -29,9 +29,9 @@ python3 -m venv --help
 
 ---
 
-***REMOVED******REMOVED*** Quick Start - Local Testing
+## Quick Start - Local Testing
 
-***REMOVED******REMOVED******REMOVED*** First-Time Setup
+### First-Time Setup
 
 Run the full test suite (creates virtual environment automatically):
 
@@ -48,7 +48,7 @@ This will:
 
 **Time:** ~2-3 minutes (first run), ~30 seconds (subsequent runs)
 
-***REMOVED******REMOVED******REMOVED*** Quick Testing During Development
+### Quick Testing During Development
 
 After initial setup, use the quick test script:
 
@@ -62,7 +62,7 @@ This runs tests with minimal output for rapid feedback during development.
 
 ---
 
-***REMOVED******REMOVED*** Why Test Locally?
+## Why Test Locally?
 
 **Benefits:**
 - ⚡ Catch errors before CI runs (faster feedback)
@@ -79,9 +79,9 @@ This runs tests with minimal output for rapid feedback during development.
 
 ---
 
-***REMOVED******REMOVED*** Test Suite Overview
+## Test Suite Overview
 
-***REMOVED******REMOVED******REMOVED*** Unit Tests
+### Unit Tests
 Located in `tests/test_modem_scraper.py`
 
 **Coverage:**
@@ -92,7 +92,7 @@ Located in `tests/test_modem_scraper.py`
 - ✅ Channel count validation
 - ✅ Total error calculation
 
-***REMOVED******REMOVED******REMOVED*** Integration Tests
+### Integration Tests
 Real-world scenario testing with actual modem HTML fixtures
 
 **Tests:**
@@ -101,14 +101,14 @@ Real-world scenario testing with actual modem HTML fixtures
 - ✅ SNR validation (0-60 dB)
 - ✅ Frequency validation (DOCSIS 3.0 ranges)
 
-***REMOVED******REMOVED******REMOVED*** Test Fixtures
+### Test Fixtures
 Real HTML responses from modems in `tests/fixtures/`:
 - `moto_connection.html` - Channel data and uptime
 - `moto_home.html` - Software version and channel counts
 
-***REMOVED******REMOVED*** CI/CD Pipeline
+## CI/CD Pipeline
 
-***REMOVED******REMOVED******REMOVED*** Automated Workflows
+### Automated Workflows
 
 **On Every Push/PR:**
 1. **Tests Job**
@@ -126,91 +126,91 @@ Real HTML responses from modems in `tests/fixtures/`:
    - HACS validation
    - Ensures integration meets HACS requirements
 
-***REMOVED******REMOVED*** Manual Testing (Alternative)
+## Manual Testing (Alternative)
 
 If you prefer manual control over the test environment:
 
-***REMOVED******REMOVED******REMOVED*** 1. Set Up Virtual Environment (Once)
+### 1. Set Up Virtual Environment (Once)
 
 ```bash
-***REMOVED*** Create virtual environment
+# Create virtual environment
 python3 -m venv venv
 
-***REMOVED*** Activate it
-source venv/bin/activate  ***REMOVED*** Linux/Mac/WSL
-***REMOVED*** OR
-venv\Scripts\activate  ***REMOVED*** Windows CMD
-***REMOVED*** OR
-venv\Scripts\Activate.ps1  ***REMOVED*** Windows PowerShell
+# Activate it
+source venv/bin/activate  # Linux/Mac/WSL
+# OR
+venv\Scripts\activate  # Windows CMD
+# OR
+venv\Scripts\Activate.ps1  # Windows PowerShell
 ```
 
-***REMOVED******REMOVED******REMOVED*** 2. Install Dependencies (Once)
+### 2. Install Dependencies (Once)
 
 ```bash
 pip install --upgrade pip
 pip install -r tests/requirements.txt
 ```
 
-***REMOVED******REMOVED******REMOVED*** 3. Run Tests
+### 3. Run Tests
 
 ```bash
-***REMOVED*** Run all tests
+# Run all tests
 pytest tests/ -v
 
-***REMOVED*** Run specific test file
+# Run specific test file
 pytest tests/test_config_flow.py -v
 
-***REMOVED*** Run specific test
+# Run specific test
 pytest tests/test_config_flow.py::TestConfigFlow::test_scan_interval_minimum_valid -v
 
-***REMOVED*** Run with coverage
+# Run with coverage
 pytest tests/ --cov=custom_components/cable_modem_monitor --cov-report=term
 
-***REMOVED*** Generate HTML coverage report
+# Generate HTML coverage report
 pytest tests/ --cov=custom_components/cable_modem_monitor --cov-report=html
-***REMOVED*** Open htmlcov/index.html in browser
+# Open htmlcov/index.html in browser
 ```
 
-***REMOVED******REMOVED******REMOVED*** 4. Run Code Quality Checks
+### 4. Run Code Quality Checks
 
 ```bash
-***REMOVED*** Check code quality
+# Check code quality
 ruff check custom_components/cable_modem_monitor/
 
-***REMOVED*** Auto-fix issues
+# Auto-fix issues
 ruff check --fix custom_components/cable_modem_monitor/
 ```
 
-***REMOVED******REMOVED******REMOVED*** 5. Deactivate Virtual Environment (When Done)
+### 5. Deactivate Virtual Environment (When Done)
 
 ```bash
 deactivate
 ```
 
-***REMOVED******REMOVED*** Test Results
+## Test Results
 
-***REMOVED******REMOVED******REMOVED*** Current Status
+### Current Status
 **Total Tests:** 443 tests across 26 test files
 - ✅ **Components (162 tests):** diagnostics, sensors, buttons, config flow, coordinator, modem scraper
 - ✅ **Parsers (146 tests):** All 10 modem parsers with comprehensive coverage
 - ✅ **Core Modules (115 tests):** signal_analyzer, health_monitor, hnap_builder, authentication, discovery, crawler
 - ✅ **Utils (20 tests):** entity cleanup, HTML helpers
 
-***REMOVED******REMOVED******REMOVED*** Coverage Goals
+### Coverage Goals
 - **Current:** ~70% (test-to-code ratio)
 - **Required:** 60%+ (enforced in CI/CD)
 - **Status:** ✅ Target achieved and maintained
 - **Critical paths:** All user-facing functionality, parsers, and core infrastructure fully tested
 
-***REMOVED******REMOVED*** Adding New Tests
+## Adding New Tests
 
-***REMOVED******REMOVED******REMOVED*** For New Features
+### For New Features
 1. Add HTML fixture if parsing new data
 2. Write unit test for parsing function
 3. Write integration test for complete workflow
 4. Validate data ranges and types
 
-***REMOVED******REMOVED******REMOVED*** Example
+### Example
 ```python
 def test_new_feature(self, scraper, html_fixture):
     """Test new feature parsing."""
@@ -222,7 +222,7 @@ def test_new_feature(self, scraper, html_fixture):
     assert result in valid_range
 ```
 
-***REMOVED******REMOVED*** Regression Testing
+## Regression Testing
 
 Before each release:
 1. Run full test suite locally
@@ -231,9 +231,9 @@ Before each release:
 4. Test with live modem if possible
 5. Review GitHub Actions results
 
-***REMOVED******REMOVED*** Troubleshooting
+## Troubleshooting
 
-***REMOVED******REMOVED******REMOVED*** "ModuleNotFoundError" when running tests
+### "ModuleNotFoundError" when running tests
 
 **Solution:** Install test dependencies
 ```bash
@@ -241,7 +241,7 @@ source venv/bin/activate
 pip install -r tests/requirements.txt
 ```
 
-***REMOVED******REMOVED******REMOVED*** Virtual environment not activating
+### Virtual environment not activating
 
 **Linux/Mac/WSL:**
 ```bash
@@ -258,7 +258,7 @@ venv\Scripts\Activate.ps1
 venv\Scripts\activate.bat
 ```
 
-***REMOVED******REMOVED******REMOVED*** Tests pass locally but fail in CI
+### Tests pass locally but fail in CI
 
 **Possible causes:**
 1. **Missing dependency** - Check `tests/requirements.txt` includes all imports
@@ -266,7 +266,7 @@ venv\Scripts\activate.bat
 3. **File path issues** - Use relative imports in tests
 4. **Environment-specific code** - Mock external dependencies properly
 
-***REMOVED******REMOVED******REMOVED*** Permission denied on test scripts
+### Permission denied on test scripts
 
 **Solution:** Make scripts executable
 ```bash
@@ -275,9 +275,9 @@ chmod +x scripts/dev/run_tests_local.sh scripts/dev/quick_test.sh
 
 ---
 
-***REMOVED******REMOVED*** Continuous Improvement
+## Continuous Improvement
 
-***REMOVED******REMOVED******REMOVED*** Planned Enhancements
+### Planned Enhancements
 - [x] Add tests for config_flow.py
 - [x] Add tests for coordinator.py
 - [ ] Add tests for sensor.py
@@ -286,20 +286,20 @@ chmod +x scripts/dev/run_tests_local.sh scripts/dev/quick_test.sh
 - [ ] Mock HTTP requests for network isolation
 - [ ] Performance benchmarks
 
-***REMOVED******REMOVED******REMOVED*** Contributing Tests
+### Contributing Tests
 When adding support for new modem models:
 1. Capture HTML from modem status pages
 2. Add to `tests/fixtures/`
 3. Create test cases for new HTML structure
 4. Ensure backward compatibility with existing tests
 
-***REMOVED******REMOVED*** Resources
+## Resources
 
 - [pytest Documentation](https://docs.pytest.org/)
 - [Home Assistant Testing](https://developers.home-assistant.io/docs/development_testing)
 - [Coverage.py](https://coverage.readthedocs.io/)
 
-***REMOVED******REMOVED*** Support
+## Support
 
 If tests fail:
 1. Check GitHub Actions logs for details

@@ -56,13 +56,13 @@ class TestAuthentication:
         parser = TechnicolorXB7Parser()
         session = Mock()
 
-        ***REMOVED*** Mock the POST request to check.jst
+        # Mock the POST request to check.jst
         mock_response = Mock()
         mock_response.status_code = 200
-        mock_response.url = "http://10.0.0.1/at_a_glance.jst"  ***REMOVED*** Simulates redirect
+        mock_response.url = "http://10.0.0.1/at_a_glance.jst"  # Simulates redirect
         session.post.return_value = mock_response
 
-        ***REMOVED*** Mock the GET request to network_setup.jst
+        # Mock the GET request to network_setup.jst
         mock_status_response = Mock()
         mock_status_response.status_code = 200
         mock_status_response.text = "<html>Status page content</html>"
@@ -108,14 +108,14 @@ class TestDownstream:
 
         channel_ids = [ch["channel_id"] for ch in downstream]
 
-        ***REMOVED*** First channel should be 10 (primary)
+        # First channel should be 10 (primary)
         assert channel_ids[0] == "10"
 
-        ***REMOVED*** Then 1-9
+        # Then 1-9
         for i in range(1, 10):
             assert str(i) in channel_ids
 
-        ***REMOVED*** Then 11-34
+        # Then 11-34
         for i in range(11, 35):
             assert str(i) in channel_ids
 
@@ -124,16 +124,16 @@ class TestDownstream:
         parser = TechnicolorXB7Parser()
         downstream = parser._parse_downstream(soup)
 
-        ***REMOVED*** Channel 10 has "609 MHz"
+        # Channel 10 has "609 MHz"
         ch10 = [ch for ch in downstream if ch["channel_id"] == "10"][0]
-        assert ch10["frequency"] == 609_000_000  ***REMOVED*** 609 MHz in Hz
+        assert ch10["frequency"] == 609_000_000  # 609 MHz in Hz
 
     def test_frequency_raw_hz_format(self, soup):
         """Test parsing "350000000" raw Hz format."""
         parser = TechnicolorXB7Parser()
         downstream = parser._parse_downstream(soup)
 
-        ***REMOVED*** Channel 33 has "350000000" (raw Hz)
+        # Channel 33 has "350000000" (raw Hz)
         ch33 = [ch for ch in downstream if ch["channel_id"] == "33"][0]
         assert ch33["frequency"] == 350_000_000
 
@@ -142,7 +142,7 @@ class TestDownstream:
         parser = TechnicolorXB7Parser()
         downstream = parser._parse_downstream(soup)
 
-        ***REMOVED*** Channel 10 has SNR "38.4 dB"
+        # Channel 10 has SNR "38.4 dB"
         ch10 = [ch for ch in downstream if ch["channel_id"] == "10"][0]
         assert ch10["snr"] == 38.4
 
@@ -151,11 +151,11 @@ class TestDownstream:
         parser = TechnicolorXB7Parser()
         downstream = parser._parse_downstream(soup)
 
-        ***REMOVED*** Channel 10 has positive power "4.3 dBmV"
+        # Channel 10 has positive power "4.3 dBmV"
         ch10 = [ch for ch in downstream if ch["channel_id"] == "10"][0]
         assert ch10["power"] == 4.3
 
-        ***REMOVED*** Channel 4 has negative power "-2.0 dBmV"
+        # Channel 4 has negative power "-2.0 dBmV"
         ch4 = [ch for ch in downstream if ch["channel_id"] == "4"][0]
         assert ch4["power"] == -2.0
 
@@ -164,11 +164,11 @@ class TestDownstream:
         parser = TechnicolorXB7Parser()
         downstream = parser._parse_downstream(soup)
 
-        ***REMOVED*** Channel 10 has "256 QAM"
+        # Channel 10 has "256 QAM"
         ch10 = [ch for ch in downstream if ch["channel_id"] == "10"][0]
         assert ch10["modulation"] == "256 QAM"
 
-        ***REMOVED*** Channel 33 has "OFDM"
+        # Channel 33 has "OFDM"
         ch33 = [ch for ch in downstream if ch["channel_id"] == "33"][0]
         assert ch33["modulation"] == "OFDM"
 
@@ -177,7 +177,7 @@ class TestDownstream:
         parser = TechnicolorXB7Parser()
         downstream = parser._parse_downstream(soup)
 
-        ***REMOVED*** All channels should be "Locked"
+        # All channels should be "Locked"
         for ch in downstream:
             assert ch["lock_status"] == "Locked"
 
@@ -186,7 +186,7 @@ class TestDownstream:
         parser = TechnicolorXB7Parser()
         downstream = parser._parse_downstream(soup)
 
-        ***REMOVED*** Channel 10 should have error statistics
+        # Channel 10 should have error statistics
         ch10 = [ch for ch in downstream if ch["channel_id"] == "10"][0]
         assert ch10["corrected"] == 780484376
         assert ch10["uncorrected"] == 257
@@ -214,7 +214,7 @@ class TestUpstream:
         parser = TechnicolorXB7Parser()
         upstream = parser._parse_upstream(soup)
 
-        ***REMOVED*** Channel 1 has "21  MHz" (note extra spaces)
+        # Channel 1 has "21  MHz" (note extra spaces)
         ch1 = [ch for ch in upstream if ch["channel_id"] == "1"][0]
         assert ch1["frequency"] == 21_000_000
 
@@ -223,7 +223,7 @@ class TestUpstream:
         parser = TechnicolorXB7Parser()
         upstream = parser._parse_upstream(soup)
 
-        ***REMOVED*** Channel 1 has "32.0 dBmV"
+        # Channel 1 has "32.0 dBmV"
         ch1 = [ch for ch in upstream if ch["channel_id"] == "1"][0]
         assert ch1["power"] == 32.0
 
@@ -232,15 +232,15 @@ class TestUpstream:
         parser = TechnicolorXB7Parser()
         upstream = parser._parse_upstream(soup)
 
-        ***REMOVED*** Channel 1 has symbol rate 2560
+        # Channel 1 has symbol rate 2560
         ch1 = [ch for ch in upstream if ch["channel_id"] == "1"][0]
         assert ch1["symbol_rate"] == 2560
 
-        ***REMOVED*** Channel 2 has symbol rate 5120
+        # Channel 2 has symbol rate 5120
         ch2 = [ch for ch in upstream if ch["channel_id"] == "2"][0]
         assert ch2["symbol_rate"] == 5120
 
-        ***REMOVED*** Channel 10 has symbol rate 0
+        # Channel 10 has symbol rate 0
         ch10 = [ch for ch in upstream if ch["channel_id"] == "10"][0]
         assert ch10["symbol_rate"] == 0
 
@@ -249,12 +249,12 @@ class TestUpstream:
         parser = TechnicolorXB7Parser()
         upstream = parser._parse_upstream(soup)
 
-        ***REMOVED*** Channels 1-4 have "QAM"
+        # Channels 1-4 have "QAM"
         for i in range(1, 5):
             ch = [c for c in upstream if c["channel_id"] == str(i)][0]
             assert ch["modulation"] == "QAM"
 
-        ***REMOVED*** Channel 10 has "OFDMA"
+        # Channel 10 has "OFDMA"
         ch10 = [ch for ch in upstream if ch["channel_id"] == "10"][0]
         assert ch10["modulation"] == "OFDMA"
 
@@ -263,15 +263,15 @@ class TestUpstream:
         parser = TechnicolorXB7Parser()
         upstream = parser._parse_upstream(soup)
 
-        ***REMOVED*** Channel 1 has "TDMA_AND_ATDMA"
+        # Channel 1 has "TDMA_AND_ATDMA"
         ch1 = [ch for ch in upstream if ch["channel_id"] == "1"][0]
         assert ch1["channel_type"] == "TDMA_AND_ATDMA"
 
-        ***REMOVED*** Channel 2 has "ATDMA"
+        # Channel 2 has "ATDMA"
         ch2 = [ch for ch in upstream if ch["channel_id"] == "2"][0]
         assert ch2["channel_type"] == "ATDMA"
 
-        ***REMOVED*** Channel 10 has "TDMA"
+        # Channel 10 has "TDMA"
         ch10 = [ch for ch in upstream if ch["channel_id"] == "10"][0]
         assert ch10["channel_type"] == "TDMA"
 
@@ -280,7 +280,7 @@ class TestUpstream:
         parser = TechnicolorXB7Parser()
         upstream = parser._parse_upstream(soup)
 
-        ***REMOVED*** All channels should be "Locked"
+        # All channels should be "Locked"
         for ch in upstream:
             assert ch["lock_status"] == "Locked"
 
@@ -293,7 +293,7 @@ class TestSystemInfo:
         parser = TechnicolorXB7Parser()
         system_info = parser._parse_system_info(soup)
 
-        ***REMOVED*** Should have at least some fields
+        # Should have at least some fields
         assert isinstance(system_info, dict)
 
     def test_initialization_status(self, soup):
@@ -301,8 +301,8 @@ class TestSystemInfo:
         parser = TechnicolorXB7Parser()
         system_info = parser._parse_system_info(soup)
 
-        ***REMOVED*** May have downstream/upstream status fields
-        ***REMOVED*** These are optional depending on HTML structure
+        # May have downstream/upstream status fields
+        # These are optional depending on HTML structure
         assert isinstance(system_info, dict)
 
     def test_uptime(self, soup):
@@ -329,12 +329,12 @@ class TestSystemInfo:
         assert "last_boot_time" in system_info
         assert system_info["last_boot_time"] is not None
 
-        ***REMOVED*** Verify boot time is approximately 21 days, 15h, 20m, 33s ago
+        # Verify boot time is approximately 21 days, 15h, 20m, 33s ago
         boot_time = datetime.fromisoformat(system_info["last_boot_time"])
         expected_uptime = timedelta(days=21, hours=15, minutes=20, seconds=33)
         actual_uptime = datetime.now() - boot_time
 
-        ***REMOVED*** Allow 1 minute tolerance for test execution time
+        # Allow 1 minute tolerance for test execution time
         assert abs((actual_uptime - expected_uptime).total_seconds()) < 60
 
     def test_primary_channel(self, soup):
@@ -385,7 +385,7 @@ class TestIntegration:
             assert "power" in ch
             assert "modulation" in ch
             assert "lock_status" in ch
-            ***REMOVED*** XB7-specific fields
+            # XB7-specific fields
             assert "symbol_rate" in ch
             assert "channel_type" in ch
 

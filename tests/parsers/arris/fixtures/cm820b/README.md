@@ -1,7 +1,7 @@
-***REMOVED*** ARRIS CM820B Modem Fixtures
+# ARRIS CM820B Modem Fixtures
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -13,11 +13,11 @@
 
 <!-- END AUTO-GENERATED -->
 
-***REMOVED******REMOVED*** Verification Status
+## Verification Status
 
 ✅ **VERIFIED** - Confirmed working by real user
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
@@ -32,11 +32,11 @@
 | **Contributed By** | @dimkalinux |
 | **Contribution Date** | December 2025 |
 
-***REMOVED******REMOVED*** User Verification
+## User Verification
 
 **Verified by:** @dimkalinux
 **Date:** December 2025 (v3.10.0)
-**Source:** [GitHub PR ***REMOVED***57](https://github.com/solentlabs/cable_modem_monitor/pull/57)
+**Source:** [GitHub PR #57](https://github.com/solentlabs/cable_modem_monitor/pull/57)
 
 **Working Features:**
 - 8 downstream channels with power, SNR, frequency, modulation
@@ -48,19 +48,19 @@
 - Software version parsing returns "Unknown" (field present but not parsed)
 - URLs require `/cgi-bin/` prefix (handled by parser)
 
-***REMOVED******REMOVED*** Available Fixtures
+## Available Fixtures
 
-***REMOVED******REMOVED******REMOVED*** cm820b_info.html
+### cm820b_info.html
 - **Source:** `/cgi-bin/vers_cgi`
 - **Content:** Hardware/firmware information page
 - **Contains:** Model, vendor, hardware revision, serial number, firmware version
 
-***REMOVED******REMOVED******REMOVED*** cm820b_status.html
+### cm820b_status.html
 - **Source:** `/cgi-bin/status_cgi`
 - **Content:** RF parameters and status page
 - **Contains:** Downstream/upstream channel data, system uptime, interface status
 
-***REMOVED******REMOVED*** Parser Implementation
+## Parser Implementation
 
 **File:** `custom_components/cable_modem_monitor/parsers/arris/cm820b.py`
 
@@ -79,7 +79,7 @@ url_patterns = [
 - Detects "EuroDOCSIS" or "Touchstone" identifiers
 - Priority: 110 (model-specific)
 
-***REMOVED******REMOVED*** Test Coverage
+## Test Coverage
 
 **File:** `tests/parsers/arris/test_cm820b.py`
 
@@ -90,7 +90,7 @@ url_patterns = [
 - System info parsing
 - Uptime parsing
 
-***REMOVED******REMOVED*** Notes
+## Notes
 
 - This is a EuroDOCSIS 3.0 variant used primarily in European markets
 - Uses Intel Puma 5 chipset (predecessor to problematic Puma 6)
@@ -98,7 +98,7 @@ url_patterns = [
 - First modem verified from Ukraine (Volya ISP)
 - Simple HTML table format with CGI-based URLs
 
-***REMOVED******REMOVED*** Attribution
+## Attribution
 
 - **Parser & Fixtures:** @dimkalinux
 - **Verification:** Real-world testing on Volya ISP (Ukraine)

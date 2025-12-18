@@ -1,8 +1,8 @@
-***REMOVED*** Netgear C7000v2 Modem Fixtures
+# Netgear C7000v2 Modem Fixtures
 
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -14,21 +14,21 @@
 
 <!-- END AUTO-GENERATED -->
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
 | **Model** | C7000v2 |
 | **Manufacturer** | Netgear |
-| **Related Issue** | [***REMOVED***61](https://github.com/solentlabs/cable_modem_monitor/issues/61) |
+| **Related Issue** | [#61](https://github.com/solentlabs/cable_modem_monitor/issues/61) |
 | **Captured By** | @Anthranilic |
 | **Capture Date** | December 2025 |
 
-***REMOVED******REMOVED*** Authentication
+## Authentication
 
 **Type:** HTTP Basic Auth
 
-***REMOVED******REMOVED*** Files
+## Files
 
 | File | Description |
 |------|-------------|
@@ -36,7 +36,7 @@
 | `RouterStatus.htm` | System info (firmware, uptime) |
 | `index.htm` | Main page for detection |
 
-***REMOVED******REMOVED******REMOVED*** Extended Files
+### Extended Files
 
 | File | Description |
 |------|-------------|
@@ -44,7 +44,7 @@
 | `eventLog.htm` | Event logs |
 | `DocsisOffline.htm` | Offline page |
 
-***REMOVED******REMOVED*** Notes
+## Notes
 
 - User provided manually redacted diagnostics after sanitization gap was discovered
 - C7000v2 uses same page structure and parsing logic as C3700

@@ -55,19 +55,19 @@ class TestRestart:
         session = Mock()
         base_url = "http://192.168.100.1"
 
-        ***REMOVED*** Mock the GET request to MotoSecurity.asp
+        # Mock the GET request to MotoSecurity.asp
         mock_security_response = Mock()
         mock_security_response.status_code = 200
         mock_security_response.text = security_html
         session.get.return_value = mock_security_response
 
-        ***REMOVED*** Mock the POST request for restart
+        # Mock the POST request for restart
         mock_restart_response = Mock()
         mock_restart_response.status_code = 200
         mock_restart_response.text = ""
         session.post.return_value = mock_restart_response
 
-        ***REMOVED*** Test successful restart
+        # Test successful restart
         result = parser.restart(session, base_url)
         assert result is True
 
@@ -91,13 +91,13 @@ class TestRestart:
         session = Mock()
         base_url = "http://192.168.100.1"
 
-        ***REMOVED*** Mock the GET request to MotoSecurity.asp
+        # Mock the GET request to MotoSecurity.asp
         mock_security_response = Mock()
         mock_security_response.status_code = 200
         mock_security_response.text = security_html
         session.get.return_value = mock_security_response
 
-        ***REMOVED*** Mock the POST request raising ConnectionResetError
+        # Mock the POST request raising ConnectionResetError
         session.post.side_effect = ConnectionResetError("Connection reset by peer")
 
         result = parser.restart(session, base_url)
@@ -120,17 +120,17 @@ class TestParsing:
         soup_conn = BeautifulSoup(connection_html, "html.parser")
         soup_home = BeautifulSoup(home_html, "html.parser")
 
-        ***REMOVED*** Parse connection page
+        # Parse connection page
         data = parser.parse(soup_conn)
 
-        ***REMOVED*** Parse home page for software version
+        # Parse home page for software version
         home_info = parser._parse_system_info(soup_home)
         data["system_info"].update(home_info)
 
-        ***REMOVED*** Verify downstream channels
+        # Verify downstream channels
         assert "downstream" in data
         assert len(data["downstream"]) > 0
-        ***REMOVED*** First row: Channel=1, Channel ID=21 (col 3 is the actual DOCSIS channel ID)
+        # First row: Channel=1, Channel ID=21 (col 3 is the actual DOCSIS channel ID)
         assert data["downstream"][0]["channel_id"] == "21"
         assert data["downstream"][0]["frequency"] == 237000000
         assert data["downstream"][0]["power"] == 0.5
@@ -149,17 +149,17 @@ class TestParsing:
         soup_conn = BeautifulSoup(connection_html, "html.parser")
         soup_home = BeautifulSoup(home_html, "html.parser")
 
-        ***REMOVED*** Parse connection page
+        # Parse connection page
         data = parser.parse(soup_conn)
 
-        ***REMOVED*** Parse home page for software version
+        # Parse home page for software version
         home_info = parser._parse_system_info(soup_home)
         data["system_info"].update(home_info)
 
-        ***REMOVED*** Verify upstream channels
+        # Verify upstream channels
         assert "upstream" in data
         assert len(data["upstream"]) > 0
-        ***REMOVED*** First row: Channel=1, Channel ID=2 (col 3 is the actual DOCSIS channel ID)
+        # First row: Channel=1, Channel ID=2 (col 3 is the actual DOCSIS channel ID)
         assert data["upstream"][0]["channel_id"] == "2"
         assert data["upstream"][0]["frequency"] == 24000000
         assert data["upstream"][0]["power"] == 36.2
@@ -171,14 +171,14 @@ class TestParsing:
         soup_conn = BeautifulSoup(connection_html, "html.parser")
         soup_home = BeautifulSoup(home_html, "html.parser")
 
-        ***REMOVED*** Parse connection page
+        # Parse connection page
         data = parser.parse(soup_conn)
 
-        ***REMOVED*** Parse home page for software version
+        # Parse home page for software version
         home_info = parser._parse_system_info(soup_home)
         data["system_info"].update(home_info)
 
-        ***REMOVED*** Verify system info
+        # Verify system info
         assert "system_info" in data
         assert data["system_info"]["software_version"] == "7621-5.7.1.5"
         assert data["system_info"]["system_uptime"] == "32 days 11h:58m:26s"
@@ -219,10 +219,10 @@ class TestRestartDetection:
         soup = BeautifulSoup(html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** During restart (< 5 min), zero power/SNR should be filtered to None
+        # During restart (< 5 min), zero power/SNR should be filtered to None
         assert len(data["downstream"]) == 1
-        assert data["downstream"][0]["power"] is None  ***REMOVED*** Filtered out
-        assert data["downstream"][0]["snr"] is None  ***REMOVED*** Filtered out
+        assert data["downstream"][0]["power"] is None  # Filtered out
+        assert data["downstream"][0]["snr"] is None  # Filtered out
         assert data["system_info"]["system_uptime"] == "0 days 00h:04m:30s"
 
     def test_preserves_nonzero_power_during_restart(self):
@@ -253,10 +253,10 @@ class TestRestartDetection:
         soup = BeautifulSoup(html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** During restart, non-zero values should be preserved
+        # During restart, non-zero values should be preserved
         assert len(data["downstream"]) == 1
-        assert data["downstream"][0]["power"] == 3.5  ***REMOVED*** Preserved
-        assert data["downstream"][0]["snr"] == 38.2  ***REMOVED*** Preserved
+        assert data["downstream"][0]["power"] == 3.5  # Preserved
+        assert data["downstream"][0]["snr"] == 38.2  # Preserved
 
     def test_no_filtering_after_restart_window(self):
         """Test that zero power values are NOT filtered after restart window."""
@@ -286,10 +286,10 @@ class TestRestartDetection:
         soup = BeautifulSoup(html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** After restart window (>= 5 min), zero values should be kept
+        # After restart window (>= 5 min), zero values should be kept
         assert len(data["downstream"]) == 1
-        assert data["downstream"][0]["power"] == 0  ***REMOVED*** NOT filtered
-        assert data["downstream"][0]["snr"] == 0  ***REMOVED*** NOT filtered
+        assert data["downstream"][0]["power"] == 0  # NOT filtered
+        assert data["downstream"][0]["snr"] == 0  # NOT filtered
 
     def test_upstream_filtering_during_restart(self):
         """Test that zero power values are filtered for upstream during restart."""
@@ -317,14 +317,14 @@ class TestRestartDetection:
         soup = BeautifulSoup(html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** During restart, zero upstream power should be filtered
+        # During restart, zero upstream power should be filtered
         assert len(data["upstream"]) == 1
-        assert data["upstream"][0]["power"] is None  ***REMOVED*** Filtered out
+        assert data["upstream"][0]["power"] is None  # Filtered out
 
     def test_restart_window_constant(self):
         """Test that the restart window constant is correctly defined."""
         assert RESTART_WINDOW_SECONDS == 300
-        assert RESTART_WINDOW_SECONDS == 5 * 60  ***REMOVED*** 5 minutes
+        assert RESTART_WINDOW_SECONDS == 5 * 60  # 5 minutes
 
 
 class TestAutoDetection:
@@ -409,12 +409,12 @@ class TestAutoDetection:
         soup = BeautifulSoup(swinfo_html, "html.parser")
         url = "http://192.168.100.1/MotoSwInfo.asp"
 
-        ***REMOVED*** Verify MB7621 has an anonymous URL pattern
+        # Verify MB7621 has an anonymous URL pattern
         anon_patterns = [p for p in MotorolaMB7621Parser.url_patterns if not p.get("auth_required", True)]
         assert len(anon_patterns) > 0, "MB7621 needs at least one auth_required=False URL"
 
-        ***REMOVED*** The anonymous URL should be MotoSwInfo.asp
+        # The anonymous URL should be MotoSwInfo.asp
         assert anon_patterns[0]["path"] == "/MotoSwInfo.asp"
 
-        ***REMOVED*** When that page is fetched, MB7621 should be detected
+        # When that page is fetched, MB7621 should be detected
         assert MotorolaMB7621Parser.can_parse(soup, url, swinfo_html) is True

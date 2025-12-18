@@ -1,4 +1,4 @@
-***REMOVED***!/usr/bin/env python3
+#!/usr/bin/env python3
 """Capture modem traffic using Playwright.
 
 This script launches a browser window and records all network traffic
@@ -29,25 +29,25 @@ import urllib.request
 from datetime import datetime
 from pathlib import Path
 
-***REMOVED*** Add parent directory to path for imports
+# Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 def check_devcontainer() -> bool:
     """Check if running inside a VS Code devcontainer and warn user."""
-    ***REMOVED*** Check if we're actually RUNNING from /workspaces (not just that it exists)
+    # Check if we're actually RUNNING from /workspaces (not just that it exists)
     script_path = str(Path(__file__).resolve())
     cwd = str(Path.cwd())
     running_from_workspaces = script_path.startswith("/workspaces") or cwd.startswith("/workspaces")
 
-    ***REMOVED*** Specific indicators of VS Code devcontainer
+    # Specific indicators of VS Code devcontainer
     in_devcontainer = (
-        ***REMOVED*** Actually running from /workspaces mount
+        # Actually running from /workspaces mount
         running_from_workspaces
-        ***REMOVED*** Explicit devcontainer env vars
+        # Explicit devcontainer env vars
         or os.environ.get("REMOTE_CONTAINERS") == "true"
         or os.environ.get("CODESPACES") == "true"
-        ***REMOVED*** VS Code remote container indicator
+        # VS Code remote container indicator
         or os.environ.get("VSCODE_REMOTE_CONTAINERS_SESSION") is not None
     )
 
@@ -80,15 +80,15 @@ def check_basic_auth(url: str, timeout: int = 5) -> tuple[bool, str | None]:
         Tuple of (requires_basic_auth, realm_name)
     """
     try:
-        ***REMOVED*** Use GET instead of HEAD - some modems reject HEAD requests
+        # Use GET instead of HEAD - some modems reject HEAD requests
         req = urllib.request.Request(url, method="GET")
         urllib.request.urlopen(req, timeout=timeout)
-        return False, None  ***REMOVED*** No auth required
+        return False, None  # No auth required
     except urllib.error.HTTPError as e:
         if e.code == 401:
             auth_header = e.headers.get("WWW-Authenticate", "")
             if auth_header.lower().startswith("basic"):
-                ***REMOVED*** Extract realm if present
+                # Extract realm if present
                 realm = None
                 if 'realm="' in auth_header:
                     realm = auth_header.split('realm="')[1].split('"')[0]
@@ -116,7 +116,7 @@ def prompt_for_credentials(realm: str | None = None) -> tuple[str, str]:
 def check_playwright() -> bool:
     """Check if Playwright is installed."""
     try:
-        import playwright  ***REMOVED*** noqa: F401
+        import playwright  # noqa: F401
 
         return True
     except ImportError:
@@ -147,26 +147,26 @@ def install_playwright() -> bool:
         return False
 
 
-***REMOVED*** Extensions to filter out (bloat that's not needed for parser development)
+# Extensions to filter out (bloat that's not needed for parser development)
 BLOAT_EXTENSIONS = {
     ".woff",
     ".woff2",
     ".ttf",
     ".otf",
-    ".eot",  ***REMOVED*** Fonts
+    ".eot",  # Fonts
     ".png",
     ".jpg",
     ".jpeg",
     ".gif",
     ".ico",
     ".svg",
-    ".webp",  ***REMOVED*** Images
+    ".webp",  # Images
     ".mp3",
     ".mp4",
     ".wav",
     ".webm",
-    ".ogg",  ***REMOVED*** Media
-    ".map",  ***REMOVED*** Source maps
+    ".ogg",  # Media
+    ".map",  # Source maps
 }
 
 
@@ -209,25 +209,25 @@ def filter_and_compress_har(har_path: Path) -> tuple[Path, dict]:
     with open(har_path, encoding="utf-8") as f:
         har = json.load(f)
 
-    ***REMOVED*** Add Solent Labs™ metadata
+    # Add Solent Labs™ metadata
     _add_solent_labs_metadata(har)
 
     original_count = len(har["log"]["entries"])
     original_size = har_path.stat().st_size
 
-    ***REMOVED*** Filter entries
+    # Filter entries
     seen_urls = set()
     filtered_entries = []
 
     for entry in har["log"]["entries"]:
         url = entry.get("request", {}).get("url", "")
 
-        ***REMOVED*** Skip bloat file types
-        url_lower = url.lower().split("?")[0]  ***REMOVED*** Remove query params for extension check
+        # Skip bloat file types
+        url_lower = url.lower().split("?")[0]  # Remove query params for extension check
         if any(url_lower.endswith(ext) for ext in BLOAT_EXTENSIONS):
             continue
 
-        ***REMOVED*** Skip duplicates (keep first occurrence)
+        # Skip duplicates (keep first occurrence)
         if url in seen_urls:
             continue
         seen_urls.add(url)
@@ -237,13 +237,13 @@ def filter_and_compress_har(har_path: Path) -> tuple[Path, dict]:
     har["log"]["entries"] = filtered_entries
     filtered_count = len(filtered_entries)
 
-    ***REMOVED*** Write filtered HAR
+    # Write filtered HAR
     with open(har_path, "w", encoding="utf-8") as f:
-        json.dump(har, f, separators=(",", ":"))  ***REMOVED*** Compact JSON
+        json.dump(har, f, separators=(",", ":"))  # Compact JSON
 
     filtered_size = har_path.stat().st_size
 
-    ***REMOVED*** Compress
+    # Compress
     compressed_path = har_path.with_suffix(".har.gz")
     with (
         open(har_path, "rb") as f_in,
@@ -271,7 +271,7 @@ def _post_capture_processing(output_path: Path, skip_sanitize: bool) -> None:
     print("=" * 60)
     print()
 
-    ***REMOVED*** Filter and compress
+    # Filter and compress
     print("Optimizing capture (removing fonts, images, duplicates)...")
     try:
         compressed_path, stats = filter_and_compress_har(output_path)
@@ -291,7 +291,7 @@ def _post_capture_processing(output_path: Path, skip_sanitize: bool) -> None:
     if compressed_path:
         print(f"  Compressed: {compressed_path}")
 
-    ***REMOVED*** Sanitize unless disabled
+    # Sanitize unless disabled
     if not skip_sanitize:
         _sanitize_capture(output_path)
 
@@ -309,7 +309,7 @@ def _sanitize_capture(output_path: Path) -> None:
         sanitized_path = sanitize_har_file(str(output_path))
         print(f"  Sanitized HAR: {sanitized_path}")
 
-        ***REMOVED*** Also compress the sanitized version
+        # Also compress the sanitized version
         sanitized_gz = Path(sanitized_path).with_suffix(".har.gz")
         with (
             open(sanitized_path, "rb") as f_in,
@@ -340,19 +340,19 @@ def _sanitize_capture(output_path: Path) -> None:
         print(f"  Run manually: python scripts/sanitize_har.py {output_path}")
 
 
-def main() -> int:  ***REMOVED*** noqa: C901
+def main() -> int:  # noqa: C901
     parser = argparse.ArgumentParser(
         description="Capture modem traffic for parser development",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-    ***REMOVED*** Capture from default modem IP
+    # Capture from default modem IP
     python scripts/capture_modem.py
 
-    ***REMOVED*** Capture from different IP
+    # Capture from different IP
     python scripts/capture_modem.py --ip 192.168.0.1
 
-    ***REMOVED*** Specify output filename
+    # Specify output filename
     python scripts/capture_modem.py --output my_modem.har
 
 What to do:
@@ -409,11 +409,11 @@ Why visit all pages and wait?
 
     args = parser.parse_args()
 
-    ***REMOVED*** Check if running in devcontainer
+    # Check if running in devcontainer
     if check_devcontainer():
         return 1
 
-    ***REMOVED*** Check Playwright installation, auto-install if missing
+    # Check Playwright installation, auto-install if missing
     if not check_playwright():
         print("Playwright is not installed.")
         print()
@@ -425,7 +425,7 @@ Why visit all pages and wait?
 
     from playwright.sync_api import sync_playwright
 
-    ***REMOVED*** Generate output filename in captures/ directory
+    # Generate output filename in captures/ directory
     captures_dir = Path(__file__).parent.parent / "captures"
     captures_dir.mkdir(exist_ok=True)
 
@@ -435,7 +435,7 @@ Why visit all pages and wait?
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         output_path = captures_dir / f"modem_{timestamp}.har"
 
-    ***REMOVED*** Ensure .har extension
+    # Ensure .har extension
     if output_path.suffix != ".har":
         output_path = output_path.with_suffix(".har")
 
@@ -449,7 +449,7 @@ Why visit all pages and wait?
     print(f"  Browser:    {args.browser}")
     print(f"  Output:     {output_path}")
 
-    ***REMOVED*** Check for HTTP Basic Auth requirement
+    # Check for HTTP Basic Auth requirement
     http_credentials = None
     print()
     print("Checking modem authentication type...")
@@ -457,7 +457,7 @@ Why visit all pages and wait?
 
     if requires_basic:
         print(f"  Detected: HTTP Basic Auth{f' ({realm})' if realm else ''}")
-        ***REMOVED*** Get credentials from args or prompt
+        # Get credentials from args or prompt
         if args.username and args.password:
             username, password = args.username, args.password
         else:
@@ -484,7 +484,7 @@ Why visit all pages and wait?
 
     try:
         with sync_playwright() as p:
-            ***REMOVED*** Select browser
+            # Select browser
             if args.browser == "firefox":
                 browser_type = p.firefox
             elif args.browser == "webkit":
@@ -492,41 +492,41 @@ Why visit all pages and wait?
             else:
                 browser_type = p.chromium
 
-            ***REMOVED*** Launch browser with HAR recording
+            # Launch browser with HAR recording
             browser = browser_type.launch(headless=False)
 
-            ***REMOVED*** Build context options
+            # Build context options
             context_options = {
                 "record_har_path": str(output_path),
-                "record_har_content": "embed",  ***REMOVED*** Embed response bodies in HAR
-                "ignore_https_errors": True,  ***REMOVED*** Modems often have self-signed certs
-                "service_workers": "block",  ***REMOVED*** Disable service workers to prevent caching
+                "record_har_content": "embed",  # Embed response bodies in HAR
+                "ignore_https_errors": True,  # Modems often have self-signed certs
+                "service_workers": "block",  # Disable service workers to prevent caching
             }
 
-            ***REMOVED*** Add HTTP Basic Auth credentials if needed
+            # Add HTTP Basic Auth credentials if needed
             if http_credentials:
                 context_options["http_credentials"] = http_credentials
 
             context = browser.new_context(**context_options)
 
-            ***REMOVED*** Enable route interception to disable HTTP cache
-            ***REMOVED*** This ensures all requests go to the network, capturing async HNAP calls
-            ***REMOVED*** that might otherwise be served from cache
+            # Enable route interception to disable HTTP cache
+            # This ensures all requests go to the network, capturing async HNAP calls
+            # that might otherwise be served from cache
             context.route("**/*", lambda route: route.continue_())
 
-            ***REMOVED*** Create page and navigate to modem
+            # Create page and navigate to modem
             page = context.new_page()
             page.goto(modem_url, wait_until="networkidle")
 
             print("Browser opened. Interact with your modem, then close the browser.")
             print()
 
-            ***REMOVED*** Wait for browser to close
+            # Wait for browser to close
             with contextlib.suppress(Exception):
-                ***REMOVED*** This will block until the page/context is closed
+                # This will block until the page/context is closed
                 page.wait_for_event("close", timeout=0)
 
-            ***REMOVED*** Close context to save HAR
+            # Close context to save HAR
             context.close()
             browser.close()
 

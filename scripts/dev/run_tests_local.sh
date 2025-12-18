@@ -1,26 +1,26 @@
-***REMOVED***!/bin/bash
-***REMOVED*** Local test runner for Cable Modem Monitor integration
-***REMOVED*** This script sets up a virtual environment and runs all tests locally
-***REMOVED*** before pushing to GitHub, preventing CI failures.
+#!/bin/bash
+# Local test runner for Cable Modem Monitor integration
+# This script sets up a virtual environment and runs all tests locally
+# before pushing to GitHub, preventing CI failures.
 
-set -e  ***REMOVED*** Exit on error
+set -e  # Exit on error
 
 echo "=========================================="
 echo "Cable Modem Monitor - Local Test Runner"
 echo "=========================================="
 echo ""
 
-***REMOVED*** Colors for output
+# Colors for output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
-NC='\033[0m' ***REMOVED*** No Color
+NC='\033[0m' # No Color
 
-***REMOVED*** Check if virtual environment exists
+# Check if virtual environment exists
 if [ ! -d ".venv" ]; then
     echo -e "${YELLOW}Creating virtual environment...${NC}"
 
-    ***REMOVED*** Try to create .venv
+    # Try to create .venv
     if ! python3 -m .venv .venv 2>/dev/null; then
         echo -e "${RED}✗ Failed to create virtual environment${NC}"
         echo ""
@@ -40,20 +40,20 @@ if [ ! -d ".venv" ]; then
     echo ""
 fi
 
-***REMOVED*** Activate virtual environment
+# Activate virtual environment
 echo -e "${YELLOW}Activating virtual environment...${NC}"
 source .venv/bin/activate
 echo -e "${GREEN}✓ Virtual environment activated${NC}"
 echo ""
 
-***REMOVED*** Install/update dependencies
+# Install/update dependencies
 echo -e "${YELLOW}Installing test dependencies...${NC}"
 pip install --upgrade pip --quiet
 pip install -r tests/requirements.txt --quiet
 echo -e "${GREEN}✓ Dependencies installed${NC}"
 echo ""
 
-***REMOVED*** Run linting
+# Run linting
 echo -e "${YELLOW}Running code quality checks (ruff)...${NC}"
 if ruff check custom_components/cable_modem_monitor/ --select E,F,W,C90; then
     echo -e "${GREEN}✓ Code quality checks passed${NC}"
@@ -63,7 +63,7 @@ else
 fi
 echo ""
 
-***REMOVED*** Run tests with coverage (single run)
+# Run tests with coverage (single run)
 echo -e "${YELLOW}Running tests with coverage...${NC}"
 if pytest tests/ -v --tb=short --cov=custom_components/cable_modem_monitor --cov-report=term --cov-report=html; then
     echo ""
@@ -77,7 +77,7 @@ fi
 echo -e "${GREEN}✓ Coverage report generated (see htmlcov/index.html)${NC}"
 echo ""
 
-***REMOVED*** Summary
+# Summary
 echo "=========================================="
 echo "Test Summary"
 echo "=========================================="

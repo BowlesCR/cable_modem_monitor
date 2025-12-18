@@ -170,13 +170,13 @@ $(document).ready(function()  {
 	document.getElementById('modalFloaterMessage').style.display="none";
 	document.getElementById('modalContainerMessage').style.display="none";
 	document.getElementById("copyright").innerHTML = g_copyright;
-	$("***REMOVED***binnacleWrapper1").removeClass("binnacleItems_0");
-	$("***REMOVED***binnacleWrapper2").removeClass("binnacleItems_0");
+	$("#binnacleWrapper1").removeClass("binnacleItems_0");
+	$("#binnacleWrapper2").removeClass("binnacleItems_0");
 	// Set number of items in binnacle (0 to 8)
-	$("***REMOVED***binnacleWrapper1").addClass("binnacleItems_0");
-	$("***REMOVED***binnacleWrapper2").addClass("binnacleItems_0");
+	$("#binnacleWrapper1").addClass("binnacleItems_0");
+	$("#binnacleWrapper2").addClass("binnacleItems_0");
 	// Show the binnacle.
-	$("***REMOVED***binnacleWrapper1").show();
-	$("***REMOVED***binnacleWrapper2").show();
+	$("#binnacleWrapper1").show();
+	$("#binnacleWrapper2").show();
 	FillRegister();
 });

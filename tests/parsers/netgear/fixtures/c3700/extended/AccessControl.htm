@@ -19,7 +19,7 @@
 <script src="script/jquery.mousewheel.js"></script>
 <script type="text/javascript" src="script/jquery.jscrollpane.min.js"></script>
 <!-- foxconn, khfan, remove, 2014/09/24
-     Defect ***REMOVED*** 126
+     Defect # 126
      C7000-100NAS: Security -- Some broken URL links are found by sortsite and error in URLs.
   -->
 <script type="text/javascript" src="script/sorttable.js"></script>
@@ -53,7 +53,7 @@
 //        $('.scroll-pane').jScrollPane('scrollbarMargin:5px');
         BodyInit();
 
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
             buttonFilter();
         });
     });
@@ -157,7 +157,7 @@
             AppendRowText += '</tr>\n';
         }
 
-        $('***REMOVED***online_list_table tr:last').after(AppendRowText);
+        $('#online_list_table tr:last').after(AppendRowText);
     }
 
     function InitUpdateOfflineWhiteListTableView(tagValues)
@@ -178,7 +178,7 @@
             AppendRowText += '</tr>\n';
         }
 
-        $('***REMOVED***offline_white_list_table tr:last').after(AppendRowText);
+        $('#offline_white_list_table tr:last').after(AppendRowText);
     }
 
     function InitUpdateOfflineBlackListTableView(tagValues)
@@ -199,7 +199,7 @@
             AppendRowText += '</tr>\n';
         }
 
-        $('***REMOVED***offline_black_list_table tr:last').after(AppendRowText);
+        $('#offline_black_list_table tr:last').after(AppendRowText);
     }
 
     function setHelpIframeVisible(){
@@ -226,13 +226,13 @@
 
     function moveToHTMLend()
     {
-        window.location.href='***REMOVED***helpframe-anchor';
+        window.location.href='#helpframe-anchor';
         setHelpIframeVisible();
     }
 
     function loadhelp(fname,anchname)
     {
-        var pane = window.frames["helpframe"].$('***REMOVED***content');
+        var pane = window.frames["helpframe"].$('#content');
         var imgSrc=document.getElementById('help-button');
         if(imgSrc.src.search("up") < 0)
         {
@@ -246,7 +246,7 @@
             }
             else
             {
-                window.frames["helpframe"].location.href = fname + "_h."+"htm***REMOVED***" + anchname;
+                window.frames["helpframe"].location.href = fname + "_h."+"htm#" + anchname;
                 $(".help-frame-div").show();
             }
 
@@ -277,10 +277,10 @@
 		grayout_button("edit_white");
 		grayout_button("edit_black");
 
-        //$("***REMOVED***allow_all")[0].disabled = true;
-        $("***REMOVED***allow_all")[0].setAttribute("style","opacity : .40;filter  : alpha(opacity=50);");
-        //$("***REMOVED***block_all")[0].disabled = true;
-        $("***REMOVED***block_all")[0].setAttribute("style","opacity : .40;filter  : alpha(opacity=50);");
+        //$("#allow_all")[0].disabled = true;
+        $("#allow_all")[0].setAttribute("style","opacity : .40;filter  : alpha(opacity=50);");
+        //$("#block_all")[0].disabled = true;
+        $("#block_all")[0].setAttribute("style","opacity : .40;filter  : alpha(opacity=50);");
         checkboxIndex[0].disabled = true;
         checkboxIndexWhite[0].disabled = true;
         checkboxIndexBlack[0].disabled = true;
@@ -332,10 +332,10 @@
             checkboxIndexBlack[0].disabled = false;
         }
 
-        //$("***REMOVED***allow_all")[0].disabled = false;
-        $("***REMOVED***allow_all")[0].removeAttribute("style","opacity : .40;filter  : alpha(opacity=50);");
-        //$("***REMOVED***block_all")[0].disabled = false;
-        $("***REMOVED***block_all")[0].removeAttribute("style","opacity : .40;filter  : alpha(opacity=50);");
+        //$("#allow_all")[0].disabled = false;
+        $("#allow_all")[0].removeAttribute("style","opacity : .40;filter  : alpha(opacity=50);");
+        //$("#block_all")[0].disabled = false;
+        $("#block_all")[0].removeAttribute("style","opacity : .40;filter  : alpha(opacity=50);");
         checkboxIndex[0].disabled = false;
 
         for(i = 0; i < checkboxElements.length; i++)
@@ -552,7 +552,7 @@
             }
             else
             {
-                $('tr[name=row_rules]')[i].style.backgroundColor = "***REMOVED***e5e5e5";
+                $('tr[name=row_rules]')[i].style.backgroundColor = "#e5e5e5";
             }
         }
 
@@ -565,7 +565,7 @@
 
             if(i % 2 == 0)
             {
-                $('tr[name=row_rules_white]')[i].style.backgroundColor = "***REMOVED***e5e5e5";
+                $('tr[name=row_rules_white]')[i].style.backgroundColor = "#e5e5e5";
             }
             else
             {
@@ -582,7 +582,7 @@
 
             if(i % 2 == 0)
             {
-                $('tr[name=row_rules_black]')[i].style.backgroundColor = "***REMOVED***e5e5e5";
+                $('tr[name=row_rules_black]')[i].style.backgroundColor = "#e5e5e5";
             }
             else
             {
@@ -703,11 +703,11 @@
 
         if(enable_access_control[0].value == "1")
         {
-            $("***REMOVED***enable_acl")[0].checked = true;
+            $("#enable_acl")[0].checked = true;
         }
         else
         {
-            $("***REMOVED***enable_acl")[0].checked = false;
+            $("#enable_acl")[0].checked = false;
         }
 
         if(access_all_setting[0].value == "0")
@@ -719,7 +719,7 @@
             access_all_radio[0].checked = true;
         }
 
-        handle_all_items($("***REMOVED***enable_acl")[0]);
+        handle_all_items($("#enable_acl")[0]);
 
         adjust_column_backColor();
     }
@@ -760,37 +760,37 @@
 */
     function handle_white_list_table()
     {
-        if($("***REMOVED***white_list_body")[0].style.display == "block")
+        if($("#white_list_body")[0].style.display == "block")
         {
-            $("***REMOVED***white_list_body")[0].style.display = "none";
+            $("#white_list_body")[0].style.display = "none";
             document.getElementById("white_list_line").style.display = "none";
             document.getElementById("white_list_line2").style.display = "none";
-            $("***REMOVED***barrow_white")[0].src = "img/barrow_nobackground.gif";
+            $("#barrow_white")[0].src = "img/barrow_nobackground.gif";
         }
         else
         {
-            $("***REMOVED***white_list_body")[0].style.display = "block";
+            $("#white_list_body")[0].style.display = "block";
             document.getElementById("white_list_line").style.display = "block";
             document.getElementById("white_list_line2").style.display = "block";
-            $("***REMOVED***barrow_white")[0].src = "img/barrow_down_nobackground.gif";
+            $("#barrow_white")[0].src = "img/barrow_down_nobackground.gif";
         }
     }
 
     function handle_black_list_table()
     {
-        if($("***REMOVED***black_list_body")[0].style.display == "block")
+        if($("#black_list_body")[0].style.display == "block")
         {
-            $("***REMOVED***black_list_body")[0].style.display = "none";
+            $("#black_list_body")[0].style.display = "none";
             document.getElementById("black_list_line").style.display = "none";
             document.getElementById("black_list_line2").style.display = "none";
-            $("***REMOVED***barrow_black")[0].src = "img/barrow_nobackground.gif";
+            $("#barrow_black")[0].src = "img/barrow_nobackground.gif";
         }
         else
         {
-            $("***REMOVED***black_list_body")[0].style.display = "block";
+            $("#black_list_body")[0].style.display = "block";
             document.getElementById("black_list_line").style.display = "block";
             document.getElementById("black_list_line2").style.display = "block";
-            $("***REMOVED***barrow_black")[0].src = "img/barrow_down_nobackground.gif";
+            $("#barrow_black")[0].src = "img/barrow_down_nobackground.gif";
         }
     }
 
@@ -850,7 +850,7 @@
 
     function checkAccessAllInTd()
     {
-        if($("***REMOVED***enable_acl")[0].checked)
+        if($("#enable_acl")[0].checked)
         {
             // do nothing
         }

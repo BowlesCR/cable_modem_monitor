@@ -43,8 +43,8 @@ def parse_uptime_to_seconds(uptime_str: str | None) -> int | None:
     try:
         total_seconds = 0
 
-        ***REMOVED*** Check for HH:MM:SS or HHHH:MM:SS format (e.g., "1308:19:22")
-        ***REMOVED*** This format is hours:minutes:seconds with no unit suffixes
+        # Check for HH:MM:SS or HHHH:MM:SS format (e.g., "1308:19:22")
+        # This format is hours:minutes:seconds with no unit suffixes
         hms_match = re.match(r"^(\d+):(\d{1,2}):(\d{1,2})$", uptime_str.strip())
         if hms_match:
             hours = int(hms_match.group(1))
@@ -52,13 +52,13 @@ def parse_uptime_to_seconds(uptime_str: str | None) -> int | None:
             seconds = int(hms_match.group(3))
             return hours * 3600 + minutes * 60 + seconds
 
-        ***REMOVED*** Parse days (handles "2 days" or "2d")
+        # Parse days (handles "2 days" or "2d")
         days_match = re.search(r"(\d+)\s*(?:days?|d)", uptime_str, re.IGNORECASE)
         if days_match:
             total_seconds += int(days_match.group(1)) * 86400
 
-        ***REMOVED*** Check for HH:MM:SS embedded in string (e.g., "7 days 12:34:56")
-        ***REMOVED*** This handles S33 format where time follows days
+        # Check for HH:MM:SS embedded in string (e.g., "7 days 12:34:56")
+        # This handles S33 format where time follows days
         embedded_hms_match = re.search(r"(\d{1,2}):(\d{1,2}):(\d{1,2})", uptime_str)
         if embedded_hms_match:
             hours = int(embedded_hms_match.group(1))
@@ -66,17 +66,17 @@ def parse_uptime_to_seconds(uptime_str: str | None) -> int | None:
             seconds = int(embedded_hms_match.group(3))
             total_seconds += hours * 3600 + minutes * 60 + seconds
         else:
-            ***REMOVED*** Parse hours (handles "5 hours", "5h", "05h")
+            # Parse hours (handles "5 hours", "5h", "05h")
             hours_match = re.search(r"(\d+)\s*(?:hours?|h)", uptime_str, re.IGNORECASE)
             if hours_match:
                 total_seconds += int(hours_match.group(1)) * 3600
 
-            ***REMOVED*** Parse minutes (handles "37 minutes", "37 min", "37m")
+            # Parse minutes (handles "37 minutes", "37 min", "37m")
             minutes_match = re.search(r"(\d+)\s*(?:minutes?|mins?|m)", uptime_str, re.IGNORECASE)
             if minutes_match:
                 total_seconds += int(minutes_match.group(1)) * 60
 
-            ***REMOVED*** Parse seconds (handles "20 seconds", "20 sec", "20s")
+            # Parse seconds (handles "20 seconds", "20 sec", "20s")
             seconds_match = re.search(r"(\d+)\s*(?:seconds?|secs?|s)", uptime_str, re.IGNORECASE)
             if seconds_match:
                 total_seconds += int(seconds_match.group(1))

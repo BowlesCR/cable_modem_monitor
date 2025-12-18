@@ -1,18 +1,18 @@
-***REMOVED***!/usr/bin/env bash
-***REMOVED*** Pre-push hook: Run full project checks before pushing
-***REMOVED*** Install: cp scripts/hooks/pre-push .git/hooks/ && chmod +x .git/hooks/pre-push
+#!/usr/bin/env bash
+# Pre-push hook: Run full project checks before pushing
+# Install: cp scripts/hooks/pre-push .git/hooks/ && chmod +x .git/hooks/pre-push
 
 set -e
 
 echo "Running pre-push checks..."
 
-***REMOVED*** Colors
+# Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' ***REMOVED*** No Color
+NC='\033[0m' # No Color
 
-***REMOVED*** Find Python - prefer pyenv, fall back to system
+# Find Python - prefer pyenv, fall back to system
 if command -v pyenv &> /dev/null && pyenv versions --bare | grep -q "3.12"; then
     PYTHON="PYENV_VERSION=3.12.12 python"
 else

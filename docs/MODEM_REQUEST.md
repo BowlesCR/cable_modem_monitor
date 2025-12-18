@@ -1,8 +1,8 @@
-***REMOVED*** Requesting Support for Your Modem
+# Requesting Support for Your Modem
 
 This guide explains how to submit data from your modem to help us add support for your model.
 
-***REMOVED******REMOVED*** What We're Building Together
+## What We're Building Together
 
 Cable Modem Monitor extracts signal quality data from your modem's web interface - the same information you'd see if you logged into your modem manually. To add support for a new modem model, we need sample data from that modem's web pages.
 
@@ -18,7 +18,7 @@ Cable Modem Monitor extracts signal quality data from your modem's web interface
 - Device lists or client names
 - Account information
 
-***REMOVED******REMOVED******REMOVED*** Why Test Fixtures Matter
+### Why Test Fixtures Matter
 
 Your captured data becomes a **test fixture** - a frozen snapshot we use to:
 1. **Develop the parser** - Understand your modem's HTML/API structure
@@ -29,7 +29,7 @@ You can see existing fixtures at [`tests/parsers/FIXTURES.md`](../tests/parsers/
 
 ---
 
-***REMOVED******REMOVED*** Important: About PII and Sanitization
+## Important: About PII and Sanitization
 
 > **Automated sanitization is best-effort, not foolproof.**
 
@@ -42,7 +42,7 @@ We automatically attempt to remove personally identifiable information (PII) fro
 
 **However, modem manufacturers store data in unpredictable ways.** Some embed WiFi credentials in JavaScript variables without labels. Others use proprietary formats we haven't encountered before.
 
-***REMOVED******REMOVED******REMOVED*** Your Responsibility
+### Your Responsibility
 
 Before sharing any captured data:
 
@@ -59,9 +59,9 @@ If you find credentials that weren't automatically redacted:
 
 ---
 
-***REMOVED******REMOVED*** How to Capture Data
+## How to Capture Data
 
-***REMOVED******REMOVED******REMOVED*** Option 1: Integration Capture (Easiest)
+### Option 1: Integration Capture (Easiest)
 
 **Best for:** Users who already have the integration installed (even if your modem isn't fully supported).
 
@@ -73,17 +73,17 @@ If you find credentials that weren't automatically redacted:
 5. **Review the JSON file** - search for your credentials before sharing
 6. Attach to your GitHub issue
 
-***REMOVED******REMOVED******REMOVED*** Option 2: HAR Capture Script
+### Option 2: HAR Capture Script
 
 **Best for:** Modems with login requirements, HNAP/API-based modems, or when Option 1 doesn't capture what's needed.
 
 [HAR (HTTP Archive)](http://www.softwareishard.com/blog/har-12-spec/) files capture the complete HTTP conversation including authentication and API calls.
 
 ```bash
-***REMOVED*** One-time setup
+# One-time setup
 pip install playwright && playwright install chromium
 
-***REMOVED*** Capture
+# Capture
 python scripts/capture_modem.py
 ```
 
@@ -96,7 +96,7 @@ python scripts/capture_modem.py
 
 The script generates a `.sanitized.har.gz` file. **Review before sharing.**
 
-***REMOVED******REMOVED******REMOVED*** Which Method Do I Need?
+### Which Method Do I Need?
 
 | Modem Type | Recommended Method |
 |------------|-------------------|
@@ -108,7 +108,7 @@ The script generates a `.sanitized.har.gz` file. **Review before sharing.**
 
 ---
 
-***REMOVED******REMOVED*** Before You Submit: Review Checklist
+## Before You Submit: Review Checklist
 
 Open your captured file and verify:
 
@@ -118,7 +118,7 @@ Open your captured file and verify:
 - [ ] **Check for your public IP address** - should be `***PUBLIC_IP***`
 - [ ] **Look for serial numbers** - should be `***SERIAL***` or similar
 
-***REMOVED******REMOVED******REMOVED*** What to Look For
+### What to Look For
 
 **In JSON files**, search for:
 - Literal password values
@@ -136,14 +136,14 @@ If anything sensitive remains, either:
 
 ---
 
-***REMOVED******REMOVED*** Submitting Your Request
+## Submitting Your Request
 
 1. **Open a new issue** using the [Modem Request template](https://github.com/solentlabs/cable_modem_monitor/issues/new?template=modem_request.yml)
 2. Fill in modem details (model, manufacturer, IP address)
 3. Attach your captured file (JSON or HAR)
 4. Note any manual redactions you made
 
-***REMOVED******REMOVED******REMOVED*** What Happens Next
+### What Happens Next
 
 1. **We analyze your capture** - Understanding the HTML/API structure
 2. **We may request additional captures** - Different pages or scenarios
@@ -155,7 +155,7 @@ If anything sensitive remains, either:
 
 ---
 
-***REMOVED******REMOVED*** Privacy Summary
+## Privacy Summary
 
 | Data Type | What Happens |
 |-----------|--------------|
@@ -171,7 +171,7 @@ If anything sensitive remains, either:
 
 ---
 
-***REMOVED******REMOVED*** Questions?
+## Questions?
 
 - Check existing [modem request issues](https://github.com/solentlabs/cable_modem_monitor/issues?q=label%3A%22new+modem%22) for examples
 - Open a [GitHub Discussion](https://github.com/solentlabs/cable_modem_monitor/discussions) for questions

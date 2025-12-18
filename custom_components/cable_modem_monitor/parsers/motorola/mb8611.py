@@ -23,13 +23,13 @@ class MotorolaMB8611HnapParser(ModemParser):
     name = "Motorola MB8611"
     manufacturer = "Motorola"
     models = ["MB8611", "MB8612"]
-    priority = 101  ***REMOVED*** Higher priority for the API-based method
+    priority = 101  # Higher priority for the API-based method
 
-    ***REMOVED*** Parser status - confirmed by @cvonk in Issue ***REMOVED***6 (December 2025)
+    # Parser status - confirmed by @cvonk in Issue #6 (December 2025)
     status = ParserStatus.VERIFIED
     verification_source = "https://github.com/solentlabs/cable_modem_monitor/issues/6"
 
-    ***REMOVED*** Device metadata
+    # Device metadata
     release_date = "2020"
     docsis_version = "3.1"
     fixtures_path = "tests/parsers/motorola/fixtures/mb8611"
@@ -37,10 +37,10 @@ class MotorolaMB8611HnapParser(ModemParser):
     def __init__(self):
         """Initialize the parser with instance-level state."""
         super().__init__()
-        ***REMOVED*** Store the JSON builder instance to preserve private_key across login/parse calls
+        # Store the JSON builder instance to preserve private_key across login/parse calls
         self._json_builder: HNAPJsonRequestBuilder | None = None
 
-    ***REMOVED*** HNAP authentication configuration
+    # HNAP authentication configuration
     auth_config = HNAPAuthConfig(
         strategy=AuthStrategyType.HNAP_SESSION,
         login_url="/Login.html",
@@ -54,9 +54,9 @@ class MotorolaMB8611HnapParser(ModemParser):
         {"path": "/MotoStatusConnection.html", "auth_method": "hnap", "auth_required": True},
     ]
 
-    ***REMOVED*** Capabilities - MB8611 HNAP parser
-    ***REMOVED*** Note: MB8611 returns OFDM channels (modulation="OFDM PLC") in the same
-    ***REMOVED*** MotoConnDownstreamChannel response as QAM channels, so they're parsed together.
+    # Capabilities - MB8611 HNAP parser
+    # Note: MB8611 returns OFDM channels (modulation="OFDM PLC") in the same
+    # MotoConnDownstreamChannel response as QAM channels, so they're parsed together.
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
@@ -86,8 +86,8 @@ class MotorolaMB8611HnapParser(ModemParser):
         Note: This method is maintained for backward compatibility.
         New code should use auth_config with AuthFactory instead.
         """
-        ***REMOVED*** Try JSON-based HNAP login first
-        ***REMOVED*** Store the builder instance so the private_key persists for subsequent parse() calls
+        # Try JSON-based HNAP login first
+        # Store the builder instance so the private_key persists for subsequent parse() calls
         self._json_builder = HNAPJsonRequestBuilder(
             endpoint=self.auth_config.hnap_endpoint, namespace=self.auth_config.soap_action_namespace
         )
@@ -101,10 +101,10 @@ class MotorolaMB8611HnapParser(ModemParser):
             _LOGGER.info("MB8611: JSON HNAP login successful")
             return (True, response)
 
-        ***REMOVED*** JSON login failed - clear the builder so parse() doesn't try to use it
+        # JSON login failed - clear the builder so parse() doesn't try to use it
         self._json_builder = None
 
-        ***REMOVED*** Fall back to XML/SOAP-based HNAP login
+        # Fall back to XML/SOAP-based HNAP login
         _LOGGER.debug("MB8611: JSON login failed, trying XML/SOAP-based HNAP login")
         auth_strategy = AuthFactory.get_strategy(self.auth_config.strategy)
         success, response = auth_strategy.login(session, base_url, username, password, self.auth_config)
@@ -128,7 +128,7 @@ class MotorolaMB8611HnapParser(ModemParser):
         """
         error_str = str(error).lower()
 
-        ***REMOVED*** Check for common auth failure indicators
+        # Check for common auth failure indicators
         auth_indicators = [
             "401",
             "403",
@@ -163,13 +163,13 @@ class MotorolaMB8611HnapParser(ModemParser):
         if not session or not base_url:
             raise ValueError("MB8611 requires session and base_url for HNAP calls")
 
-        ***REMOVED*** Try JSON-based HNAP first (newer firmware)
+        # Try JSON-based HNAP first (newer firmware)
         try:
             return self._parse_with_json_hnap(session, base_url)
         except Exception as json_error:
             _LOGGER.debug("MB8611: JSON HNAP failed (%s), trying XML/SOAP HNAP...", str(json_error))
 
-            ***REMOVED*** Fall back to XML/SOAP-based HNAP (older firmware)
+            # Fall back to XML/SOAP-based HNAP (older firmware)
             try:
                 return self._parse_with_xml_hnap(session, base_url)
             except Exception as xml_error:
@@ -180,15 +180,15 @@ class MotorolaMB8611HnapParser(ModemParser):
                     exc_info=True,
                 )
 
-                ***REMOVED*** Check if failures are due to authentication issues
+                # Check if failures are due to authentication issues
                 auth_failure = self._is_auth_failure(json_error) or self._is_auth_failure(xml_error)
 
                 result: dict[str, list | dict] = {"downstream": [], "upstream": [], "system_info": {}}
 
                 if auth_failure:
-                    ***REMOVED*** Mark as auth failure so config_flow can block setup
-                    result["_auth_failure"] = True  ***REMOVED*** type: ignore[assignment]
-                    result["_login_page_detected"] = True  ***REMOVED*** type: ignore[assignment]
+                    # Mark as auth failure so config_flow can block setup
+                    result["_auth_failure"] = True  # type: ignore[assignment]
+                    result["_login_page_detected"] = True  # type: ignore[assignment]
                     result["_diagnostic_context"] = {
                         "parser": "MB8611 HNAP",
                         "json_error": str(json_error)[:200],
@@ -203,8 +203,8 @@ class MotorolaMB8611HnapParser(ModemParser):
         """Parse modem data using JSON-based HNAP requests."""
         _LOGGER.debug("MB8611: Attempting JSON-based HNAP communication")
 
-        ***REMOVED*** Reuse the builder from login() to preserve the private_key for authenticated requests
-        ***REMOVED*** If login() wasn't called (e.g., session reuse), create a new builder
+        # Reuse the builder from login() to preserve the private_key for authenticated requests
+        # If login() wasn't called (e.g., session reuse), create a new builder
         if self._json_builder is not None:
             builder = self._json_builder
             _LOGGER.debug("MB8611: Reusing JSON builder from login (private_key preserved)")
@@ -214,7 +214,7 @@ class MotorolaMB8611HnapParser(ModemParser):
             )
             _LOGGER.warning("MB8611: No stored JSON builder - creating new one (may lack auth)")
 
-        ***REMOVED*** Make batched HNAP request for all data
+        # Make batched HNAP request for all data
         hnap_actions = [
             "GetMotoStatusStartupSequence",
             "GetMotoStatusConnectionInfo",
@@ -227,20 +227,20 @@ class MotorolaMB8611HnapParser(ModemParser):
         _LOGGER.debug("MB8611: Fetching modem data via JSON HNAP GetMultipleHNAPs")
         json_response = builder.call_multiple(session, base_url, hnap_actions)
 
-        ***REMOVED*** Parse JSON response
+        # Parse JSON response
         response_data = json.loads(json_response)
 
-        ***REMOVED*** Extract nested response
+        # Extract nested response
         hnap_data = response_data.get("GetMultipleHNAPsResponse", response_data)
 
-        ***REMOVED*** Enhanced logging to help diagnose response structure
+        # Enhanced logging to help diagnose response structure
         _LOGGER.debug(
             "MB8611: JSON HNAP response received. Top-level keys: %s, response size: %d bytes",
             list(hnap_data.keys()),
             len(json_response),
         )
 
-        ***REMOVED*** Parse channels and system info
+        # Parse channels and system info
         downstream = self._parse_downstream_from_hnap(hnap_data)
         upstream = self._parse_upstream_from_hnap(hnap_data)
         system_info = self._parse_system_info_from_hnap(hnap_data)
@@ -261,12 +261,12 @@ class MotorolaMB8611HnapParser(ModemParser):
         """Parse modem data using XML/SOAP-based HNAP requests."""
         _LOGGER.debug("MB8611: Attempting XML/SOAP-based HNAP communication")
 
-        ***REMOVED*** Build XML/SOAP HNAP request builder
+        # Build XML/SOAP HNAP request builder
         builder = HNAPRequestBuilder(
             endpoint=self.auth_config.hnap_endpoint, namespace=self.auth_config.soap_action_namespace
         )
 
-        ***REMOVED*** Make batched HNAP request for all data
+        # Make batched HNAP request for all data
         soap_actions = [
             "GetMotoStatusStartupSequence",
             "GetMotoStatusConnectionInfo",
@@ -279,20 +279,20 @@ class MotorolaMB8611HnapParser(ModemParser):
         _LOGGER.debug("MB8611: Fetching modem data via XML/SOAP HNAP GetMultipleHNAPs")
         json_response = builder.call_multiple(session, base_url, soap_actions)
 
-        ***REMOVED*** Parse JSON response (MB8611 uses JSON, not XML)
+        # Parse JSON response (MB8611 uses JSON, not XML)
         response_data = json.loads(json_response)
 
-        ***REMOVED*** Extract nested response
+        # Extract nested response
         hnap_data = response_data.get("GetMultipleHNAPsResponse", response_data)
 
-        ***REMOVED*** Enhanced logging to help diagnose response structure
+        # Enhanced logging to help diagnose response structure
         _LOGGER.debug(
             "MB8611: XML/SOAP HNAP response received. Top-level keys: %s, response size: %d bytes",
             list(hnap_data.keys()),
             len(json_response),
         )
 
-        ***REMOVED*** Parse channels and system info
+        # Parse channels and system info
         downstream = self._parse_downstream_from_hnap(hnap_data)
         upstream = self._parse_upstream_from_hnap(hnap_data)
         system_info = self._parse_system_info_from_hnap(hnap_data)
@@ -323,7 +323,7 @@ class MotorolaMB8611HnapParser(ModemParser):
             channel_data = downstream_response.get("MotoConnDownstreamChannel", "")
 
             if not channel_data:
-                ***REMOVED*** Enhanced logging to help diagnose the issue
+                # Enhanced logging to help diagnose the issue
                 _LOGGER.warning(
                     "MB8611: No downstream channel data found. "
                     "Response keys: %s, downstream_response type: %s, content: %s",
@@ -333,14 +333,14 @@ class MotorolaMB8611HnapParser(ModemParser):
                 )
                 return channels
 
-            ***REMOVED*** Split by |+| delimiter
+            # Split by |+| delimiter
             channel_entries = channel_data.split("|+|")
 
             for entry in channel_entries:
                 if not entry.strip():
                     continue
 
-                ***REMOVED*** Split by ^ delimiter
+                # Split by ^ delimiter
                 fields = entry.split("^")
 
                 if len(fields) < 9:
@@ -348,13 +348,13 @@ class MotorolaMB8611HnapParser(ModemParser):
                     continue
 
                 try:
-                    ***REMOVED*** Parse channel fields
-                    ***REMOVED*** fields[0] = row index (display order only, not meaningful)
-                    ***REMOVED*** fields[3] = DOCSIS Channel ID (what technicians reference)
-                    channel_id = int(fields[3])  ***REMOVED*** DOCSIS Channel ID
+                    # Parse channel fields
+                    # fields[0] = row index (display order only, not meaningful)
+                    # fields[3] = DOCSIS Channel ID (what technicians reference)
+                    channel_id = int(fields[3])  # DOCSIS Channel ID
                     lock_status = fields[1].strip()
                     modulation = fields[2].strip()
-                    frequency = int(round(float(fields[4].strip()) * 1_000_000))  ***REMOVED*** MHz to Hz
+                    frequency = int(round(float(fields[4].strip()) * 1_000_000))  # MHz to Hz
                     power = float(fields[5].strip())
                     snr = float(fields[6].strip())
                     corrected = int(fields[7])
@@ -396,7 +396,7 @@ class MotorolaMB8611HnapParser(ModemParser):
             channel_data = upstream_response.get("MotoConnUpstreamChannel", "")
 
             if not channel_data:
-                ***REMOVED*** Enhanced logging to help diagnose the issue
+                # Enhanced logging to help diagnose the issue
                 _LOGGER.warning(
                     "MB8611: No upstream channel data found. "
                     "Response keys: %s, upstream_response type: %s, content: %s",
@@ -406,14 +406,14 @@ class MotorolaMB8611HnapParser(ModemParser):
                 )
                 return channels
 
-            ***REMOVED*** Split by |+| delimiter
+            # Split by |+| delimiter
             channel_entries = channel_data.split("|+|")
 
             for entry in channel_entries:
                 if not entry.strip():
                     continue
 
-                ***REMOVED*** Split by ^ delimiter
+                # Split by ^ delimiter
                 fields = entry.split("^")
 
                 if len(fields) < 7:
@@ -421,14 +421,14 @@ class MotorolaMB8611HnapParser(ModemParser):
                     continue
 
                 try:
-                    ***REMOVED*** Parse channel fields
-                    ***REMOVED*** fields[0] = row index (display order only, not meaningful)
-                    ***REMOVED*** fields[3] = DOCSIS Channel ID (what technicians reference)
-                    channel_id = int(fields[3])  ***REMOVED*** DOCSIS Channel ID
+                    # Parse channel fields
+                    # fields[0] = row index (display order only, not meaningful)
+                    # fields[3] = DOCSIS Channel ID (what technicians reference)
+                    channel_id = int(fields[3])  # DOCSIS Channel ID
                     lock_status = fields[1].strip()
                     modulation = fields[2].strip()
                     symbol_rate = int(fields[4])
-                    frequency = int(round(float(fields[5].strip()) * 1_000_000))  ***REMOVED*** MHz to Hz
+                    frequency = int(round(float(fields[5].strip()) * 1_000_000))  # MHz to Hz
                     power = float(fields[6].strip())
 
                     channel_info = {
@@ -491,7 +491,7 @@ class MotorolaMB8611HnapParser(ModemParser):
         if not software_info:
             return
 
-        ***REMOVED*** StatusSoftwareSfVer contains the firmware version (e.g., "8611-19.2.18")
+        # StatusSoftwareSfVer contains the firmware version (e.g., "8611-19.2.18")
         self._set_if_present(software_info, "StatusSoftwareSfVer", system_info, "software_version")
         self._set_if_present(software_info, "StatusSoftwareSpecVer", system_info, "docsis_version")
         self._set_if_present(software_info, "StatusSoftwareSerialNum", system_info, "serial_number")
@@ -514,7 +514,7 @@ class MotorolaMB8611HnapParser(ModemParser):
         - Action 3 = Change password
         """
         try:
-            ***REMOVED*** Use JSON builder if available (from login), otherwise create new
+            # Use JSON builder if available (from login), otherwise create new
             if self._json_builder is not None:
                 builder = self._json_builder
             else:
@@ -524,10 +524,10 @@ class MotorolaMB8611HnapParser(ModemParser):
                 )
                 _LOGGER.warning("MB8611: No stored JSON builder for restart - may lack auth")
 
-            ***REMOVED*** Build the restart request - action=1 triggers reboot
-            ***REMOVED*** Based on modem's MotoStatusSecurity.html JavaScript:
-            ***REMOVED*** result_xml.Set("SetStatusSecuritySettings/MotoStatusSecurityAction", "1");
-            ***REMOVED*** result_xml.Set("SetStatusSecuritySettings/MotoStatusSecXXX", "XXX");
+            # Build the restart request - action=1 triggers reboot
+            # Based on modem's MotoStatusSecurity.html JavaScript:
+            # result_xml.Set("SetStatusSecuritySettings/MotoStatusSecurityAction", "1");
+            # result_xml.Set("SetStatusSecuritySettings/MotoStatusSecXXX", "XXX");
             restart_data = {
                 "MotoStatusSecurityAction": "1",
                 "MotoStatusSecXXX": "XXX",
@@ -536,7 +536,7 @@ class MotorolaMB8611HnapParser(ModemParser):
             _LOGGER.info("MB8611: Sending restart command via HNAP SetStatusSecuritySettings")
             response = builder.call_single(session, base_url, "SetStatusSecuritySettings", restart_data)
 
-            ***REMOVED*** Parse response to check result
+            # Parse response to check result
             response_data = json.loads(response)
             result = response_data.get("SetStatusSecuritySettingsResponse", {}).get(
                 "SetStatusSecuritySettingsResult", ""
@@ -546,7 +546,7 @@ class MotorolaMB8611HnapParser(ModemParser):
                 _LOGGER.info("MB8611: Restart command sent successfully")
                 return True
             else:
-                ***REMOVED*** Enhanced error diagnostics - log full request/response for debugging
+                # Enhanced error diagnostics - log full request/response for debugging
                 _LOGGER.error("MB8611: Restart failed with result: %s", result)
                 _LOGGER.error(
                     "MB8611: Restart diagnostics - Request: action=SetStatusSecuritySettings, " "params=%s",
@@ -556,7 +556,7 @@ class MotorolaMB8611HnapParser(ModemParser):
                 return False
 
         except ConnectionResetError:
-            ***REMOVED*** Connection reset is expected - modem reboots immediately
+            # Connection reset is expected - modem reboots immediately
             _LOGGER.info("MB8611: Restart sent successfully (connection reset by rebooting modem)")
             return True
         except Exception as e:

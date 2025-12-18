@@ -40,43 +40,43 @@ async def async_setup_entry(
 
     entities: list[SensorEntity] = []
 
-    ***REMOVED*** Add unified status sensor
+    # Add unified status sensor
     entities.append(ModemStatusSensor(coordinator, entry))
 
-    ***REMOVED*** Add modem info sensor (device metadata)
+    # Add modem info sensor (device metadata)
     entities.append(ModemInfoSensor(coordinator, entry))
 
-    ***REMOVED*** Add latency sensors
+    # Add latency sensors
     entities.append(ModemHttpLatencySensor(coordinator, entry))
-    ***REMOVED*** Add ping latency sensor only if modem supports ICMP (default True)
+    # Add ping latency sensor only if modem supports ICMP (default True)
     entities.extend([ModemPingLatencySensor(coordinator, entry)] if coordinator.data.get("supports_icmp", True) else [])
 
-    ***REMOVED*** Check if we're in fallback mode (unsupported modem)
-    ***REMOVED*** In fallback mode, only connectivity sensors have data
-    ***REMOVED*** Note: system_info keys are prefixed with cable_modem_ in the coordinator data
+    # Check if we're in fallback mode (unsupported modem)
+    # In fallback mode, only connectivity sensors have data
+    # Note: system_info keys are prefixed with cable_modem_ in the coordinator data
     is_fallback_mode = coordinator.data.get("cable_modem_fallback_mode", False)
 
     if not is_fallback_mode:
-        ***REMOVED*** Add total error sensors (not available in fallback mode)
+        # Add total error sensors (not available in fallback mode)
         entities.append(ModemTotalCorrectedSensor(coordinator, entry))
         entities.append(ModemTotalUncorrectedSensor(coordinator, entry))
 
-        ***REMOVED*** Add channel count sensors (not available in fallback mode)
+        # Add channel count sensors (not available in fallback mode)
         entities.append(ModemDownstreamChannelCountSensor(coordinator, entry))
         entities.append(ModemUpstreamChannelCountSensor(coordinator, entry))
 
-        ***REMOVED*** Add software version and uptime sensors (not available in fallback mode)
+        # Add software version and uptime sensors (not available in fallback mode)
         entities.append(ModemSoftwareVersionSensor(coordinator, entry))
         entities.append(ModemSystemUptimeSensor(coordinator, entry))
         entities.append(ModemLastBootTimeSensor(coordinator, entry))
     else:
         _LOGGER.info("Fallback mode detected - skipping sensors that require channel/system data")
 
-    ***REMOVED*** Add per-channel downstream sensors
+    # Add per-channel downstream sensors
     if coordinator.data.get("cable_modem_downstream"):
         for idx, channel in enumerate(coordinator.data["cable_modem_downstream"]):
-            ***REMOVED*** v2.0+ parsers return 'channel_id', older versions used 'channel'
-            ***REMOVED*** Fallback to index+1 if neither exists (shouldn't happen in practice)
+            # v2.0+ parsers return 'channel_id', older versions used 'channel'
+            # Fallback to index+1 if neither exists (shouldn't happen in practice)
             channel_num = int(channel.get("channel_id", channel.get("channel", idx + 1)))
             entities.extend(
                 [
@@ -85,24 +85,24 @@ async def async_setup_entry(
                     ModemDownstreamFrequencySensor(coordinator, entry, channel_num),
                 ]
             )
-            ***REMOVED*** Only add error sensors if the data includes them
+            # Only add error sensors if the data includes them
             if "corrected" in channel:
                 entities.append(ModemDownstreamCorrectedSensor(coordinator, entry, channel_num))
             if "uncorrected" in channel:
                 entities.append(ModemDownstreamUncorrectedSensor(coordinator, entry, channel_num))
 
-    ***REMOVED*** Add per-channel upstream sensors
+    # Add per-channel upstream sensors
     if coordinator.data.get("cable_modem_upstream"):
         _LOGGER.debug("Creating entities for %s upstream channels", len(coordinator.data["cable_modem_upstream"]))
         for idx, channel in enumerate(coordinator.data["cable_modem_upstream"]):
-            ***REMOVED*** v2.0+ parsers return 'channel_id', older versions used 'channel'
-            ***REMOVED*** Fallback to index+1 if neither exists (shouldn't happen in practice)
+            # v2.0+ parsers return 'channel_id', older versions used 'channel'
+            # Fallback to index+1 if neither exists (shouldn't happen in practice)
             channel_num = int(channel.get("channel_id", channel.get("channel", idx + 1)))
             power_sensor = ModemUpstreamPowerSensor(coordinator, entry, channel_num)
             freq_sensor = ModemUpstreamFrequencySensor(coordinator, entry, channel_num)
             entities.extend([power_sensor, freq_sensor])
 
-    ***REMOVED*** Add LAN stats sensors
+    # Add LAN stats sensors
     if coordinator.data.get("cable_modem_lan_stats"):
         for interface, _stats in coordinator.data["cable_modem_lan_stats"].items():
             entities.extend(
@@ -132,7 +132,7 @@ class ModemSensorBase(CoordinatorEntity, SensorEntity):
         super().__init__(coordinator)
         self._entry = entry
 
-        ***REMOVED*** Get detected modem info from config entry, with fallback to generic values
+        # Get detected modem info from config entry, with fallback to generic values
         manufacturer = entry.data.get("detected_manufacturer", "Unknown")
         model = entry.data.get("detected_modem", "Cable Modem Monitor")
 
@@ -147,15 +147,15 @@ class ModemSensorBase(CoordinatorEntity, SensorEntity):
     @property
     def available(self) -> bool:
         """Return if entity is available."""
-        ***REMOVED*** Sensors remain available if coordinator succeeds, even if modem is temporarily offline
-        ***REMOVED*** This allows sensors to retain last known values during modem reboots
-        ***REMOVED*** Only mark unavailable if we truly can't reach the modem
+        # Sensors remain available if coordinator succeeds, even if modem is temporarily offline
+        # This allows sensors to retain last known values during modem reboots
+        # Only mark unavailable if we truly can't reach the modem
         status = self.coordinator.data.get("cable_modem_connection_status", "unknown")
         return self.coordinator.last_update_success and status in (
             "online",
             "offline",
-            "limited",  ***REMOVED*** Fallback mode - basic connectivity only
-            "parser_issue",  ***REMOVED*** Known parser but no channel data extracted
+            "limited",  # Fallback mode - basic connectivity only
+            "parser_issue",  # Known parser but no channel data extracted
         )
 
 
@@ -197,31 +197,31 @@ class ModemStatusSensor(ModemSensorBase):
         """
         data = self.coordinator.data
 
-        ***REMOVED*** Check health status first - can we reach the modem?
+        # Check health status first - can we reach the modem?
         health_status = data.get("health_status", "unknown")
         if health_status == "unresponsive":
             return "Unresponsive"
 
-        ***REMOVED*** Check connection status - did parsing work?
+        # Check connection status - did parsing work?
         connection_status = data.get("cable_modem_connection_status", "unknown")
         if connection_status in ("offline", "unreachable"):
             return "Unresponsive"
         if connection_status == "parser_issue":
             return "Parser Error"
 
-        ***REMOVED*** Check DOCSIS status - derive from channel lock status
+        # Check DOCSIS status - derive from channel lock status
         docsis_status = self._derive_docsis_status(data)
         if docsis_status == "Not Locked":
             return "Not Locked"
         if docsis_status == "Partial Lock":
             return "Partial Lock"
 
-        ***REMOVED*** Check for ICMP blocked (only if parser expects ping to work)
+        # Check for ICMP blocked (only if parser expects ping to work)
         supports_icmp = data.get("supports_icmp", True)
         if supports_icmp and health_status == "icmp_blocked":
             return "ICMP Blocked"
 
-        ***REMOVED*** All good
+        # All good
         return "Operational"
 
     def _derive_docsis_status(self, data: dict) -> str:
@@ -236,21 +236,21 @@ class ModemStatusSensor(ModemSensorBase):
         upstream = data.get("cable_modem_upstream", [])
 
         if not downstream:
-            ***REMOVED*** No downstream data - might be fallback mode or parser issue
-            ***REMOVED*** Don't report as "Not Locked" if we simply don't have the data
+            # No downstream data - might be fallback mode or parser issue
+            # Don't report as "Not Locked" if we simply don't have the data
             return "Operational" if data.get("cable_modem_fallback_mode") else "Unknown"
 
-        ***REMOVED*** Count locked channels
+        # Count locked channels
         locked_count = 0
         total_count = len(downstream)
 
         for ch in downstream:
             lock_status = ch.get("lock_status", "").lower()
-            ***REMOVED*** Consider various "locked" indicators
+            # Consider various "locked" indicators
             if lock_status in ("locked", "locked qam", "qam256", "qam64", "ofdm"):
                 locked_count += 1
             elif not lock_status:
-                ***REMOVED*** No lock_status field - assume locked if we have data
+                # No lock_status field - assume locked if we have data
                 locked_count += 1
 
         if locked_count == total_count and upstream:
@@ -292,10 +292,10 @@ class ModemInfoSensor(ModemSensorBase):
         """Return device metadata as attributes."""
         attrs: dict[str, str | bool | None] = {}
 
-        ***REMOVED*** Static info from config entry
+        # Static info from config entry
         attrs["manufacturer"] = self._entry.data.get("detected_manufacturer", "Unknown")
 
-        ***REMOVED*** Dynamic info from coordinator (parser metadata)
+        # Dynamic info from coordinator (parser metadata)
         if release_date := self.coordinator.data.get("_parser_release_date"):
             attrs["release_date"] = release_date
         if docsis_version := self.coordinator.data.get("_parser_docsis_version"):
@@ -357,7 +357,7 @@ class ModemDownstreamPowerSensor(ModemSensorBase):
     @property
     def native_value(self) -> float | None:
         """Return the state of the sensor."""
-        ***REMOVED*** Use indexed lookup for O(1) performance instead of O(n) linear search
+        # Use indexed lookup for O(1) performance instead of O(n) linear search
         channel_map = self.coordinator.data.get("_downstream_by_id", {})
         if self._channel in channel_map:
             return float(channel_map[self._channel].get("power"))
@@ -380,7 +380,7 @@ class ModemDownstreamSNRSensor(ModemSensorBase):
     @property
     def native_value(self) -> float | None:
         """Return the state of the sensor."""
-        ***REMOVED*** Use indexed lookup for O(1) performance instead of O(n) linear search
+        # Use indexed lookup for O(1) performance instead of O(n) linear search
         channel_map = self.coordinator.data.get("_downstream_by_id", {})
         if self._channel in channel_map:
             return float(channel_map[self._channel].get("snr"))
@@ -404,7 +404,7 @@ class ModemDownstreamFrequencySensor(ModemSensorBase):
     @property
     def native_value(self) -> int | None:
         """Return the state of the sensor."""
-        ***REMOVED*** Use indexed lookup for O(1) performance instead of O(n) linear search
+        # Use indexed lookup for O(1) performance instead of O(n) linear search
         channel_map = self.coordinator.data.get("_downstream_by_id", {})
         if self._channel in channel_map:
             return int(channel_map[self._channel].get("frequency"))
@@ -426,7 +426,7 @@ class ModemDownstreamCorrectedSensor(ModemSensorBase):
     @property
     def native_value(self) -> int | None:
         """Return the state of the sensor."""
-        ***REMOVED*** Use indexed lookup for O(1) performance instead of O(n) linear search
+        # Use indexed lookup for O(1) performance instead of O(n) linear search
         channel_map = self.coordinator.data.get("_downstream_by_id", {})
         if self._channel in channel_map:
             return int(channel_map[self._channel].get("corrected"))
@@ -448,7 +448,7 @@ class ModemDownstreamUncorrectedSensor(ModemSensorBase):
     @property
     def native_value(self) -> int | None:
         """Return the state of the sensor."""
-        ***REMOVED*** Use indexed lookup for O(1) performance instead of O(n) linear search
+        # Use indexed lookup for O(1) performance instead of O(n) linear search
         channel_map = self.coordinator.data.get("_downstream_by_id", {})
         if self._channel in channel_map:
             return int(channel_map[self._channel].get("uncorrected"))
@@ -471,7 +471,7 @@ class ModemUpstreamPowerSensor(ModemSensorBase):
     @property
     def native_value(self) -> float | None:
         """Return the state of the sensor."""
-        ***REMOVED*** Use indexed lookup for O(1) performance instead of O(n) linear search
+        # Use indexed lookup for O(1) performance instead of O(n) linear search
         channel_map = self.coordinator.data.get("_upstream_by_id", {})
         if self._channel in channel_map:
             return float(channel_map[self._channel].get("power"))
@@ -495,7 +495,7 @@ class ModemUpstreamFrequencySensor(ModemSensorBase):
     @property
     def native_value(self) -> int | None:
         """Return the state of the sensor."""
-        ***REMOVED*** Use indexed lookup for O(1) performance instead of O(n) linear search
+        # Use indexed lookup for O(1) performance instead of O(n) linear search
         channel_map = self.coordinator.data.get("_upstream_by_id", {})
         if self._channel in channel_map:
             return int(channel_map[self._channel].get("frequency"))
@@ -586,12 +586,12 @@ class ModemLastBootTimeSensor(ModemSensorBase):
         if not uptime_str or uptime_str == "Unknown":
             return None
 
-        ***REMOVED*** Parse uptime string to seconds
+        # Parse uptime string to seconds
         uptime_seconds = parse_uptime_to_seconds(uptime_str)
         if uptime_seconds is None:
             return None
 
-        ***REMOVED*** Calculate last boot time: current time - uptime
+        # Calculate last boot time: current time - uptime
         now = dt_util.now()
         last_boot: datetime | None = now - timedelta(seconds=uptime_seconds)
         return last_boot
@@ -699,7 +699,7 @@ class ModemPingLatencySensor(ModemSensorBase):
         self._attr_native_unit_of_measurement = "ms"
         self._attr_icon = "mdi:speedometer"
         self._attr_state_class = SensorStateClass.MEASUREMENT
-        ***REMOVED*** No device_class - latency measurements don't have a standard class
+        # No device_class - latency measurements don't have a standard class
 
     @property
     def native_value(self) -> int | None:
@@ -721,7 +721,7 @@ class ModemHttpLatencySensor(ModemSensorBase):
         self._attr_native_unit_of_measurement = "ms"
         self._attr_icon = "mdi:web-clock"
         self._attr_state_class = SensorStateClass.MEASUREMENT
-        ***REMOVED*** No device_class - latency measurements don't have a standard class
+        # No device_class - latency measurements don't have a standard class
 
     @property
     def native_value(self) -> int | None:

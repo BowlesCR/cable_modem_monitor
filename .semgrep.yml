@@ -1,5 +1,5 @@
 rules:
-  ***REMOVED*** Detect SSL verification disabled
+  # Detect SSL verification disabled
   - id: ssl-verification-disabled
     pattern-either:
       - pattern: requests.$METHOD(..., verify=False, ...)
@@ -12,7 +12,7 @@ rules:
       category: security
       cwe: "CWE-295: Improper Certificate Validation"
 
-  ***REMOVED*** Detect command injection via subprocess
+  # Detect command injection via subprocess
   - id: subprocess-shell-injection
     pattern-either:
       - pattern: subprocess.$FUNC(..., shell=True, ...)
@@ -24,7 +24,7 @@ rules:
       category: security
       cwe: "CWE-78: OS Command Injection"
 
-  ***REMOVED*** Detect unvalidated redirects
+  # Detect unvalidated redirects
   - id: unvalidated-redirect
     pattern: $SESSION.$METHOD(..., allow_redirects=True, ...)
     message: Unvalidated redirects can lead to open redirect vulnerabilities
@@ -34,7 +34,7 @@ rules:
       category: security
       cwe: "CWE-601: URL Redirection to Untrusted Site"
 
-  ***REMOVED*** Detect logging of sensitive data
+  # Detect logging of sensitive data
   - id: logging-sensitive-data
     pattern-regex: '(logger|_LOGGER)\.(debug|info|warning|error|critical)\(.*?(password|token|secret|api_key).*?\)'
     message: Potential logging of sensitive information
@@ -44,7 +44,7 @@ rules:
       category: security
       cwe: "CWE-532: Information Exposure Through Log Files"
 
-  ***REMOVED*** Detect broad exception catching
+  # Detect broad exception catching
   - id: broad-exception-catch
     pattern: |
       try:
@@ -57,7 +57,7 @@ rules:
     metadata:
       category: security
 
-  ***REMOVED*** Detect f-string in logging (performance and security)
+  # Detect f-string in logging (performance and security)
   - id: f-string-in-logging
     pattern-either:
       - pattern: $LOGGER.$LEVEL(f"...")
@@ -68,7 +68,7 @@ rules:
     metadata:
       category: best-practice
 
-  ***REMOVED*** Detect hardcoded credentials
+  # Detect hardcoded credentials
   - id: hardcoded-password
     pattern-either:
       - pattern: password = "..."

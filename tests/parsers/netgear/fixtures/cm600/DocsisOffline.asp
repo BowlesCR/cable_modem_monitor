@@ -30,7 +30,7 @@ var wan_status = 0;
         {
             parent.loadPage("DocsisStatus.asp");
         }
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
             buttonFilter();
         });
 
@@ -43,7 +43,7 @@ function BodyInit()
 }
 
 //--></script></head>
-<body onLoad="'MNU_menu.htm'" style="margin:0px;background-color:***REMOVED***e5e5e5">
+<body onLoad="'MNU_menu.htm'" style="margin:0px;background-color:#e5e5e5">
     <form id="target" name="DocsisOffline" action='/goform/DocsisOffline' method="post" onSubmit="return false">
         <input type="hidden" name="buttonHit">
         <input type="hidden" name="buttonValue">
@@ -66,7 +66,7 @@ function BodyInit()
         <table WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="4">
             <tr>
                 <td align=center>
-                    <b style="color:***REMOVED***ff0000">
+                    <b style="color:#ff0000">
                         Your modem is offline.
                     </b>
                 </TD>

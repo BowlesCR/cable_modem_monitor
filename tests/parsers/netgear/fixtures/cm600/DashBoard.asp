@@ -57,7 +57,7 @@
          font-size:14px;
          font-weight:bold;
          font-family: Arial,Simsun,Helvetica, sans-serif;;
-         color:***REMOVED***323232;
+         color:#323232;
          white-space: nowrap;
          overflow:hidden;
       }
@@ -66,7 +66,7 @@
          font-size:14px;
          font-weight:bold;
          font-family: Arial,Simsun, Helvetica, sans-serif;;
-         color:***REMOVED***ffffff;
+         color:#ffffff;
          display:block;
       }
 
@@ -74,7 +74,7 @@
          font-size:14px;
          font-weight:bold;
          font-family: Arial,Simsun,Helvetica, sans-serif;;
-         color:***REMOVED***43A800;
+         color:#43A800;
          white-space: nowrap;
          overflow:hidden;
       }
@@ -82,7 +82,7 @@
       .Condition-unnormal{
          font-size:12px;
          font-weight:bold;
-         color:***REMOVED***ffffff;
+         color:#ffffff;
          text-decoration:underline;
          font-family: Arial,Simsun,Helvetica, sans-serif;;
          font-style: italic;
@@ -93,7 +93,7 @@
          font-size:14px;
          font-weight:bold;
          font-family: Arial,Simsun,Helvetica, sans-serif;;
-         color:***REMOVED***323232;
+         color:#323232;
          white-space: nowrap;
          overflow:hidden;
       }
@@ -102,20 +102,20 @@
          font-size:14px;
          font-weight:bold;
          font-family: Arial,Simsun, Helvetica, sans-serif;;
-         color:***REMOVED***ffffff;
+         color:#ffffff;
          /*display:block;*/
       }
 
       .subtext{
          font-family: Arial,Simsun,Helvetica, sans-serif;
          font-size:20px;font-weight:bold;
-         color:***REMOVED***323232
+         color:#323232
       }
 
       .subtext_pr{
          font-family: Simsun,Arial,Helvetica, sans-serif;
          font-size:20px;font-weight:bold;
-         color:***REMOVED***323232
+         color:#323232
       }
   </style>
   <script type="text/javascript" src="jquery.js"></script>
@@ -182,9 +182,9 @@ $.fn.vAlign = function() {
          {
               if( ethernetIp == "" || ethernetIp == "---.---.---.---")
               {
-                  $('***REMOVED***Internet_head').addClass('error-head');
-                  $('***REMOVED***Internet_bottom').addClass('error-bottom');
-                  $('***REMOVED***Internet-status').addClass('Status-unnormal');
+                  $('#Internet_head').addClass('error-head');
+                  $('#Internet_bottom').addClass('error-bottom');
+                  $('#Internet-status').addClass('Status-unnormal');
               }
          }
          else
@@ -192,22 +192,22 @@ $.fn.vAlign = function() {
              if(Internet_Result == 0){
 
              }else{
-                 $('***REMOVED***Internet_head').addClass('error-head');
-                 $('***REMOVED***Internet_bottom').addClass('error-bottom');
-                 $('***REMOVED***Internet-status').addClass('Status-unnormal');
+                 $('#Internet_head').addClass('error-head');
+                 $('#Internet_bottom').addClass('error-bottom');
+                 $('#Internet-status').addClass('Status-unnormal');
              }
          }
 
         if(ETHERNET_SUPPORT && ethernetConnect)
         {
-            $('***REMOVED***Internet').click(function(ev){
+            $('#Internet').click(function(ev){
                 location.href = "BasicSettingsBottom.htm";
                 itemOnclickCssSetting("basic-int");
             });
         }
         else
         {
-            $('***REMOVED***Internet').click(function(ev){
+            $('#Internet').click(function(ev){
                     location.href = "DocsisOffline.asp";
                     itemOnclickCssSetting("basic-int");
                 });
@@ -216,46 +216,46 @@ $.fn.vAlign = function() {
 /*
         if("BAS_basic.htm" != "") {
             if(Internet_Result == 0){
-                $('***REMOVED***Internet').click(function(ev){
+                $('#Internet').click(function(ev){
                     location.href = "BAS_basic.htm";
 
-                    parent.$('***REMOVED***page').width(685);
-                    parent.$('***REMOVED***page').height(470);
-                    $('***REMOVED***page').css("margin-top","0");
-                    $('***REMOVED***page').css("margin-left","30");
+                    parent.$('#page').width(685);
+                    parent.$('#page').height(470);
+                    $('#page').css("margin-top","0");
+                    $('#page').css("margin-left","30");
 
                     parent.$('.menuActive').removeClass('menuActive');
-                    parent.$('***REMOVED***basic-int').addClass('menuActive');
+                    parent.$('#basic-int').addClass('menuActive');
                 });
-                parent.$('***REMOVED***INT_menu').attr("href","BAS_basic.htm");
+                parent.$('#INT_menu').attr("href","BAS_basic.htm");
             }else if(Internet_Result == 1){
-                $('***REMOVED***Internet').click(function(ev){
+                $('#Internet').click(function(ev){
                     location.href = "genie_down.htm";
 
-                    parent.$('***REMOVED***page').width(685);
-                    parent.$('***REMOVED***page').height(470);
-                    parent.$('***REMOVED***page').css("margin-top","0");
-                    parent.$('***REMOVED***page').css("margin-left","30");
+                    parent.$('#page').width(685);
+                    parent.$('#page').height(470);
+                    parent.$('#page').css("margin-top","0");
+                    parent.$('#page').css("margin-left","30");
 
                     parent.$('.menuActive').removeClass('menuActive');
-                    parent.$('***REMOVED***basic-int').addClass('menuActive');
+                    parent.$('#basic-int').addClass('menuActive');
 
                 });
-                parent.$('***REMOVED***INT_menu').attr("href","genie_down.htm");
+                parent.$('#INT_menu').attr("href","genie_down.htm");
             }else{
-                $('***REMOVED***Internet').click(function(ev){
+                $('#Internet').click(function(ev){
                     location.href = "genie_detwan.htm";
 
-                    parent.$('***REMOVED***page').width(685);
-                    parent.$('***REMOVED***page').height(470);
-                    parent.$('***REMOVED***page').css("margin-top","0");
-                    parent.$('***REMOVED***page').css("margin-left","30");
+                    parent.$('#page').width(685);
+                    parent.$('#page').height(470);
+                    parent.$('#page').css("margin-top","0");
+                    parent.$('#page').css("margin-left","30");
 
                     parent.$('.menuActive').removeClass('menuActive');
-                    parent.$('***REMOVED***basic-int').addClass('menuActive');
+                    parent.$('#basic-int').addClass('menuActive');
 
                 });
-                parent.$('***REMOVED***INT_menu').attr("href","genie_detwan.htm");
+                parent.$('#INT_menu').attr("href","genie_detwan.htm");
             }
         }
 */
@@ -293,53 +293,53 @@ $.fn.vAlign = function() {
           if(Wireless_Result == 0){
               if(Wireless_Radio_Result == "2g")
               {
-                  $('***REMOVED***wireless1').css("display","none");
-                  $('***REMOVED***wireless3').css("display","none");
+                  $('#wireless1').css("display","none");
+                  $('#wireless3').css("display","none");
               }
               else if(Wireless_Radio_Result == "5g")
               {
-                  $('***REMOVED***wireless1_5g').css("display","none");
-                  $('***REMOVED***wireless3_5g').css("display","none");
+                  $('#wireless1_5g').css("display","none");
+                  $('#wireless3_5g').css("display","none");
               }
               if(Wireless_Security_Result =="2g" || Wireless_Security_Result =="5g"){
                   if(Wireless_Security_Result =="2g" && Wireless_Radio_Result != "2g")
                   {
-                  	  $('***REMOVED***Wireless_head').addClass('warning-head');
-                      $('***REMOVED***wireless3').addClass('Status-wireless-unnormal');
-                      $('***REMOVED***wireless3').attr("style","background-color:***REMOVED***FAE125;text-align: center;");
+                  	  $('#Wireless_head').addClass('warning-head');
+                      $('#wireless3').addClass('Status-wireless-unnormal');
+                      $('#wireless3').attr("style","background-color:#FAE125;text-align: center;");
                   }
                   else if(Wireless_Security_Result =="5g" && Wireless_Radio_Result != "5g")
                   {
-                  	  $('***REMOVED***Wireless_head').addClass('warning-head');
-                      $('***REMOVED***wireless3_5g').addClass('Status-wireless-unnormal');
-                      $('***REMOVED***wireless3_5g').attr("style","background-color:***REMOVED***FAE125;text-align: center;");
+                  	  $('#Wireless_head').addClass('warning-head');
+                      $('#wireless3_5g').addClass('Status-wireless-unnormal');
+                      $('#wireless3_5g').attr("style","background-color:#FAE125;text-align: center;");
                   }
               }
           }else{
-              $('***REMOVED***Wireless_head').addClass('warning-head');
-              $('***REMOVED***Wireless_bottom').addClass('warning-bottom');
-              $('***REMOVED***Wireless-status').addClass('Status-wireless-unnormal');
+              $('#Wireless_head').addClass('warning-head');
+              $('#Wireless_bottom').addClass('warning-bottom');
+              $('#Wireless-status').addClass('Status-wireless-unnormal');
           }
 
           if(false)
           {
-              $('***REMOVED***Wireless').click(function(ev){
+              $('#Wireless').click(function(ev){
                   location.href = "WirelessSettings.htm";
                   itemOnclickCssSetting("basic-wls");
               });
-              parent.$('***REMOVED***WLS_menu').attr("href","WirelessSettings.htm");
+              parent.$('#WLS_menu').attr("href","WirelessSettings.htm");
           }
           else
           {
             if(Wireless_Link_Result == 0){
-                $('***REMOVED***Wireless').click(function(ev){
+                $('#Wireless').click(function(ev){
                     location.href = "WirelessSettings.htm";
                     itemOnclickCssSetting("basic-wls");
                 });
-                parent.$('***REMOVED***WLS_menu').attr("href","WirelessSettings.htm");
+                parent.$('#WLS_menu').attr("href","WirelessSettings.htm");
             }else if(Wireless_Link_Result == 1){
 
-                $('***REMOVED***Wireless').click(function(ev){
+                $('#Wireless').click(function(ev){
                     if(wifiScheduleSupport)
                     {
                         location.href = "AdvancedWirelessSettingsWithSchedule.htm";
@@ -352,11 +352,11 @@ $.fn.vAlign = function() {
                 });
                 if(wifiScheduleSupport)
                 {
-                    parent.$('***REMOVED***WLS_menu').attr("href","AdvancedWirelessSettingsWithSchedule.htm");
+                    parent.$('#WLS_menu').attr("href","AdvancedWirelessSettingsWithSchedule.htm");
                 }
                 else
                 {
-                    parent.$('***REMOVED***WLS_menu').attr("href","AdvancedWirelessSettings.htm");
+                    parent.$('#WLS_menu').attr("href","AdvancedWirelessSettings.htm");
                 }
 
             }
@@ -370,7 +370,7 @@ $.fn.vAlign = function() {
           var AttachedDevices_Result = "";
 
 
-          $('***REMOVED***AttachedDevices').click(function(ev){
+          $('#AttachedDevices').click(function(ev){
               location.href = "NetworkMap.htm";
               itemOnclickCssSetting("basic-atd");
           });
@@ -386,38 +386,38 @@ $.fn.vAlign = function() {
 //          var support = 1;
 
           if(support == 0){
-              $('***REMOVED***ParentalControls-condition').text("NOT SUPPORTED");
+              $('#ParentalControls-condition').text("NOT SUPPORTED");
           }else{
               if(ParentalControls_Result == 1){
-                  $('***REMOVED***ParentalControls-condition').text("ENABLED");
+                  $('#ParentalControls-condition').text("ENABLED");
               }else{
-                  $('***REMOVED***ParentalControls-condition').text("NOT ENABLED");
+                  $('#ParentalControls-condition').text("NOT ENABLED");
               }
           }
           if("BAS_basic.htm" != ""){
               if(support == 0){
-                  $('***REMOVED***ParentalControls').click(function(ev){
+                  $('#ParentalControls').click(function(ev){
                        window.open("http://www.netgear.com/ lpc",'_blank','fullscreen=yes,toolbar=yes,location=yes,scrollbars=yes');
                   });
-                  parent.$('***REMOVED***PAR_menu').attr("href","http://www.netgear.com/lpc");
-                  parent.$('***REMOVED***PAR_menu2').attr("href","http://www.netgear.com/lpc");
+                  parent.$('#PAR_menu').attr("href","http://www.netgear.com/lpc");
+                  parent.$('#PAR_menu2').attr("href","http://www.netgear.com/lpc");
               }else{
                   if(ParentalControls_Result == 0){
-                      $('***REMOVED***ParentalControls').click(function(ev){
+                      $('#ParentalControls').click(function(ev){
                            window.open("http://www.netgear.com/lpc",'_blank','fullscreen=yes,toolbar=yes,location=yes,scrollbars=yes');
                            parent.$('.menuActive').removeClass('menuActive');
-                           parent.$('***REMOVED***basic-par').addClass('menuActive');
+                           parent.$('#basic-par').addClass('menuActive');
                       });
-                      parent.$('***REMOVED***PAR_menu').attr("href","http://www.netgear.com/lpc");
-                      parent.$('***REMOVED***PAR_menu2').attr("href","http://www.netgear.com/lpc");
+                      parent.$('#PAR_menu').attr("href","http://www.netgear.com/lpc");
+                      parent.$('#PAR_menu2').attr("href","http://www.netgear.com/lpc");
                   }else{
-                      $('***REMOVED***ParentalControls').click(function(){
+                      $('#ParentalControls').click(function(){
                           window.open("http://netgear.opendns.com/",'_blank','fullscreen=yes,toolbar=yes,location=yes,scrollbars=yes');
                           parent.$('.menuActive').removeClass('menuActive');
-                          parent.$('***REMOVED***basic-par').addClass('menuActive');
+                          parent.$('#basic-par').addClass('menuActive');
                       });
-                      parent.$('***REMOVED***PAR_menu').attr("href","http://netgear.opendns.com/");
-                      parent.$('***REMOVED***PAR_menu2').attr("href","http://netgear.opendns.com/");
+                      parent.$('#PAR_menu').attr("href","http://netgear.opendns.com/");
+                      parent.$('#PAR_menu2').attr("href","http://netgear.opendns.com/");
                   }
               }
          }
@@ -434,12 +434,12 @@ $.fn.vAlign = function() {
 
 
           if(ReadyShare_Result == 1){
-              $('***REMOVED***ReadyShare-condition').text("READY");
+              $('#ReadyShare-condition').text("READY");
           }else{
-              $('***REMOVED***ReadyShare-condition').text("No USB drive");
+              $('#ReadyShare-condition').text("No USB drive");
           }
 
-          $('***REMOVED***ReadyShare').click(function(ev){
+          $('#ReadyShare').click(function(ev){
               location.href = "USBBasic.htm";
 //              location.href = "USB_basic_main.htm";
               itemOnclickCssSetting("basic-rea");
@@ -453,16 +453,16 @@ $.fn.vAlign = function() {
           var GuestNetwork_Result = document.getElementsByName("Guest_Result")[0].value;
           if(GuestNetwork_Result == "2g")
           {
-              $('***REMOVED***guest1_5g').css("display","none");
-              $('***REMOVED***guest3_5g').css("display","none");
+              $('#guest1_5g').css("display","none");
+              $('#guest3_5g').css("display","none");
           }
           else if(GuestNetwork_Result == "5g")
           {
-              $('***REMOVED***guest1').css("display","none");
-              $('***REMOVED***guest3').css("display","none");
+              $('#guest1').css("display","none");
+              $('#guest3').css("display","none");
           }
 
-          $('***REMOVED***GuestNetwork').click(function(ev){
+          $('#GuestNetwork').click(function(ev){
             location.href = "GuestNetwork.htm";
             itemOnclickCssSetting("basic-gst");
           });
@@ -474,16 +474,16 @@ $.fn.vAlign = function() {
           var Voice_Result = document.forms[0].Voice_Result.value;
 
           if(Voice_Result == 1){
-              $('***REMOVED***Voice-condition').text("READY");
+              $('#Voice-condition').text("READY");
               document.getElementsByName("VoiceImg")[0].src = "Phone.PNG";
           }else{
-          	  $('***REMOVED***Voice-condition').text("Not Available");
-              $('***REMOVED***Voice-condition').css("color","red");
+          	  $('#Voice-condition').text("Not Available");
+              $('#Voice-condition').css("color","red");
               document.getElementsByName("VoiceImg")[0].src = "Phone_gray.PNG";
           }
 
 
-          $('***REMOVED***Voice').click(function(ev){
+          $('#Voice').click(function(ev){
             location.href = "MtaStatus.htm";
             itemOnclickCssSetting("basic-voice");
           });
@@ -492,15 +492,15 @@ $.fn.vAlign = function() {
 
 function itemOnclickCssSetting(itemId)
 {
-    parent.$('***REMOVED***page').width(685);
-    parent.$('***REMOVED***page').height(parent.page_contain_height);
-    parent.$('***REMOVED***page').css("margin-top","0");
-    parent.$('***REMOVED***page').css("margin-left","30");
+    parent.$('#page').width(685);
+    parent.$('#page').height(parent.page_contain_height);
+    parent.$('#page').css("margin-top","0");
+    parent.$('#page').css("margin-left","30");
 
     parent.$('.menuActive').removeClass('menuActive');
-    parent.$('***REMOVED***'+itemId).addClass('menuActive');
-    parent.$('***REMOVED***page').css("visibility","hidden");
-    parent.$('***REMOVED***page_contain').addClass('main-page-contain-loading');
+    parent.$('#'+itemId).addClass('menuActive');
+    parent.$('#page').css("visibility","hidden");
+    parent.$('#page_contain').addClass('main-page-contain-loading');
 }
 
 function InternetDisplay(connected, comment)
@@ -523,19 +523,19 @@ function InternetDisplay(connected, comment)
     {
         ethernetConnect = true;
         if (comment == "Off")
-            $('***REMOVED***Internet-status1').html(vOff);
+            $('#Internet-status1').html(vOff);
         else
-            $('***REMOVED***Internet-status1').html(comment);
-        $('***REMOVED***internet2').css('display', 'none');
+            $('#Internet-status1').html(comment);
+        $('#internet2').css('display', 'none');
     }
     else
     {
-        $('***REMOVED***Internet-status1').html('STATUS:');
+        $('#Internet-status1').html('STATUS:');
 
         if (comment == "Good")
-            $('***REMOVED***Internet-status2').html(vGood);
+            $('#Internet-status2').html(vGood);
         else
-            $('***REMOVED***Internet-status2').html(comment);
+            $('#Internet-status2').html(comment);
 
     }
 }
@@ -568,8 +568,8 @@ function InitUpdateView(tagValues)
         {
             ethernetConnect = true;
             ethernetIp = tagValues[30];
-            $("***REMOVED***connectionText").html("Internet Connection");
-            $("***REMOVED***connectionText").css("font-size","18px");
+            $("#connectionText").html("Internet Connection");
+            $("#connectionText").css("font-size","18px");
         }
     }
 
@@ -577,7 +577,7 @@ function InitUpdateView(tagValues)
     document.getElementsByName("Internet_Status")[0].value = tagValues[0];
 
     // Internet Comment
-//    $('***REMOVED***Internet-status1').html(tagValues[1]);
+//    $('#Internet-status1').html(tagValues[1]);
     InternetDisplay(tagValues[0], tagValues[1]);
 
     // Wireless Radio Enable
@@ -594,7 +594,7 @@ function InitUpdateView(tagValues)
     }
     else
         tagValues[4] = stringTmp;
-    $('***REMOVED***wiressSSID1').html(tagValues[4]);
+    $('#wiressSSID1').html(tagValues[4]);
 
     // Wireless SSID 5g
     stringTmp = piplineDecode(tagValues[5])
@@ -604,18 +604,18 @@ function InitUpdateView(tagValues)
     }
     else
         tagValues[5] = stringTmp;
-    $('***REMOVED***wiressSSID1_5g').html(tagValues[5]);
+    $('#wiressSSID1_5g').html(tagValues[5]);
 
     // Wireless Passphrase
     if(tagValues[6] == "None")
     {
-        $('***REMOVED***wireless3').html("No Security");
+        $('#wireless3').html("No Security");
     }
     else if(tagValues[6] == "Enterprise")
     {
-        $('***REMOVED***wireless3').html('Security:&nbsp&nbsp&nbsp&nbsp&nbsp'+tagValues[6]);
-        $('***REMOVED***wireless3').addClass('Status-wireless-normal');
-        $('***REMOVED***wireless4').addClass('Status-wireless-normal');
+        $('#wireless3').html('Security:&nbsp&nbsp&nbsp&nbsp&nbsp'+tagValues[6]);
+        $('#wireless3').addClass('Status-wireless-normal');
+        $('#wireless4').addClass('Status-wireless-normal');
     }
     else
     {
@@ -626,18 +626,18 @@ function InitUpdateView(tagValues)
         }
         else
             tagValues[6] = stringTmp;
-        $('***REMOVED***wirelessPassword1').html(tagValues[6]);
+        $('#wirelessPassword1').html(tagValues[6]);
     }
 
     // Wireless Passphrase 5g
     if(tagValues[7] == "None")
     {
-        $('***REMOVED***wireless3_5g').html("No Security");
+        $('#wireless3_5g').html("No Security");
     }
     else if(tagValues[7] == "Enterprise")
     {
-        $('***REMOVED***wireless3_5g').html('Security:&nbsp&nbsp&nbsp&nbsp&nbsp'+tagValues[7]);
-        $('***REMOVED***wireless3_5g').addClass('Status-wireless-normal');
+        $('#wireless3_5g').html('Security:&nbsp&nbsp&nbsp&nbsp&nbsp'+tagValues[7]);
+        $('#wireless3_5g').addClass('Status-wireless-normal');
     }
     else
     {
@@ -648,12 +648,12 @@ function InitUpdateView(tagValues)
         }
         else
             tagValues[7] = stringTmp;
-        $('***REMOVED***wirelessPassword1_5g').html(tagValues[7]);
+        $('#wirelessPassword1_5g').html(tagValues[7]);
     }
 
 
     // Attached Devices Number
-    $('***REMOVED***AttachedDevices-condition').html(tagValues[8]);
+    $('#AttachedDevices-condition').html(tagValues[8]);
 
 
     // Parentral Radio Enable
@@ -678,7 +678,7 @@ function InitUpdateView(tagValues)
     }
     else
         tagValues[13] = stringTmp;
-    $('***REMOVED***guestSSID1').html(tagValues[13]);
+    $('#guestSSID1').html(tagValues[13]);
 
     // Guest Passphrase
     stringTmp = piplineDecode(tagValues[14])
@@ -688,7 +688,7 @@ function InitUpdateView(tagValues)
     }
     else
         tagValues[14] = stringTmp;
-    $('***REMOVED***guestPassword1').html(tagValues[14]);
+    $('#guestPassword1').html(tagValues[14]);
 
     // Guest SSID 5g
     stringTmp = piplineDecode(tagValues[15])
@@ -698,7 +698,7 @@ function InitUpdateView(tagValues)
     }
     else
         tagValues[15] = stringTmp;
-    $('***REMOVED***guestSSID1_5g').html(tagValues[15]);
+    $('#guestSSID1_5g').html(tagValues[15]);
 
     // Guest Passphrase
     stringTmp = piplineDecode(tagValues[16])
@@ -708,7 +708,7 @@ function InitUpdateView(tagValues)
     }
     else
         tagValues[16] = stringTmp;
-    $('***REMOVED***guestPassword1_5g').html(tagValues[16]);
+    $('#guestPassword1_5g').html(tagValues[16]);
 
     // Rg/Bridge supported
     var RgMode = tagValues[22];
@@ -719,7 +719,7 @@ function InitUpdateView(tagValues)
     setWebMTASupport(tagValues[17]);
 
     // always hide nat mode webpage
-    //parent.$("***REMOVED***NatMode").hide();
+    //parent.$("#NatMode").hide();
 
     if (RgMode == "1")
     {
@@ -735,20 +735,20 @@ function InitUpdateView(tagValues)
         // GuestNetwork supported
         if (tagValues[21] == "1")
         {
-            $("***REMOVED***GuestNetwork").hide();
-            parent.$('***REMOVED***guest_set').css('display', 'none');
+            $("#GuestNetwork").hide();
+            parent.$('#guest_set').css('display', 'none');
         }
 
         // Voice Supported
         if (tagValues[23] == "1")
         {
-            $("***REMOVED***ParentalControls").hide();
-            $("***REMOVED***Voice").show();
+            $("#ParentalControls").hide();
+            $("#Voice").show();
         }
         else
         {
-            $("***REMOVED***ParentalControls").show();
-            $("***REMOVED***Voice").hide();
+            $("#ParentalControls").show();
+            $("#Voice").hide();
         }
     }
     else
@@ -756,22 +756,22 @@ function InitUpdateView(tagValues)
         // Voice Supported
         if (tagValues[23] == "1")
         {
-            $("***REMOVED***Voice").show();
+            $("#Voice").show();
         }
         else
         {
-            $("***REMOVED***Voice").hide();
+            $("#Voice").hide();
         }
 
-        parent.$("***REMOVED***router_status").show();
-        parent.$("***REMOVED***eventlog").show();
+        parent.$("#router_status").show();
+        parent.$("#eventlog").show();
         // always hide nat mode webpage
-        parent.$("***REMOVED***RouterMode").show();
-        $("***REMOVED***GuestNetwork").hide();
-        $("***REMOVED***ReadyShare").hide();
-        $("***REMOVED***ParentalControls").hide();
-        $("***REMOVED***AttachedDevices").hide();
-        $("***REMOVED***Wireless").hide();
+        parent.$("#RouterMode").show();
+        $("#GuestNetwork").hide();
+        $("#ReadyShare").hide();
+        $("#ParentalControls").hide();
+        $("#AttachedDevices").hide();
+        $("#Wireless").hide();
     }
 
     document.getElementsByName("Voice_Result")[0].value = tagValues[24];
@@ -785,50 +785,50 @@ function InitUpdateView(tagValues)
 		oneItemHeight=24;
 	}
 
-    parent.$('***REMOVED***set_hdr li').each(function(){
+    parent.$('#set_hdr li').each(function(){
         //alert ($(this)[0].getAttribute('id'));
         if($($(this)[0]).css("display") != "none"){
             activeLength++;
         }
     });
-    parent.$('***REMOVED***set_hdr').height(activeLength * oneItemHeight + heightpadding);
+    parent.$('#set_hdr').height(activeLength * oneItemHeight + heightpadding);
 
     activeLength=0;
-    parent.$('***REMOVED***AdminULId li').each(function(){
+    parent.$('#AdminULId li').each(function(){
         //alert ($(this)[0].getAttribute('id'));
         if($($(this)[0]).css("display") != "none"){
             activeLength++;
         }
     });
-    parent.$('***REMOVED***AdminULId').height(activeLength * oneItemHeight + heightpadding);
+    parent.$('#AdminULId').height(activeLength * oneItemHeight + heightpadding);
 
     activeLength=0;
-    parent.$('***REMOVED***usb_hdr li').each(function(){
+    parent.$('#usb_hdr li').each(function(){
         //alert ($(this)[0].getAttribute('id'));
         if($($(this)[0]).css("display") != "none"){
             activeLength++;
         }
     });
-    parent.$('***REMOVED***usb_hdr').height(activeLength * oneItemHeight + heightpadding);
+    parent.$('#usb_hdr').height(activeLength * oneItemHeight + heightpadding);
 
     activeLength=0;
-    parent.$('***REMOVED***sec_hdr li').each(function(){
+    parent.$('#sec_hdr li').each(function(){
         //alert ($(this)[0].getAttribute('id'));
         if($($(this)[0]).css("display") != "none"){
             activeLength++;
         }
     });
-    parent.$('***REMOVED***sec_hdr').height(activeLength * oneItemHeight + heightpadding);
+    parent.$('#sec_hdr').height(activeLength * oneItemHeight + heightpadding);
 
     if (tagValues[25] == "0")
     {
-        $("***REMOVED***GuestNetwork").hide();
+        $("#GuestNetwork").hide();
     }
 
     // USB hidden supportted
     if (tagValues[26] == "1")
     {
-        $("***REMOVED***ReadyShare").hide();
+        $("#ReadyShare").hide();
     }
 }
 
@@ -859,17 +859,17 @@ function initBridgeView(statusTag)
 {
     if(statusTag == "1")
     {
-        parent.$("***REMOVED***router_status_text").html("Modem Status");
-        parent.$("***REMOVED***RouterMode").hide();
-        parent.$("***REMOVED***SetPassword").show();
+        parent.$("#router_status_text").html("Modem Status");
+        parent.$("#RouterMode").hide();
+        parent.$("#SetPassword").show();
     }
 }
 function hiddenWifi(statusTag)
 {
     if(statusTag == "1")
     {
-        $("***REMOVED***GuestNetwork").hide();
-        $("***REMOVED***Wireless").hide();
+        $("#GuestNetwork").hide();
+        $("#Wireless").hide();
     }
 }
 
@@ -878,11 +878,11 @@ function setWebMTASupport (enable)
 {
     if ( enable == '1')
     {
-        parent.$('***REMOVED***MtaStatus').css('display', 'block');
+        parent.$('#MtaStatus').css('display', 'block');
     }
     else
     {
-        parent.$('***REMOVED***MtaStatus').css('display', 'none');
+        parent.$('#MtaStatus').css('display', 'none');
     }
 }
 
@@ -890,11 +890,11 @@ function setWebSpeedTestSupport (enable)
 {
     if ( enable == '1')
     {
-        parent.$('***REMOVED***SpeedTest').css('display', 'block');
+        parent.$('#SpeedTest').css('display', 'block');
     }
     else
     {
-        parent.$('***REMOVED***SpeedTest').css('display', 'none');
+        parent.$('#SpeedTest').css('display', 'none');
     }
 }
 
@@ -902,11 +902,11 @@ function setWebLoopbackIPSupport (enable)
 {
     if ( enable == '1')
     {
-        parent.$('***REMOVED***OnOLanSetup').css('display', 'block');
+        parent.$('#OnOLanSetup').css('display', 'block');
     }
     else
     {
-        parent.$('***REMOVED***OnOLanSetup').css('display', 'none');
+        parent.$('#OnOLanSetup').css('display', 'none');
     }
 }
 
@@ -914,13 +914,13 @@ function setWeb3GWANSupport (enable)
 {
     if ( enable == '1')
     {
-        parent.$('***REMOVED***MobileBroadbandSetup').css('display', 'block');
-        parent.$('***REMOVED***BroadbandSetup').css('display', 'block');
+        parent.$('#MobileBroadbandSetup').css('display', 'block');
+        parent.$('#BroadbandSetup').css('display', 'block');
     }
     else
     {
-        parent.$('***REMOVED***MobileBroadbandSetup').css('display', 'none');
-        parent.$('***REMOVED***BroadbandSetup').css('display', 'none');
+        parent.$('#MobileBroadbandSetup').css('display', 'none');
+        parent.$('#BroadbandSetup').css('display', 'none');
     }
 }
 
@@ -928,27 +928,27 @@ function WirelessDisplay(enable, type)
 {
     var str;
 
-    $('***REMOVED***wireless_none').css('display', 'none');
-    $('***REMOVED***wireless_key').css('display', 'none');
+    $('#wireless_none').css('display', 'none');
+    $('#wireless_key').css('display', 'none');
 
     if (enable == 'none')
     {
-        $('***REMOVED***wireless_none').css('display', 'block');
-        $('***REMOVED***wireless_none').vAlign();
-        $('***REMOVED***wireless_none').css('text-align', 'center');
-        $('***REMOVED***wirelessRadio').html('OFF');
+        $('#wireless_none').css('display', 'block');
+        $('#wireless_none').vAlign();
+        $('#wireless_none').css('text-align', 'center');
+        $('#wirelessRadio').html('OFF');
 
     }
     else if (type == 'none')
     {
-        $('***REMOVED***wirelessRadio').html('No Security');
-        $('***REMOVED***wireless_none').css('display', 'block');
-        $('***REMOVED***wireless_none').vAlign();
-        $('***REMOVED***wireless_none').css('text-align', 'center');
+        $('#wirelessRadio').html('No Security');
+        $('#wireless_none').css('display', 'block');
+        $('#wireless_none').vAlign();
+        $('#wireless_none').css('text-align', 'center');
     }
     else
     {
-        $('***REMOVED***wireless_key').css('display', 'block');
+        $('#wireless_key').css('display', 'block');
     }
 }
 
@@ -956,35 +956,35 @@ function WirelessDisplay(enable, type)
 function GuestWirelessDisplay(enable,wifiEnable)
 {
     var str;
-    var noneWidth = $('***REMOVED***guest1_none')[0].offsetWidth;
+    var noneWidth = $('#guest1_none')[0].offsetWidth;
 
-    $('***REMOVED***guest1_none').css('display', 'none');
-    $('***REMOVED***guest1_key').css('display', 'none');
-    $('***REMOVED***guest1_long').css('display', 'none');
+    $('#guest1_none').css('display', 'none');
+    $('#guest1_key').css('display', 'none');
+    $('#guest1_long').css('display', 'none');
 
     if (enable == 'none' || wifiEnable == 'none')
     {
 //    alert (enable);
-        if($('***REMOVED***GuestNetwork-bottom')[0].offsetWidth < noneWidth)
+        if($('#GuestNetwork-bottom')[0].offsetWidth < noneWidth)
         {
-            $('***REMOVED***guest1_long').css('display', 'block');
-            $('***REMOVED***guest1_long').vAlign();
-            $('***REMOVED***guest1_long').css('text-align', 'center');
+            $('#guest1_long').css('display', 'block');
+            $('#guest1_long').vAlign();
+            $('#guest1_long').css('text-align', 'center');
         }
         else{
-            $('***REMOVED***guest1_none').css('display', 'block');
-            $('***REMOVED***guest1_none').vAlign();
-            $('***REMOVED***guest1_none').css('text-align', 'center');
+            $('#guest1_none').css('display', 'block');
+            $('#guest1_none').vAlign();
+            $('#guest1_none').css('text-align', 'center');
         }
     }
     else
     {
-        $('***REMOVED***guest1_key').css('display', 'block');
+        $('#guest1_key').css('display', 'block');
     }
 }
   </script>
 </head>
-<body style="background:url('background_gradient.jpg') no-repeat left top;background-color:***REMOVED***e5e5e5;margin:0;padding:0;width:605px;height:405px;cursor:pointer">
+<body style="background:url('background_gradient.jpg') no-repeat left top;background-color:#e5e5e5;margin:0;padding:0;width:605px;height:405px;cursor:pointer">
     <table style="margin-left:5px;margin-top:7px" CELLSPACING="0" CELLPADDING="0">
         <tr>
             <td style="height:192px;width:192px;padding-left:3px" id="Internet">
@@ -999,8 +999,8 @@ function GuestWirelessDisplay(enable,wifiEnable)
                         </span>
                     </div>
                 </div>
-                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset ***REMOVED***eaeaea;">
-                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid ***REMOVED***d4d4d4;">
+                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset #eaeaea;">
+                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid #d4d4d4;">
                         <img alt="" src="Internet.jpg">
                         <br>
                         <span id="connectionText" class="subtext">
@@ -1040,8 +1040,8 @@ function GuestWirelessDisplay(enable,wifiEnable)
                         </span>
                     </div>
                 </div>
-                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset ***REMOVED***eaeaea;">
-                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid ***REMOVED***d4d4d4;">
+                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset #eaeaea;">
+                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid #d4d4d4;">
                         <img alt="" src="img/Wireless.gif">
                         <br>
                         <span class="subtext">
@@ -1126,8 +1126,8 @@ function GuestWirelessDisplay(enable,wifiEnable)
                         </span>
                     </div>
                 </div>
-                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset ***REMOVED***eaeaea;">
-                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid ***REMOVED***d4d4d4;">
+                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset #eaeaea;">
+                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid #d4d4d4;">
                         <img alt="" src="AttachedDevice.jpg">
                         <br>
                         <span class="subtext">
@@ -1169,8 +1169,8 @@ function GuestWirelessDisplay(enable,wifiEnable)
                         </span>
                     </div>
                 </div>
-                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset ***REMOVED***eaeaea;">
-                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid ***REMOVED***d4d4d4;">
+                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset #eaeaea;">
+                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid #d4d4d4;">
                         <img alt="" src="ParentalControl.jpg">
                         <br>
                         <span class="subtext">
@@ -1207,8 +1207,8 @@ function GuestWirelessDisplay(enable,wifiEnable)
                         </span>
                     </div>
                 </div>
-                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset ***REMOVED***eaeaea;">
-                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid ***REMOVED***d4d4d4;">
+                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset #eaeaea;">
+                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid #d4d4d4;">
                         <img alt="" name="VoiceImg" src="Phone_gray.PNG">
                         <br>
                         <span class="subtext">
@@ -1245,8 +1245,8 @@ function GuestWirelessDisplay(enable,wifiEnable)
                         </span>
                     </div>
                 </div>
-                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset ***REMOVED***eaeaea;">
-                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid ***REMOVED***d4d4d4;">
+                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset #eaeaea;">
+                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid #d4d4d4;">
                         <img alt="" src="img/ReadyShare.gif">
                         <br>
                         <span class="subtext" style="font-family:Arial;">
@@ -1283,8 +1283,8 @@ function GuestWirelessDisplay(enable,wifiEnable)
                         </span>
                     </div>
                 </div>
-                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset ***REMOVED***eaeaea;">
-                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid ***REMOVED***d4d4d4;">
+                <div style="height:115px;width:192px;background-image:url('DashBackCenter.gif'); background-repeat: no-repeat;text-align:center;border-bottom:1px inset #eaeaea;">
+                    <div style="height:100%;width:188px;background-image:url('DashCenter.gif'); background-repeat: no-repeat;margin-left:2px;text-align:center;border-bottom:1px solid #d4d4d4;">
                         <img alt="" src="GuestNetwork.jpg">
                         <br>
                         <span class="subtext">

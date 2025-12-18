@@ -1,8 +1,8 @@
-***REMOVED*** Technicolor XB7 (CGM4331COM) Test Fixtures
+# Technicolor XB7 (CGM4331COM) Test Fixtures
 
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -14,7 +14,7 @@
 
 <!-- END AUTO-GENERATED -->
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
@@ -28,12 +28,12 @@
 | **Captured By** | @kwschulz |
 | **Capture Date** | Development |
 
-***REMOVED******REMOVED*** Links
+## Links
 
 - [Rogers XB7 Information](https://www.rogers.com/)
 - [Comcast XB7 Information](https://www.xfinity.com/)
 
-***REMOVED******REMOVED*** Authentication
+## Authentication
 
 - **Method**: Form-based POST to `/check.jst`
 - **Username Field**: `username`
@@ -41,15 +41,15 @@
 - **Success Redirect**: `/at_a_glance.jst`
 - **Default IP**: `10.0.0.1`
 
-***REMOVED******REMOVED*** Fixture Files
+## Fixture Files
 
 | File | Description | Key Data |
 |------|-------------|----------|
 | `network_setup.jst` | Network setup/status page | DS/US channels, system info, error codewords |
 
-***REMOVED******REMOVED*** Data Available
+## Data Available
 
-***REMOVED******REMOVED******REMOVED*** network_setup.jst - Channel and System Data
+### network_setup.jst - Channel and System Data
 
 This page uses a transposed table format where:
 - Rows = Metrics (Channel ID, Lock Status, Frequency, SNR, Power, Modulation)
@@ -93,7 +93,7 @@ This page uses a transposed table format where:
 | Correctable Codewords | FEC corrected errors |
 | Uncorrectable Codewords | FEC uncorrectable errors |
 
-***REMOVED******REMOVED*** Parser Capabilities
+## Parser Capabilities
 
 | Capability | Supported |
 |------------|-----------|
@@ -105,12 +105,12 @@ This page uses a transposed table format where:
 | Hardware Version | No |
 | Restart | No |
 
-***REMOVED******REMOVED*** Contributor Information
+## Contributor Information
 
 - **Parser Status**: Unverified (needs user confirmation)
 - **ISP Variations**: May vary between Rogers and Comcast deployments
 
-***REMOVED******REMOVED*** Notes for Parser Development
+## Notes for Parser Development
 
 1. **Table format**: Transposed - rows are metrics, columns are channels
 2. **Cell values**: Wrapped in `<div class="netWidth">` elements

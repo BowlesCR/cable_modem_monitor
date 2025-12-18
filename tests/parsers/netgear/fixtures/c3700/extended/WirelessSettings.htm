@@ -124,7 +124,7 @@ var show5GEnterpriseAlert = 1;
     {
         BodyInit();
 
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
             buttonFilter();
         });
 
@@ -195,14 +195,14 @@ var show5GEnterpriseAlert = 1;
     }
     function moveToHTMLend()
     {
-        window.location.href='***REMOVED***helpframe-anchor';
+        window.location.href='#helpframe-anchor';
         setHelpIframeVisible();
     }
 
 
     function loadhelp(fname,anchname)
     {
-                var pane = window.frames["helpframe"].$('***REMOVED***content');
+                var pane = window.frames["helpframe"].$('#content');
                 var imgSrc=document.getElementById('help-button');
                 var linkName = "";
 
@@ -222,7 +222,7 @@ var show5GEnterpriseAlert = 1;
                         }
                         else
                         {
-                                window.frames["helpframe"].location.href=linkName+"***REMOVED***" + anchname;
+                                window.frames["helpframe"].location.href=linkName+"#" + anchname;
                                 $(".help-frame-div").show();
                         }
 
@@ -1759,7 +1759,7 @@ function InitUpdateView(tagValues)
 {
     var countrymapping = 0;
 
-    //Eason, 20150204, C7000TD***REMOVED***327 Retail: 54Mpbs Removal from 5GHz selection.
+    //Eason, 20150204, C7000TD#327 Retail: 54Mpbs Removal from 5GHz selection.
     if(tagValues[44] == "0")
     {
         delete opt11acMode['Up to 54 Mbps'];
@@ -1796,8 +1796,8 @@ function InitUpdateView(tagValues)
         document.getElementsByName("enable_wireless")[0].checked = (tagValues[2] == 1)? true : false;
         $('input[name=enable_wireless]').show();
         $('input[name=enable_isolation]').hide();
-        $('***REMOVED***enable_wireless').show();
-        $('***REMOVED***enable_isolation').hide();
+        $('#enable_wireless').show();
+        $('#enable_isolation').hide();
     }
     else
     {
@@ -1805,8 +1805,8 @@ function InitUpdateView(tagValues)
     document.getElementsByName("enable_isolation")[0].checked = (tagValues[2] == 1)? true : false;
         $('input[name=enable_wireless]').hide();
         $('input[name=enable_isolation]').show();
-        $('***REMOVED***enable_wireless').hide();
-        $('***REMOVED***enable_isolation').show();
+        $('#enable_wireless').hide();
+        $('#enable_isolation').show();
     }
 
     /* Name (SSID) */
@@ -1871,7 +1871,7 @@ function InitUpdateView(tagValues)
     if (!tagValues[15])
         document.getElementsByName("passphraseStr")[0].value = tagValues[15];
 
-    $("***REMOVED***CurrentChannel").html(tagValues[16]);
+    $("#CurrentChannel").html(tagValues[16]);
 
     /* 5G Enable SSID Broadcast */
     document.getElementsByName("ssid_bc_an")[0].checked = (tagValues[17] == 1)? true : false;
@@ -1882,8 +1882,8 @@ function InitUpdateView(tagValues)
         document.getElementsByName("enable_wireless_an")[0].checked = (tagValues[18] == 1)? true : false;
         $('input[name=enable_wireless_an]').show();
         $('input[name=enable_isolation_an]').hide();
-        $('***REMOVED***enable_wireless_an').show();
-        $('***REMOVED***enable_isolation_an').hide();
+        $('#enable_wireless_an').show();
+        $('#enable_isolation_an').hide();
     }
     else
     {
@@ -1891,8 +1891,8 @@ function InitUpdateView(tagValues)
     document.getElementsByName("enable_isolation_an")[0].checked = (tagValues[18] == 1)? true : false;
         $('input[name=enable_wireless_an]').hide();
         $('input[name=enable_isolation_an]').show();
-        $('***REMOVED***enable_wireless_an').hide();
-        $('***REMOVED***enable_isolation_an').show();
+        $('#enable_wireless_an').hide();
+        $('#enable_isolation_an').show();
     }
 
     /* 5G Name (SSID) */
@@ -1960,13 +1960,13 @@ function InitUpdateView(tagValues)
     if (!tagValues[31])
         document.getElementsByName("passphraseStr_an")[0].value = tagValues[31];
 
-    $("***REMOVED***CurrentChannel_an").html(tagValues[32]);
+    $("#CurrentChannel_an").html(tagValues[32]);
 
     // Support dual band
     document.getElementsByName("display_5G")[0].value = tagValues[33];
     if (tagValues[33] == "1")
     {
-        $("***REMOVED***setting_5G").css ('display', 'block');
+        $("#setting_5G").css ('display', 'block');
 
     }
     else
@@ -2014,7 +2014,7 @@ function InitUpdateView(tagValues)
         $('input[name=passphraseHidden_an]').show();
     }
 
-    //Eason, 20150803, Mantis***REMOVED***15455: The wireless settings can be changed when WPS process is turned on by WPS hardware button.
+    //Eason, 20150803, Mantis#15455: The wireless settings can be changed when WPS process is turned on by WPS hardware button.
     //Wps Alert
     document.getElementsByName("show_wps_alert")[0].value = tagValues[37];
 
@@ -2022,9 +2022,9 @@ function InitUpdateView(tagValues)
     if(isSupportYouSee)
     {
         $('input[name=enable_isolation]').hide();
-        $('***REMOVED***enable_isolation').hide();
+        $('#enable_isolation').hide();
         $('input[name=enable_isolation_an]').hide();
-        $('***REMOVED***enable_isolation_an').hide();
+        $('#enable_isolation_an').hide();
     }
 
     if(tagValues[40] == "1")
@@ -2048,12 +2048,12 @@ function InitUpdateView(tagValues)
     if(tagValues[43] == "0")
     {
         $('input[name=enable_isolation]').hide();
-        $('***REMOVED***enable_isolation').hide();
+        $('#enable_isolation').hide();
         $('input[name=enable_isolation_an]').hide();
-        $('***REMOVED***enable_isolation_an').hide();
+        $('#enable_isolation_an').hide();
     }
 
-    //Eason, 20150812, Mantis***REMOVED***15239: The "WPS Wizard" and all the WPS configuration items on the Advanced Wireless Settings page don't gray out.
+    //Eason, 20150812, Mantis#15239: The "WPS Wizard" and all the WPS configuration items on the Advanced Wireless Settings page don't gray out.
     //WPS disabled
     if(tagValues[45] == 0)
     {
@@ -2300,8 +2300,8 @@ function InitUpdateEnterpriseView(tagValues)
     }
     else
     {
-        $('***REMOVED***enterprise_radio').hide();
-        $('***REMOVED***enterprise_radio_an').hide();
+        $('#enterprise_radio').hide();
+        $('#enterprise_radio_an').hide();
     }
 }
 

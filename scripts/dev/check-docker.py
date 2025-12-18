@@ -1,4 +1,4 @@
-***REMOVED***!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 Cross-platform Docker status checker.
 Verifies Docker is installed and running before executing Docker commands.
@@ -9,7 +9,7 @@ import shutil
 import subprocess
 import sys
 
-***REMOVED*** Color codes
+# Color codes
 GREEN = "\033[0;32m"
 RED = "\033[0;31m"
 YELLOW = "\033[1;33m"
@@ -17,11 +17,11 @@ CYAN = "\033[0;36m"
 NC = "\033[0m"
 
 
-***REMOVED*** Check if terminal supports Unicode (use ASCII fallback for Windows)
+# Check if terminal supports Unicode (use ASCII fallback for Windows)
 def supports_unicode():
     """Check if the terminal supports Unicode output."""
     try:
-        ***REMOVED*** Try to encode a checkmark - if it fails, we don't have Unicode support
+        # Try to encode a checkmark - if it fails, we don't have Unicode support
         "\u2713".encode(sys.stdout.encoding or "utf-8")
         return True
     except (UnicodeEncodeError, AttributeError):
@@ -61,14 +61,14 @@ def get_platform_instructions():
             "  3. Launch Docker Desktop",
             "  4. Wait for the Docker icon in system tray to stop animating",
         ]
-    elif system == "Darwin":  ***REMOVED*** macOS
+    elif system == "Darwin":  # macOS
         return [
             "macOS:",
             "  1. Open Applications folder",
             "  2. Launch Docker Desktop",
             "  3. Wait for the Docker whale icon in menu bar to show 'Running'",
         ]
-    else:  ***REMOVED*** Linux and others
+    else:  # Linux and others
         return [
             "Linux:",
             "  Option 1 (Docker Desktop):",
@@ -84,7 +84,7 @@ def check_docker():
     Check if Docker is installed and running.
     Returns 0 if Docker is ready, 1 otherwise.
     """
-    ***REMOVED*** Check if Docker is installed
+    # Check if Docker is installed
     if not shutil.which("docker"):
         print_error("Docker is not installed")
         print("")
@@ -101,9 +101,9 @@ def check_docker():
         print("")
         return 1
 
-    ***REMOVED*** Check if Docker daemon is running
+    # Check if Docker daemon is running
     try:
-        ***REMOVED*** Run 'docker info' to check if daemon is accessible
+        # Run 'docker info' to check if daemon is accessible
         subprocess.run(
             ["docker", "info"],
             stdout=subprocess.DEVNULL,
@@ -134,7 +134,7 @@ def check_docker():
         return 1
 
     except FileNotFoundError:
-        ***REMOVED*** This shouldn't happen since we checked with shutil.which, but just in case
+        # This shouldn't happen since we checked with shutil.which, but just in case
         print_error("Docker command not found in PATH")
         print("")
         return 1

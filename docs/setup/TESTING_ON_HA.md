@@ -1,24 +1,24 @@
-***REMOVED*** Testing on Home Assistant
+# Testing on Home Assistant
 
 This guide explains how to deploy a development branch of Cable Modem Monitor to a real Home Assistant instance for testing.
 
 > **For local development** (running tests, working on code): See [Getting Started](./GETTING_STARTED.md)
 >
-> **For stable installation** (released versions): See [README.md Installation](../README.md***REMOVED***installation)
+> **For stable installation** (released versions): See [README.md Installation](../README.md#installation)
 
 ---
 
-***REMOVED******REMOVED*** Quick Start
+## Quick Start
 
-***REMOVED******REMOVED******REMOVED*** Using the Deploy Script (Recommended)
+### Using the Deploy Script (Recommended)
 
 ```bash
-***REMOVED*** Clone the repo (or switch to the branch you want to test)
+# Clone the repo (or switch to the branch you want to test)
 git clone https://github.com/solentlabs/cable_modem_monitor.git
 cd cable_modem_monitor
 git checkout feature/your-branch-name
 
-***REMOVED*** Run the deployment script
+# Run the deployment script
 ./scripts/maintenance/deploy_updates.sh
 ```
 
@@ -29,37 +29,37 @@ The script supports multiple deployment methods:
 
 ---
 
-***REMOVED******REMOVED*** Manual Deployment
+## Manual Deployment
 
 If the script doesn't work for your setup, follow these manual steps.
 
-***REMOVED******REMOVED******REMOVED*** Step 1: Get the Code
+### Step 1: Get the Code
 
 ```bash
-***REMOVED*** Clone the repository
+# Clone the repository
 git clone https://github.com/solentlabs/cable_modem_monitor.git
 cd cable_modem_monitor
 
-***REMOVED*** Switch to the branch you want to test
+# Switch to the branch you want to test
 git checkout feature/branch-name
 ```
 
-***REMOVED******REMOVED******REMOVED*** Step 2: Copy ONLY the Integration Folder
+### Step 2: Copy ONLY the Integration Folder
 
 **Important**: Copy only the `custom_components/cable_modem_monitor/` folder, NOT the entire repository.
 
 ```bash
-***REMOVED*** Example: Copy to local HA config
+# Example: Copy to local HA config
 cp -r custom_components/cable_modem_monitor /path/to/ha/config/custom_components/
 
-***REMOVED*** Example: Copy via SSH
+# Example: Copy via SSH
 scp -r custom_components/cable_modem_monitor user@ha-host:/config/custom_components/
 
-***REMOVED*** Example: Copy to Docker container
+# Example: Copy to Docker container
 docker cp custom_components/cable_modem_monitor homeassistant:/config/custom_components/
 ```
 
-***REMOVED******REMOVED******REMOVED*** Step 3: Verify the Structure
+### Step 3: Verify the Structure
 
 Your HA config should look like this:
 
@@ -92,65 +92,65 @@ Your HA config should look like this:
         └── ...
 ```
 
-***REMOVED******REMOVED******REMOVED*** Step 4: Restart Home Assistant
+### Step 4: Restart Home Assistant
 
 ```bash
-***REMOVED*** HA OS / Supervised
+# HA OS / Supervised
 ha core restart
 
-***REMOVED*** Docker
+# Docker
 docker restart homeassistant
 
-***REMOVED*** Core installation
+# Core installation
 systemctl restart home-assistant
 ```
 
 ---
 
-***REMOVED******REMOVED*** Common Issues
+## Common Issues
 
-***REMOVED******REMOVED******REMOVED*** "Integration not found"
+### "Integration not found"
 
 This usually means you cloned the entire repo into custom_components instead of just the integration folder.
 
 **Fix**: Remove the incorrectly installed folder and copy only `custom_components/cable_modem_monitor/`:
 
 ```bash
-***REMOVED*** Remove incorrect installation
+# Remove incorrect installation
 rm -rf /config/custom_components/cable_modem_monitor
 
-***REMOVED*** Copy correctly (from repo root)
+# Copy correctly (from repo root)
 cp -r custom_components/cable_modem_monitor /config/custom_components/
 ```
 
-***REMOVED******REMOVED******REMOVED*** "No module named 'custom_components.cable_modem_monitor'"
+### "No module named 'custom_components.cable_modem_monitor'"
 
 Same issue as above - the folder structure is wrong.
 
-***REMOVED******REMOVED******REMOVED*** Permissions Issues
+### Permissions Issues
 
 On some systems, you may need to fix ownership:
 
 ```bash
-***REMOVED*** Docker
+# Docker
 docker exec homeassistant chown -R root:root /config/custom_components/cable_modem_monitor
 
-***REMOVED*** Linux
+# Linux
 sudo chown -R homeassistant:homeassistant /config/custom_components/cable_modem_monitor
 ```
 
 ---
 
-***REMOVED******REMOVED*** Testing a PR
+## Testing a PR
 
 To test a specific pull request:
 
 ```bash
-***REMOVED*** Fetch the PR branch
+# Fetch the PR branch
 git fetch origin pull/44/head:pr-44
 git checkout pr-44
 
-***REMOVED*** Deploy
+# Deploy
 ./scripts/maintenance/deploy_updates.sh
 ```
 
@@ -163,7 +163,7 @@ gh pr checkout 44
 
 ---
 
-***REMOVED******REMOVED*** Providing Feedback
+## Providing Feedback
 
 After testing, please report back on the GitHub issue or PR:
 
@@ -173,7 +173,7 @@ After testing, please report back on the GitHub issue or PR:
 To get debug logs:
 
 ```yaml
-***REMOVED*** In configuration.yaml
+# In configuration.yaml
 logger:
   default: warning
   logs:
@@ -184,7 +184,7 @@ Then check Settings → System → Logs after restarting.
 
 ---
 
-***REMOVED******REMOVED*** See Also
+## See Also
 
 - [Getting Started](./GETTING_STARTED.md) - Local development setup
 - [CONTRIBUTING.md](../../CONTRIBUTING.md) - How to contribute

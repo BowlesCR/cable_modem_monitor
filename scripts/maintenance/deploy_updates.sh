@@ -1,5 +1,5 @@
-***REMOVED***!/bin/bash
-***REMOVED*** Deploy cable modem monitor updates to Home Assistant
+#!/bin/bash
+# Deploy cable modem monitor updates to Home Assistant
 
 echo "Creating deployment package..."
 tar czf /tmp/cable_modem_deploy.tar.gz \

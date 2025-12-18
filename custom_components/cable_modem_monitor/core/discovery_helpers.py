@@ -41,7 +41,7 @@ class ParserHeuristics:
 
         _LOGGER.debug("Running parser heuristics to narrow search space")
 
-        ***REMOVED*** Try to fetch root page quickly (no auth) for heuristics
+        # Try to fetch root page quickly (no auth) for heuristics
         try:
             response = session.get(f"{base_url}/", timeout=3, verify=verify_ssl)
             if response.status_code == 200:
@@ -51,11 +51,11 @@ class ParserHeuristics:
 
                 _LOGGER.debug("Heuristics: Got root page (%s bytes, title: '%s')", len(html), title)
 
-                ***REMOVED*** Check for manufacturer indicators
+                # Check for manufacturer indicators
                 for parser_class in parsers:
                     manufacturer = parser_class.manufacturer.lower()
 
-                    ***REMOVED*** Strong indicators (in title or prominent text)
+                    # Strong indicators (in title or prominent text)
                     if manufacturer in title or manufacturer in html[:1000]:
                         _LOGGER.debug(
                             "Heuristics: %s is LIKELY (found '%s' in title/header)",
@@ -63,7 +63,7 @@ class ParserHeuristics:
                             manufacturer,
                         )
                         likely_parsers.append(parser_class)
-                    ***REMOVED*** Weak indicators (anywhere in page) or model numbers
+                    # Weak indicators (anywhere in page) or model numbers
                     elif any(model.lower() in html for model in parser_class.models):
                         _LOGGER.debug("Heuristics: %s is LIKELY (found model number)", parser_class.name)
                         likely_parsers.append(parser_class)
@@ -72,13 +72,13 @@ class ParserHeuristics:
 
             else:
                 _LOGGER.debug("Heuristics: Root page returned status %s, skipping heuristics", response.status_code)
-                return list(parsers)  ***REMOVED*** Return all parsers if heuristics fail
+                return list(parsers)  # Return all parsers if heuristics fail
 
         except (requests.RequestException, Exception) as e:
             _LOGGER.debug("Heuristics: Failed to fetch root page (%s), trying all parsers", type(e).__name__)
-            return list(parsers)  ***REMOVED*** Return all parsers if heuristics fail
+            return list(parsers)  # Return all parsers if heuristics fail
 
-        ***REMOVED*** If we found likely parsers, return those first, then the rest
+        # If we found likely parsers, return those first, then the rest
         if likely_parsers:
             result = likely_parsers + unlikely_parsers
             _LOGGER.info(
@@ -88,7 +88,7 @@ class ParserHeuristics:
             )
             return result
 
-        ***REMOVED*** No heuristics matched, return all parsers
+        # No heuristics matched, return all parsers
         _LOGGER.debug("Heuristics: No strong indicators found, trying all parsers")
         return list(parsers)
 
@@ -108,12 +108,12 @@ class ParserHeuristics:
         Returns:
             Tuple of (html, url) if successful, None otherwise
         """
-        ***REMOVED*** Check if parser has URL patterns marked as not requiring auth
+        # Check if parser has URL patterns marked as not requiring auth
         if not hasattr(parser_class, "url_patterns"):
             return None
 
         for pattern in parser_class.url_patterns:
-            ***REMOVED*** Look for patterns explicitly marked as not requiring auth
+            # Look for patterns explicitly marked as not requiring auth
             if not pattern.get("auth_required", True):
                 url = f"{base_url}{pattern['path']}"
                 try:
@@ -159,10 +159,10 @@ class DiscoveryCircuitBreaker:
         if self._broken:
             return False
 
-        ***REMOVED*** Start timer on first attempt
+        # Start timer on first attempt
         self.start_time = time.time()
 
-        ***REMOVED*** Check max attempts
+        # Check max attempts
         if self.attempts >= self.max_attempts:
             _LOGGER.warning(
                 "Discovery circuit breaker: Max attempts reached (%s). " "Stopping detection to prevent endless loops.",
@@ -171,7 +171,7 @@ class DiscoveryCircuitBreaker:
             self._broken = True
             return False
 
-        ***REMOVED*** Check timeout
+        # Check timeout
         elapsed = time.time() - self.start_time
         if elapsed > self.timeout:
             _LOGGER.warning(

@@ -1,15 +1,15 @@
-***REMOVED*** Guide: Adding a New Modem Parser
+# Guide: Adding a New Modem Parser
 
 This guide provides step-by-step instructions for adding support for a new cable modem model, based on the patterns established in this project.
 
-***REMOVED******REMOVED*** Prerequisites
+## Prerequisites
 
 - Python 3.9+
 - Access to the modem's web interface (or HTML captures)
 - Understanding of the modem's authentication mechanism
 - Knowledge of BeautifulSoup and HTML parsing
 
-***REMOVED******REMOVED*** Overview
+## Overview
 
 Adding a new parser involves:
 1. Creating the parser module
@@ -20,9 +20,9 @@ Adding a new parser involves:
 
 **Note:** Parser registry updates are **no longer required**! The discovery system automatically finds and registers new parsers.
 
-***REMOVED******REMOVED*** Step 1: Create Parser Module
+## Step 1: Create Parser Module
 
-***REMOVED******REMOVED******REMOVED*** 1.1 Choose Directory Structure
+### 1.1 Choose Directory Structure
 
 Parsers are organized by manufacturer:
 
@@ -44,7 +44,7 @@ custom_components/cable_modem_monitor/parsers/
     └── [model].py
 ```
 
-***REMOVED******REMOVED******REMOVED*** 1.2 Create Parser File
+### 1.2 Create Parser File
 
 **File:** `custom_components/cable_modem_monitor/parsers/[manufacturer]/[model].py`
 
@@ -61,7 +61,7 @@ Key pages:
 
 Authentication: HTTP Basic Auth / Form-based / [HNAP](https://en.wikipedia.org/wiki/Home_Network_Administration_Protocol) / None
 
-Related: Issue ***REMOVED***[number] (if applicable)
+Related: Issue #[number] (if applicable)
 """
 
 from __future__ import annotations
@@ -81,16 +81,16 @@ class [Manufacturer][Model]Parser(ModemParser):
 
     name = "[Manufacturer] [Model]"
     manufacturer = "[Manufacturer]"
-    models = ["[MODEL]"]  ***REMOVED*** List of model numbers this parser supports
-    priority = 50  ***REMOVED*** Standard priority (1-100, higher = preferred)
+    models = ["[MODEL]"]  # List of model numbers this parser supports
+    priority = 50  # Standard priority (1-100, higher = preferred)
 
-    ***REMOVED*** Authentication configuration
+    # Authentication configuration
     auth_config = BasicAuthConfig(
         strategy=AuthStrategyType.BASIC_HTTP,
-        ***REMOVED*** Add other auth parameters as needed
+        # Add other auth parameters as needed
     )
 
-    ***REMOVED*** URL patterns to try for modem data
+    # URL patterns to try for modem data
     url_patterns = [
         {"path": "/", "auth_method": "basic", "auth_required": False},
         {"path": "/status.html", "auth_method": "basic", "auth_required": False},
@@ -108,8 +108,8 @@ class [Manufacturer][Model]Parser(ModemParser):
         Returns:
             True if login successful or not required, False otherwise
         """
-        ***REMOVED*** Implement authentication logic
-        ***REMOVED*** For HTTP Basic Auth, this may be a no-op as session handles it
+        # Implement authentication logic
+        # For HTTP Basic Auth, this may be a no-op as session handles it
         return True
 
     def parse(self, soup: BeautifulSoup, session=None, base_url=None) -> dict:
@@ -144,13 +144,13 @@ class [Manufacturer][Model]Parser(ModemParser):
         Returns:
             True if this parser can handle the page, False otherwise
         """
-        ***REMOVED*** Implement detection logic
-        ***REMOVED*** Example: Check for specific text in title or meta tags
+        # Implement detection logic
+        # Example: Check for specific text in title or meta tags
         title = soup.find("title")
         if title and "[MODEL]" in title.text.upper():
             return True
 
-        ***REMOVED*** Check for manufacturer name in HTML
+        # Check for manufacturer name in HTML
         if "[MANUFACTURER]" in html.upper() and "[MODEL]" in html.upper():
             return True
 
@@ -171,14 +171,14 @@ class [Manufacturer][Model]Parser(ModemParser):
         """
         channels = []
 
-        ***REMOVED*** Implement downstream parsing logic
-        ***REMOVED*** Example: Find table and extract rows
+        # Implement downstream parsing logic
+        # Example: Find table and extract rows
         table = soup.find("table", {"id": "downstream_table"})
         if not table:
             _LOGGER.warning("Downstream table not found")
             return channels
 
-        rows = table.find_all("tr")[1:]  ***REMOVED*** Skip header row
+        rows = table.find_all("tr")[1:]  # Skip header row
 
         for row in rows:
             cells = row.find_all("td")
@@ -216,8 +216,8 @@ class [Manufacturer][Model]Parser(ModemParser):
         """
         channels = []
 
-        ***REMOVED*** Implement upstream parsing logic
-        ***REMOVED*** Similar to downstream but with different fields
+        # Implement upstream parsing logic
+        # Similar to downstream but with different fields
 
         return channels
 
@@ -234,17 +234,17 @@ class [Manufacturer][Model]Parser(ModemParser):
         """
         info = {}
 
-        ***REMOVED*** Implement system info parsing
-        ***REMOVED*** Extract model, firmware version, uptime, etc.
+        # Implement system info parsing
+        # Extract model, firmware version, uptime, etc.
 
         return info
 ```
 
-***REMOVED******REMOVED*** Step 2: Handle Authentication
+## Step 2: Handle Authentication
 
-***REMOVED******REMOVED******REMOVED*** Common Authentication Types
+### Common Authentication Types
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** HTTP Basic Auth
+#### HTTP Basic Auth
 ```python
 from custom_components.cable_modem_monitor.core.auth_config import BasicAuthConfig
 from custom_components.cable_modem_monitor.core.authentication import AuthStrategyType
@@ -254,11 +254,11 @@ auth_config = BasicAuthConfig(
 )
 
 def login(self, session, base_url, username, password) -> bool:
-    ***REMOVED*** HTTP Basic Auth is handled automatically by the session
+    # HTTP Basic Auth is handled automatically by the session
     return True
 ```
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** Form-Based Auth
+#### Form-Based Auth
 ```python
 from custom_components.cable_modem_monitor.core.auth_config import FormAuthConfig
 
@@ -277,7 +277,7 @@ def login(self, session, base_url, username, password) -> bool:
     return response.status_code == 200
 ```
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** [HNAP](https://en.wikipedia.org/wiki/Home_Network_Administration_Protocol) (Home Network Administration Protocol)
+#### [HNAP](https://en.wikipedia.org/wiki/Home_Network_Administration_Protocol) (Home Network Administration Protocol)
 
 HNAP is a [SOAP](https://www.w3.org/TR/soap/)-based protocol used by some Motorola and Arris modems. Originally developed by Pure Networks (acquired by Cisco), it's still used for local device management despite being abandoned by its original stewards.
 
@@ -292,13 +292,13 @@ auth_config = HNAPAuthConfig(
 )
 
 def login(self, session, base_url, username, password) -> bool:
-    ***REMOVED*** HNAP authentication is handled by the auth framework
+    # HNAP authentication is handled by the auth framework
     return True
 ```
 
-***REMOVED******REMOVED*** Step 3: Add Test Fixtures
+## Step 3: Add Test Fixtures
 
-***REMOVED******REMOVED******REMOVED*** 3.1 Capture Modem HTML
+### 3.1 Capture Modem HTML
 
 Use the provided tool to capture HTML from your modem:
 
@@ -311,37 +311,37 @@ Or manually save HTML pages:
 2. Right-click → Save Page As → Complete HTML
 3. Save to `tests/parsers/[manufacturer]/fixtures/[model]/`
 
-***REMOVED******REMOVED******REMOVED*** 3.2 Organize Fixtures
+### 3.2 Organize Fixtures
 
 ```
 tests/parsers/[manufacturer]/fixtures/[model]/
-├── index.html           ***REMOVED*** Main page
-├── status.html          ***REMOVED*** Channel status page
-├── logs.html            ***REMOVED*** Event logs (optional)
-└── README.md            ***REMOVED*** Document fixture source and details
+├── index.html           # Main page
+├── status.html          # Channel status page
+├── logs.html            # Event logs (optional)
+└── README.md            # Document fixture source and details
 ```
 
 **README.md example:**
 ```markdown
-***REMOVED*** [Manufacturer] [Model] Test Fixtures
+# [Manufacturer] [Model] Test Fixtures
 
 **Source:** Real [Model] modem
 **Firmware:** V1.0.0
 **ISP:** Comcast
 **Date Captured:** 2025-11-14
 
-***REMOVED******REMOVED*** Files
+## Files
 
 - `index.html`: Main page (/)
 - `status.html`: Channel status (/status.html)
 
-***REMOVED******REMOVED*** Notes
+## Notes
 
 - Sensitive information (MAC addresses, serial numbers) has been redacted
 - All channels are operational in this capture
 ```
 
-***REMOVED******REMOVED*** Step 4: Write Unit Tests
+## Step 4: Write Unit Tests
 
 **File:** `tests/parsers/[manufacturer]/test_[model].py`
 
@@ -395,10 +395,10 @@ def test_parse_downstream(soup):
     parser = [ParserClass]()
     channels = parser.parse_downstream(soup)
 
-    ***REMOVED*** Verify we got channels
+    # Verify we got channels
     assert len(channels) > 0, "Expected at least one downstream channel"
 
-    ***REMOVED*** Verify channel structure
+    # Verify channel structure
     channel = channels[0]
     assert "channel_id" in channel
     assert "frequency" in channel
@@ -408,7 +408,7 @@ def test_parse_downstream(soup):
     assert "corrected" in channel
     assert "uncorrected" in channel
 
-    ***REMOVED*** Verify data types
+    # Verify data types
     assert isinstance(channel["channel_id"], str)
     assert isinstance(channel["frequency"], int)
     assert isinstance(channel["power"], float)
@@ -417,10 +417,10 @@ def test_parse_downstream(soup):
     assert isinstance(channel["corrected"], int)
     assert isinstance(channel["uncorrected"], int)
 
-    ***REMOVED*** Verify reasonable values (adjust based on your modem)
+    # Verify reasonable values (adjust based on your modem)
     assert channel["frequency"] > 0
-    assert -20 <= channel["power"] <= 20  ***REMOVED*** Typical range
-    assert 0 <= channel["snr"] <= 50      ***REMOVED*** Typical range
+    assert -20 <= channel["power"] <= 20  # Typical range
+    assert 0 <= channel["snr"] <= 50      # Typical range
 
 
 def test_parse_upstream(soup):
@@ -436,7 +436,7 @@ def test_parse_upstream(soup):
     assert "power" in channel
     assert "modulation" in channel
 
-    ***REMOVED*** Verify data types
+    # Verify data types
     assert isinstance(channel["frequency"], int)
     assert isinstance(channel["power"], float)
 
@@ -446,7 +446,7 @@ def test_parse_system_info(soup):
     parser = [ParserClass]()
     info = parser.parse_system_info(soup)
 
-    ***REMOVED*** At minimum, should have model info
+    # At minimum, should have model info
     assert "model" in info or "software_version" in info
 
 
@@ -455,12 +455,12 @@ def test_parse_full(soup):
     parser = [ParserClass]()
     data = parser.parse(soup)
 
-    ***REMOVED*** Verify structure
+    # Verify structure
     assert "downstream" in data
     assert "upstream" in data
     assert "system_info" in data
 
-    ***REMOVED*** Verify types
+    # Verify types
     assert isinstance(data["downstream"], list)
     assert isinstance(data["upstream"], list)
     assert isinstance(data["system_info"], dict)
@@ -471,7 +471,7 @@ def test_parse_empty_html():
     parser = [ParserClass]()
     soup = BeautifulSoup("<html></html>", "html.parser")
 
-    ***REMOVED*** Should not raise exceptions
+    # Should not raise exceptions
     channels = parser.parse_downstream(soup)
     assert isinstance(channels, list)
     assert len(channels) == 0
@@ -483,19 +483,19 @@ def test_parse_malformed_html():
     html = "<html><table><tr><td>Invalid</td></tr></table></html>"
     soup = BeautifulSoup(html, "html.parser")
 
-    ***REMOVED*** Should not raise exceptions
+    # Should not raise exceptions
     data = parser.parse(soup)
     assert isinstance(data, dict)
 ```
 
-***REMOVED******REMOVED*** Step 5: Verify Auto-Discovery
+## Step 5: Verify Auto-Discovery
 
 Your parser will be **automatically discovered** - no registry updates needed!
 
 To verify your parser is being discovered:
 
 ```python
-***REMOVED*** In Python console or test
+# In Python console or test
 from custom_components.cable_modem_monitor.parsers import get_parsers
 
 for parser in get_parsers():
@@ -504,9 +504,9 @@ for parser in get_parsers():
 
 Your new parser should appear in the list.
 
-***REMOVED******REMOVED*** Step 6: Update Documentation
+## Step 6: Update Documentation
 
-***REMOVED******REMOVED******REMOVED*** 6.1 README.md
+### 6.1 README.md
 
 Add your modem to the supported modems table:
 
@@ -516,18 +516,18 @@ Add your modem to the supported modems table:
 | [Manufacturer] | [Model] | 3.0/3.1 | 24x8 | ✅ Supported |
 ```
 
-***REMOVED******REMOVED******REMOVED*** 6.2 CHANGELOG.md
+### 6.2 CHANGELOG.md
 
 Document the addition:
 
 ```markdown
-***REMOVED******REMOVED*** [Unreleased]
+## [Unreleased]
 
-***REMOVED******REMOVED******REMOVED*** Added
-- Support for [Manufacturer] [Model] cable modem (***REMOVED***[issue])
+### Added
+- Support for [Manufacturer] [Model] cable modem (#[issue])
 ```
 
-***REMOVED******REMOVED******REMOVED*** 6.3 Parser Documentation
+### 6.3 Parser Documentation
 
 Ensure your parser has:
 - Module docstring describing the modem
@@ -535,28 +535,28 @@ Ensure your parser has:
 - Method docstrings for all public methods
 - Inline comments for complex logic
 
-***REMOVED******REMOVED*** Step 7: Code Quality Checks
+## Step 7: Code Quality Checks
 
-***REMOVED******REMOVED******REMOVED*** Run Linters
+### Run Linters
 
 ```bash
-***REMOVED*** Ruff (linting)
+# Ruff (linting)
 ruff check custom_components/cable_modem_monitor/parsers/[manufacturer]/[model].py
 
-***REMOVED*** Mypy (type checking)
+# Mypy (type checking)
 mypy custom_components/cable_modem_monitor/parsers/[manufacturer]/[model].py
 
-***REMOVED*** Black (formatting)
+# Black (formatting)
 black custom_components/cable_modem_monitor/parsers/[manufacturer]/[model].py
 ```
 
-***REMOVED******REMOVED******REMOVED*** Fix Issues
+### Fix Issues
 
 - Resolve any linting errors
 - Add type hints where missing
 - Format code to match project style
 
-***REMOVED******REMOVED*** Step 8: Test with Real Modem (Optional)
+## Step 8: Test with Real Modem (Optional)
 
 If you have access to the physical modem:
 
@@ -566,9 +566,9 @@ If you have access to the physical modem:
 4. Check Home Assistant logs for errors
 5. Validate sensor data in UI
 
-***REMOVED******REMOVED*** Step 9: Submit Pull Request
+## Step 9: Submit Pull Request
 
-***REMOVED******REMOVED******REMOVED*** 9.1 Commit Changes
+### 9.1 Commit Changes
 
 ```bash
 git add custom_components/cable_modem_monitor/parsers/[manufacturer]/
@@ -580,7 +580,7 @@ git commit -m "feat: Add support for [Manufacturer] [Model] modem"
 
 **Note:** You don't need to modify `parsers/__init__.py` - auto-discovery handles registration.
 
-***REMOVED******REMOVED******REMOVED*** 9.2 Create Pull Request
+### 9.2 Create Pull Request
 
 Include in your PR description:
 - Modem model and DOCSIS version
@@ -589,9 +589,9 @@ Include in your PR description:
 - Any known limitations or issues
 - Screenshots (optional but helpful)
 
-***REMOVED******REMOVED*** Common Parsing Patterns
+## Common Parsing Patterns
 
-***REMOVED******REMOVED******REMOVED*** Pattern 1: Table Parsing
+### Pattern 1: Table Parsing
 
 ```python
 def parse_downstream(self, soup: BeautifulSoup) -> list[dict]:
@@ -600,19 +600,19 @@ def parse_downstream(self, soup: BeautifulSoup) -> list[dict]:
     if not table:
         return channels
 
-    rows = table.find_all("tr")[1:]  ***REMOVED*** Skip header
+    rows = table.find_all("tr")[1:]  # Skip header
     for row in rows:
         cells = row.find_all("td")
         if len(cells) >= 7:
             channels.append({
                 "channel_id": cells[0].text.strip(),
                 "frequency": int(cells[1].text.strip()),
-                ***REMOVED*** ... more fields
+                # ... more fields
             })
     return channels
 ```
 
-***REMOVED******REMOVED******REMOVED*** Pattern 2: JavaScript Variable Extraction
+### Pattern 2: JavaScript Variable Extraction
 
 ```python
 import re
@@ -624,18 +624,18 @@ def parse_downstream(self, soup: BeautifulSoup) -> list[dict]:
         match = re.search(r"var channelData = ['"]([^'"]+)['"]", script.string)
         if match:
             data = match.group(1).split("|")
-            ***REMOVED*** Parse split data into channels
+            # Parse split data into channels
     return channels
 ```
 
-***REMOVED******REMOVED******REMOVED*** Pattern 3: Multi-Page Parsing
+### Pattern 3: Multi-Page Parsing
 
 ```python
 def parse(self, soup: BeautifulSoup, session=None, base_url=None) -> dict:
-    ***REMOVED*** Parse main page
+    # Parse main page
     system_info = self.parse_system_info(soup)
 
-    ***REMOVED*** Fetch additional page for channel data
+    # Fetch additional page for channel data
     if session and base_url:
         response = session.get(f"{base_url}/channels.asp")
         channel_soup = BeautifulSoup(response.text, "html.parser")
@@ -652,7 +652,7 @@ def parse(self, soup: BeautifulSoup, session=None, base_url=None) -> dict:
     }
 ```
 
-***REMOVED******REMOVED******REMOVED*** Pattern 4: Robust Error Handling
+### Pattern 4: Robust Error Handling
 
 ```python
 def parse_downstream(self, soup: BeautifulSoup) -> list[dict]:
@@ -677,7 +677,7 @@ def parse_downstream(self, soup: BeautifulSoup) -> list[dict]:
                     "channel_id": cells[0].text.strip(),
                     "frequency": int(cells[1].text.strip()),
                     "power": float(cells[2].text.strip()),
-                    ***REMOVED*** ... more fields
+                    # ... more fields
                 }
                 channels.append(channel)
 
@@ -692,16 +692,16 @@ def parse_downstream(self, soup: BeautifulSoup) -> list[dict]:
     return channels
 ```
 
-***REMOVED******REMOVED*** Troubleshooting
+## Troubleshooting
 
-***REMOVED******REMOVED******REMOVED*** Issue: Parser not detected during auto-discovery
+### Issue: Parser not detected during auto-discovery
 
 **Solution:** Check your `can_parse()` method:
 - Make sure detection logic is specific enough
 - Verify title/meta tag names match actual HTML
 - Add more detection criteria if needed
 
-***REMOVED******REMOVED******REMOVED*** Issue: Authentication fails
+### Issue: Authentication fails
 
 **Solution:**
 - Verify auth_config is correct for your modem type
@@ -709,7 +709,7 @@ def parse_downstream(self, soup: BeautifulSoup) -> list[dict]:
 - Add logging to `login()` method to debug
 - Test authentication manually with curl/Postman
 
-***REMOVED******REMOVED******REMOVED*** Issue: Parsing returns empty data
+### Issue: Parsing returns empty data
 
 **Solution:**
 - Verify HTML fixtures match expected structure
@@ -717,16 +717,16 @@ def parse_downstream(self, soup: BeautifulSoup) -> list[dict]:
 - Check CSS selectors/XPath expressions
 - Inspect actual HTML in browser developer tools
 
-***REMOVED******REMOVED******REMOVED*** Issue: Tests fail with type errors
+### Issue: Tests fail with type errors
 
 **Solution:**
 - Ensure all numeric values are converted to correct types (int/float)
 - Handle empty strings before conversion
 - Add type checks before assignments
 
-***REMOVED******REMOVED*** Resources
+## Resources
 
-***REMOVED******REMOVED******REMOVED*** DOCSIS Standards
+### DOCSIS Standards
 
 The parser data schema is aligned with industry standards for cable modem metrics:
 
@@ -743,7 +743,7 @@ Schema field mapping:
 - `corrected` → `docsIfSigQCorrecteds`
 - `uncorrected` → `docsIfSigQUncorrectables`
 
-***REMOVED******REMOVED******REMOVED*** Project Resources
+### Project Resources
 
 - **Example Parsers:**
   - Simple: `arris/sb6141.py`
@@ -752,7 +752,7 @@ Schema field mapping:
 - **Issue Tracker:** GitHub Issues
 - **Community:** Discord/Forum [if available]
 
-***REMOVED******REMOVED*** Getting Help
+## Getting Help
 
 If you need assistance:
 1. Check existing parsers for similar patterns
@@ -760,7 +760,7 @@ If you need assistance:
 3. Open a GitHub Discussion for questions
 4. Join community chat for real-time help
 
-***REMOVED******REMOVED*** Attribution
+## Attribution
 
 If you use reference code from other MIT-licensed projects:
 

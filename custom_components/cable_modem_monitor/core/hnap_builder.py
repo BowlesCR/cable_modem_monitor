@@ -7,18 +7,18 @@ from typing import TYPE_CHECKING, cast
 
 import requests
 
-***REMOVED*** Import Element for type checking from standard library
+# Import Element for type checking from standard library
 if TYPE_CHECKING:
     from xml.etree.ElementTree import Element
 
 _LOGGER = logging.getLogger(__name__)
 
-***REMOVED*** Use defusedxml to prevent XXE (XML External Entity) attacks
-***REMOVED*** See: https://docs.python.org/3/library/xml.html***REMOVED***xml-vulnerabilities
+# Use defusedxml to prevent XXE (XML External Entity) attacks
+# See: https://docs.python.org/3/library/xml.html#xml-vulnerabilities
 try:
-    from defusedxml import ElementTree  ***REMOVED*** type: ignore[import-untyped]
+    from defusedxml import ElementTree  # type: ignore[import-untyped]
 except ImportError:
-    ***REMOVED*** Fallback to standard library with warning
+    # Fallback to standard library with warning
     from xml.etree import ElementTree
 
     _LOGGER.warning(
@@ -117,7 +117,7 @@ class HNAPRequestBuilder:
   <soap:Body>
     <{action} xmlns="{self.namespace}">"""
 
-        ***REMOVED*** Add parameters if provided
+        # Add parameters if provided
         if params:
             for key, value in params.items():
                 envelope += f"\n      <{key}>{value}</{key}>"
@@ -139,7 +139,7 @@ class HNAPRequestBuilder:
         Returns:
             SOAP envelope XML string for batched request
         """
-        ***REMOVED*** Build action list
+        # Build action list
         action_list = "\n      ".join(f'<{action} xmlns="{self.namespace}"/>' for action in actions)
 
         envelope = f"""<?xml version="1.0" encoding="utf-8"?>
@@ -172,17 +172,17 @@ class HNAPRequestBuilder:
         try:
             root = ElementTree.fromstring(xml_text)
 
-            ***REMOVED*** Define namespaces for XPath
+            # Define namespaces for XPath
             namespaces = {"soap": "http://schemas.xmlsoap.org/soap/envelope/", "hnap": namespace}
 
-            ***REMOVED*** Find the action response in the SOAP body
+            # Find the action response in the SOAP body
             action_response = root.find(f".//hnap:{action}Response", namespaces)
 
             if action_response is None:
-                ***REMOVED*** Try without namespace prefix (some responses don't use it)
+                # Try without namespace prefix (some responses don't use it)
                 action_response = root.find(f".//{action}Response")
 
-            return action_response  ***REMOVED*** type: ignore[no-any-return]
+            return action_response  # type: ignore[no-any-return]
 
         except ElementTree.ParseError as e:
             _LOGGER.error("Failed to parse HNAP XML response: %s", e)

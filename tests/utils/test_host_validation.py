@@ -44,7 +44,7 @@ class TestIsValidHost:
             "router.local",
             "my-modem.home.lan",
             "cable-modem",
-            "a",  ***REMOVED*** Single character
+            "a",  # Single character
             "test123",
         ]
         for host in valid_hosts:
@@ -53,11 +53,11 @@ class TestIsValidHost:
     def test_invalid_empty_host(self):
         """Test empty host is invalid."""
         assert not is_valid_host("")
-        assert not is_valid_host(None)  ***REMOVED*** type: ignore[arg-type]
+        assert not is_valid_host(None)  # type: ignore[arg-type]
 
     def test_invalid_too_long_host(self):
         """Test host exceeding max length is invalid."""
-        long_host = "a" * 254  ***REMOVED*** Max is 253
+        long_host = "a" * 254  # Max is 253
         assert not is_valid_host(long_host)
 
     def test_invalid_shell_metacharacters(self):
@@ -77,17 +77,17 @@ class TestIsValidHost:
 
     def test_invalid_formats_rejected(self):
         """Test that truly invalid formats are rejected."""
-        ***REMOVED*** Note: The validator is permissive - things like "256.1.1.1" pass
-        ***REMOVED*** because they match the hostname pattern. This tests actual rejections.
+        # Note: The validator is permissive - things like "256.1.1.1" pass
+        # because they match the hostname pattern. This tests actual rejections.
         invalid_hosts: list[str | None] = [
             "",
             None,
-            "host; command",  ***REMOVED*** Shell injection
+            "host; command",  # Shell injection
             "host|pipe",
             "host`backtick`",
         ]
         for host in invalid_hosts:
-            assert not is_valid_host(host), f"{host} should be invalid"  ***REMOVED*** type: ignore[arg-type]
+            assert not is_valid_host(host), f"{host} should be invalid"  # type: ignore[arg-type]
 
     def test_invalid_hostname_formats(self):
         """Test invalid hostname formats."""
@@ -137,7 +137,7 @@ class TestExtractHostname:
             extract_hostname("")
 
         with pytest.raises(ValueError, match="empty"):
-            extract_hostname(None)  ***REMOVED*** type: ignore[arg-type]
+            extract_hostname(None)  # type: ignore[arg-type]
 
     def test_raises_on_invalid_host(self):
         """Test ValueError on invalid host format."""
@@ -151,7 +151,7 @@ class TestExtractHostname:
 
     def test_raises_on_non_http_protocol(self):
         """Test rejection of non-HTTP protocols."""
-        ***REMOVED*** ftp:// should be treated as a hostname, not a URL
-        ***REMOVED*** It will fail validation because of the ":"
+        # ftp:// should be treated as a hostname, not a URL
+        # It will fail validation because of the ":"
         with pytest.raises(ValueError):
             extract_hostname("ftp://some.server")

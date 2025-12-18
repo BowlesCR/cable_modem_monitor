@@ -1,10 +1,10 @@
-***REMOVED*** Modem metadata - verified against official sources
-***REMOVED*** This file is read by scripts/generate_fixture_index.py
+# Modem metadata - verified against official sources
+# This file is read by scripts/generate_fixture_index.py
 
 release_date: 2016
 end_of_life: 2023
 docsis_version: "3.0"
-protocol: HTML ***REMOVED*** HNAP = JSON API, HTML = web scraping
+protocol: HTML # HNAP = JSON API, HTML = web scraping
 chipset: Broadcom BCM3384
 isps:
   - Comcast

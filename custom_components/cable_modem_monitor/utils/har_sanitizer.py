@@ -19,7 +19,7 @@ from .html_helper import sanitize_html
 
 _LOGGER = logging.getLogger(__name__)
 
-***REMOVED*** Sensitive header names (case-insensitive)
+# Sensitive header names (case-insensitive)
 SENSITIVE_HEADERS = {
     "authorization",
     "cookie",
@@ -30,7 +30,7 @@ SENSITIVE_HEADERS = {
     "x-csrf-token",
 }
 
-***REMOVED*** Sensitive form field names (case-insensitive patterns)
+# Sensitive form field names (case-insensitive patterns)
 SENSITIVE_FIELD_PATTERNS = [
     r"password",
     r"passwd",
@@ -45,7 +45,7 @@ SENSITIVE_FIELD_PATTERNS = [
     r"api_key",
 ]
 
-***REMOVED*** Compile patterns for efficiency
+# Compile patterns for efficiency
 _SENSITIVE_FIELD_RE = re.compile(
     "|".join(SENSITIVE_FIELD_PATTERNS),
     re.IGNORECASE,
@@ -75,10 +75,10 @@ def sanitize_header_value(name: str, value: str) -> str:
         Sanitized value or original if not sensitive
     """
     if name.lower() in SENSITIVE_HEADERS:
-        ***REMOVED*** For cookies, preserve structure but redact values
+        # For cookies, preserve structure but redact values
         if name.lower() in ("cookie", "set-cookie"):
-            ***REMOVED*** Preserve cookie names, redact values
-            ***REMOVED*** Format: name=value; name2=value2
+            # Preserve cookie names, redact values
+            # Format: name=value; name2=value2
             def redact_cookie(match: re.Match) -> str:
                 cookie_name = match.group(1)
                 return f"{cookie_name}=[REDACTED]"
@@ -114,7 +114,7 @@ def _sanitize_json_text(text: str) -> str:
                     data[key] = "[REDACTED]"
         return json.dumps(data)
     except json.JSONDecodeError:
-        return text  ***REMOVED*** Leave as-is if not valid JSON
+        return text  # Leave as-is if not valid JSON
 
 
 def sanitize_post_data(post_data: dict[str, Any] | None) -> dict[str, Any] | None:
@@ -131,13 +131,13 @@ def sanitize_post_data(post_data: dict[str, Any] | None) -> dict[str, Any] | Non
 
     result = copy.deepcopy(post_data)
 
-    ***REMOVED*** Sanitize params array
+    # Sanitize params array
     if "params" in result and isinstance(result["params"], list):
         for param in result["params"]:
             if isinstance(param, dict) and "name" in param and is_sensitive_field(param["name"]):
                 param["value"] = "[REDACTED]"
 
-    ***REMOVED*** Sanitize raw text (form-urlencoded or JSON)
+    # Sanitize raw text (form-urlencoded or JSON)
     if "text" in result and result["text"]:
         text = result["text"]
         mime_type = result.get("mimeType", "")
@@ -181,15 +181,15 @@ def _sanitize_headers(headers: list[dict[str, Any]]) -> None:
 
 def _sanitize_request(req: dict[str, Any]) -> None:
     """Sanitize a HAR request object in-place."""
-    ***REMOVED*** Sanitize headers
+    # Sanitize headers
     if "headers" in req and isinstance(req["headers"], list):
         _sanitize_headers(req["headers"])
 
-    ***REMOVED*** Sanitize POST data
+    # Sanitize POST data
     if "postData" in req:
         req["postData"] = sanitize_post_data(req["postData"])
 
-    ***REMOVED*** Sanitize query string params (in case password is in URL)
+    # Sanitize query string params (in case password is in URL)
     if "queryString" in req and isinstance(req["queryString"], list):
         for param in req["queryString"]:
             if isinstance(param, dict) and "name" in param and is_sensitive_field(param["name"]):
@@ -210,16 +210,16 @@ def _sanitize_response_content(content: dict[str, Any]) -> None:
             data = json.loads(content["text"])
             content["text"] = json.dumps(_sanitize_json_recursive(data))
         except json.JSONDecodeError:
-            pass  ***REMOVED*** Invalid JSON - leave content unchanged
+            pass  # Invalid JSON - leave content unchanged
 
 
 def _sanitize_response(resp: dict[str, Any]) -> None:
     """Sanitize a HAR response object in-place."""
-    ***REMOVED*** Sanitize headers
+    # Sanitize headers
     if "headers" in resp and isinstance(resp["headers"], list):
         _sanitize_headers(resp["headers"])
 
-    ***REMOVED*** Sanitize response content
+    # Sanitize response content
     if "content" in resp and isinstance(resp["content"], dict):
         _sanitize_response_content(resp["content"])
 
@@ -261,25 +261,25 @@ def sanitize_har(har_data: dict[str, Any]) -> dict[str, Any]:
 
     log = result["log"]
 
-    ***REMOVED*** Sanitize creator info (may contain system details)
+    # Sanitize creator info (may contain system details)
     if "creator" in log and isinstance(log["creator"], dict):
-        ***REMOVED*** Keep name and version, they're useful for debugging
+        # Keep name and version, they're useful for debugging
         pass
 
-    ***REMOVED*** Sanitize browser info
+    # Sanitize browser info
     if "browser" in log and isinstance(log["browser"], dict):
-        ***REMOVED*** Keep name and version
+        # Keep name and version
         pass
 
-    ***REMOVED*** Sanitize all entries
+    # Sanitize all entries
     if "entries" in log and isinstance(log["entries"], list):
         log["entries"] = [sanitize_entry(entry) for entry in log["entries"]]
 
-    ***REMOVED*** Sanitize pages (if present)
+    # Sanitize pages (if present)
     if "pages" in log and isinstance(log["pages"], list):
         for page in log["pages"]:
             if isinstance(page, dict) and "title" in page:
-                ***REMOVED*** Sanitize page titles (may contain IPs or other info)
+                # Sanitize page titles (may contain IPs or other info)
                 page["title"] = sanitize_html(page["title"])
 
     return result

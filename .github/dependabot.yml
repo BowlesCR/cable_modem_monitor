@@ -1,9 +1,9 @@
-***REMOVED*** Dependabot configuration for automated dependency updates
-***REMOVED*** https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+# Dependabot configuration for automated dependency updates
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
 updates:
-  ***REMOVED*** Monitor GitHub Actions for security updates
+  # Monitor GitHub Actions for security updates
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -18,8 +18,8 @@ updates:
       prefix: "ci"
       include: "scope"
 
-  ***REMOVED*** Monitor Python dependencies in manifest.json
-  ***REMOVED*** This includes the beautifulsoup4 requirement
+  # Monitor Python dependencies in manifest.json
+  # This includes the beautifulsoup4 requirement
   - package-ecosystem: "pip"
     directory: "/custom_components/cable_modem_monitor"
     schedule:
@@ -33,7 +33,7 @@ updates:
     commit-message:
       prefix: "deps"
       include: "scope"
-    ***REMOVED*** Group minor and patch updates together
+    # Group minor and patch updates together
     groups:
       production-dependencies:
         patterns:
@@ -42,7 +42,7 @@ updates:
           - "minor"
           - "patch"
 
-  ***REMOVED*** Monitor test dependencies
+  # Monitor test dependencies
   - package-ecosystem: "pip"
     directory: "/tests"
     schedule:
@@ -57,7 +57,7 @@ updates:
     commit-message:
       prefix: "test"
       include: "scope"
-    ***REMOVED*** Group test dependency updates
+    # Group test dependency updates
     groups:
       test-dependencies:
         patterns:
@@ -66,5 +66,5 @@ updates:
           - "minor"
           - "patch"
 
-  ***REMOVED*** Security updates will be processed daily automatically
-  ***REMOVED*** by Dependabot's security update feature
+  # Security updates will be processed daily automatically
+  # by Dependabot's security update feature

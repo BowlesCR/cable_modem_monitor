@@ -47,7 +47,7 @@ var vUnknown = "Unknown";
     $(document).ready(function()
     {
 //        $('.scroll-pane').jScrollPane('scrollbarMargin:5px');
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
             buttonFilter();
         });
 
@@ -70,7 +70,7 @@ var vUnknown = "Unknown";
             if(navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/iPhone/i) ||
                navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i)){
                 if (navigator.userAgent.search("Safari") > -1) {
-                    window.frames["helpframe"].$('***REMOVED***content').jScrollPane({showArrows:true});
+                    window.frames["helpframe"].$('#content').jScrollPane({showArrows:true});
                 }
             }
             imgSrc.src="img/helparrowdown-icon.gif";
@@ -85,14 +85,14 @@ var vUnknown = "Unknown";
     /*
     function moveToHTMLend()
     {
-        window.location.href='***REMOVED***helpframe-anchor';
+        window.location.href='#helpframe-anchor';
         setHelpIframeVisible();
     }
     */
 
     function loadhelp(fname,anchname)
     {
-                var pane = window.frames["helpframe"].$('***REMOVED***content');
+                var pane = window.frames["helpframe"].$('#content');
                 var imgSrc=document.getElementById('help-button');
                 if(imgSrc.src.search("up")<0)
                 {
@@ -108,7 +108,7 @@ var vUnknown = "Unknown";
                         }
                         else
                         {
-                                window.frames["helpframe"].location.href=fname+"_h.htm***REMOVED***" + anchname;
+                                window.frames["helpframe"].location.href=fname+"_h.htm#" + anchname;
                                 $(".help-frame-div").show();
                         }
 
@@ -175,7 +175,7 @@ function InitUpdateView(tagValues)
     document.getElementById("SecurityStatus").innerHTML = tagValues[8];
     document.getElementById("SecurityComment").innerHTML = tagValues[9];
     document.getElementById("CurrentSystemTime").innerHTML = 'Current System Time:' + tagValues[10];
-    $("***REMOVED***Startupfreq").val(tagValues[11]);   //implement goto freq
+    $("#Startupfreq").val(tagValues[11]);   //implement goto freq
     if( tagValues[12] == 0 )
     {
         document.getElementById("DownstreamBondedChannels").innerHTML = 'Downstream Bonded Channels';
@@ -353,7 +353,7 @@ function InitCmIpProvModeUpdateView(tagValues)
     }
     else
     {
-        $('***REMOVED***CmIpProvMode').hide();
+        $('#CmIpProvMode').hide();
     }
 }
 
@@ -451,7 +451,7 @@ function checkData()
 </head>
 <!-- remove loadhelp -->
 <!--
-<body onload='BodyInit();loadhelp("help","Connect");' style="margin:0px;background-color:***REMOVED***e5e5e5">
+<body onload='BodyInit();loadhelp("help","Connect");' style="margin:0px;background-color:#e5e5e5">
 -->
 <body onload="changeContentSize()" onResize="changeContentSize()" class="page-body">
 	<img alt="" id="bodyBackgroundImg" src="subhead2-background.jpg" style="width:650px;height:445px;position: absolute;top:31px">

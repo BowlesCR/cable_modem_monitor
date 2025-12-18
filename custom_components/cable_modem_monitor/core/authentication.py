@@ -62,7 +62,7 @@ class BasicHttpAuthStrategy(AuthStrategy):
             _LOGGER.debug("No credentials provided for Basic Auth, skipping")
             return (True, None)
 
-        ***REMOVED*** Attach auth to session (sent with every request)
+        # Attach auth to session (sent with every request)
         session.auth = (username, password)
         _LOGGER.debug("HTTP Basic Auth configured for session")
         return (True, None)
@@ -94,7 +94,7 @@ class FormPlainAuthStrategy(AuthStrategy):
         _LOGGER.debug("Submitting form login to %s", login_url)
         response = session.post(login_url, data=login_data, timeout=10, allow_redirects=True, verify=session.verify)
 
-        ***REMOVED*** Check success indicator
+        # Check success indicator
         if config.success_indicator:
             is_in_url = config.success_indicator in response.url
             is_large_response = config.success_indicator.isdigit() and len(response.text) > int(
@@ -107,7 +107,7 @@ class FormPlainAuthStrategy(AuthStrategy):
                 _LOGGER.warning("Form login failed: success indicator not found")
                 return (False, None)
 
-        ***REMOVED*** If no success indicator, assume success if status is 200
+        # If no success indicator, assume success if status is 200
         if response.status_code == 200:
             return (True, response.text)
 
@@ -148,7 +148,7 @@ class FormBase64AuthStrategy(AuthStrategy):
         _LOGGER.debug("Submitting form login with Base64-encoded password to %s", login_url)
         response = session.post(login_url, data=login_data, timeout=10, allow_redirects=True, verify=session.verify)
 
-        ***REMOVED*** Check success indicator
+        # Check success indicator
         if config.success_indicator:
             is_in_url = config.success_indicator in response.url
             is_large_response = config.success_indicator.isdigit() and len(response.text) > int(
@@ -161,7 +161,7 @@ class FormBase64AuthStrategy(AuthStrategy):
                 _LOGGER.warning("Form login failed: success indicator not found")
                 return (False, None)
 
-        ***REMOVED*** If no success indicator, assume success if status is 200
+        # If no success indicator, assume success if status is 200
         if response.status_code == 200:
             return (True, response.text)
 
@@ -187,10 +187,10 @@ class FormPlainAndBase64AuthStrategy(AuthStrategy):
 
         login_url = f"{base_url}{config.login_url}"
 
-        ***REMOVED*** Try plain password first
+        # Try plain password first
         passwords_to_try = [
-            password,  ***REMOVED*** Plain password
-            base64.b64encode(password.encode("utf-8")).decode("utf-8"),  ***REMOVED*** Base64-encoded
+            password,  # Plain password
+            base64.b64encode(password.encode("utf-8")).decode("utf-8"),  # Base64-encoded
         ]
 
         for attempt, pwd in enumerate(passwords_to_try, 1):
@@ -203,7 +203,7 @@ class FormPlainAndBase64AuthStrategy(AuthStrategy):
 
             response = session.post(login_url, data=login_data, timeout=10, allow_redirects=True, verify=session.verify)
 
-            ***REMOVED*** Check success
+            # Check success
             success = False
             if config.success_indicator:
                 is_in_url = config.success_indicator in response.url
@@ -346,7 +346,7 @@ class HNAPSessionAuthStrategy(AuthStrategy):
             return (False, None)
 
         try:
-            ***REMOVED*** Build login SOAP envelope
+            # Build login SOAP envelope
             login_envelope = self._build_login_envelope(username, password, config)
 
             hnap_url = f"{base_url}{config.hnap_endpoint}"
@@ -384,7 +384,7 @@ class HNAPSessionAuthStrategy(AuthStrategy):
                 )
                 return (False, None)
 
-            ***REMOVED*** Check for session timeout indicator (means auth failed)
+            # Check for session timeout indicator (means auth failed)
             if config.session_timeout_indicator in response.text:
                 _LOGGER.warning(
                     "HNAP login failed: Found '%s' in response (authentication rejected). " "Response preview: %s",
@@ -393,7 +393,7 @@ class HNAPSessionAuthStrategy(AuthStrategy):
                 )
                 return (False, None)
 
-            ***REMOVED*** Check for JSON error responses (some MB8611 firmwares return JSON errors)
+            # Check for JSON error responses (some MB8611 firmwares return JSON errors)
             error_indicators = ["SET_JSON_FORMAT_ERROR", "ERROR", '"LoginResult":"FAILED"', '"LoginResult": "FAILED"']
             for error_indicator in error_indicators:
                 if error_indicator in response.text:
@@ -406,7 +406,7 @@ class HNAPSessionAuthStrategy(AuthStrategy):
                     )
                     return (False, None)
 
-            ***REMOVED*** Log success indicators
+            # Log success indicators
             _LOGGER.info(
                 "HNAP login successful! Session established with modem. " "Response size: %d bytes",
                 len(response.text),

@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="css/scrollbar.css">
 <link rel="stylesheet" href="css/button.css">
 <style type="text/css" media="screen,print">
-***REMOVED***inputWidth520 {font-family:Arial,Helvetica,Geneva,Swiss,SunSans-Regular,sans-serif;font-size:11px;width:520px;height:136px}
+#inputWidth520 {font-family:Arial,Helvetica,Geneva,Swiss,SunSans-Regular,sans-serif;font-size:11px;width:520px;height:136px}
 td,input
 {
  font-size:12px;
@@ -43,11 +43,11 @@ var ctime;
         BodyInit();
         if(get_browser() == "Chrome")
         {
-            $('***REMOVED***inputWidth520').attr('style','width:510px;height:110px');
+            $('#inputWidth520').attr('style','width:510px;height:110px');
         }
 
 //        $('.scroll-pane').jScrollPane('scrollbarMargin:5px');
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
             buttonFilter();
         });
 
@@ -78,14 +78,14 @@ var ctime;
     }
     function moveToHTMLend()
     {
-        window.location.href='***REMOVED***helpframe-anchor';
+        window.location.href='#helpframe-anchor';
         setHelpIframeVisible();
     }
 
 
     function loadhelp(fname,anchname)
     {
-                var pane = window.frames["helpframe"].$('***REMOVED***content');
+                var pane = window.frames["helpframe"].$('#content');
                 var imgSrc=document.getElementById('help-button');
                 if(imgSrc.src.search("up")<0)
                 {
@@ -101,7 +101,7 @@ var ctime;
                         }
                         else
                         {
-                                window.frames["helpframe"].location.href=fname+"_h."+"htm***REMOVED***" + anchname;
+                                window.frames["helpframe"].location.href=fname+"_h."+"htm#" + anchname;
                                 $(".help-frame-div").show();
                         }
 
@@ -119,25 +119,25 @@ function StartCommand()
     if ((ff.DiagnosticUtility.selectedIndex == 0) &&
         (checkPingParm() == true))
     {
-        $("***REMOVED***inputWidth370").attr("disabled", true);
+        $("#inputWidth370").attr("disabled", true);
         return true;
     }
     else if ((ff.DiagnosticUtility.selectedIndex == 1) &&
         (checkTrcerParm() == true))
     {
-        $("***REMOVED***inputWidth370").attr("disabled", true);
+        $("#inputWidth370").attr("disabled", true);
         return true;
     }
     else if ((ff.DiagnosticUtility.selectedIndex == 2) &&
         (checkDSParm() == true)) // 20130107 Emerson, add DS/US throughput page
     {
-        $("***REMOVED***inputWidth370").attr("disabled", true);
+        $("#inputWidth370").attr("disabled", true);
         return true;
     }
     else if ((ff.DiagnosticUtility.selectedIndex == 3) &&
         (checkUSParm() == true)) // 20130107 Emerson, add DS/US throughput page
     {
-        $("***REMOVED***inputWidth370").attr("disabled", true);
+        $("#inputWidth370").attr("disabled", true);
         return true;
     }
     return false;
@@ -157,12 +157,12 @@ function StopCommand()
     if((ff.DiagnosticUtility.options[0].selected == true) &&
         (checkPingParm() == true))
     {
-        $("***REMOVED***inputWidth370").attr("disabled", true);
+        $("#inputWidth370").attr("disabled", true);
       return true;
     }
     else
     {
-        $("***REMOVED***inputWidth370").attr("disabled", true);
+        $("#inputWidth370").attr("disabled", true);
       return true;
     }
   //}
@@ -171,7 +171,7 @@ function StopCommand()
 function ClearCommand()
 {
   window.document.RgDiagnostics.UtilityCommand.value=3;
-    $("***REMOVED***inputWidth370").attr("disabled", true);
+    $("#inputWidth370").attr("disabled", true);
 }
 function Refresh()
 {
@@ -458,25 +458,25 @@ function InitUpdateView(tagValues)
         setGray("0");
         clearTimeout(ctime);
 
-//        $("***REMOVED***start").show();
-//        $("***REMOVED***stop").hide();
+//        $("#start").show();
+//        $("#stop").hide();
     }
     else
     {
         setGray("1");
         ctime = setTimeout("window.location.reload(true);",2000);
 
-//        $("***REMOVED***start").hide();
-//        $("***REMOVED***stop").show();
+//        $("#start").hide();
+//        $("#stop").show();
     }
 
     if(tagValues[14] == "1")
     {
-        $("***REMOVED***IPTYPE").show();
+        $("#IPTYPE").show();
     }
     else
     {
-        $("***REMOVED***IPTYPE").hide();
+        $("#IPTYPE").hide();
     }
 }
 
@@ -536,48 +536,48 @@ function UtilityChange()
     {
 	    if (cf.DiagnosticUtility.selectedIndex == 0)
 	    {
-	        $("***REMOVED***pingStyle").show();
-	        $("***REMOVED***tracerouteStyle").hide();
-	        $("***REMOVED***dsStyle").hide();
-	        $("***REMOVED***usStyle").hide();
+	        $("#pingStyle").show();
+	        $("#tracerouteStyle").hide();
+	        $("#dsStyle").hide();
+	        $("#usStyle").hide();
 	    }
 	    else if (cf.DiagnosticUtility.selectedIndex == 1)
 	    {
-	        $("***REMOVED***pingStyle").hide();
-	        $("***REMOVED***tracerouteStyle").show();
-	        $("***REMOVED***dsStyle").hide();
-	        $("***REMOVED***usStyle").hide();
+	        $("#pingStyle").hide();
+	        $("#tracerouteStyle").show();
+	        $("#dsStyle").hide();
+	        $("#usStyle").hide();
 	    }
 	    else if (cf.DiagnosticUtility.selectedIndex == 2)
 	    {
-	    	  $("***REMOVED***pingStyle").hide();
-	        $("***REMOVED***tracerouteStyle").hide();
-	        $("***REMOVED***dsStyle").show();
-	        $("***REMOVED***usStyle").hide();
+	    	  $("#pingStyle").hide();
+	        $("#tracerouteStyle").hide();
+	        $("#dsStyle").show();
+	        $("#usStyle").hide();
 	    }
 	    else
 	    {
-	    	  $("***REMOVED***pingStyle").hide();
-	        $("***REMOVED***tracerouteStyle").hide();
-	        $("***REMOVED***dsStyle").hide();
-	        $("***REMOVED***usStyle").show();
+	    	  $("#pingStyle").hide();
+	        $("#tracerouteStyle").hide();
+	        $("#dsStyle").hide();
+	        $("#usStyle").show();
 	    }
   	}
   	else
   	{
   		if (cf.DiagnosticUtility.selectedIndex == 0)
 	    {
-	        $("***REMOVED***pingStyle").show();
-	        $("***REMOVED***tracerouteStyle").hide();
-	        $("***REMOVED***dsStyle").hide();
-	        $("***REMOVED***usStyle").hide();
+	        $("#pingStyle").show();
+	        $("#tracerouteStyle").hide();
+	        $("#dsStyle").hide();
+	        $("#usStyle").hide();
 	    }
 	    else if (cf.DiagnosticUtility.selectedIndex == 1)
 	    {
-	        $("***REMOVED***pingStyle").hide();
-	        $("***REMOVED***tracerouteStyle").show();
-	        $("***REMOVED***dsStyle").hide();
-	        $("***REMOVED***usStyle").hide();
+	        $("#pingStyle").hide();
+	        $("#tracerouteStyle").show();
+	        $("#dsStyle").hide();
+	        $("#usStyle").hide();
 	    }
   	}
     // 20130107 Emerson, add DS/US throughput page end
@@ -593,13 +593,13 @@ function changeIpType(ipType)
 {
     if(ipType == 0)
     {
-        $("***REMOVED***target_ipv4").show();
-        $("***REMOVED***target_ipv6").hide();
+        $("#target_ipv4").show();
+        $("#target_ipv6").hide();
     }
     else
     {
-        $("***REMOVED***target_ipv4").hide();
-        $("***REMOVED***target_ipv6").show();
+        $("#target_ipv4").hide();
+        $("#target_ipv6").show();
     }
 }
 

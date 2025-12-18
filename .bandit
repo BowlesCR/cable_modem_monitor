@@ -1,7 +1,7 @@
-***REMOVED*** Bandit configuration for Python security linting
-***REMOVED*** https://bandit.readthedocs.io/
+# Bandit configuration for Python security linting
+# https://bandit.readthedocs.io/
 
-***REMOVED*** Exclude test files and virtual environments
+# Exclude test files and virtual environments
 exclude_dirs:
   - /tests/
   - /venv/
@@ -9,16 +9,16 @@ exclude_dirs:
   - /__pycache__/
   - /.git/
 
-***REMOVED*** Skips (use sparingly)
-***REMOVED*** B101 - assert_used (ok in tests)
+# Skips (use sparingly)
+# B101 - assert_used (ok in tests)
 skips:
   - B101
 
-***REMOVED*** Tests to run (leave empty to run all)
-***REMOVED*** Common issues that CodeQL also catches:
-***REMOVED*** B201 - Flask debug mode
-***REMOVED*** B301-B324 - Pickle/marshal/shelve usage
-***REMOVED*** B501-B509 - Weak cryptography
-***REMOVED*** B601-B612 - Shell injection, SQL injection
-***REMOVED*** B701-B703 - Jinja2 autoescape issues
+# Tests to run (leave empty to run all)
+# Common issues that CodeQL also catches:
+# B201 - Flask debug mode
+# B301-B324 - Pickle/marshal/shelve usage
+# B501-B509 - Weak cryptography
+# B601-B612 - Shell injection, SQL injection
+# B701-B703 - Jinja2 autoescape issues
 tests: []

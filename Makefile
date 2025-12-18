@@ -1,6 +1,6 @@
 .PHONY: help test test-quick test-simple clean lint lint-fix fix-imports lint-all type-check format format-check check deploy sync-version docker-start docker-stop docker-restart docker-logs docker-status docker-clean docker-shell
 
-***REMOVED*** Default target - show help
+# Default target - show help
 help:
 	@echo "Cable Modem Monitor - Available Commands"
 	@echo ""
@@ -37,56 +37,56 @@ help:
 	@echo ""
 	@echo "For more details, see scripts/README.md"
 
-***REMOVED*** Run full test suite with coverage
+# Run full test suite with coverage
 test:
 	@bash scripts/dev/run_tests_local.sh
 
-***REMOVED*** Quick test (assumes venv setup)
+# Quick test (assumes venv setup)
 test-quick:
 	@bash scripts/dev/quick_test.sh
 
-***REMOVED*** Simple test without venv
+# Simple test without venv
 test-simple:
 	@bash scripts/dev/test_simple.sh
 
-***REMOVED*** Clean test artifacts
+# Clean test artifacts
 clean:
 	@python3 scripts/dev/cleanup_test_artifacts.py
 
-***REMOVED*** Run linter
+# Run linter
 lint:
 	@echo "Running Ruff linter..."
 	@ruff check .
 
-***REMOVED*** Run linter with auto-fix
+# Run linter with auto-fix
 lint-fix:
 	@echo "Running Ruff linter with auto-fix..."
 	@ruff check --fix .
 
-***REMOVED*** Type checking
+# Type checking
 type-check:
 	@echo "Running mypy type checker..."
 	@mypy .
 
-***REMOVED*** Format code
+# Format code
 format:
 	@echo "Formatting code with Black..."
 	@black .
 
-***REMOVED*** Check code formatting without modifying
+# Check code formatting without modifying
 format-check:
 	@echo "Checking code formatting..."
 	@black --check .
 
-***REMOVED*** Run all code quality checks
+# Run all code quality checks
 check: lint format-check type-check
 	@echo "✅ All code quality checks passed!"
 
-***REMOVED*** Quick check (lint + format only, skip type-check for speed)
+# Quick check (lint + format only, skip type-check for speed)
 quick-check: lint format-check
 	@echo "✅ Quick quality checks passed!"
 
-***REMOVED*** Run all linters (comprehensive)
+# Run all linters (comprehensive)
 lint-all: lint type-check
 	@echo "Running security linting..."
 	@if command -v bandit >/dev/null 2>&1; then \
@@ -96,30 +96,30 @@ lint-all: lint type-check
 	fi
 	@echo "✅ All linting checks completed!"
 
-***REMOVED*** Quick pre-commit validation (fast) - requires venv
+# Quick pre-commit validation (fast) - requires venv
 validate:
 	@echo "🔍 Running quick validation..."
 	@$(MAKE) quick-check
 	@$(MAKE) test-quick
 	@echo "✅ Validation passed! Safe to commit."
 
-***REMOVED*** Cross-platform validation (auto-installs tools, works without venv)
+# Cross-platform validation (auto-installs tools, works without venv)
 validate-host:
 	@python scripts/dev/validate.py
 
-***REMOVED*** Full CI validation (comprehensive)
+# Full CI validation (comprehensive)
 validate-ci:
 	@./scripts/ci-check.sh
 
-***REMOVED*** Deploy to Home Assistant
+# Deploy to Home Assistant
 deploy:
 	@bash scripts/maintenance/deploy_updates.sh
 
-***REMOVED*** Sync version numbers
+# Sync version numbers
 sync-version:
 	@python3 scripts/maintenance/update_versions.py
 
-***REMOVED*** Docker development environment
+# Docker development environment
 docker-start:
 	@bash scripts/dev/docker-dev.sh start
 

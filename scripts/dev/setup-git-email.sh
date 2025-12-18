@@ -1,24 +1,24 @@
-***REMOVED***!/bin/bash
-***REMOVED*** Setup script to configure git with a privacy-safe email address
-***REMOVED*** This helps protect contributor privacy by using GitHub's noreply email
-***REMOVED***
-***REMOVED*** Usage:
-***REMOVED***   ./scripts/dev/setup-git-email.sh           ***REMOVED*** Interactive setup
-***REMOVED***   ./scripts/dev/setup-git-email.sh --check   ***REMOVED*** Check only (for CI/pre-commit)
+#!/bin/bash
+# Setup script to configure git with a privacy-safe email address
+# This helps protect contributor privacy by using GitHub's noreply email
+#
+# Usage:
+#   ./scripts/dev/setup-git-email.sh           # Interactive setup
+#   ./scripts/dev/setup-git-email.sh --check   # Check only (for CI/pre-commit)
 
 set -e
 
-***REMOVED*** Colors for output
+# Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' ***REMOVED*** No Color
+NC='\033[0m' # No Color
 
-***REMOVED*** Get current email
+# Get current email
 CURRENT_EMAIL=$(git config user.email 2>/dev/null || echo "")
 
-***REMOVED*** Allowed email patterns
+# Allowed email patterns
 is_allowed_email() {
   local email="$1"
   if [[ "$email" =~ @users\.noreply\.github\.com$ ]]; then
@@ -31,7 +31,7 @@ is_allowed_email() {
   return 1
 }
 
-***REMOVED*** Check-only mode (for pre-commit hook)
+# Check-only mode (for pre-commit hook)
 if [[ "$1" == "--check" ]]; then
   if is_allowed_email "$CURRENT_EMAIL"; then
     exit 0
@@ -50,7 +50,7 @@ if [[ "$1" == "--check" ]]; then
   fi
 fi
 
-***REMOVED*** Interactive mode
+# Interactive mode
 echo ""
 echo -e "${BLUE}============================================================${NC}"
 echo -e "${BLUE}  Git Email Privacy Setup${NC}"
@@ -79,7 +79,7 @@ echo "  2. Check 'Keep my email addresses private'"
 echo "  3. Copy your noreply email (looks like: 12345678+username@users.noreply.github.com)"
 echo ""
 
-***REMOVED*** Prompt for email
+# Prompt for email
 read -p "Paste your GitHub noreply email (or press Enter to skip): " NEW_EMAIL
 
 if [[ -z "$NEW_EMAIL" ]]; then
@@ -88,7 +88,7 @@ if [[ -z "$NEW_EMAIL" ]]; then
   exit 0
 fi
 
-***REMOVED*** Validate the email looks like a noreply
+# Validate the email looks like a noreply
 if ! is_allowed_email "$NEW_EMAIL"; then
   echo ""
   echo -e "${RED}Error: That doesn't look like a GitHub noreply email.${NC}"
@@ -96,7 +96,7 @@ if ! is_allowed_email "$NEW_EMAIL"; then
   exit 1
 fi
 
-***REMOVED*** Configure git
+# Configure git
 git config user.email "$NEW_EMAIL"
 
 echo ""

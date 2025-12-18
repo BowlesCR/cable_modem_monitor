@@ -1,8 +1,8 @@
-***REMOVED*** Motorola MB7621 Test Fixtures
+# Motorola MB7621 Test Fixtures
 
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -14,7 +14,7 @@
 
 <!-- END AUTO-GENERATED -->
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
@@ -32,33 +32,33 @@
 | **Captured By** | @kwschulz |
 | **Capture Date** | Development |
 
-***REMOVED******REMOVED*** Links
+## Links
 
 - [Motorola MB7621 Product Page](https://www.motorola.com/us/mb7621)
 - [Motorola MB7621 Support](https://motorolanetwork.com/mb7621.html)
 
-***REMOVED******REMOVED*** Authentication
+## Authentication
 
 - **Method**: Form-based POST to `/goform/login`
 - **Username Field**: `loginUsername`
 - **Password Field**: `loginPassword`
 - **Default IP**: `192.168.100.1`
 
-***REMOVED******REMOVED*** Directory Structure
+## Directory Structure
 
 ```
 mb7621/
-├── Login.html          ***REMOVED*** Core - authentication
-├── MotoHome.asp        ***REMOVED*** Core - dashboard/detection
-├── MotoConnection.asp  ***REMOVED*** Core - channel data
-├── MotoSwInfo.asp      ***REMOVED*** Core - software info
-├── MotoSecurity.asp    ***REMOVED*** Core - restart functionality (used by tests)
+├── Login.html          # Core - authentication
+├── MotoHome.asp        # Core - dashboard/detection
+├── MotoConnection.asp  # Core - channel data
+├── MotoSwInfo.asp      # Core - software info
+├── MotoSecurity.asp    # Core - restart functionality (used by tests)
 ├── README.md
 └── extended/
-    └── MotoSnmpLog.asp   ***REMOVED*** Event logs
+    └── MotoSnmpLog.asp   # Event logs
 ```
 
-***REMOVED******REMOVED*** Core Fixtures
+## Core Fixtures
 
 | File | Description | Key Data |
 |------|-------------|----------|
@@ -68,15 +68,15 @@ mb7621/
 | `MotoSwInfo.asp` | Software information | Hardware/firmware version, serial number |
 | `MotoSecurity.asp` | Security/restart page | Restart functionality |
 
-***REMOVED******REMOVED*** Extended Fixtures (`extended/`)
+## Extended Fixtures (`extended/`)
 
 | File | Description |
 |------|-------------|
 | `MotoSnmpLog.asp` | Event logs |
 
-***REMOVED******REMOVED*** Data Available
+## Data Available
 
-***REMOVED******REMOVED******REMOVED*** MotoSwInfo.asp - Software Information
+### MotoSwInfo.asp - Software Information
 
 | Field | Example Value |
 |-------|---------------|
@@ -87,7 +87,7 @@ mb7621/
 | Cable Modem Serial Number | 2480-MB7621-30-5076 |
 | CM Certificate | Installed |
 
-***REMOVED******REMOVED******REMOVED*** MotoConnection.asp - Channel Data
+### MotoConnection.asp - Channel Data
 
 | Data Type | Details |
 |-----------|---------|
@@ -112,13 +112,13 @@ mb7621/
 - Channel Type
 - Symbol Rate
 
-***REMOVED******REMOVED*** Contributor Information
+## Contributor Information
 
 - **Original Contributor**: kwschulz (maintainer)
 - **Fixtures Captured**: Development testing
 - **Parser Status**: Verified
 
-***REMOVED******REMOVED*** Notes for Parser Development
+## Notes for Parser Development
 
 1. **Primary data source**: `MotoConnection.asp` contains all channel data
 2. **System info**: `MotoSwInfo.asp` has hardware/firmware versions

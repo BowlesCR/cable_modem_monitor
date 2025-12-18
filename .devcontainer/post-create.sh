@@ -1,13 +1,13 @@
-***REMOVED***!/bin/bash
-***REMOVED*** Post-create setup for dev container
-***REMOVED*** This runs once when the container is first created
+#!/bin/bash
+# Post-create setup for dev container
+# This runs once when the container is first created
 
 set -e
 
 echo "📦 Installing Python dependencies..."
 pip install --root-user-action=ignore -r requirements-dev.txt
 
-***REMOVED*** Install CodeQL CLI if not already installed
+# Install CodeQL CLI if not already installed
 if ! command -v codeql > /dev/null 2>&1; then
     echo "🔍 Installing CodeQL CLI..."
     wget -q https://github.com/github/codeql-cli-binaries/releases/latest/download/codeql-linux64.zip

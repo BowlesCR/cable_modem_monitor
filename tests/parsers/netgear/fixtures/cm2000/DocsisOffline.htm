@@ -41,7 +41,7 @@ var wan_status = 0;
         {
             location.href='DocsisStatus.htm';
         }
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
             buttonFilter();
         });
 
@@ -60,7 +60,7 @@ function showHelpIframe() {
         if(imgSrc.src.search("up")>=0)
         {
             $(".help-frame-div").show();
-            window.frames["helpframe"].$('***REMOVED***content').jScrollPane({showArrows:true});
+            window.frames["helpframe"].$('#content').jScrollPane({showArrows:true});
             imgSrc.src="img/helparrowdown-icon.png";
         }
         else
@@ -76,7 +76,7 @@ function showHelpIframe() {
     }
 function loadhelp(fname,anchname)
     {
-        var pane = window.frames["helpframe"].$('***REMOVED***content');
+        var pane = window.frames["helpframe"].$('#content');
         var imgSrc=document.getElementById('help-button');
         if(imgSrc.src.search("up")<0)
         {
@@ -89,7 +89,7 @@ function loadhelp(fname,anchname)
             }
             else
             {
-                window.frames["helpframe"].location.href=fname+"_h.htm***REMOVED***" + anchname;
+                window.frames["helpframe"].location.href=fname+"_h.htm#" + anchname;
                 $(".help-frame-div").show();
             }
             $(".help-frame-div").show();
@@ -126,7 +126,7 @@ function BodyInit()
                 <tr><td colspan="2" height="12" class="pb-15" ><div style="background-image:url('seprator.gif');width:100%;background-repeat:repeat-x;">&nbsp;</div></td></tr>
                 <tr>
                     <td align="center">
-                        <b style="font-weight:bold; color:***REMOVED***ff0000">
+                        <b style="font-weight:bold; color:#ff0000">
                             Your modem is offline.
                         </b>
                     </td>

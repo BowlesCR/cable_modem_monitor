@@ -1,66 +1,66 @@
-***REMOVED*** Modem Request Triage Skill
+# Modem Request Triage Skill
 
 Process new modem support requests for cable_modem_monitor. Downloads artifacts, triages for completeness, identifies similar parsers, builds fixtures, and drafts user responses.
 
-***REMOVED******REMOVED*** When to Use
+## When to Use
 
 - New `[Modem Request]` issue opened on cable_modem_monitor
 - User provides HAR capture, diagnostics JSON, or HTML files
 - Need to assess if data is actionable before committing to development
 
-***REMOVED******REMOVED*** Project Paths
+## Project Paths
 
 ```
 cable_modem_monitor/
-├── RAW_DATA/{Model}/              ***REMOVED*** Raw user submissions (not committed)
-├── tests/parsers/{mfr}/fixtures/{model}/  ***REMOVED*** Scrubbed test fixtures
-├── custom_components/.../parsers/{mfr}/   ***REMOVED*** Parser implementations
+├── RAW_DATA/{Model}/              # Raw user submissions (not committed)
+├── tests/parsers/{mfr}/fixtures/{model}/  # Scrubbed test fixtures
+├── custom_components/.../parsers/{mfr}/   # Parser implementations
 ```
 
 Response templates: `ai-skills/modem-request-replies.md`
 
 ---
 
-***REMOVED******REMOVED*** Phase 1: Intake
+## Phase 1: Intake
 
-***REMOVED******REMOVED******REMOVED*** 1.1 Create RAW_DATA folder
+### 1.1 Create RAW_DATA folder
 
 ```bash
 mkdir -p RAW_DATA/{MODEL}
 ```
 
-***REMOVED******REMOVED******REMOVED*** 1.2 Download all artifacts
+### 1.2 Download all artifacts
 
 - Download attached files (HAR, ZIP, JSON, HTML)
 - Save to `RAW_DATA/{MODEL}/`
 - Extract any archives
 
-***REMOVED******REMOVED******REMOVED*** 1.3 Save issue context
+### 1.3 Save issue context
 
 Create `RAW_DATA/{MODEL}/ISSUE.md`:
 
 ```markdown
-***REMOVED*** Issue ***REMOVED***{number}: {title}
+# Issue #{number}: {title}
 
 **Submitted:** {date}
 **User:** @{username}
 **URL:** {issue_url}
 
-***REMOVED******REMOVED*** Details
+## Details
 - Modem: {model}
 - Manufacturer: {manufacturer}
 - Auth: {auth_type}
 - IP: {modem_ip}
 
-***REMOVED******REMOVED*** User Notes
+## User Notes
 {additional_info from issue}
 ```
 
 ---
 
-***REMOVED******REMOVED*** Phase 2: Triage (Go/No-Go)
+## Phase 2: Triage (Go/No-Go)
 
-***REMOVED******REMOVED******REMOVED*** 2.1 Scan for completeness
+### 2.1 Scan for completeness
 
 Check if submission includes:
 
@@ -71,22 +71,22 @@ Check if submission includes:
 | Auth flow (if needed) | Login page + authenticated pages |
 | Event log (optional) | `EventLog.htm` or similar - useful for future outage detection features |
 
-***REMOVED******REMOVED******REMOVED*** 2.2 Scan for PII
+### 2.2 Scan for PII
 
 Search artifacts for:
 
 ```
-***REMOVED*** WiFi credentials
+# WiFi credentials
 grep -ri "passphrase\|password\|wpa\|wep\|ssid" RAW_DATA/{MODEL}/
 
-***REMOVED*** Real MAC addresses (not sanitized)
+# Real MAC addresses (not sanitized)
 grep -riE "([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}" RAW_DATA/{MODEL}/ | grep -v "00:00:00\|XX:XX\|REDACTED"
 
-***REMOVED*** Serial numbers
+# Serial numbers
 grep -ri "serial" RAW_DATA/{MODEL}/
 ```
 
-***REMOVED******REMOVED******REMOVED*** 2.3 Check capture method
+### 2.3 Check capture method
 
 | Method | Risk | Action |
 |--------|------|--------|
@@ -95,7 +95,7 @@ grep -ri "serial" RAW_DATA/{MODEL}/
 | Chrome HAR export | Medium | Review carefully, may need re-capture |
 | Manual HTML save | High | Likely needs re-capture |
 
-***REMOVED******REMOVED******REMOVED*** 2.4 Decision Gate
+### 2.4 Decision Gate
 
 **RED FLAGS (stop, request more data):**
 - [ ] Missing status/channel pages
@@ -110,11 +110,11 @@ grep -ri "serial" RAW_DATA/{MODEL}/
 
 If RED FLAGS → Draft response using "Need more data" template, STOP here.
 
-***REMOVED******REMOVED******REMOVED*** 2.5 Update issue status
+### 2.5 Update issue status
 
 If proceeding:
 ```bash
-***REMOVED*** Assign to yourself and add in-development label
+# Assign to yourself and add in-development label
 gh issue edit {NUMBER} --repo solentlabs/cable_modem_monitor --add-assignee {USERNAME} --add-label in-development
 ```
 
@@ -122,15 +122,15 @@ gh issue edit {NUMBER} --repo solentlabs/cable_modem_monitor --add-assignee {USE
 
 ---
 
-***REMOVED******REMOVED*** Phase 3: Similar Modem Analysis
+## Phase 3: Similar Modem Analysis
 
-***REMOVED******REMOVED******REMOVED*** 3.1 Check same manufacturer
+### 3.1 Check same manufacturer
 
 ```bash
 ls custom_components/cable_modem_monitor/parsers/{manufacturer}/
 ```
 
-***REMOVED******REMOVED******REMOVED*** 3.2 Compare characteristics
+### 3.2 Compare characteristics
 
 | Attribute | Check Against |
 |-----------|---------------|
@@ -141,7 +141,7 @@ ls custom_components/cable_modem_monitor/parsers/{manufacturer}/
 | HTML structure | Table IDs, class names, data format |
 | OFDM support | Does fixture have OFDM/OFDMA data? (DOCSIS 3.1) |
 
-***REMOVED******REMOVED******REMOVED*** 3.3 Decision matrix
+### 3.3 Decision matrix
 
 | Finding | Action |
 |---------|--------|
@@ -150,12 +150,12 @@ ls custom_components/cable_modem_monitor/parsers/{manufacturer}/
 | Same auth, different HTML | Reuse auth logic, new parsing |
 | Completely different | Build from scratch |
 
-***REMOVED******REMOVED******REMOVED*** 3.4 Document findings
+### 3.4 Document findings
 
 Add to `RAW_DATA/{MODEL}/ISSUE.md`:
 
 ```markdown
-***REMOVED******REMOVED*** Similar Modem Analysis
+## Similar Modem Analysis
 
 **Closest match:** {parser_name}
 **Similarity:** {High/Medium/Low}
@@ -165,16 +165,16 @@ Add to `RAW_DATA/{MODEL}/ISSUE.md`:
 
 ---
 
-***REMOVED******REMOVED*** Phase 4: Build Fixtures
+## Phase 4: Build Fixtures
 
-***REMOVED******REMOVED******REMOVED*** 4.1 Create fixture folder
+### 4.1 Create fixture folder
 
 ```bash
 mkdir -p tests/parsers/{manufacturer}/fixtures/{model}
 mkdir -p tests/parsers/{manufacturer}/fixtures/{model}/extended
 ```
 
-***REMOVED******REMOVED******REMOVED*** 4.2 Copy and scrub files
+### 4.2 Copy and scrub files
 
 - Keep original filenames
 - Replace real data with mock data:
@@ -184,23 +184,23 @@ mkdir -p tests/parsers/{manufacturer}/fixtures/{model}/extended
   - Channel data → Keep structure, use realistic but fake values
 - Move unused resources to `extended/`
 
-***REMOVED******REMOVED******REMOVED*** 4.3 Create metadata.yaml
+### 4.3 Create metadata.yaml
 
 ```yaml
-***REMOVED*** Modem metadata - verified against official sources
+# Modem metadata - verified against official sources
 release_date: {year}
-end_of_life: null  ***REMOVED*** null = still current, or year
+end_of_life: null  # null = still current, or year
 docsis_version: "{3.0|3.1}"
 protocol: {HTML|HNAP}
-chipset: {chipset if known}  ***REMOVED*** e.g., "Broadcom BCM3390" - check manufacturer specs
+chipset: {chipset if known}  # e.g., "Broadcom BCM3390" - check manufacturer specs
 isps:
   - {ISP1}
   - {ISP2}
 source: {manufacturer product page URL}
 
-***REMOVED*** Fixture capture info
-firmware_tested: "{version from modem}"  ***REMOVED*** e.g., "V1.03.08", "8600-19.3.15"
-captured_from_issue: {issue_number}       ***REMOVED*** e.g., 63
+# Fixture capture info
+firmware_tested: "{version from modem}"  # e.g., "V1.03.08", "8600-19.3.15"
+captured_from_issue: {issue_number}       # e.g., 63
 ```
 
 **Important metadata notes:**
@@ -221,7 +221,7 @@ captured_from_issue: {issue_number}       ***REMOVED*** e.g., 63
 
 4. **Source URL** - Link to official product page for future reference.
 
-***REMOVED******REMOVED******REMOVED*** 4.4 Handle extended/ files
+### 4.4 Handle extended/ files
 
 Files from HAR captures that aren't needed for parsing but may be useful for reference:
 - Move to `extended/` subfolder
@@ -229,16 +229,16 @@ Files from HAR captures that aren't needed for parsing but may be useful for ref
 - Common candidates: `DashBoard.htm`, `EventLog.htm`, `DeviceInfo.htm`
 
 ```bash
-***REMOVED*** Scan extended files for PII before committing
+# Scan extended files for PII before committing
 grep -riE "(password|passphrase|wpa|wep|serial|device.?id)" tests/parsers/{mfr}/fixtures/{model}/extended/
 ```
 
-***REMOVED******REMOVED******REMOVED*** 4.5 Create README.md
+### 4.5 Create README.md
 
 ```markdown
-***REMOVED*** {Manufacturer} {Model} Modem Fixtures
+# {Manufacturer} {Model} Modem Fixtures
 
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -246,32 +246,32 @@ grep -riE "(password|passphrase|wpa|wep|serial|device.?id)" tests/parsers/{mfr}/
 | **Protocol** | {HTML/HNAP} |
 | **Status** | ⏳ Pending |
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
 | **Model** | {model} |
 | **Manufacturer** | {manufacturer} |
-| **Related Issue** | [***REMOVED***{number}]({url}) |
+| **Related Issue** | [#{number}]({url}) |
 | **Captured By** | @{username} |
 | **Capture Date** | {month year} |
 
-***REMOVED******REMOVED*** Authentication
+## Authentication
 
 **Type:** {None/Basic/Form/HNAP}
 
-***REMOVED******REMOVED*** Files
+## Files
 
 | File | Description |
 |------|-------------|
 | `{filename}` | {description} |
 
-***REMOVED******REMOVED*** Notes
+## Notes
 
 {any special notes about this modem}
 ```
 
-***REMOVED******REMOVED******REMOVED*** 4.5 Validate fixture index
+### 4.5 Validate fixture index
 
 ```bash
 python scripts/generate_fixture_index.py
@@ -279,16 +279,16 @@ python scripts/generate_fixture_index.py
 
 ---
 
-***REMOVED******REMOVED*** Phase 5: Build Parser
+## Phase 5: Build Parser
 
-***REMOVED******REMOVED******REMOVED*** 5.1 Create parser file
+### 5.1 Create parser file
 
 ```bash
-***REMOVED*** Copy from similar parser or template
+# Copy from similar parser or template
 cp parsers/{mfr}/{similar}.py parsers/{mfr}/{model}.py
 ```
 
-***REMOVED******REMOVED******REMOVED*** 5.2 Implement parser
+### 5.2 Implement parser
 
 Reference: `docs/reference/PARSER_GUIDE.md`
 
@@ -300,7 +300,7 @@ Key elements:
 - `parse()` → returns downstream, upstream, system_info
 - `parse_downstream()`, `parse_upstream()`, `parse_system_info()`
 
-***REMOVED******REMOVED******REMOVED*** 5.2.1 OFDM Capability Audit
+### 5.2.1 OFDM Capability Audit
 
 **CRITICAL:** If the parser declares `ModemCapability.OFDM_DOWNSTREAM` or `OFDM_UPSTREAM`, verify there is **actual parsing code** for OFDM/OFDMA channels.
 
@@ -320,7 +320,7 @@ Audit checklist:
 
 **Gap example:** Parser declares OFDM capability but no `_parse_ofdm_*` methods exist → channels silently lost.
 
-***REMOVED******REMOVED******REMOVED*** 5.3 Write tests
+### 5.3 Write tests
 
 **Target: 80%+ coverage** for the parser file.
 
@@ -333,7 +333,7 @@ Test categories to cover:
 6. **Fixtures** - verify required files exist
 
 ```python
-***REMOVED*** tests/parsers/{mfr}/test_{model}.py
+# tests/parsers/{mfr}/test_{model}.py
 
 class TestDetection:
     def test_can_parse_from_title(self, fixture_html): ...
@@ -354,13 +354,13 @@ class TestEdgeCases:
     def test_parse_handles_malformed_js(self): ...
 ```
 
-***REMOVED******REMOVED******REMOVED*** 5.4 Run tests
+### 5.4 Run tests
 
 ```bash
 pytest tests/parsers/{mfr}/test_{model}.py -v
 ```
 
-***REMOVED******REMOVED******REMOVED*** 5.5 Handle pre-commit hooks
+### 5.5 Handle pre-commit hooks
 
 Pre-commit hooks will run on commit. Common issues:
 
@@ -373,7 +373,7 @@ Pre-commit hooks will run on commit. Common issues:
 
 If hooks modify files, the commit will fail. Re-add and retry.
 
-***REMOVED******REMOVED******REMOVED*** 5.6 Verify UI display
+### 5.6 Verify UI display
 
 After building, verify the parser appears correctly in the integration UI:
 - Parser should show with `*` suffix (indicates awaiting verification)
@@ -381,9 +381,9 @@ After building, verify the parser appears correctly in the integration UI:
 
 ---
 
-***REMOVED******REMOVED*** Phase 6: User Testing
+## Phase 6: User Testing
 
-***REMOVED******REMOVED******REMOVED*** 6.0 Commit strategy
+### 6.0 Commit strategy
 
 Keep commits logically separated:
 - **Bug fixes** discovered during development → separate commit first
@@ -394,22 +394,22 @@ Example from CM1200 work:
 1. `fix: Show asterisk for unverified parsers in config flow` (bug fix)
 2. `feat: Add Netgear CM1200 parser` (parser, fixtures, tests)
 
-***REMOVED******REMOVED******REMOVED*** 6.1 Release
+### 6.1 Release
 
 - Commit parser and fixtures
 - Include in next version release
-- Add CHANGELOG.md entry under `***REMOVED******REMOVED******REMOVED*** Added`:
+- Add CHANGELOG.md entry under `### Added`:
 
 ```markdown
-- **{Manufacturer} {Model} Parser** - {DOCSIS version} support with {auth type} authentication (Related to ***REMOVED***{issue})
+- **{Manufacturer} {Model} Parser** - {DOCSIS version} support with {auth type} authentication (Related to #{issue})
 ```
 
 Example:
 ```markdown
-- **Netgear C7000v2 Parser** - DOCSIS 3.0 support with HTTP Basic authentication (Related to ***REMOVED***61)
+- **Netgear C7000v2 Parser** - DOCSIS 3.0 support with HTTP Basic authentication (Related to #61)
 ```
 
-***REMOVED******REMOVED******REMOVED*** 6.2 Request testing
+### 6.2 Request testing
 
 Post on issue:
 
@@ -438,12 +438,12 @@ Let me know:
 2. Press **"Capture HTML"**
 3. Attach the resulting JSON file here
 
-See [Capture Instructions](https://github.com/solentlabs/cable_modem_monitor/blob/main/docs/MODEM_REQUEST.md***REMOVED***option-1-integration-capture-easiest) for details.
+See [Capture Instructions](https://github.com/solentlabs/cable_modem_monitor/blob/main/docs/MODEM_REQUEST.md#option-1-integration-capture-easiest) for details.
 ```
 
 **Note:** Only ask for HTML capture if the initial submission was HAR-based or missing pages. For static HTML modems, the integration's "Capture HTML" is preferred over HAR for follow-ups.
 
-***REMOVED******REMOVED******REMOVED*** 6.3 Iterate
+### 6.3 Iterate
 
 Common issues to fix:
 - Missing channels (parsing bug)
@@ -451,7 +451,7 @@ Common issues to fix:
 - Restart not working (different endpoint)
 - Firmware version missing (different page)
 
-***REMOVED******REMOVED******REMOVED*** 6.4 Mark verified
+### 6.4 Mark verified
 
 Once user confirms working, use the **issue-to-fixture** skill for detailed steps:
 → See `ai-skills/issue-to-fixture.md`
@@ -464,7 +464,7 @@ Summary:
 
 ---
 
-***REMOVED******REMOVED*** Response Templates
+## Response Templates
 
 See `ai-skills/modem-request-replies.md` for:
 - Initial acknowledgment
@@ -476,7 +476,7 @@ See `ai-skills/modem-request-replies.md` for:
 
 ---
 
-***REMOVED******REMOVED*** Issue Labels
+## Issue Labels
 
 Track modem request progress with labels:
 
@@ -504,7 +504,7 @@ verified → close issue
 
 ---
 
-***REMOVED******REMOVED*** Quick Reference: Auth Types
+## Quick Reference: Auth Types
 
 | Auth Type | Complexity | Examples | Key Indicator |
 |-----------|------------|----------|---------------|
@@ -515,7 +515,7 @@ verified → close issue
 
 ---
 
-***REMOVED******REMOVED*** Checklist Summary
+## Checklist Summary
 
 ```
 □ Phase 1: Intake
@@ -561,7 +561,7 @@ verified → close issue
 
 ---
 
-***REMOVED******REMOVED*** Future: Automation Potential
+## Future: Automation Potential
 
 Steps that could be scripted to speed up the workflow:
 
@@ -578,12 +578,12 @@ Steps that could be scripted to speed up the workflow:
 
 ---
 
-***REMOVED******REMOVED*** RAW_DATA Cleanup
+## RAW_DATA Cleanup
 
 After parser is verified and issue closed:
 
 ```bash
-***REMOVED*** Remove raw user data (may contain PII)
+# Remove raw user data (may contain PII)
 rm -rf RAW_DATA/{MODEL}/
 ```
 

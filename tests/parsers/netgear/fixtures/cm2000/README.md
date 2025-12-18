@@ -1,8 +1,8 @@
-***REMOVED*** Netgear CM2000 (Nighthawk) Test Fixtures
+# Netgear CM2000 (Nighthawk) Test Fixtures
 
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -14,7 +14,7 @@
 
 <!-- END AUTO-GENERATED -->
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
@@ -32,32 +32,32 @@
 | **Captured By** | @m4dh4tt3r-88 |
 | **Capture Date** | November 2025 |
 
-***REMOVED******REMOVED*** Links
+## Links
 
 - [Netgear CM2000 Product Page](https://www.netgear.com/home/wifi/modems/cm2000/)
 - [Netgear CM2000 Support](https://www.netgear.com/support/product/cm2000)
-- [Related Issue: ***REMOVED***38](https://github.com/solentlabs/cable_modem_monitor/issues/38)
+- [Related Issue: #38](https://github.com/solentlabs/cable_modem_monitor/issues/38)
 
-***REMOVED******REMOVED*** Authentication
+## Authentication
 
 - **Method**: Form-based POST to `/goform/Login`
 - **Username Field**: `loginName` (value: "admin")
 - **Password Field**: `loginPassword`
 - **Default URL**: `http://192.168.100.1/`
 
-***REMOVED******REMOVED*** Directory Structure
+## Directory Structure
 
 ```
 cm2000/
-├── DocsisStatus.htm      ***REMOVED*** Core - channel data
-├── RouterStatus.htm      ***REMOVED*** Core - system info, reboot
-├── DashBoard.htm         ***REMOVED*** Core - dashboard redirect
-├── DocsisOffline.htm     ***REMOVED*** Core - offline state
-├── index.htm             ***REMOVED*** Core - login, firmware version
-├── index_https.htm       ***REMOVED*** Core - HTTPS detection
-├── root.htm              ***REMOVED*** Core - root redirect
+├── DocsisStatus.htm      # Core - channel data
+├── RouterStatus.htm      # Core - system info, reboot
+├── DashBoard.htm         # Core - dashboard redirect
+├── DocsisOffline.htm     # Core - offline state
+├── index.htm             # Core - login, firmware version
+├── index_https.htm       # Core - HTTPS detection
+├── root.htm              # Core - root redirect
 ├── README.md
-└── extended/             ***REMOVED*** Reference files
+└── extended/             # Reference files
     ├── eventLog.htm
     ├── Logout.htm
     ├── OpenSourceLicense.html
@@ -65,7 +65,7 @@ cm2000/
     └── WebServiceManagement.htm
 ```
 
-***REMOVED******REMOVED*** Core Fixtures
+## Core Fixtures
 
 | File | Size | Description |
 |------|------|-------------|
@@ -77,7 +77,7 @@ cm2000/
 | `DocsisOffline.htm` | 6 KB | Offline status page |
 | `root.htm` | 362 B | Root redirect |
 
-***REMOVED******REMOVED*** Extended Fixtures (`extended/`)
+## Extended Fixtures (`extended/`)
 
 | File | Size | Description |
 |------|------|-------------|
@@ -87,11 +87,11 @@ cm2000/
 | `Logout.htm` | 1 KB | Logout page |
 | `OpenSourceLicense.html` | 78 KB | Open source licenses |
 
-***REMOVED******REMOVED*** Data Available
+## Data Available
 
 Unlike the CM600, the CM2000 **does provide** uptime, system time, and firmware version!
 
-***REMOVED******REMOVED******REMOVED*** Software Version (index.htm)
+### Software Version (index.htm)
 
 Firmware version is in `index.htm`, not `DocsisStatus.htm`:
 
@@ -108,7 +108,7 @@ function InitTagValue()
 | 0 | Firmware Version | `V8.01.02` |
 | 5 | Build Type | `retail` |
 
-***REMOVED******REMOVED******REMOVED*** Reboot Endpoint (RouterStatus.htm)
+### Reboot Endpoint (RouterStatus.htm)
 
 Reboot is available via `RouterStatus.htm`:
 
@@ -128,7 +128,7 @@ if(confirm("Rebooting the router will disrupt active traffic on the network. Are
 
 **Note**: The form action URL includes a dynamic ID that must be extracted from the page.
 
-***REMOVED******REMOVED******REMOVED*** InitTagValue() - System Status
+### InitTagValue() - System Status
 | Index | Field | Example Value |
 |-------|-------|---------------|
 | 0 | Acquire DS Frequency | `579000000` |
@@ -144,7 +144,7 @@ if(confirm("Rebooting the router will disrupt active traffic on the network. Are
 | 15 | OFDM DS Channel Count | `3` |
 | 16 | OFDM US Channel Count | `1` |
 
-***REMOVED******REMOVED******REMOVED*** InitDsTableTagValue() - 32 Downstream Channels (DOCSIS 3.0)
+### InitDsTableTagValue() - 32 Downstream Channels (DOCSIS 3.0)
 
 | Field | Example |
 |-------|---------|
@@ -159,7 +159,7 @@ if(confirm("Rebooting the router will disrupt active traffic on the network. Are
 | ... | ... | ... | ... | ... | ... | ... | ... | ... |
 | 31 | Locked | QAM256 | 45 | 741 MHz | 9.2 dBmV | 41.2 dB | 80 | 423 |
 
-***REMOVED******REMOVED******REMOVED*** InitUsTableTagValue() - 8 Upstream Channels (DOCSIS 3.0)
+### InitUsTableTagValue() - 8 Upstream Channels (DOCSIS 3.0)
 
 | Field | Example |
 |-------|---------|
@@ -174,7 +174,7 @@ if(confirm("Rebooting the router will disrupt active traffic on the network. Are
 | 3 | Locked | ATDMA | 1 | 5120 Ksym/s | 16.3 MHz | 38.0 dBmV |
 | 4 | Locked | ATDMA | 4 | 5120 Ksym/s | 35.6 MHz | 37.8 dBmV |
 
-***REMOVED******REMOVED******REMOVED*** InitOfdmDsTableTagValue() - OFDM Downstream (DOCSIS 3.1)
+### InitOfdmDsTableTagValue() - OFDM Downstream (DOCSIS 3.1)
 
 | Field | Example |
 |-------|---------|
@@ -186,15 +186,15 @@ if(confirm("Rebooting the router will disrupt active traffic on the network. Are
 |----|------|-------------|----:|----------:|------:|----:|
 | 1 | Locked | 0,1,2,3 | 33 | 762 MHz | 9.88 dBmV | 40.9 dB |
 
-***REMOVED******REMOVED******REMOVED*** InitOfdmUsTableTagValue() - OFDM Upstream (DOCSIS 3.1)
+### InitOfdmUsTableTagValue() - OFDM Upstream (DOCSIS 3.1)
 
 | Field | Example |
 |-------|---------|
 | Channel Count | 2 (0 locked in this capture) |
 
-***REMOVED******REMOVED*** Contributor Information
+## Contributor Information
 
-- **Original Issue**: [***REMOVED***38 - Netgear CM2000 Support Request](https://github.com/solentlabs/cable_modem_monitor/issues/38)
+- **Original Issue**: [#38 - Netgear CM2000 Support Request](https://github.com/solentlabs/cable_modem_monitor/issues/38)
 - **Contributor**: @m4dh4tt3r-88
 - **Fixtures Captured**: November 2025
 - **Parser Status**: ⏳ Pending v3.8.1 verification
@@ -206,7 +206,7 @@ if(confirm("Rebooting the router will disrupt active traffic on the network. Are
   - ⏳ Software version from index.htm
   - ⏳ Restart via RouterStatus.htm
 
-***REMOVED******REMOVED*** Comparison with CM600
+## Comparison with CM600
 
 | Feature | CM600 | CM2000 |
 |---------|-------|--------|

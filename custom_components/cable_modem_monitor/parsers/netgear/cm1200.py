@@ -19,7 +19,7 @@ Channel data:
 - Up to 8 upstream (DOCSIS 3.0, ATDMA)
 - OFDM support may vary by ISP configuration
 
-Related: Issue ***REMOVED***63 (Netgear CM1200 Support Request)
+Related: Issue #63 (Netgear CM1200 Support Request)
 Contributor: @DeFlanko
 """
 
@@ -43,21 +43,21 @@ class NetgearCM1200Parser(ModemParser):
     name = "Netgear CM1200"
     manufacturer = "Netgear"
     models = ["CM1200"]
-    priority = 50  ***REMOVED*** Standard priority
+    priority = 50  # Standard priority
 
-    ***REMOVED*** Parser status - awaiting user confirmation
+    # Parser status - awaiting user confirmation
     status = ParserStatus.AWAITING_VERIFICATION
     verification_source = "https://github.com/solentlabs/cable_modem_monitor/issues/63"
 
-    ***REMOVED*** Device metadata
+    # Device metadata
     release_date = "2019"
     docsis_version = "3.1"
     fixtures_path = "tests/parsers/netgear/fixtures/cm1200"
 
-    ***REMOVED*** CM1200 uses HTTP Basic authentication
+    # CM1200 uses HTTP Basic authentication
     auth_config = BasicAuthConfig()
 
-    ***REMOVED*** Capabilities - CM1200 provides channel data and system info
+    # Capabilities - CM1200 provides channel data and system info
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
@@ -68,7 +68,7 @@ class NetgearCM1200Parser(ModemParser):
         ModemCapability.CURRENT_TIME,
     }
 
-    ***REMOVED*** URL patterns to try for modem data
+    # URL patterns to try for modem data
     url_patterns = [
         {"path": "/", "auth_method": "basic", "auth_required": True},
         {"path": "/DocsisStatus.htm", "auth_method": "basic", "auth_required": True},
@@ -94,10 +94,10 @@ class NetgearCM1200Parser(ModemParser):
             return (True, None)
 
         try:
-            ***REMOVED*** Set HTTP Basic auth credentials on the session
+            # Set HTTP Basic auth credentials on the session
             session.auth = (username, password)
 
-            ***REMOVED*** Verify by fetching DocsisStatus.htm
+            # Verify by fetching DocsisStatus.htm
             _LOGGER.debug("CM1200: Testing HTTP Basic auth via DocsisStatus.htm")
             response = session.get(f"{base_url}/DocsisStatus.htm", timeout=10)
 
@@ -129,8 +129,8 @@ class NetgearCM1200Parser(ModemParser):
         Returns:
             Dictionary with downstream, upstream, and system_info
         """
-        ***REMOVED*** CM1200 requires fetching DocsisStatus.htm for channel data
-        docsis_soup = soup  ***REMOVED*** Default to provided soup
+        # CM1200 requires fetching DocsisStatus.htm for channel data
+        docsis_soup = soup  # Default to provided soup
 
         if session and base_url:
             try:
@@ -149,11 +149,11 @@ class NetgearCM1200Parser(ModemParser):
             except Exception as e:
                 _LOGGER.warning("CM1200: Error fetching DocsisStatus.htm: %s - using provided page", e)
 
-        ***REMOVED*** Parse channel data from DocsisStatus.htm
+        # Parse channel data from DocsisStatus.htm
         downstream_channels = self.parse_downstream(docsis_soup)
         upstream_channels = self.parse_upstream(docsis_soup)
 
-        ***REMOVED*** Parse system info from DocsisStatus.htm (uptime, current time)
+        # Parse system info from DocsisStatus.htm (uptime, current time)
         system_info = self.parse_system_info(docsis_soup)
 
         return {
@@ -178,13 +178,13 @@ class NetgearCM1200Parser(ModemParser):
         Returns:
             True if this is a Netgear CM1200, False otherwise
         """
-        ***REMOVED*** Check title tag
+        # Check title tag
         title = soup.find("title")
         if title and "CM1200" in title.text and "NETGEAR" in title.text:
             _LOGGER.info("Detected Netgear CM1200 from page title")
             return True
 
-        ***REMOVED*** Check meta description
+        # Check meta description
         meta_desc = soup.find("meta", attrs={"name": "description"})
         if meta_desc:
             content = meta_desc.get("content", "")
@@ -208,12 +208,12 @@ class NetgearCM1200Parser(ModemParser):
         channels: list[dict] = []
 
         try:
-            ***REMOVED*** Parse DOCSIS 3.0 QAM channels
+            # Parse DOCSIS 3.0 QAM channels
             qam_channels = self._parse_downstream_from_js(soup)
             channels.extend(qam_channels)
             _LOGGER.info("CM1200: Parsed %d downstream QAM channels", len(qam_channels))
 
-            ***REMOVED*** Parse DOCSIS 3.1 OFDM channels
+            # Parse DOCSIS 3.1 OFDM channels
             ofdm_channels = self._parse_ofdm_downstream(soup)
             channels.extend(ofdm_channels)
             _LOGGER.info("CM1200: Parsed %d downstream OFDM channels", len(ofdm_channels))
@@ -367,12 +367,12 @@ class NetgearCM1200Parser(ModemParser):
         channels: list[dict] = []
 
         try:
-            ***REMOVED*** Parse DOCSIS 3.0 ATDMA channels
+            # Parse DOCSIS 3.0 ATDMA channels
             atdma_channels = self._parse_upstream_from_js(soup)
             channels.extend(atdma_channels)
             _LOGGER.info("CM1200: Parsed %d upstream ATDMA channels", len(atdma_channels))
 
-            ***REMOVED*** Parse DOCSIS 3.1 OFDMA channels
+            # Parse DOCSIS 3.1 OFDMA channels
             ofdma_channels = self._parse_ofdma_upstream(soup)
             channels.extend(ofdma_channels)
             _LOGGER.info("CM1200: Parsed %d upstream OFDMA channels", len(ofdma_channels))
@@ -419,7 +419,7 @@ class NetgearCM1200Parser(ModemParser):
     def _parse_upstream_channel(self, values: list[str], idx: int, channel_num: int) -> dict | None:
         """Parse a single upstream channel from tagValueList values."""
         try:
-            ***REMOVED*** CM1200: Symbol Rate at idx+4, Frequency at idx+5
+            # CM1200: Symbol Rate at idx+4, Frequency at idx+5
             freq_str = values[idx + 5].replace(" Hz", "").strip()
             freq = int(freq_str)
             lock_status = values[idx + 1]
@@ -501,7 +501,7 @@ class NetgearCM1200Parser(ModemParser):
         info: dict = {}
 
         try:
-            ***REMOVED*** Try to extract from JavaScript InitTagValue function
+            # Try to extract from JavaScript InitTagValue function
             script_tags = [
                 tag for tag in soup.find_all("script") if tag.string and re.search("InitTagValue", tag.string)
             ]
@@ -510,30 +510,30 @@ class NetgearCM1200Parser(ModemParser):
                 if not script.string:
                     continue
 
-                ***REMOVED*** Look for InitTagValue function
+                # Look for InitTagValue function
                 func_match = re.search(r"function InitTagValue\(\)[^{]*\{(.*?)\n\s*\}", script.string, re.DOTALL)
                 if not func_match:
                     continue
 
                 func_body = func_match.group(1)
-                ***REMOVED*** Remove block comments and line comments
+                # Remove block comments and line comments
                 func_body_clean = re.sub(r"/\*.*?\*/", "", func_body, flags=re.DOTALL)
                 func_body_clean = re.sub(r"//.*$", "", func_body_clean, flags=re.MULTILINE)
 
                 match = re.search(r"var tagValueList = [\"']([^\"']+)[\"']", func_body_clean)
                 if match:
                     values = match.group(1).split("|")
-                    ***REMOVED*** Extract current system time (index 10)
+                    # Extract current system time (index 10)
                     if len(values) > 10 and values[10] and values[10] != "&nbsp;":
                         info["current_time"] = values[10]
                         _LOGGER.debug("CM1200: Parsed current time: %s", values[10])
 
-                    ***REMOVED*** Extract system uptime (index 14)
+                    # Extract system uptime (index 14)
                     if len(values) > 14 and values[14] and values[14] != "&nbsp;":
                         info["system_uptime"] = values[14]
                         _LOGGER.debug("CM1200: Parsed system uptime: %s", values[14])
 
-                        ***REMOVED*** Calculate last boot time from uptime
+                        # Calculate last boot time from uptime
                         boot_time = self._calculate_boot_time(values[14])
                         if boot_time:
                             info["last_boot_time"] = boot_time
@@ -561,12 +561,12 @@ class NetgearCM1200Parser(ModemParser):
         try:
             total_seconds = 0
 
-            ***REMOVED*** Parse days (e.g., "39 days")
+            # Parse days (e.g., "39 days")
             days_match = re.search(r"(\d+)\s*days?", uptime_str, re.IGNORECASE)
             if days_match:
                 total_seconds += int(days_match.group(1)) * 86400
 
-            ***REMOVED*** Parse HH:MM:SS format (e.g., "15:47:33")
+            # Parse HH:MM:SS format (e.g., "15:47:33")
             time_match = re.search(r"(\d{1,2}):(\d{2}):(\d{2})", uptime_str)
             if time_match:
                 hours = int(time_match.group(1))
@@ -577,7 +577,7 @@ class NetgearCM1200Parser(ModemParser):
             if total_seconds == 0:
                 return None
 
-            ***REMOVED*** Calculate boot time: current time - uptime
+            # Calculate boot time: current time - uptime
             uptime_delta = timedelta(seconds=total_seconds)
             boot_time = datetime.now() - uptime_delta
 

@@ -1,14 +1,14 @@
-***REMOVED*** Project Governance
+# Project Governance
 
 This document outlines the governance model for the Cable Modem Monitor project.
 
-***REMOVED******REMOVED*** Project Overview
+## Project Overview
 
 Cable Modem Monitor is a community-driven open-source project that provides Home Assistant integration for monitoring cable modem statistics. The project is maintained by volunteers who contribute their time and expertise.
 
-***REMOVED******REMOVED*** Roles and Responsibilities
+## Roles and Responsibilities
 
-***REMOVED******REMOVED******REMOVED*** Maintainer
+### Maintainer
 
 **Current Maintainer:** @kwschulz
 
@@ -25,7 +25,7 @@ Cable Modem Monitor is a community-driven open-source project that provides Home
 - Major changes should be discussed in issues before implementation
 - Community feedback is valued and considered in decisions
 
-***REMOVED******REMOVED******REMOVED*** Contributors
+### Contributors
 
 Anyone who contributes to the project through code, documentation, testing, or issue reporting.
 
@@ -41,20 +41,20 @@ Anyone who contributes to the project through code, documentation, testing, or i
 - Be respectful and collaborative
 - Respond to feedback on pull requests
 
-***REMOVED******REMOVED******REMOVED*** Community Members
+### Community Members
 
 Users of the integration who may report issues, suggest features, or help others.
 
-***REMOVED******REMOVED*** Contribution Process
+## Contribution Process
 
-***REMOVED******REMOVED******REMOVED*** 1. Issue Creation
+### 1. Issue Creation
 
 - Check for existing issues before creating new ones
 - Use the appropriate issue template (bug report or feature request)
 - Provide clear, detailed information
 - Be patient and respectful
 
-***REMOVED******REMOVED******REMOVED*** 2. Pull Request Workflow
+### 2. Pull Request Workflow
 
 ```
 1. Fork the repository
@@ -67,14 +67,14 @@ Users of the integration who may report issues, suggest features, or help others
 8. Maintainer merges when approved
 ```
 
-***REMOVED******REMOVED******REMOVED*** 3. Review Process
+### 3. Review Process
 
 - All pull requests require review by the maintainer
 - Reviews should be completed within 2 weeks when possible
 - Contributors should respond to feedback within 2 weeks
 - PRs may be closed if inactive for 30+ days
 
-***REMOVED******REMOVED******REMOVED*** 4. Merging Requirements
+### 4. Merging Requirements
 
 Pull requests must meet these requirements before merging:
 
@@ -85,9 +85,9 @@ Pull requests must meet these requirements before merging:
 - [ ] Commit messages follow conventional commits format
 - [ ] Maintainer approval
 
-***REMOVED******REMOVED*** Release Process
+## Release Process
 
-***REMOVED******REMOVED******REMOVED*** Versioning
+### Versioning
 
 We follow [Semantic Versioning](https://semver.org/):
 
@@ -95,7 +95,7 @@ We follow [Semantic Versioning](https://semver.org/):
 - **MINOR** (x.X.0): New features, backward compatible
 - **PATCH** (x.x.X): Bug fixes, backward compatible
 
-***REMOVED******REMOVED******REMOVED*** Release Workflow
+### Release Workflow
 
 1. **Preparation**
    - Update version in `manifest.json`
@@ -116,15 +116,15 @@ We follow [Semantic Versioning](https://semver.org/):
    - GitHub release is published
    - Users are notified via HACS
 
-***REMOVED******REMOVED******REMOVED*** Release Schedule
+### Release Schedule
 
 - **Patch releases**: As needed for bug fixes
 - **Minor releases**: When new features are ready (typically monthly)
 - **Major releases**: When breaking changes are necessary (rare)
 
-***REMOVED******REMOVED*** Decision Making Process
+## Decision Making Process
 
-***REMOVED******REMOVED******REMOVED*** Feature Acceptance
+### Feature Acceptance
 
 New features are evaluated based on:
 
@@ -134,60 +134,60 @@ New features are evaluated based on:
 4. **Code quality**: Is it well-tested and documented?
 5. **Breaking changes**: Are they necessary and justified?
 
-***REMOVED******REMOVED******REMOVED*** Priority Levels
+### Priority Levels
 
 1. **Critical**: Security vulnerabilities, data loss bugs
 2. **High**: Crashes, major functionality broken
 3. **Medium**: Feature requests, enhancements
 4. **Low**: Nice-to-have improvements, cosmetic changes
 
-***REMOVED******REMOVED*** Communication Channels
+## Communication Channels
 
-***REMOVED******REMOVED******REMOVED*** GitHub Issues
+### GitHub Issues
 - Bug reports
 - Feature requests
 - Technical discussions
 
-***REMOVED******REMOVED******REMOVED*** GitHub Discussions
+### GitHub Discussions
 - General questions
 - Community support
 - Ideas and proposals
 
-***REMOVED******REMOVED******REMOVED*** Pull Requests
+### Pull Requests
 - Code review
 - Implementation discussion
 - Technical decisions
 
-***REMOVED******REMOVED*** Code of Conduct Enforcement
+## Code of Conduct Enforcement
 
 The maintainer is responsible for enforcing the [Code of Conduct](CODE_OF_CONDUCT.md).
 
-***REMOVED******REMOVED******REMOVED*** Enforcement Process
+### Enforcement Process
 
 1. **Warning**: First violation receives a private warning
 2. **Temporary Ban**: Repeated violations result in temporary ban (30-90 days)
 3. **Permanent Ban**: Serious or continued violations result in permanent ban
 
-***REMOVED******REMOVED******REMOVED*** Appeals
+### Appeals
 
 Appeals can be submitted to the maintainer via email. Decisions on appeals are final.
 
-***REMOVED******REMOVED*** Changes to Governance
+## Changes to Governance
 
 This governance document may be updated by the maintainer as the project evolves. Major changes will be announced via GitHub release notes.
 
-***REMOVED******REMOVED******REMOVED*** Amendment Process
+### Amendment Process
 
 1. Propose changes via pull request
 2. Allow 2 weeks for community feedback
 3. Maintainer makes final decision
 4. Update effective date
 
-***REMOVED******REMOVED*** License
+## License
 
 This project is licensed under the MIT License. All contributions are made under this license.
 
-***REMOVED******REMOVED*** Acknowledgments
+## Acknowledgments
 
 This project would not be possible without:
 

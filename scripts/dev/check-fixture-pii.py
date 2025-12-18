@@ -1,4 +1,4 @@
-***REMOVED***!/usr/bin/env python3
+#!/usr/bin/env python3
 """Pre-commit hook to check for PII in test fixtures.
 
 Scans HTML/HTM fixture files for potential personally identifiable information:
@@ -24,7 +24,7 @@ import re
 import sys
 from pathlib import Path
 
-***REMOVED*** Load html_helper directly to avoid Home Assistant dependencies in __init__.py
+# Load html_helper directly to avoid Home Assistant dependencies in __init__.py
 _html_helper_path = (
     Path(__file__).parent.parent.parent / "custom_components" / "cable_modem_monitor" / "utils" / "html_helper.py"
 )
@@ -36,27 +36,33 @@ _spec.loader.exec_module(_html_helper)
 PII_ALLOWLIST = _html_helper.PII_ALLOWLIST
 check_for_pii = _html_helper.check_for_pii
 
-***REMOVED*** Additional patterns specific to fixture validation
+# Additional patterns specific to fixture validation
 WIFI_CRED_PATTERN = re.compile(
     r"var\s+tagValueList\s*=\s*['\"]([^'\"]+)['\"]",
     re.IGNORECASE,
 )
 
-***REMOVED*** Known safe values (anonymized placeholders)
+# Motorola password variable pattern
+MOTO_PASSWORD_PATTERN = re.compile(
+    r"var\s+Current(?:Pw|Password)[A-Za-z]*\s*=\s*['\"]([^'\"]+)['\"]",
+    re.IGNORECASE,
+)
+
+# Known safe values (anonymized placeholders)
 SAFE_VALUES = set(PII_ALLOWLIST) | {
     "00:00:00:00:00:00",
     "ff:ff:ff:ff:ff:ff",
     "0.0.0.0",
 }
 
-***REMOVED*** Safe MAC addresses (zeroed, broadcast, documentation)
+# Safe MAC addresses (zeroed, broadcast, documentation)
 SAFE_MACS = {
     "00:00:00:00:00:00",
     "ff:ff:ff:ff:ff:ff",
 }
 
-***REMOVED*** Private/documentation IP ranges (safe to include)
-***REMOVED*** Includes RFC 5737 TEST-NET ranges for documentation
+# Private/documentation IP ranges (safe to include)
+# Includes RFC 5737 TEST-NET ranges for documentation
 SAFE_IP_PREFIXES = (
     "192.168.",
     "10.",
@@ -79,15 +85,15 @@ SAFE_IP_PREFIXES = (
     "127.",
     "0.0.0.0",
     "255.255.255.",
-    ***REMOVED*** RFC 5737 TEST-NET ranges (documentation IPs - safe)
-    "192.0.2.",  ***REMOVED*** TEST-NET-1
-    "198.51.100.",  ***REMOVED*** TEST-NET-2
-    "203.0.113.",  ***REMOVED*** TEST-NET-3
+    # RFC 5737 TEST-NET ranges (documentation IPs - safe)
+    "192.0.2.",  # TEST-NET-1
+    "198.51.100.",  # TEST-NET-2
+    "203.0.113.",  # TEST-NET-3
 )
 
-***REMOVED*** Safe values for tagValueList (status values, device names, not credentials)
+# Safe values for tagValueList (status values, device names, not credentials)
 TAGVALUE_SAFE_PATTERNS = {
-    ***REMOVED*** Status values
+    # Status values
     "good",
     "locked",
     "not locked",
@@ -125,7 +131,7 @@ TAGVALUE_SAFE_PATTERNS = {
     "configured",
     "security",
     "allowed",
-    ***REMOVED*** Common device/config names (not passwords)
+    # Common device/config names (not passwords)
     "sharedlna",
     "readydlna",
     "devname1",
@@ -143,7 +149,7 @@ TAGVALUE_SAFE_PATTERNS = {
     "rokustreamingstick",
     "appletv",
     "firetv",
-    "herschel",  ***REMOVED*** Device name from fixtures
+    "herschel",  # Device name from fixtures
 }
 
 
@@ -156,6 +162,23 @@ def is_safe_mac(mac: str) -> bool:
     """Check if a MAC address is safe (zeroed, broadcast, or placeholder)."""
     mac_lower = mac.lower()
     return mac_lower in SAFE_MACS or mac_lower == "xx:xx:xx:xx:xx:xx"
+
+
+def check_motorola_passwords(content: str, filepath: Path) -> list[str]:
+    """Check for Motorola JavaScript password variables.
+
+    Looks for var CurrentPwAdmin = 'value' or var CurrentPwUser = 'value' patterns.
+    """
+    issues = []
+
+    for match in MOTO_PASSWORD_PATTERN.finditer(content):
+        password = match.group(1)
+        # Skip already-redacted values
+        if password.startswith("***"):
+            continue
+        issues.append(f"  Motorola password variable found: '{password}'")
+
+    return issues
 
 
 def check_tagvaluelist_credentials(content: str, filepath: Path) -> list[str]:
@@ -173,17 +196,17 @@ def check_tagvaluelist_credentials(content: str, filepath: Path) -> list[str]:
             val_stripped = val.strip()
             val_lower = val_stripped.lower()
 
-            ***REMOVED*** Check if this looks like a credential:
-            ***REMOVED*** - 8+ characters
-            ***REMOVED*** - Alphanumeric only
-            ***REMOVED*** - Not a known safe value
+            # Check if this looks like a credential:
+            # - 8+ characters
+            # - Alphanumeric only
+            # - Not a known safe value
             if (
                 len(val_stripped) >= 8
                 and re.match(r"^[a-zA-Z0-9]+$", val_stripped)
                 and val_lower not in TAGVALUE_SAFE_PATTERNS
-                and not re.match(r"^\d+$", val_stripped)  ***REMOVED*** Not pure numbers
-                and not val_stripped.startswith("***")  ***REMOVED*** Not already redacted
-                and not re.match(r"^V\d", val_stripped)  ***REMOVED*** Not version strings
+                and not re.match(r"^\d+$", val_stripped)  # Not pure numbers
+                and not val_stripped.startswith("***")  # Not already redacted
+                and not re.match(r"^V\d", val_stripped)  # Not version strings
                 and not val_stripped.endswith("Hz")
                 and not val_stripped.endswith("dB")
                 and not val_stripped.endswith("dBmV")
@@ -199,25 +222,29 @@ def check_html_file(filepath: Path) -> list[str]:
     issues = []
     content = filepath.read_text(errors="ignore")
 
-    ***REMOVED*** Use the comprehensive check_for_pii function
+    # Use the comprehensive check_for_pii function
     findings = check_for_pii(content, str(filepath))
     for finding in findings:
-        ***REMOVED*** Skip safe IPs (private + documentation ranges)
+        # Skip safe IPs (private + documentation ranges)
         if finding["pattern"] == "public_ip" and is_safe_ip(finding["match"]):
             continue
-        ***REMOVED*** Skip safe MAC addresses
+        # Skip safe MAC addresses
         if finding["pattern"] == "mac_address" and is_safe_mac(finding["match"]):
             continue
         issues.append(f"  {finding['pattern']}: {finding['match']} (line {finding['line']})")
 
-    ***REMOVED*** Additional check for tagValueList credentials
+    # Additional check for tagValueList credentials
     tagvalue_issues = check_tagvaluelist_credentials(content, filepath)
     issues.extend(tagvalue_issues)
+
+    # Check for Motorola password variables
+    moto_issues = check_motorola_passwords(content, filepath)
+    issues.extend(moto_issues)
 
     return issues
 
 
-def check_har_file(filepath: Path) -> list[str]:  ***REMOVED*** noqa: C901
+def check_har_file(filepath: Path) -> list[str]:  # noqa: C901
     """Check a HAR file for PII."""
     issues = []
 
@@ -227,21 +254,21 @@ def check_har_file(filepath: Path) -> list[str]:  ***REMOVED*** noqa: C901
     except (json.JSONDecodeError, UnicodeDecodeError) as e:
         return [f"  Failed to parse HAR file: {e}"]
 
-    ***REMOVED*** Extract all text content from HAR and check it
-    def extract_text(obj: dict | list | str, path: str = "") -> None:  ***REMOVED*** noqa: C901
+    # Extract all text content from HAR and check it
+    def extract_text(obj: dict | list | str, path: str = "") -> None:  # noqa: C901
         if isinstance(obj, dict):
             for key, value in obj.items():
                 new_path = f"{path}.{key}" if path else key
                 if key in ("text", "value", "content") and isinstance(value, str):
                     findings = check_for_pii(value, f"{filepath}:{new_path}")
                     for finding in findings:
-                        ***REMOVED*** Skip safe IPs and MACs
+                        # Skip safe IPs and MACs
                         if finding["pattern"] == "public_ip" and is_safe_ip(finding["match"]):
                             continue
                         if finding["pattern"] == "mac_address" and is_safe_mac(finding["match"]):
                             continue
                         issues.append(f"  {finding['pattern']}: {finding['match']} " f"(in {new_path})")
-                    ***REMOVED*** Also check for tagValueList in HTML content
+                    # Also check for tagValueList in HTML content
                     if "tagValueList" in value:
                         tagvalue_issues = check_tagvaluelist_credentials(value, filepath)
                         for issue in tagvalue_issues:
@@ -263,27 +290,27 @@ def check_metadata_exists(fixture_dir: Path) -> bool:
     """
     if (fixture_dir / "metadata.yaml").exists():
         return True
-    ***REMOVED*** Check parent for extended/supplementary directories
+    # Check parent for extended/supplementary directories
     return bool(fixture_dir.parent and (fixture_dir.parent / "metadata.yaml").exists())
 
 
-def main() -> int:  ***REMOVED*** noqa: C901
+def main() -> int:  # noqa: C901
     """Run PII checks on fixture files."""
     fixtures_root = Path("tests/parsers")
     if not fixtures_root.exists():
-        return 0  ***REMOVED*** No fixtures to check
+        return 0  # No fixtures to check
 
     exit_code = 0
     checked_dirs: set[Path] = set()
     files_checked = 0
 
-    ***REMOVED*** Find all HTML/HTM files in fixture directories
+    # Find all HTML/HTM files in fixture directories
     for pattern in ("fixtures/**/*.html", "fixtures/**/*.htm"):
         for html_file in fixtures_root.rglob(pattern):
             fixture_dir = html_file.parent
             files_checked += 1
 
-            ***REMOVED*** Check for PII in HTML
+            # Check for PII in HTML
             issues = check_html_file(html_file)
             if issues:
                 print(f"\n⚠️  Potential PII in {html_file}:")
@@ -292,7 +319,7 @@ def main() -> int:  ***REMOVED*** noqa: C901
                 print("  → Please anonymize using sanitize_html() or confirm safe")
                 exit_code = 1
 
-            ***REMOVED*** Check for metadata.yaml (once per directory)
+            # Check for metadata.yaml (once per directory)
             if fixture_dir not in checked_dirs:
                 checked_dirs.add(fixture_dir)
                 if not check_metadata_exists(fixture_dir):
@@ -300,7 +327,7 @@ def main() -> int:  ***REMOVED*** noqa: C901
                     print("  → See docs/reference/FIXTURE_FORMAT.md for template")
                     exit_code = 1
 
-    ***REMOVED*** Find all HAR files
+    # Find all HAR files
     for har_file in fixtures_root.rglob("fixtures/**/*.har"):
         files_checked += 1
         issues = check_har_file(har_file)

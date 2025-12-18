@@ -14,8 +14,8 @@ from ..base_parser import ModemCapability, ModemParser, ParserStatus
 
 _LOGGER = logging.getLogger(__name__)
 
-***REMOVED*** During modem restart, power readings may be temporarily zero.
-***REMOVED*** Ignore zero power readings during the first 5 minutes after boot.
+# During modem restart, power readings may be temporarily zero.
+# Ignore zero power readings during the first 5 minutes after boot.
 RESTART_WINDOW_SECONDS = 300
 
 
@@ -26,23 +26,23 @@ class TechnicolorTC4400Parser(ModemParser):
     manufacturer = "Technicolor"
     models = ["TC4400"]
 
-    ***REMOVED*** Parser status
-    status = ParserStatus.VERIFIED  ***REMOVED*** Confirmed by @Mar1usW3 in ***REMOVED***1 (v2.2.0)
+    # Parser status
+    status = ParserStatus.VERIFIED  # Confirmed by @Mar1usW3 in #1 (v2.2.0)
     verification_source = "https://github.com/solentlabs/cable_modem_monitor/issues/1 (@Mar1usW3)"
 
-    ***REMOVED*** Device metadata
+    # Device metadata
     release_date = "2017"
     docsis_version = "3.1"
     fixtures_path = "tests/parsers/technicolor/fixtures/tc4400"
 
-    ***REMOVED*** New authentication configuration (declarative)
+    # New authentication configuration (declarative)
     auth_config = BasicAuthConfig(strategy=AuthStrategyType.BASIC_HTTP)
 
     url_patterns = [
         {"path": "/cmconnectionstatus.html", "auth_method": "basic", "auth_required": True},
     ]
 
-    ***REMOVED*** Capabilities - Technicolor TC4400
+    # Capabilities - Technicolor TC4400
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
@@ -81,7 +81,7 @@ class TechnicolorTC4400Parser(ModemParser):
 
     def parse(self, soup: BeautifulSoup, session=None, base_url=None) -> dict:
         """Parse all data from the modem."""
-        ***REMOVED*** Parse system info first to get uptime for restart detection
+        # Parse system info first to get uptime for restart detection
         system_info = self._parse_system_info(soup)
         downstream_channels = self._parse_downstream(soup, system_info)
         upstream_channels = self._parse_upstream(soup, system_info)
@@ -123,7 +123,7 @@ class TechnicolorTC4400Parser(ModemParser):
                     snr = extract_float(cols[7].text)
                     power = extract_float(cols[8].text)
 
-                    ***REMOVED*** During restart window, filter out zero values which are typically invalid
+                    # During restart window, filter out zero values which are typically invalid
                     if is_restarting:
                         if power == 0:
                             power = None
@@ -180,7 +180,7 @@ class TechnicolorTC4400Parser(ModemParser):
                 if len(cols) == 9:
                     power = extract_float(cols[7].text)
 
-                    ***REMOVED*** During restart window, filter out zero power which is typically invalid
+                    # During restart window, filter out zero power which is typically invalid
                     if is_restarting and power == 0:
                         power = None
 
@@ -202,7 +202,7 @@ class TechnicolorTC4400Parser(ModemParser):
 
     def _parse_system_info(self, soup: BeautifulSoup) -> dict:
         """Parse system information from Technicolor TC4400."""
-        ***REMOVED*** Mapping of HTML header text to info dict keys
+        # Mapping of HTML header text to info dict keys
         header_mapping = {
             "Standard Specification Compliant": "standard_specification_compliant",
             "Hardware Version": "hardware_version",
@@ -226,7 +226,7 @@ class TechnicolorTC4400Parser(ModemParser):
                     if value_cell and header in header_mapping:
                         info[header_mapping[header]] = value_cell.text.strip()
                 else:
-                    ***REMOVED*** Special case: Serial number uses different format
+                    # Special case: Serial number uses different format
                     header_cell = row.find("td", text="Cable Modem Serial Number")
                     if header_cell:
                         value_cell = header_cell.find_next_sibling("td")

@@ -1,4 +1,4 @@
-***REMOVED***!/usr/bin/env python3
+#!/usr/bin/env python3
 """Sanitize HAR files to remove PII before sharing.
 
 This script can be run standalone without Home Assistant installed.
@@ -13,7 +13,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-***REMOVED*** Add scripts directory to path for imports
+# Add scripts directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
 from utils.sanitizer import sanitize_har_file

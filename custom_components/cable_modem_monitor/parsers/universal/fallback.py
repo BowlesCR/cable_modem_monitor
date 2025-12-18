@@ -41,30 +41,30 @@ class UniversalFallbackParser(ModemParser):
     name = "Unknown Modem (Fallback Mode)"
     manufacturer = "Unknown"
     models = ["Unknown"]
-    priority = 1  ***REMOVED*** LOWEST priority - only used as last resort
+    priority = 1  # LOWEST priority - only used as last resort
 
-    ***REMOVED*** Parser status - diagnostic tool, always "works"
+    # Parser status - diagnostic tool, always "works"
     status = ParserStatus.VERIFIED
     verification_source = "Diagnostic tool for HTML capture - not a real parser"
 
-    ***REMOVED*** Capabilities - Fallback parser has no data capabilities (diagnostic mode only)
+    # Capabilities - Fallback parser has no data capabilities (diagnostic mode only)
     capabilities: set[ModemCapability] = set()
 
-    ***REMOVED*** Use HTTP Basic Auth - most common authentication for cable modems
-    ***REMOVED*** Will be skipped if no credentials provided
+    # Use HTTP Basic Auth - most common authentication for cable modems
+    # Will be skipped if no credentials provided
     auth_config = BasicAuthConfig(
         strategy=AuthStrategyType.BASIC_HTTP,
     )
 
-    ***REMOVED*** Priority seed URLs - generic patterns, not manufacturer-specific
-    ***REMOVED*** Link crawler will discover all other pages automatically
-    ***REMOVED*** Uses reusable pattern generation from html_crawler utility
+    # Priority seed URLs - generic patterns, not manufacturer-specific
+    # Link crawler will discover all other pages automatically
+    # Uses reusable pattern generation from html_crawler utility
 
     _seed_urls = generate_seed_urls(
         bases=["", "index", "status", "connection"], extensions=["", ".html", ".htm", ".asp"]
     )
 
-    ***REMOVED*** Convert to url_patterns format
+    # Convert to url_patterns format
     url_patterns = [{"path": path, "auth_method": "basic", "auth_required": False} for path in _seed_urls]
 
     @classmethod
@@ -101,7 +101,7 @@ class UniversalFallbackParser(ModemParser):
         Returns:
             tuple: (success: bool, authenticated_html: str | None)
         """
-        ***REMOVED*** If no credentials, skip authentication (many modems have public status pages)
+        # If no credentials, skip authentication (many modems have public status pages)
         if not username or not password:
             _LOGGER.info(
                 "Fallback parser: No credentials provided. Will try to access public pages. "
@@ -109,7 +109,7 @@ class UniversalFallbackParser(ModemParser):
             )
             return True, None
 
-        ***REMOVED*** Try HTTP Basic Auth (most common for cable modems)
+        # Try HTTP Basic Auth (most common for cable modems)
         _LOGGER.info(
             "Fallback parser: Attempting HTTP Basic Auth. "
             "If this fails, your modem may use a different authentication method. "
@@ -130,7 +130,7 @@ class UniversalFallbackParser(ModemParser):
                     "You can still try to install without auth - some pages may work. "
                     "Press 'Capture HTML' after installation to help us add proper support."
                 )
-                ***REMOVED*** Return True anyway to allow installation - user can capture HTML
+                # Return True anyway to allow installation - user can capture HTML
                 return True, None
 
         except Exception as e:
@@ -140,7 +140,7 @@ class UniversalFallbackParser(ModemParser):
                 "Press 'Capture HTML' after installation to help us add proper support.",
                 e,
             )
-            ***REMOVED*** Return True anyway to allow installation
+            # Return True anyway to allow installation
             return True, None
 
     def parse(self, soup: BeautifulSoup, session=None, base_url=None) -> dict:
@@ -163,16 +163,16 @@ class UniversalFallbackParser(ModemParser):
             "Press 'Capture HTML' button to help add full support for your modem."
         )
 
-        ***REMOVED*** Try to extract any basic info from the page if possible
+        # Try to extract any basic info from the page if possible
         model_info = self._try_extract_model_info(soup)
 
         return {
-            "downstream": [],  ***REMOVED*** No channel data - modem not supported
-            "upstream": [],  ***REMOVED*** No channel data - modem not supported
+            "downstream": [],  # No channel data - modem not supported
+            "upstream": [],  # No channel data - modem not supported
             "system_info": {
                 "model": model_info or "Unknown Model",
                 "manufacturer": "Unknown",
-                "fallback_mode": True,  ***REMOVED*** Special flag to indicate fallback parser
+                "fallback_mode": True,  # Special flag to indicate fallback parser
                 "status_message": (
                     "⚠️  Modem Not Fully Supported\n"
                     "✓  Connectivity monitoring is active (ping & HTTP latency)\n"
@@ -199,18 +199,18 @@ class UniversalFallbackParser(ModemParser):
         Returns:
             Model string if found, None otherwise
         """
-        ***REMOVED*** Try page title first
+        # Try page title first
         if soup.title and soup.title.string:
             title = soup.title.string.strip()
             if title and title != "":
                 _LOGGER.debug(f"Found page title: {title}")
                 return str(title)
 
-        ***REMOVED*** Try meta tags
+        # Try meta tags
         meta_tags = soup.find_all("meta", attrs={"name": True, "content": True})
         for meta in meta_tags:
             name_attr = meta.get("name", "")
-            ***REMOVED*** Ensure name is a string (BeautifulSoup can return list for multi-value attrs)
+            # Ensure name is a string (BeautifulSoup can return list for multi-value attrs)
             if not isinstance(name_attr, str):
                 continue
             name = name_attr.lower()
@@ -223,12 +223,12 @@ class UniversalFallbackParser(ModemParser):
                     _LOGGER.debug(f"Found model in meta tag: {content}")
                     return str(content)
 
-        ***REMOVED*** Try common modem identifiers in HTML
-        ***REMOVED*** Look for common patterns like "NETGEAR", "ARRIS", "CM600", etc.
+        # Try common modem identifiers in HTML
+        # Look for common patterns like "NETGEAR", "ARRIS", "CM600", etc.
         html_text = soup.get_text()
         import re
 
-        ***REMOVED*** Common modem brand patterns
+        # Common modem brand patterns
         patterns = [
             r"(NETGEAR\s+CM\d+)",
             r"(ARRIS\s+SB\d+)",

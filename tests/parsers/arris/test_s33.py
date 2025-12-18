@@ -133,7 +133,7 @@ class TestS33ParserMetadata:
         from custom_components.cable_modem_monitor.parsers.base_parser import ParserStatus
 
         assert ArrisS33HnapParser.status == ParserStatus.AWAITING_VERIFICATION
-        ***REMOVED*** Also test the verified property via an instance
+        # Also test the verified property via an instance
         parser = ArrisS33HnapParser()
         assert parser.verified is False
 
@@ -172,14 +172,14 @@ class TestS33ParserDetection:
     def test_can_parse_with_s33_model(self, s33_login_html):
         """Test detection via S33 model string."""
         soup = BeautifulSoup(s33_login_html, "html.parser")
-        ***REMOVED*** Inject S33 into HTML for test (actual page may have it in JS)
+        # Inject S33 into HTML for test (actual page may have it in JS)
         html_with_model = s33_login_html + "<!-- S33 -->"
         assert ArrisS33HnapParser.can_parse(soup, "http://192.168.100.1/Login.html", html_with_model)
 
     def test_can_parse_with_arris_and_hnap(self, s33_login_html):
         """Test detection via ARRIS + HNAP markers."""
         soup = BeautifulSoup(s33_login_html, "html.parser")
-        ***REMOVED*** The fixture should have ARRIS branding and HNAP references
+        # The fixture should have ARRIS branding and HNAP references
         if "ARRIS" in s33_login_html and "purenetworks.com/HNAP1" in s33_login_html:
             assert ArrisS33HnapParser.can_parse(soup, "http://192.168.100.1/Login.html", s33_login_html)
 
@@ -281,12 +281,12 @@ class TestS33DownstreamParsing:
 
         assert len(channels) == 3
 
-        ***REMOVED*** Check first channel
+        # Check first channel
         ch1 = channels[0]
         assert ch1["channel_id"] == 20
         assert ch1["lock_status"] == "Locked"
         assert ch1["modulation"] == "QAM256"
-        assert ch1["frequency"] == 537000000  ***REMOVED*** Hz
+        assert ch1["frequency"] == 537000000  # Hz
         assert ch1["power"] == 5.0
         assert ch1["snr"] == 40.0
         assert ch1["corrected"] == 1234
@@ -295,7 +295,7 @@ class TestS33DownstreamParsing:
     def test_parse_downstream_frequency_in_mhz(self):
         """Test parsing frequency when provided in MHz without Hz suffix (line 298)."""
         parser = ArrisS33HnapParser()
-        ***REMOVED*** Frequency as plain number (MHz) - should be converted to Hz
+        # Frequency as plain number (MHz) - should be converted to Hz
         response = {
             "GetCustomerStatusDownstreamChannelInfoResponse": {
                 "CustomerConnDownstreamChannel": "1^Locked^QAM256^20^537^5 dBmV^40 dB^100^0"
@@ -303,25 +303,25 @@ class TestS33DownstreamParsing:
         }
         channels = parser._parse_downstream_from_hnap(response)
         assert len(channels) == 1
-        assert channels[0]["frequency"] == 537000000  ***REMOVED*** 537 MHz -> 537000000 Hz
+        assert channels[0]["frequency"] == 537000000  # 537 MHz -> 537000000 Hz
 
     def test_parse_downstream_invalid_entry_too_few_fields(self):
         """Test parsing skips entries with too few fields (lines 281-282)."""
         parser = ArrisS33HnapParser()
-        ***REMOVED*** Entry with only 5 fields (needs 9)
+        # Entry with only 5 fields (needs 9)
         response = {
             "GetCustomerStatusDownstreamChannelInfoResponse": {
                 "CustomerConnDownstreamChannel": "1^Locked^QAM256^20^537000000 Hz|+|2^Locked^QAM256"
             }
         }
         channels = parser._parse_downstream_from_hnap(response)
-        ***REMOVED*** Only first entry should parse
-        assert len(channels) == 0  ***REMOVED*** First entry also has too few fields
+        # Only first entry should parse
+        assert len(channels) == 0  # First entry also has too few fields
 
     def test_parse_downstream_skips_empty_entries(self):
         """Test that empty entries in the channel data are skipped (line 275)."""
         parser = ArrisS33HnapParser()
-        ***REMOVED*** Entry with empty strings between delimiters
+        # Entry with empty strings between delimiters
         response = {
             "GetCustomerStatusDownstreamChannelInfoResponse": {
                 "CustomerConnDownstreamChannel": "|+||+|1^Locked^QAM256^20^537000000 Hz^5 dBmV^40 dB^100^0"
@@ -355,19 +355,19 @@ class TestS33UpstreamParsing:
 
         assert len(channels) == 2
 
-        ***REMOVED*** Check first channel
+        # Check first channel
         ch1 = channels[0]
         assert ch1["channel_id"] == 1
         assert ch1["lock_status"] == "Locked"
         assert ch1["modulation"] == "SC-QAM"
         assert ch1["symbol_rate"] == "5120 Ksym/sec"
-        assert ch1["frequency"] == 38600000  ***REMOVED*** Hz
+        assert ch1["frequency"] == 38600000  # Hz
         assert ch1["power"] == 43.0
 
     def test_parse_upstream_frequency_in_mhz(self):
         """Test parsing upstream frequency when provided in MHz without Hz suffix (line 382)."""
         parser = ArrisS33HnapParser()
-        ***REMOVED*** Frequency as plain number (MHz) - should be converted to Hz
+        # Frequency as plain number (MHz) - should be converted to Hz
         response = {
             "GetCustomerStatusUpstreamChannelInfoResponse": {
                 "CustomerConnUpstreamChannel": "1^Locked^SC-QAM^1^5120 Ksym/sec^38.6^43 dBmV"
@@ -375,7 +375,7 @@ class TestS33UpstreamParsing:
         }
         channels = parser._parse_upstream_from_hnap(response)
         assert len(channels) == 1
-        assert channels[0]["frequency"] == 38600000  ***REMOVED*** 38.6 MHz -> 38600000 Hz
+        assert channels[0]["frequency"] == 38600000  # 38.6 MHz -> 38600000 Hz
 
     def test_parse_upstream_skips_empty_entries(self):
         """Test that empty entries in upstream data are skipped (line 360)."""
@@ -394,7 +394,7 @@ class TestS33UpstreamParsing:
         parser = ArrisS33HnapParser()
         response = {
             "GetCustomerStatusUpstreamChannelInfoResponse": {
-                "CustomerConnUpstreamChannel": "1^Locked^SC-QAM"  ***REMOVED*** Only 3 fields, needs 7
+                "CustomerConnUpstreamChannel": "1^Locked^SC-QAM"  # Only 3 fields, needs 7
             }
         }
         channels = parser._parse_upstream_from_hnap(response)
@@ -426,7 +426,7 @@ class TestS33SystemInfoParsing:
         """Test parsing system info from combined HNAP data."""
         parser = ArrisS33HnapParser()
 
-        ***REMOVED*** Combine responses (as returned by GetMultipleHNAPs)
+        # Combine responses (as returned by GetMultipleHNAPs)
         hnap_data = {}
         hnap_data.update(sample_connection_info_response)
         hnap_data.update(sample_startup_sequence_response)
@@ -434,16 +434,16 @@ class TestS33SystemInfoParsing:
 
         system_info = parser._parse_system_info_from_hnap(hnap_data)
 
-        ***REMOVED*** Connection info
+        # Connection info
         assert "system_uptime" in system_info
         assert system_info["system_uptime"] == "7 days 12:34:56"
         assert system_info["network_access"] == "Allowed"
         assert system_info["model_name"] == "S33"
 
-        ***REMOVED*** Startup sequence info
+        # Startup sequence info
         assert system_info["connectivity_status"] == "Connected"
 
-        ***REMOVED*** Device status info (firmware version)
+        # Device status info (firmware version)
         assert "software_version" in system_info
         assert system_info["software_version"] == "TB01.03.001.10_012022_212.S3"
         assert system_info["internet_connection"] == "Connected"
@@ -496,18 +496,18 @@ class TestS33Restart:
 
         parser = ArrisS33HnapParser()
 
-        ***REMOVED*** Mock the JSON builder to return proper responses for both calls:
-        ***REMOVED*** 1. GetArrisConfigurationInfo (get current settings)
-        ***REMOVED*** 2. SetArrisConfigurationInfo (send reboot command)
+        # Mock the JSON builder to return proper responses for both calls:
+        # 1. GetArrisConfigurationInfo (get current settings)
+        # 2. SetArrisConfigurationInfo (send reboot command)
         mock_builder = MagicMock()
         mock_builder.call_single.side_effect = [
-            ***REMOVED*** First call: GetArrisConfigurationInfo
+            # First call: GetArrisConfigurationInfo
             (
                 '{"GetArrisConfigurationInfoResponse": {'
                 '"GetArrisConfigurationInfoResult": "OK", '
                 '"ethSWEthEEE": "1", "LedStatus": "1"}}'
             ),
-            ***REMOVED*** Second call: SetArrisConfigurationInfo
+            # Second call: SetArrisConfigurationInfo
             (
                 '{"SetArrisConfigurationInfoResponse": {'
                 '"SetArrisConfigurationInfoResult": "OK", '
@@ -521,11 +521,11 @@ class TestS33Restart:
         assert result is True
         assert mock_builder.call_single.call_count == 2
 
-        ***REMOVED*** Check the second call (SetArrisConfigurationInfo with reboot)
+        # Check the second call (SetArrisConfigurationInfo with reboot)
         second_call_args = mock_builder.call_single.call_args_list[1]
         assert second_call_args[0][2] == "SetArrisConfigurationInfo"
         assert second_call_args[0][3]["Action"] == "reboot"
-        ***REMOVED*** Should include the EEE and LED settings from GetArrisConfigurationInfo
+        # Should include the EEE and LED settings from GetArrisConfigurationInfo
         assert second_call_args[0][3]["SetEEEEnable"] == "1"
         assert second_call_args[0][3]["LED_Status"] == "1"
 
@@ -537,13 +537,13 @@ class TestS33Restart:
 
         mock_builder = MagicMock()
         mock_builder.call_single.side_effect = [
-            ***REMOVED*** First call: GetArrisConfigurationInfo
+            # First call: GetArrisConfigurationInfo
             (
                 '{"GetArrisConfigurationInfoResponse": {'
                 '"GetArrisConfigurationInfoResult": "OK", '
                 '"ethSWEthEEE": "0", "LedStatus": "1"}}'
             ),
-            ***REMOVED*** Second call: SetArrisConfigurationInfo (OK but no action)
+            # Second call: SetArrisConfigurationInfo (OK but no action)
             '{"SetArrisConfigurationInfoResponse": {"SetArrisConfigurationInfoResult": "OK"}}',
         ]
         parser._json_builder = mock_builder
@@ -559,7 +559,7 @@ class TestS33Restart:
         parser = ArrisS33HnapParser()
 
         mock_builder = MagicMock()
-        ***REMOVED*** First call succeeds, second call causes connection reset (modem rebooting)
+        # First call succeeds, second call causes connection reset (modem rebooting)
         mock_builder.call_single.side_effect = [
             (
                 '{"GetArrisConfigurationInfoResponse": {'
@@ -582,13 +582,13 @@ class TestS33Restart:
 
         mock_builder = MagicMock()
         mock_builder.call_single.side_effect = [
-            ***REMOVED*** First call: GetArrisConfigurationInfo succeeds
+            # First call: GetArrisConfigurationInfo succeeds
             (
                 '{"GetArrisConfigurationInfoResponse": {'
                 '"GetArrisConfigurationInfoResult": "OK", '
                 '"ethSWEthEEE": "0", "LedStatus": "1"}}'
             ),
-            ***REMOVED*** Second call: SetArrisConfigurationInfo returns ERROR
+            # Second call: SetArrisConfigurationInfo returns ERROR
             '{"SetArrisConfigurationInfoResponse": {"SetArrisConfigurationInfoResult": "ERROR"}}',
         ]
         parser._json_builder = mock_builder
@@ -605,13 +605,13 @@ class TestS33Restart:
 
         mock_builder = MagicMock()
         mock_builder.call_single.side_effect = [
-            ***REMOVED*** First call: GetArrisConfigurationInfo with specific values
+            # First call: GetArrisConfigurationInfo with specific values
             (
                 '{"GetArrisConfigurationInfoResponse": {'
                 '"GetArrisConfigurationInfoResult": "OK", '
                 '"ethSWEthEEE": "1", "LedStatus": "0"}}'
             ),
-            ***REMOVED*** Second call: SetArrisConfigurationInfo
+            # Second call: SetArrisConfigurationInfo
             (
                 '{"SetArrisConfigurationInfoResponse": {'
                 '"SetArrisConfigurationInfoResult": "OK", '
@@ -622,16 +622,16 @@ class TestS33Restart:
 
         parser.restart(MagicMock(), "https://192.168.100.1")
 
-        ***REMOVED*** Verify the request data matches what configuration.js sends
-        ***REMOVED*** The second call should have the reboot action with preserved settings
+        # Verify the request data matches what configuration.js sends
+        # The second call should have the reboot action with preserved settings
         second_call_args = mock_builder.call_single.call_args_list[1]
         request_data = second_call_args[0][3]
         assert "Action" in request_data
         assert request_data["Action"] == "reboot"
         assert "SetEEEEnable" in request_data
-        assert request_data["SetEEEEnable"] == "1"  ***REMOVED*** From GetArrisConfigurationInfo
+        assert request_data["SetEEEEnable"] == "1"  # From GetArrisConfigurationInfo
         assert "LED_Status" in request_data
-        assert request_data["LED_Status"] == "0"  ***REMOVED*** From GetArrisConfigurationInfo
+        assert request_data["LED_Status"] == "0"  # From GetArrisConfigurationInfo
 
     def test_restart_success_on_connection_aborted(self):
         """Test restart returns True on 'Connection aborted' (lines 557-564)."""

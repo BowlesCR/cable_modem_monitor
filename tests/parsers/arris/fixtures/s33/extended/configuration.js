@@ -191,14 +191,14 @@ $(document).ready( function()  {
 	{
 	   SetMultiXML_1st("led");
 	}
-	$("***REMOVED***binnacleWrapper1").removeClass("binnacleItems_0");
-	$("***REMOVED***binnacleWrapper2").removeClass("binnacleItems_0");
+	$("#binnacleWrapper1").removeClass("binnacleItems_0");
+	$("#binnacleWrapper2").removeClass("binnacleItems_0");
 	// Set number of items in binnacle (0 to 8)
-	$("***REMOVED***binnacleWrapper1").addClass("binnacleItems_0");
-	$("***REMOVED***binnacleWrapper2").addClass("binnacleItems_0");
+	$("#binnacleWrapper1").addClass("binnacleItems_0");
+	$("#binnacleWrapper2").addClass("binnacleItems_0");
 	// Show the binnacle.
-	$("***REMOVED***binnacleWrapper1").show();
-	$("***REMOVED***binnacleWrapper2").show();
+	$("#binnacleWrapper1").show();
+	$("#binnacleWrapper2").show();
 	FillRegister();
 	GetMultiXML_1st();
 

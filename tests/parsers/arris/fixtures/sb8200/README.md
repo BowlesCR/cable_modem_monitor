@@ -1,8 +1,8 @@
-***REMOVED*** ARRIS SB8200 Modem Fixtures
+# ARRIS SB8200 Modem Fixtures
 
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -14,7 +14,7 @@
 
 <!-- END AUTO-GENERATED -->
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
@@ -25,12 +25,12 @@
 | **Release Year** | 2017 |
 | **ISPs** | Comcast, Xfinity, Cox, Spectrum, and most major ISPs |
 | **Max Speed** | 2 Gbps downstream (with LAG) |
-| **Related Issue** | [***REMOVED***42](https://github.com/solentlabs/cable_modem_monitor/issues/42) |
+| **Related Issue** | [#42](https://github.com/solentlabs/cable_modem_monitor/issues/42) |
 | **Contributor** | @undotcom |
 | **Capture Date** | November 2025 |
 | **Parser Status** | Verified |
 
-***REMOVED******REMOVED*** Known URLs
+## Known URLs
 
 Complete page inventory from `main_arris.js` menu structure:
 
@@ -46,17 +46,17 @@ Complete page inventory from `main_arris.js` menu structure:
 
 **Base URL:** `http://192.168.100.1`
 
-***REMOVED******REMOVED*** Authentication
+## Authentication
 
 **Type:** None required
 
 The SB8200 status pages are publicly accessible without authentication.
 
-***REMOVED******REMOVED*** Reboot Capability
+## Reboot Capability
 
 **Status:** Disabled (blocked server-side by ISP/firmware)
 
-***REMOVED******REMOVED******REMOVED*** Historical Context
+### Historical Context
 
 In 2015-2016, ARRIS SURFboard modems (particularly the SB6141) were found to have a critical security vulnerability: the admin interface at `192.168.100.1` required **no authentication**, allowing anyone on the local network unrestricted access. Worse, the interface was vulnerable to CSRF attacks—attackers could embed malicious image tags like `<img src="http://192.168.100.1/reset.htm">` in webpages to remotely trigger modem reboots or factory resets when users visited compromised sites.
 
@@ -66,25 +66,25 @@ With over 135 million affected modems worldwide, this created a significant atta
 
 > **Community Action:** User @undotcom posted an [open letter to ARRIS](https://community.surfboard.com/sb8200-59/open-letter-to-arris-why-do-you-disable-basic-functionality-e-g-software-reboot-on-the-sb8200-5829) asking why software reboot is disabled. If you're affected by this limitation, consider adding your voice.
 
-***REMOVED******REMOVED******REMOVED*** Technical Details
+### Technical Details
 
 The SB8200 firmware includes a reboot button in `cmconfiguration.html` with a `disabled` attribute. Testing confirmed the restriction is enforced server-side—direct POST requests to `/cmconfiguration.html` with `Rebooting=1` are rejected by ISP firmware (Spectrum).
 
-***REMOVED******REMOVED*** Available Fixtures
+## Available Fixtures
 
-***REMOVED******REMOVED******REMOVED*** cmconnectionstatus.html
+### cmconnectionstatus.html
 
-- **Source:** Issue ***REMOVED***42 attachment (SB8200.Arris.Modem.files.zip)
+- **Source:** Issue #42 attachment (SB8200.Arris.Modem.files.zip)
 - **Size:** 21 KB
 - **Content:** Full connection status page with all channel data (32 DS + 3 US channels)
 
-***REMOVED******REMOVED******REMOVED*** cmswinfo.html
+### cmswinfo.html
 
-- **Source:** Issue ***REMOVED***42 Fallback capture by @undotcom
+- **Source:** Issue #42 Fallback capture by @undotcom
 - **Size:** 4 KB
 - **Content:** Product information page (uptime, hardware/software versions)
 
-***REMOVED******REMOVED******REMOVED*** Extended Files
+### Extended Files
 
 Reference files not used by parser but useful for documentation:
 
@@ -96,6 +96,6 @@ Reference files not used by parser but useful for documentation:
 | `extended/lagcfg.html` | 5 KB | Link aggregation (LAG) settings |
 | `extended/main_arris.js` | 15 KB | Menu structure, page URLs |
 
-***REMOVED******REMOVED*** Related Issues
+## Related Issues
 
-- **Issue ***REMOVED***42:** ARRIS SB8200 support request (@undotcom)
+- **Issue #42:** ARRIS SB8200 support request (@undotcom)

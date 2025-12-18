@@ -23,16 +23,16 @@ class TechnicolorXB7Parser(ModemParser):
     manufacturer = "Technicolor"
     models = ["XB7", "CGM4331COM"]
 
-    ***REMOVED*** Parser status
-    status = ParserStatus.VERIFIED  ***REMOVED*** Confirmed by @esand in ***REMOVED***2 (v3.0)
+    # Parser status
+    status = ParserStatus.VERIFIED  # Confirmed by @esand in #2 (v3.0)
     verification_source = "https://github.com/solentlabs/cable_modem_monitor/issues/2 (@esand)"
 
-    ***REMOVED*** Device metadata
+    # Device metadata
     release_date = "2018"
     docsis_version = "3.1"
     fixtures_path = "tests/parsers/technicolor/fixtures/xb7"
 
-    ***REMOVED*** New authentication configuration (declarative)
+    # New authentication configuration (declarative)
     auth_config = RedirectFormAuthConfig(
         strategy=AuthStrategyType.REDIRECT_FORM,
         login_url="/check.jst",
@@ -46,7 +46,7 @@ class TechnicolorXB7Parser(ModemParser):
         {"path": "/network_setup.jst", "auth_method": "form", "auth_required": True},
     ]
 
-    ***REMOVED*** Capabilities - Technicolor XB7 provides full system info
+    # Capabilities - Technicolor XB7 provides full system info
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
@@ -78,7 +78,7 @@ class TechnicolorXB7Parser(ModemParser):
             return False, None
 
         try:
-            ***REMOVED*** Step 1: POST credentials to check.jst
+            # Step 1: POST credentials to check.jst
             login_url = f"{base_url}/check.jst"
             login_data = {
                 "username": username,
@@ -92,14 +92,14 @@ class TechnicolorXB7Parser(ModemParser):
                 _LOGGER.error("XB7 login failed with status %s", response.status_code)
                 return False, None
 
-            ***REMOVED*** Step 2: Check if we got redirected to at_a_glance.jst (successful login)
-            ***REMOVED*** Validate redirect URL is on the same host for security
+            # Step 2: Check if we got redirected to at_a_glance.jst (successful login)
+            # Validate redirect URL is on the same host for security
             from urllib.parse import urlparse
 
             redirect_parsed = urlparse(response.url)
             base_parsed = urlparse(base_url)
 
-            ***REMOVED*** Security check: Ensure redirect is to same host
+            # Security check: Ensure redirect is to same host
             if redirect_parsed.hostname != base_parsed.hostname:
                 _LOGGER.error("XB7: Security violation - redirect to different host: %s", response.url)
                 return False, None
@@ -109,7 +109,7 @@ class TechnicolorXB7Parser(ModemParser):
             else:
                 _LOGGER.warning("XB7: Unexpected redirect to %s", response.url)
 
-            ***REMOVED*** Step 3: Now fetch the network_setup.jst page with authenticated session
+            # Step 3: Now fetch the network_setup.jst page with authenticated session
             status_url = f"{base_url}/network_setup.jst"
             _LOGGER.debug("XB7: Fetching %s with authenticated session", status_url)
             status_response = session.get(status_url, timeout=10)
@@ -124,23 +124,23 @@ class TechnicolorXB7Parser(ModemParser):
             return True, status_response.text
 
         except (requests.exceptions.Timeout, requests.exceptions.ReadTimeout) as e:
-            ***REMOVED*** Timeout is common when modem is busy/rebooting - log at debug level
+            # Timeout is common when modem is busy/rebooting - log at debug level
             _LOGGER.debug("XB7 login timeout (modem may be busy or rebooting): %s", str(e))
             return False, None
 
         except requests.exceptions.ConnectionError as e:
-            ***REMOVED*** Connection errors should be logged but not with full stack trace
+            # Connection errors should be logged but not with full stack trace
             _LOGGER.warning("XB7 login connection error: %s", str(e))
             return False, None
 
         except requests.exceptions.RequestException as e:
-            ***REMOVED*** Other request errors
+            # Other request errors
             _LOGGER.warning("XB7 login request failed: %s", str(e))
-            _LOGGER.debug("XB7 login exception details:", exc_info=True)  ***REMOVED*** Full trace only at debug
+            _LOGGER.debug("XB7 login exception details:", exc_info=True)  # Full trace only at debug
             return False, None
 
         except Exception as e:
-            ***REMOVED*** Unexpected errors should still log details
+            # Unexpected errors should still log details
             _LOGGER.error("XB7 login unexpected exception: %s", str(e), exc_info=True)
             return False, None
 
@@ -153,12 +153,12 @@ class TechnicolorXB7Parser(ModemParser):
         1. URL contains "network_setup.jst"
         2. HTML contains "Channel Bonding Value" with netWidth divs (XB7-specific)
         """
-        ***REMOVED*** Primary detection: URL pattern
+        # Primary detection: URL pattern
         if "network_setup.jst" in url.lower():
             _LOGGER.debug("XB7 detected by URL pattern: network_setup.jst")
             return True
 
-        ***REMOVED*** Secondary detection: Content-based
+        # Secondary detection: Content-based
         if "Channel Bonding Value" in html and soup.find_all("div", class_="netWidth"):
             _LOGGER.debug("XB7 detected by content: Channel Bonding Value + netWidth divs")
             return True
@@ -171,7 +171,7 @@ class TechnicolorXB7Parser(ModemParser):
         upstream_channels = self._parse_upstream(soup)
         system_info = self._parse_system_info(soup)
 
-        ***REMOVED*** Parse primary channel
+        # Parse primary channel
         primary_channel_id = self._parse_primary_channel(soup)
         if primary_channel_id:
             system_info["primary_downstream_channel"] = primary_channel_id
@@ -198,7 +198,7 @@ class TechnicolorXB7Parser(ModemParser):
             _LOGGER.debug("Found %s tables in XB7 HTML", len(tables))
 
             for table in tables:
-                ***REMOVED*** Find thead with "Downstream" text
+                # Find thead with "Downstream" text
                 thead = table.find("thead")
                 if not thead:
                     continue
@@ -215,7 +215,7 @@ class TechnicolorXB7Parser(ModemParser):
                 rows = tbody.find_all("tr", recursive=False)
                 downstream_channels = self._parse_xb7_transposed_table(rows, is_upstream=False)
 
-                ***REMOVED*** Look for error codewords table
+                # Look for error codewords table
                 error_channels = self._parse_error_codewords(soup)
                 if error_channels:
                     self._merge_error_stats(downstream_channels, error_channels)
@@ -243,7 +243,7 @@ class TechnicolorXB7Parser(ModemParser):
             tables = soup.find_all("table", class_="data")
 
             for table in tables:
-                ***REMOVED*** Find thead with "Upstream" text
+                # Find thead with "Upstream" text
                 thead = table.find("thead")
                 if not thead:
                     continue
@@ -252,7 +252,7 @@ class TechnicolorXB7Parser(ModemParser):
                 if "Upstream" not in header_text or "Channel Bonding Value" not in header_text:
                     continue
 
-                ***REMOVED*** Make sure it's not downstream table
+                # Make sure it's not downstream table
                 if "Downstream" in header_text:
                     continue
 
@@ -282,18 +282,18 @@ class TechnicolorXB7Parser(ModemParser):
         channel_count = 0
 
         for row in rows:
-            ***REMOVED*** First cell is the row label (th)
+            # First cell is the row label (th)
             label_cell = row.find("th", class_="row-label")
             if not label_cell:
                 continue
 
-            ***REMOVED*** Get only direct text, not from nested divs
+            # Get only direct text, not from nested divs
             label = "".join(label_cell.find_all(string=True, recursive=False)).strip()
             if not label:
-                ***REMOVED*** Fallback if no direct text
+                # Fallback if no direct text
                 label = label_cell.get_text(strip=True)
 
-            ***REMOVED*** Extract all netWidth div values from this row
+            # Extract all netWidth div values from this row
             value_cells = row.find_all("td")
             values = []
             for cell in value_cells:
@@ -303,7 +303,7 @@ class TechnicolorXB7Parser(ModemParser):
                 else:
                     values.append(cell.get_text(strip=True))
 
-            ***REMOVED*** Update channel count from longest row
+            # Update channel count from longest row
             if len(values) > channel_count:
                 channel_count = len(values)
 
@@ -357,7 +357,7 @@ class TechnicolorXB7Parser(ModemParser):
             snr_text = data_map["SNR"][index]
             channel_data["snr"] = extract_float(snr_text)
 
-        ***REMOVED*** Initialize error counters (will be filled from error table)
+        # Initialize error counters (will be filled from error table)
         channel_data["corrected"] = None
         channel_data["uncorrected"] = None
 
@@ -390,12 +390,12 @@ class TechnicolorXB7Parser(ModemParser):
         channels = []
 
         try:
-            ***REMOVED*** Build a map of row_label -> [values for each channel]
+            # Build a map of row_label -> [values for each channel]
             data_map, channel_count = self._build_xb7_data_map(rows)
 
             _LOGGER.debug(f"XB7 transposed table has {channel_count} channels with labels: {list(data_map.keys())}")
 
-            ***REMOVED*** Now transpose: create one channel dict per column
+            # Now transpose: create one channel dict per column
             for i in range(channel_count):
                 channel_data = self._extract_xb7_channel_data_at_index(data_map, i, is_upstream)
 
@@ -436,7 +436,7 @@ class TechnicolorXB7Parser(ModemParser):
             if not label_cell:
                 continue
 
-            ***REMOVED*** Get only direct text, not from nested divs
+            # Get only direct text, not from nested divs
             label = "".join(label_cell.find_all(string=True, recursive=False)).strip()
             if not label:
                 label = label_cell.get_text(strip=True)
@@ -507,7 +507,7 @@ class TechnicolorXB7Parser(ModemParser):
     def _merge_error_stats(self, downstream_channels: list[dict], error_channels: list[dict]) -> None:
         """Merge error statistics into downstream channels by matching channel_id."""
         try:
-            ***REMOVED*** Create lookup dict by channel_id
+            # Create lookup dict by channel_id
             error_lookup = {ch["channel_id"]: ch for ch in error_channels if "channel_id" in ch}
 
             for channel in downstream_channels:
@@ -562,7 +562,7 @@ class TechnicolorXB7Parser(ModemParser):
         system_info: dict[str, str] = {}
 
         try:
-            ***REMOVED*** Look for readonlyLabel spans
+            # Look for readonlyLabel spans
             labels = soup.find_all("span", class_="readonlyLabel")
 
             for label in labels:
@@ -587,11 +587,11 @@ class TechnicolorXB7Parser(ModemParser):
         """
         text = text.strip()
 
-        ***REMOVED*** Check if it's raw Hz (all digits)
+        # Check if it's raw Hz (all digits)
         if text.replace(" ", "").isdigit():
             return int(text.replace(" ", ""))
 
-        ***REMOVED*** Check if it contains "MHz"
+        # Check if it contains "MHz"
         if "mhz" in text.lower():
             freq_mhz = extract_float(text)
             if freq_mhz is not None:
@@ -609,7 +609,7 @@ class TechnicolorXB7Parser(ModemParser):
         from datetime import datetime, timedelta
 
         try:
-            ***REMOVED*** Parse uptime string
+            # Parse uptime string
             days = 0
             hours = 0
             minutes = 0
@@ -631,7 +631,7 @@ class TechnicolorXB7Parser(ModemParser):
             if sec_match:
                 seconds = int(sec_match.group(1))
 
-            ***REMOVED*** Calculate boot time
+            # Calculate boot time
             uptime_delta = timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
             boot_time = datetime.now() - uptime_delta
 
@@ -649,11 +649,11 @@ class TechnicolorXB7Parser(ModemParser):
         import re
 
         try:
-            ***REMOVED*** Look for the note text
+            # Look for the note text
             for span in soup.find_all("span", class_="readonlyLabel"):
                 text = span.get_text(strip=True)
                 if "Primary channel" in text or "primary channel" in text:
-                    ***REMOVED*** Extract channel ID: "*Channel ID 10 is the Primary channel"
+                    # Extract channel ID: "*Channel ID 10 is the Primary channel"
                     match = re.search(r"Channel ID (\d+) is the Primary", text, re.IGNORECASE)
                     if match:
                         return match.group(1)

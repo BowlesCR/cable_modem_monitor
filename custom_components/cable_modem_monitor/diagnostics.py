@@ -27,17 +27,17 @@ def _sanitize_log_message(message: str) -> str:
     Returns:
         Sanitized message with credentials, IPs, and paths redacted
     """
-    ***REMOVED*** Remove anything that looks like credentials
+    # Remove anything that looks like credentials
     message = re.sub(
         r"(password|passwd|pwd|token|key|secret|auth|username|user)[\s]*[=:]\s*[^\s,}\]]+",
         r"\1=***REDACTED***",
         message,
         flags=re.IGNORECASE,
     )
-    ***REMOVED*** Remove file paths (but keep relative component paths)
+    # Remove file paths (but keep relative component paths)
     message = re.sub(r"/config/[^\s,}\]]+", "/config/***PATH***", message)
     message = re.sub(r"/home/[^\s,}\]]+", "/home/***PATH***", message)
-    ***REMOVED*** Remove private IP addresses (but keep common modem IPs for context)
+    # Remove private IP addresses (but keep common modem IPs for context)
     message = re.sub(
         r"\b(?!192\.168\.100\.1\b)(?:10\.|172\.(?:1[6-9]|2[0-9]|3[01])\.|192\.168\.)\d{1,3}\.\d{1,3}\b",
         "***PRIVATE_IP***",
@@ -46,7 +46,7 @@ def _sanitize_log_message(message: str) -> str:
     return message
 
 
-def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[str, Any]]:  ***REMOVED*** noqa: C901
+def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[str, Any]]:  # noqa: C901
     """Get recent log records for cable_modem_monitor.
 
     Args:
@@ -58,13 +58,13 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
     """
     recent_logs = []
 
-    ***REMOVED*** Method 1: Try to get logs from system_log integration (if available)
+    # Method 1: Try to get logs from system_log integration (if available)
     try:
         if "system_log" in hass.data:
             system_log = hass.data["system_log"]
             _LOGGER.debug("system_log found in hass.data, type: %s", type(system_log))
 
-            ***REMOVED*** system_log exposes a DomainData object with a handler attribute
+            # system_log exposes a DomainData object with a handler attribute
             if hasattr(system_log, "handler"):
                 handler = system_log.handler
                 _LOGGER.debug("system_log.handler found, type: %s", type(handler))
@@ -72,7 +72,7 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
                 if hasattr(handler, "records"):
                     _LOGGER.debug("handler.records found, record count: %d", len(handler.records))
                     for record in handler.records:
-                        ***REMOVED*** Filter for cable_modem_monitor logs
+                        # Filter for cable_modem_monitor logs
                         if "cable_modem_monitor" in record.name:
                             sanitized_message = _sanitize_log_message(record.getMessage())
                             recent_logs.append(
@@ -84,29 +84,29 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
                                 }
                             )
 
-                    ***REMOVED*** If we found logs via system_log, return them
+                    # If we found logs via system_log, return them
                     if recent_logs:
                         _LOGGER.debug("Retrieved %d logs from system_log handler", len(recent_logs))
                         return recent_logs[-max_records:]
                 else:
                     _LOGGER.debug("handler.records not found, attributes: %s", dir(handler))
-            ***REMOVED*** Also try direct records access (older HA versions)
+            # Also try direct records access (older HA versions)
             elif hasattr(system_log, "records"):
                 _LOGGER.debug("system_log.records found (direct), record count: %d", len(system_log.records))
 
-                ***REMOVED*** system_log stores LogRecord objects or SimpleEntry named tuples
-                ***REMOVED*** SimpleEntry format: (name, timestamp, level, message, exception, root_cause)
+                # system_log stores LogRecord objects or SimpleEntry named tuples
+                # SimpleEntry format: (name, timestamp, level, message, exception, root_cause)
                 for record in system_log.records:
                     try:
                         if hasattr(record, "name") and hasattr(record, "message"):
-                            ***REMOVED*** SimpleEntry or LogRecord-like object with name and message attrs
+                            # SimpleEntry or LogRecord-like object with name and message attrs
                             if "cable_modem_monitor" in str(record.name):
-                                ***REMOVED*** Get level - could be int or string
+                                # Get level - could be int or string
                                 level = getattr(record, "level", "ERROR")
                                 if isinstance(level, int):
                                     level = logging.getLevelName(level)
 
-                                ***REMOVED*** Get timestamp
+                                # Get timestamp
                                 timestamp = getattr(record, "timestamp", None) or getattr(
                                     record, "created", time.time()
                                 )
@@ -123,7 +123,7 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
                                     }
                                 )
                         elif hasattr(record, "getMessage"):
-                            ***REMOVED*** Standard LogRecord object
+                            # Standard LogRecord object
                             if "cable_modem_monitor" in record.name:
                                 sanitized_message = _sanitize_log_message(record.getMessage())
                                 recent_logs.append(
@@ -135,7 +135,7 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
                                     }
                                 )
                         elif isinstance(record, tuple) and len(record) >= 4:
-                            ***REMOVED*** Legacy tuple format: (name, timestamp, level, message, ...)
+                            # Legacy tuple format: (name, timestamp, level, message, ...)
                             logger_name = record[0]
                             if "cable_modem_monitor" in str(logger_name):
                                 timestamp = record[1] if len(record) > 1 else time.time()
@@ -160,7 +160,7 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
                         _LOGGER.debug("Error parsing log record: %s", e)
                         continue
 
-                ***REMOVED*** If we found logs via system_log, return them
+                # If we found logs via system_log, return them
                 if recent_logs:
                     _LOGGER.debug("Retrieved %d error logs from system_log (direct)", len(recent_logs))
                     return recent_logs[-max_records:]
@@ -173,9 +173,9 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
     except Exception as err:
         _LOGGER.warning("Could not retrieve logs from system_log: %s", err, exc_info=True)
 
-    ***REMOVED*** Method 2: Try to read from Home Assistant's log file
+    # Method 2: Try to read from Home Assistant's log file
     try:
-        ***REMOVED*** Home Assistant stores logs in config/home-assistant.log
+        # Home Assistant stores logs in config/home-assistant.log
         log_file = Path(hass.config.path("home-assistant.log"))
 
         if not log_file.exists():
@@ -194,30 +194,30 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
                 }
             ]
 
-        ***REMOVED*** Read last N lines from log file (much faster than reading entire file)
-        ***REMOVED*** Read more lines than max_records to account for non-matching lines
+        # Read last N lines from log file (much faster than reading entire file)
+        # Read more lines than max_records to account for non-matching lines
         with open(log_file, "rb") as f:
-            ***REMOVED*** Seek to end of file
+            # Seek to end of file
             f.seek(0, 2)
             file_size = f.tell()
 
-            ***REMOVED*** Read last ~100KB (should be plenty for 150 log entries)
-            ***REMOVED*** Average log line is ~200 bytes, so 100KB ~= 500 lines
+            # Read last ~100KB (should be plenty for 150 log entries)
+            # Average log line is ~200 bytes, so 100KB ~= 500 lines
             read_size = min(100000, file_size)
             f.seek(max(0, file_size - read_size))
 
-            ***REMOVED*** Read and decode
+            # Read and decode
             tail_data = f.read().decode("utf-8", errors="ignore")
             lines = tail_data.split("\n")
 
-        ***REMOVED*** Parse log lines for cable_modem_monitor entries
-        ***REMOVED*** Format: 2025-11-09 04:39:46.123 INFO (MainThread) [custom_components.cable_modem_monitor.config_flow] Message
+        # Parse log lines for cable_modem_monitor entries
+        # Format: 2025-11-09 04:39:46.123 INFO (MainThread) [custom_components.cable_modem_monitor.config_flow] Message
         log_pattern = re.compile(
-            r"^(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\.\d{3})\s+"  ***REMOVED*** timestamp
-            r"(\w+)\s+"  ***REMOVED*** level
-            r"\([^)]+\)\s+"  ***REMOVED*** thread
-            r"\[custom_components\.cable_modem_monitor\.?([^\]]*)\]\s+"  ***REMOVED*** logger
-            r"(.+)$"  ***REMOVED*** message
+            r"^(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\.\d{3})\s+"  # timestamp
+            r"(\w+)\s+"  # level
+            r"\([^)]+\)\s+"  # thread
+            r"\[custom_components\.cable_modem_monitor\.?([^\]]*)\]\s+"  # logger
+            r"(.+)$"  # message
         )
 
         for line in lines:
@@ -225,7 +225,7 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
             if match:
                 timestamp_str, level, logger, message = match.groups()
 
-                ***REMOVED*** Sanitize the message
+                # Sanitize the message
                 sanitized_message = _sanitize_log_message(message)
 
                 recent_logs.append(
@@ -237,7 +237,7 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
                     }
                 )
 
-        ***REMOVED*** If we found logs, return the most recent ones
+        # If we found logs, return the most recent ones
         if recent_logs:
             _LOGGER.debug("Retrieved %d logs from log file", len(recent_logs))
             return recent_logs[-max_records:]
@@ -245,7 +245,7 @@ def _get_recent_logs(hass: HomeAssistant, max_records: int = 150) -> list[dict[s
     except Exception as err:
         _LOGGER.warning("Failed to read logs from file: %s", err)
 
-    ***REMOVED*** If we couldn't get logs, return a note
+    # If we couldn't get logs, return a note
     return [
         {
             "timestamp": time.time(),
@@ -296,7 +296,7 @@ def _get_hnap_auth_attempt(coordinator) -> dict[str, Any]:
         Dict with auth attempt details or explanatory note if not available
     """
     try:
-        ***REMOVED*** Navigate: coordinator -> scraper -> parser -> _json_builder
+        # Navigate: coordinator -> scraper -> parser -> _json_builder
         scraper = getattr(coordinator, "scraper", None)
         if not scraper:
             return {"note": "Scraper not available"}
@@ -313,7 +313,7 @@ def _get_hnap_auth_attempt(coordinator) -> dict[str, Any]:
         if not auth_attempt:
             return {"note": "No HNAP auth attempt recorded yet"}
 
-        ***REMOVED*** Sanitize the auth attempt data
+        # Sanitize the auth attempt data
         sanitized: dict[str, Any] = {}
         for key, value in auth_attempt.items():
             if value is None:
@@ -321,7 +321,7 @@ def _get_hnap_auth_attempt(coordinator) -> dict[str, Any]:
             elif isinstance(value, str):
                 sanitized[key] = _sanitize_log_message(value)
             elif isinstance(value, dict):
-                ***REMOVED*** For request dicts, keep structure but sanitize strings
+                # For request dicts, keep structure but sanitize strings
                 sanitized[key] = {
                     k: _sanitize_log_message(str(v)) if isinstance(v, str) else v for k, v in value.items()
                 }
@@ -343,14 +343,14 @@ def _build_diagnostics_dict(hass: HomeAssistant, coordinator, entry: ConfigEntry
     data = coordinator.data if coordinator.data else {}
 
     diagnostics = {
-        ***REMOVED*** Solent Labs™ metadata - helps identify official diagnostics captures
+        # Solent Labs™ metadata - helps identify official diagnostics captures
         "_solentlabs": {
             "tool": "cable_modem_monitor/diagnostics",
             "version": VERSION,
             "captured_at": datetime.now().isoformat(),
             "note": "Captured with Solent Labs™ Cable Modem Monitor diagnostics",
         },
-        ***REMOVED*** PII review guidance - displayed prominently for users sharing diagnostics
+        # PII review guidance - displayed prominently for users sharing diagnostics
         "_review_before_sharing": {
             "warning": (
                 "Automated sanitization is best-effort, not foolproof. "
@@ -429,16 +429,16 @@ def _build_diagnostics_dict(hass: HomeAssistant, coordinator, entry: ConfigEntry
         ],
     }
 
-    ***REMOVED*** Add error information if last update failed
-    ***REMOVED*** Security: Sanitize exception messages to avoid leaking sensitive information
+    # Add error information if last update failed
+    # Security: Sanitize exception messages to avoid leaking sensitive information
     if coordinator.last_exception:
         exception_type = type(coordinator.last_exception).__name__
         exception_msg = str(coordinator.last_exception)
 
-        ***REMOVED*** Sanitize using our helper function
+        # Sanitize using our helper function
         exception_msg = _sanitize_log_message(exception_msg)
 
-        ***REMOVED*** Truncate long messages
+        # Truncate long messages
         if len(exception_msg) > 200:
             exception_msg = exception_msg[:200] + "... (truncated)"
 
@@ -448,7 +448,7 @@ def _build_diagnostics_dict(hass: HomeAssistant, coordinator, entry: ConfigEntry
             "note": "Exception details have been sanitized for security",
         }
 
-    ***REMOVED*** Add parser detection history if available (helpful for troubleshooting)
+    # Add parser detection history if available (helpful for troubleshooting)
     if "_parser_detection_history" in data:
         diagnostics["parser_detection_history"] = data["_parser_detection_history"]
     else:
@@ -457,12 +457,12 @@ def _build_diagnostics_dict(hass: HomeAssistant, coordinator, entry: ConfigEntry
             "attempted_parsers": [],
         }
 
-    ***REMOVED*** Add HNAP authentication attempt details if available
-    ***REMOVED*** This helps debug auth failures by showing exactly what requests we sent
+    # Add HNAP authentication attempt details if available
+    # This helps debug auth failures by showing exactly what requests we sent
     diagnostics["hnap_auth_debug"] = _get_hnap_auth_attempt(coordinator)
 
-    ***REMOVED*** Add recent logs (last 150 records)
-    ***REMOVED*** This is extremely helpful for debugging connection and detection issues
+    # Add recent logs (last 150 records)
+    # This is extremely helpful for debugging connection and detection issues
     try:
         recent_logs = _get_recent_logs(hass, max_records=150)
         diagnostics["recent_logs"] = {
@@ -471,25 +471,25 @@ def _build_diagnostics_dict(hass: HomeAssistant, coordinator, entry: ConfigEntry
             "logs": recent_logs,
         }
     except Exception as err:
-        ***REMOVED*** If we can't get logs, add a note but don't fail diagnostics
+        # If we can't get logs, add a note but don't fail diagnostics
         _LOGGER.warning("Failed to retrieve recent logs for diagnostics: %s", err)
         diagnostics["recent_logs"] = {"note": "Unable to retrieve recent logs", "error": str(err)}
 
-    ***REMOVED*** Add raw HTML capture if available and not expired
+    # Add raw HTML capture if available and not expired
     if coordinator.data and "_raw_html_capture" in coordinator.data:
         capture = coordinator.data["_raw_html_capture"]
 
-        ***REMOVED*** Check if capture has expired (5 minute TTL)
+        # Check if capture has expired (5 minute TTL)
         try:
             expires_at = datetime.fromisoformat(capture.get("ttl_expires", ""))
             if datetime.now() < expires_at:
-                ***REMOVED*** Sanitize content in each captured URL (HTML, JS, CSS, etc.)
+                # Sanitize content in each captured URL (HTML, JS, CSS, etc.)
                 sanitized_urls = []
                 for url_data in capture.get("urls", []):
                     sanitized_url = url_data.copy()
                     if "content" in sanitized_url:
                         sanitized_url["content"] = sanitize_html(sanitized_url["content"])
-                        ***REMOVED*** Add size info for sanitized content
+                        # Add size info for sanitized content
                         sanitized_url["sanitized_size_bytes"] = len(sanitized_url["content"])
                     sanitized_urls.append(sanitized_url)
 
@@ -516,11 +516,11 @@ def _build_diagnostics_dict(hass: HomeAssistant, coordinator, entry: ConfigEntry
 
 async def async_get_config_entry_diagnostics(hass: HomeAssistant, entry: ConfigEntry) -> dict[str, Any]:
     """Return diagnostics for a config entry."""
-    ***REMOVED*** Check if coordinator exists (might not if setup failed)
+    # Check if coordinator exists (might not if setup failed)
     coordinator = hass.data.get(DOMAIN, {}).get(entry.entry_id)
 
     if not coordinator:
-        ***REMOVED*** Return basic diagnostics if coordinator doesn't exist
+        # Return basic diagnostics if coordinator doesn't exist
         return {
             "error": "Integration not fully initialized - coordinator not found",
             "config_entry": {

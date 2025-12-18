@@ -176,7 +176,7 @@ class TestInputValidation:
         monitor = ModemHealthMonitor()
 
         assert monitor._is_valid_host("") is False
-        assert monitor._is_valid_host("a" * 254) is False  ***REMOVED*** Too long
+        assert monitor._is_valid_host("a" * 254) is False  # Too long
 
     def test_is_valid_url(self):
         """Test URL validation."""
@@ -243,7 +243,7 @@ class TestHealthCheckPing:
                 side_effect=[1000.0, 1000.05],
             ),
         ):
-            ***REMOVED*** Mock successful ping
+            # Mock successful ping
             mock_proc = AsyncMock()
             mock_proc.communicate.return_value = (b"", b"")
             mock_proc.returncode = 0
@@ -255,9 +255,9 @@ class TestHealthCheckPing:
             assert latency is not None
             assert latency > 0
 
-            ***REMOVED*** Verify ping command
+            # Verify ping command
             mock_exec.assert_called_once_with(
-                "ping", "-c", "1", "-W", "2", "192.168.1.1", stdout=-1, stderr=-1  ***REMOVED*** asyncio.subprocess.PIPE
+                "ping", "-c", "1", "-W", "2", "192.168.1.1", stdout=-1, stderr=-1  # asyncio.subprocess.PIPE
             )
 
     async def test_ping_failure(self):
@@ -265,7 +265,7 @@ class TestHealthCheckPing:
         monitor = ModemHealthMonitor()
 
         with patch("asyncio.create_subprocess_exec", new_callable=AsyncMock) as mock_exec:
-            ***REMOVED*** Mock failed ping
+            # Mock failed ping
             mock_proc = AsyncMock()
             mock_proc.communicate.return_value = (b"", b"ping: unknown host")
             mock_proc.returncode = 1
@@ -315,21 +315,21 @@ class TestHealthCheckHTTP:
             patch(connector_patch),
             patch(session_patch) as mock_session_class,
         ):
-            ***REMOVED*** Create the response that will be returned when entering the context manager
+            # Create the response that will be returned when entering the context manager
             mock_response = MagicMock()
             mock_response.status = 200
             mock_response.headers = {}
 
-            ***REMOVED*** Create the async context manager that head() returns
+            # Create the async context manager that head() returns
             mock_head_cm = MagicMock()
             mock_head_cm.__aenter__ = AsyncMock(return_value=mock_response)
             mock_head_cm.__aexit__ = AsyncMock(return_value=None)
 
-            ***REMOVED*** Create the session
+            # Create the session
             mock_session = MagicMock()
             mock_session.__aenter__ = AsyncMock(return_value=mock_session)
             mock_session.__aexit__ = AsyncMock(return_value=None)
-            ***REMOVED*** head() returns the context manager directly (not a coroutine)
+            # head() returns the context manager directly (not a coroutine)
             mock_session.head = MagicMock(return_value=mock_head_cm)
 
             mock_session_class.return_value = mock_session
@@ -355,23 +355,23 @@ class TestHealthCheckHTTP:
             patch(connector_patch),
             patch(session_patch) as mock_session_class,
         ):
-            ***REMOVED*** GET response
+            # GET response
             mock_response = MagicMock()
             mock_response.status = 200
             mock_response.headers = {}
 
-            ***REMOVED*** Create the async context manager that get() returns
+            # Create the async context manager that get() returns
             mock_get_cm = MagicMock()
             mock_get_cm.__aenter__ = AsyncMock(return_value=mock_response)
             mock_get_cm.__aexit__ = AsyncMock(return_value=None)
 
-            ***REMOVED*** Create the session
+            # Create the session
             mock_session = MagicMock()
             mock_session.__aenter__ = AsyncMock(return_value=mock_session)
             mock_session.__aexit__ = AsyncMock(return_value=None)
-            ***REMOVED*** HEAD fails
+            # HEAD fails
             mock_session.head = MagicMock(side_effect=aiohttp.ClientError("HEAD not supported"))
-            ***REMOVED*** GET returns the context manager directly (not a coroutine)
+            # GET returns the context manager directly (not a coroutine)
             mock_session.get = MagicMock(return_value=mock_get_cm)
 
             mock_session_class.return_value = mock_session
@@ -396,28 +396,28 @@ class TestHealthCheckHTTP:
             patch(connector_patch),
             patch(session_patch) as mock_session_class,
         ):
-            ***REMOVED*** Create the response that will be returned when entering the context manager
+            # Create the response that will be returned when entering the context manager
             mock_response = MagicMock()
-            mock_response.status = 404  ***REMOVED*** Not Found, but server is alive
+            mock_response.status = 404  # Not Found, but server is alive
             mock_response.headers = {}
 
-            ***REMOVED*** Create the async context manager that head() returns
+            # Create the async context manager that head() returns
             mock_head_cm = MagicMock()
             mock_head_cm.__aenter__ = AsyncMock(return_value=mock_response)
             mock_head_cm.__aexit__ = AsyncMock(return_value=None)
 
-            ***REMOVED*** Create the session
+            # Create the session
             mock_session = MagicMock()
             mock_session.__aenter__ = AsyncMock(return_value=mock_session)
             mock_session.__aexit__ = AsyncMock(return_value=None)
-            ***REMOVED*** head() returns the context manager directly (not a coroutine)
+            # head() returns the context manager directly (not a coroutine)
             mock_session.head = MagicMock(return_value=mock_head_cm)
 
             mock_session_class.return_value = mock_session
 
             success, latency = await monitor._check_http("http://192.168.1.1")
 
-            assert success is True  ***REMOVED*** Server responded
+            assert success is True  # Server responded
 
     async def test_http_rejects_5xx(self):
         """Test that 5xx responses are considered failures."""
@@ -434,21 +434,21 @@ class TestHealthCheckHTTP:
             patch(connector_patch),
             patch(session_patch) as mock_session_class,
         ):
-            ***REMOVED*** Create the response that will be returned when entering the context manager
+            # Create the response that will be returned when entering the context manager
             mock_response = MagicMock()
-            mock_response.status = 500  ***REMOVED*** Server error
+            mock_response.status = 500  # Server error
             mock_response.headers = {}
 
-            ***REMOVED*** Create the async context manager that head() returns
+            # Create the async context manager that head() returns
             mock_head_cm = MagicMock()
             mock_head_cm.__aenter__ = AsyncMock(return_value=mock_response)
             mock_head_cm.__aexit__ = AsyncMock(return_value=None)
 
-            ***REMOVED*** Create the session
+            # Create the session
             mock_session = MagicMock()
             mock_session.__aenter__ = AsyncMock(return_value=mock_session)
             mock_session.__aexit__ = AsyncMock(return_value=None)
-            ***REMOVED*** head() returns the context manager directly (not a coroutine)
+            # head() returns the context manager directly (not a coroutine)
             mock_session.head = MagicMock(return_value=mock_head_cm)
 
             mock_session_class.return_value = mock_session
@@ -481,11 +481,11 @@ class TestHealthCheckHTTP:
             patch(connector_patch),
             patch(session_patch) as mock_session_class,
         ):
-            ***REMOVED*** Create the session
+            # Create the session
             mock_session = MagicMock()
             mock_session.__aenter__ = AsyncMock(return_value=mock_session)
             mock_session.__aexit__ = AsyncMock(return_value=None)
-            ***REMOVED*** Both HEAD and GET timeout
+            # Both HEAD and GET timeout
             mock_session.head = MagicMock(side_effect=TimeoutError("Connection timeout"))
             mock_session.get = MagicMock(side_effect=TimeoutError("Connection timeout"))
 
@@ -558,18 +558,18 @@ class TestHealthCheckFullFlow:
             patch.object(monitor, "_check_ping", return_value=(True, 5.0)),
             patch.object(monitor, "_check_http", return_value=(True, 10.0)),
         ):
-            ***REMOVED*** Add 10 checks
+            # Add 10 checks
             for _ in range(10):
                 await monitor.check_health("http://192.168.1.1")
 
-            ***REMOVED*** History should be limited to 5
+            # History should be limited to 5
             assert len(monitor.history) == 5
 
     async def test_consecutive_failures_reset(self):
         """Test that consecutive failures reset on success."""
         monitor = ModemHealthMonitor()
 
-        ***REMOVED*** Fail twice
+        # Fail twice
         with (
             patch.object(monitor, "_check_ping", return_value=(False, None)),
             patch.object(monitor, "_check_http", return_value=(False, None)),
@@ -579,7 +579,7 @@ class TestHealthCheckFullFlow:
 
         assert monitor.consecutive_failures == 2
 
-        ***REMOVED*** Succeed once
+        # Succeed once
         with (
             patch.object(monitor, "_check_ping", return_value=(True, 5.0)),
             patch.object(monitor, "_check_http", return_value=(True, 10.0)),
@@ -597,14 +597,14 @@ class TestAverageLatency:
         """Test average ping latency calculation."""
         monitor = ModemHealthMonitor()
 
-        ***REMOVED*** Add results with different ping latencies
+        # Add results with different ping latencies
         monitor.history.append(HealthCheckResult(1.0, True, 5.0, True, 10.0))
         monitor.history.append(HealthCheckResult(2.0, True, 7.0, True, 12.0))
         monitor.history.append(HealthCheckResult(3.0, True, 9.0, True, 14.0))
 
         avg = monitor.average_ping_latency
 
-        assert avg == pytest.approx(7.0)  ***REMOVED*** (5 + 7 + 9) / 3
+        assert avg == pytest.approx(7.0)  # (5 + 7 + 9) / 3
 
     @pytest.mark.asyncio
     async def test_average_http_latency(self):
@@ -617,7 +617,7 @@ class TestAverageLatency:
 
         avg = monitor.average_http_latency
 
-        assert avg == pytest.approx(20.0)  ***REMOVED*** (10 + 20 + 30) / 3
+        assert avg == pytest.approx(20.0)  # (10 + 20 + 30) / 3
 
     def test_no_history(self):
         """Test average latency with no history."""
@@ -631,11 +631,11 @@ class TestAverageLatency:
         monitor = ModemHealthMonitor()
 
         monitor.history.append(HealthCheckResult(1.0, True, 5.0, True, 10.0))
-        monitor.history.append(HealthCheckResult(2.0, False, None, False, None))  ***REMOVED*** Failed
+        monitor.history.append(HealthCheckResult(2.0, False, None, False, None))  # Failed
         monitor.history.append(HealthCheckResult(3.0, True, 7.0, True, 20.0))
 
-        assert monitor.average_ping_latency == pytest.approx(6.0)  ***REMOVED*** (5 + 7) / 2
-        assert monitor.average_http_latency == pytest.approx(15.0)  ***REMOVED*** (10 + 20) / 2
+        assert monitor.average_ping_latency == pytest.approx(6.0)  # (5 + 7) / 2
+        assert monitor.average_http_latency == pytest.approx(15.0)  # (10 + 20) / 2
 
 
 class TestStatusSummary:

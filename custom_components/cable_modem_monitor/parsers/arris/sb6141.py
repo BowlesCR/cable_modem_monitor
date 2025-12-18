@@ -22,24 +22,24 @@ class ArrisSB6141Parser(ModemParser):
     manufacturer = "ARRIS"
     models = ["SB6141"]
 
-    ***REMOVED*** Parser status
+    # Parser status
     status = ParserStatus.VERIFIED
     verification_source = "HA Community thread (@captain-coredump/vreihen)"
 
-    ***REMOVED*** Device metadata
+    # Device metadata
     release_date = "2012"
-    end_of_life = "2020"  ***REMOVED*** No longer manufactured
+    end_of_life = "2020"  # No longer manufactured
     docsis_version = "3.0"
     fixtures_path = "tests/parsers/arris/fixtures/sb6141"
 
-    ***REMOVED*** New authentication configuration (declarative)
+    # New authentication configuration (declarative)
     auth_config = NoAuthConfig(strategy=AuthStrategyType.NO_AUTH)
 
     url_patterns = [
         {"path": "/cmSignalData.htm", "auth_method": "none", "auth_required": False},
     ]
 
-    ***REMOVED*** Capabilities - ARRIS SB6141 (no system info available)
+    # Capabilities - ARRIS SB6141 (no system info available)
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
@@ -63,26 +63,26 @@ class ArrisSB6141Parser(ModemParser):
     @classmethod
     def can_parse(cls, soup: BeautifulSoup, url: str, html: str) -> bool:
         """Detect if this is an ARRIS SB6141 modem."""
-        ***REMOVED*** Check for SB6141 model number first (most specific)
+        # Check for SB6141 model number first (most specific)
         if soup.find(string=lambda s: s and "SB6141" in s):
             return True
 
-        ***REMOVED*** Exclude other known Arris models to avoid conflicts
+        # Exclude other known Arris models to avoid conflicts
         if soup.find(string=lambda s: s and "SB6190" in s):
             return False
 
-        ***REMOVED*** Look for "Startup Procedure" text which is common to ARRIS modems
+        # Look for "Startup Procedure" text which is common to ARRIS modems
         if soup.find(string="Startup Procedure"):
             return True
 
-        ***REMOVED*** Look for transposed table structure with "Channel ID" row
+        # Look for transposed table structure with "Channel ID" row
         tables = soup.find_all("table")
         for table in tables:
             rows = table.find_all("tr")
             for row in rows:
                 cells = row.find_all("td")
                 if cells and cells[0].text.strip() == "Channel ID":
-                    ***REMOVED*** Additional check for "Power Level" row (ARRIS-specific)
+                    # Additional check for "Power Level" row (ARRIS-specific)
                     for check_row in rows:
                         check_cells = check_row.find_all("td")
                         if check_cells and "Power Level" in check_cells[0].text:
@@ -98,13 +98,13 @@ class ArrisSB6141Parser(ModemParser):
             tables = soup.find_all("table")
             _LOGGER.debug("Parsing ARRIS SB6141 format from %s tables", len(tables))
 
-            ***REMOVED*** Find tables by looking for "Channel ID" row
+            # Find tables by looking for "Channel ID" row
             for table in tables:
                 rows = table.find_all("tr")
                 if not rows:
                     continue
 
-                ***REMOVED*** Check if this table has channel data
+                # Check if this table has channel data
                 row_labels = []
                 for row in rows:
                     cells = row.find_all("td")
@@ -112,20 +112,20 @@ class ArrisSB6141Parser(ModemParser):
                         label = cells[0].text.strip()
                         row_labels.append(label)
 
-                ***REMOVED*** Detect downstream table
+                # Detect downstream table
                 has_channel_id = "Channel ID" in row_labels
                 has_power_level = any("Power Level" in label for label in row_labels)
                 has_snr = "Signal to Noise Ratio" in row_labels
                 has_downstream_mod = "Downstream Modulation" in row_labels
 
                 if has_channel_id and has_power_level and (has_snr or has_downstream_mod):
-                    ***REMOVED*** Downstream table
+                    # Downstream table
                     _LOGGER.debug("Found ARRIS downstream table")
                     downstream_channels = self._parse_transposed_table(
                         rows, ["Channel ID", "Frequency", "Signal to Noise Ratio", "Power Level"]
                     )
                 elif "Total Correctable Codewords" in row_labels:
-                    ***REMOVED*** Signal stats table - merge with downstream channels
+                    # Signal stats table - merge with downstream channels
                     _LOGGER.debug("Found ARRIS signal stats table")
                     self._merge_error_stats(downstream_channels, rows)
 
@@ -148,7 +148,7 @@ class ArrisSB6141Parser(ModemParser):
                 if not rows:
                     continue
 
-                ***REMOVED*** Check if this is upstream table
+                # Check if this is upstream table
                 row_labels = []
                 for row in rows:
                     cells = row.find_all("td")
@@ -156,14 +156,14 @@ class ArrisSB6141Parser(ModemParser):
                         label = cells[0].text.strip()
                         row_labels.append(label)
 
-                ***REMOVED*** Detect upstream table
+                # Detect upstream table
                 has_channel_id = "Channel ID" in row_labels
                 has_power_level = any("Power Level" in label for label in row_labels)
                 has_symbol_rate = "Symbol Rate" in row_labels
                 has_upstream_mod = "Upstream Modulation" in row_labels
 
                 if has_channel_id and has_power_level and (has_symbol_rate or has_upstream_mod):
-                    ***REMOVED*** Upstream table
+                    # Upstream table
                     _LOGGER.debug("Found ARRIS upstream table")
                     upstream_channels = self._parse_transposed_table(
                         rows, ["Channel ID", "Frequency", "Power Level"], is_upstream=True
@@ -191,16 +191,16 @@ class ArrisSB6141Parser(ModemParser):
                 continue
 
             label = cells[0].text.strip()
-            values = [cell.text.strip() for cell in cells[1:]]  ***REMOVED*** Skip first cell (label)
+            values = [cell.text.strip() for cell in cells[1:]]  # Skip first cell (label)
 
-            ***REMOVED*** Normalize label and handle nested tables in Power Level row
+            # Normalize label and handle nested tables in Power Level row
             if "Power Level" in label:
                 label = "Power Level"
-                ***REMOVED*** ARRIS SB6141 has nested table in Power Level row - skip first value
+                # ARRIS SB6141 has nested table in Power Level row - skip first value
                 if values and "Downstream Power Level reading" in values[0]:
-                    values = values[1:]  ***REMOVED*** Skip nested table text
+                    values = values[1:]  # Skip nested table text
 
-            ***REMOVED*** Update channel count from longest row
+            # Update channel count from longest row
             if len(values) > channel_count:
                 channel_count = len(values)
 
@@ -216,7 +216,7 @@ class ArrisSB6141Parser(ModemParser):
         """
         channel_data: dict[str, str | int | float | None] = {}
 
-        ***REMOVED*** Extract channel ID
+        # Extract channel ID
         if "Channel ID" in data_map and index < len(data_map["Channel ID"]):
             channel_id = extract_number(data_map["Channel ID"][index])
             if channel_id is None:
@@ -225,24 +225,24 @@ class ArrisSB6141Parser(ModemParser):
         else:
             return None
 
-        ***REMOVED*** Extract frequency (already in Hz for ARRIS)
+        # Extract frequency (already in Hz for ARRIS)
         if "Frequency" in data_map and index < len(data_map["Frequency"]):
             freq_text = data_map["Frequency"][index]
             freq_hz = extract_number(freq_text)
             channel_data["frequency"] = freq_hz
 
-        ***REMOVED*** Extract power level
+        # Extract power level
         if "Power Level" in data_map and index < len(data_map["Power Level"]):
             power_text = data_map["Power Level"][index]
             channel_data["power"] = extract_float(power_text)
 
         if not is_upstream:
-            ***REMOVED*** Downstream-specific fields
+            # Downstream-specific fields
             if "Signal to Noise Ratio" in data_map and index < len(data_map["Signal to Noise Ratio"]):
                 snr_text = data_map["Signal to Noise Ratio"][index]
                 channel_data["snr"] = extract_float(snr_text)
 
-            ***REMOVED*** Initialize error counters (will be filled from stats table)
+            # Initialize error counters (will be filled from stats table)
             channel_data["corrected"] = None
             channel_data["uncorrected"] = None
 
@@ -253,12 +253,12 @@ class ArrisSB6141Parser(ModemParser):
         channels = []
 
         try:
-            ***REMOVED*** Build a map of row_label -> [values for each channel]
+            # Build a map of row_label -> [values for each channel]
             data_map, channel_count = self._build_transposed_data_map(rows)
 
             _LOGGER.debug(f"Transposed table has {channel_count} channels with labels: {list(data_map.keys())}")
 
-            ***REMOVED*** Now transpose: create one channel dict per column
+            # Now transpose: create one channel dict per column
             for i in range(channel_count):
                 channel_data = self._extract_channel_data_at_index(data_map, i, is_upstream)
 
@@ -274,7 +274,7 @@ class ArrisSB6141Parser(ModemParser):
     def _merge_error_stats(self, downstream_channels: list[dict], stats_rows: list) -> None:
         """Merge error statistics from signal stats table into downstream channels."""
         try:
-            ***REMOVED*** Parse stats table (also transposed)
+            # Parse stats table (also transposed)
             data_map = {}
             for row in stats_rows:
                 cells = row.find_all("td")
@@ -285,7 +285,7 @@ class ArrisSB6141Parser(ModemParser):
                 values = [cell.text.strip() for cell in cells[1:]]
                 data_map[label] = values
 
-            ***REMOVED*** Match channels by index
+            # Match channels by index
             for i, channel in enumerate(downstream_channels):
                 if "Total Correctable Codewords" in data_map and i < len(data_map["Total Correctable Codewords"]):
                     channel["corrected"] = extract_number(data_map["Total Correctable Codewords"][i])

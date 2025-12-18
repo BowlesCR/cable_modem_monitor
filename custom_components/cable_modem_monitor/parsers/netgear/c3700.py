@@ -43,24 +43,24 @@ class NetgearC3700Parser(ModemParser):
     name = "Netgear C3700"
     manufacturer = "Netgear"
     models = ["C3700", "C3700-100NAS"]
-    priority = 50  ***REMOVED*** Standard priority
+    priority = 50  # Standard priority
 
-    ***REMOVED*** Parser status
+    # Parser status
     status = ParserStatus.VERIFIED
     verification_source = "kwschulz (maintainer)"
 
-    ***REMOVED*** Device metadata
+    # Device metadata
     release_date = "2014-09"
-    end_of_life = "2020"  ***REMOVED*** Approximate, no longer sold
+    end_of_life = "2020"  # Approximate, no longer sold
     docsis_version = "3.0"
     fixtures_path = "tests/parsers/netgear/fixtures/c3700"
 
-    ***REMOVED*** C3700 uses HTTP Basic Auth
+    # C3700 uses HTTP Basic Auth
     auth_config = BasicAuthConfig(
         strategy=AuthStrategyType.BASIC_HTTP,
     )
 
-    ***REMOVED*** Capabilities - C3700 provides channel data, version info, uptime, and restart
+    # Capabilities - C3700 provides channel data, version info, uptime, and restart
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
@@ -71,7 +71,7 @@ class NetgearC3700Parser(ModemParser):
         ModemCapability.RESTART,
     }
 
-    ***REMOVED*** URL patterns to try for modem data
+    # URL patterns to try for modem data
     url_patterns = [
         {"path": "/", "auth_method": "basic", "auth_required": False},
         {"path": "/index.htm", "auth_method": "basic", "auth_required": False},
@@ -92,7 +92,7 @@ class NetgearC3700Parser(ModemParser):
         Returns:
             tuple[bool, str | None]: (success, authenticated_html)
         """
-        ***REMOVED*** C3700 uses HTTP Basic Auth - use AuthFactory to set it up
+        # C3700 uses HTTP Basic Auth - use AuthFactory to set it up
         auth_strategy = AuthFactory.get_strategy(self.auth_config.strategy)
         return auth_strategy.login(session, base_url, username, password, self.auth_config)
 
@@ -115,7 +115,7 @@ class NetgearC3700Parser(ModemParser):
         from requests.exceptions import ChunkedEncodingError, ConnectionError
 
         try:
-            ***REMOVED*** Step 1: Fetch RouterStatus.htm to get the form action with session ID
+            # Step 1: Fetch RouterStatus.htm to get the form action with session ID
             status_url = f"{base_url}/RouterStatus.htm"
             _LOGGER.debug("C3700: Fetching RouterStatus.htm to get form action")
             status_response = session.get(status_url, timeout=10)
@@ -124,8 +124,8 @@ class NetgearC3700Parser(ModemParser):
                 _LOGGER.error("C3700: Failed to fetch RouterStatus.htm: %d", status_response.status_code)
                 return False
 
-            ***REMOVED*** Step 2: Parse the form action to extract the id parameter
-            ***REMOVED*** Format: <form action='/goform/RouterStatus?id=239640653' method="post">
+            # Step 2: Parse the form action to extract the id parameter
+            # Format: <form action='/goform/RouterStatus?id=239640653' method="post">
             form_match = re.search(
                 r"<form[^>]*action=['\"]([^'\"]*RouterStatus[^'\"]*)['\"]",
                 status_response.text,
@@ -134,24 +134,24 @@ class NetgearC3700Parser(ModemParser):
 
             if form_match:
                 form_action = form_match.group(1)
-                ***REMOVED*** Build the full restart URL
+                # Build the full restart URL
                 if form_action.startswith("/"):
                     restart_url = f"{base_url}{form_action}"
                 else:
                     restart_url = f"{base_url}/{form_action}"
                 _LOGGER.debug("C3700: Found form action: %s", form_action)
             else:
-                ***REMOVED*** Fallback to default URL without session ID
+                # Fallback to default URL without session ID
                 restart_url = f"{base_url}/goform/RouterStatus"
                 _LOGGER.warning("C3700: Could not find form action, using default URL")
 
-            ***REMOVED*** Step 3: POST the reboot command
+            # Step 3: POST the reboot command
             data = {"buttonSelect": "2"}
 
             _LOGGER.info("C3700: Sending reboot command to %s", restart_url)
             response = session.post(restart_url, data=data, timeout=10)
 
-            ***REMOVED*** Log the response for debugging
+            # Log the response for debugging
             _LOGGER.info(
                 "C3700: Reboot response - status=%d, length=%d bytes",
                 response.status_code,
@@ -167,7 +167,7 @@ class NetgearC3700Parser(ModemParser):
                 return False
 
         except (RemoteDisconnected, ConnectionError, ChunkedEncodingError) as e:
-            ***REMOVED*** Connection dropped = modem is rebooting (success!)
+            # Connection dropped = modem is rebooting (success!)
             _LOGGER.info("C3700: Modem rebooting (connection dropped as expected): %s", type(e).__name__)
             return True
         except Exception as e:
@@ -185,12 +185,12 @@ class NetgearC3700Parser(ModemParser):
         Returns:
             Dictionary with downstream, upstream, and system_info
         """
-        ***REMOVED*** C3700 requires fetching specific pages for different data
-        docsis_soup = soup  ***REMOVED*** Default to provided soup
-        router_soup = soup  ***REMOVED*** Default to provided soup
+        # C3700 requires fetching specific pages for different data
+        docsis_soup = soup  # Default to provided soup
+        router_soup = soup  # Default to provided soup
 
         if session and base_url:
-            ***REMOVED*** Fetch DocsisStatus.htm for channel data
+            # Fetch DocsisStatus.htm for channel data
             try:
                 _LOGGER.debug("C3700: Fetching DocsisStatus.htm for channel data")
                 docsis_url = f"{base_url}/DocsisStatus.htm"
@@ -207,7 +207,7 @@ class NetgearC3700Parser(ModemParser):
             except Exception as e:
                 _LOGGER.warning("C3700: Error fetching DocsisStatus.htm: %s - using provided page", e)
 
-            ***REMOVED*** Fetch RouterStatus.htm for system info (hardware/firmware versions)
+            # Fetch RouterStatus.htm for system info (hardware/firmware versions)
             try:
                 _LOGGER.debug("C3700: Fetching RouterStatus.htm for system info")
                 router_url = f"{base_url}/RouterStatus.htm"
@@ -224,11 +224,11 @@ class NetgearC3700Parser(ModemParser):
             except Exception as e:
                 _LOGGER.warning("C3700: Error fetching RouterStatus.htm: %s - using provided page", e)
 
-        ***REMOVED*** Parse channel data from DocsisStatus.htm
+        # Parse channel data from DocsisStatus.htm
         downstream_channels = self.parse_downstream(docsis_soup)
         upstream_channels = self.parse_upstream(docsis_soup)
 
-        ***REMOVED*** Parse system info from RouterStatus.htm
+        # Parse system info from RouterStatus.htm
         system_info = self.parse_system_info(router_soup)
 
         return {
@@ -254,29 +254,29 @@ class NetgearC3700Parser(ModemParser):
         Returns:
             True if this is a Netgear C3700, False otherwise
         """
-        ***REMOVED*** Check title tag
+        # Check title tag
         title = soup.find("title")
         if title and "NETGEAR Gateway C3700" in title.text:
             _LOGGER.info("Detected Netgear C3700 from page title")
             return True
 
-        ***REMOVED*** Check meta description
+        # Check meta description
         meta_desc = soup.find("meta", attrs={"name": "description"})
         if meta_desc:
             content = meta_desc.get("content", "")
-            ***REMOVED*** Ensure content is a string (BeautifulSoup can return list for multi-value attrs)
+            # Ensure content is a string (BeautifulSoup can return list for multi-value attrs)
             if isinstance(content, str) and "C3700" in content:
                 _LOGGER.info("Detected Netgear C3700 from meta description")
                 return True
 
-        ***REMOVED*** Check for C3700 in page text
+        # Check for C3700 in page text
         if "C3700" in html and "NETGEAR" in html.upper():
             _LOGGER.info("Detected Netgear C3700 from page content")
             return True
 
         return False
 
-    def parse_downstream(self, soup: BeautifulSoup) -> list[dict]:  ***REMOVED*** noqa: C901
+    def parse_downstream(self, soup: BeautifulSoup) -> list[dict]:  # noqa: C901
         """Parse downstream channel data from DocsisStatus.htm.
 
         The C3700 embeds channel data in JavaScript variables. The data format is:
@@ -295,22 +295,22 @@ class NetgearC3700Parser(ModemParser):
             all_scripts = soup.find_all("script")
             _LOGGER.debug("C3700 Downstream: Found %d total script tags.", len(all_scripts))
 
-            match = None  ***REMOVED*** Initialize match to None
+            match = None  # Initialize match to None
             for script in all_scripts:
                 if script.string and regex_pattern.search(script.string):
                     _LOGGER.debug(
                         "C3700 Downstream: Found script tag with InitDsTableTagValue. Script string length: %d",
                         len(script.string),
                     )
-                    ***REMOVED*** Extract the function body first, then get tagValueList from within it
+                    # Extract the function body first, then get tagValueList from within it
                     func_match = re.search(
                         r"function InitDsTableTagValue\(\)[^{]*\{(.*?)\n\}", script.string, re.DOTALL
                     )
                     if func_match:
                         func_body = func_match.group(1)
-                        ***REMOVED*** Remove block comments /* ... */ to avoid matching commented-out code
+                        # Remove block comments /* ... */ to avoid matching commented-out code
                         func_body_clean = re.sub(r"/\*.*?\*/", "", func_body, flags=re.DOTALL)
-                        ***REMOVED*** Now find tagValueList within this function (skip // commented lines)
+                        # Now find tagValueList within this function (skip // commented lines)
                         match = re.search(r"^\s+var tagValueList = [\"']([^\"']+)[\"']", func_body_clean, re.MULTILINE)
                         if match:
                             _LOGGER.debug(
@@ -318,9 +318,9 @@ class NetgearC3700Parser(ModemParser):
                                 len(match.group(1)),
                             )
 
-                            ***REMOVED*** Split by pipe delimiter
+                            # Split by pipe delimiter
                             values = match.group(1).split("|")
-                            break  ***REMOVED*** Found the data, stop searching
+                            break  # Found the data, stop searching
                         else:
                             _LOGGER.debug("C3700 Downstream: No tagValueList match found in function body.")
                             continue
@@ -328,23 +328,23 @@ class NetgearC3700Parser(ModemParser):
                         _LOGGER.debug("C3700 Downstream: Could not extract function body.")
                         continue
 
-            if match is None:  ***REMOVED*** If no match was found after iterating all scripts
+            if match is None:  # If no match was found after iterating all scripts
                 _LOGGER.debug(
                     "C3700 Downstream: No script tag with InitDsTableTagValue found or no tagValueList extracted."
                 )
-                return channels  ***REMOVED*** Return empty list if no data found
+                return channels  # Return empty list if no data found
 
-            if len(values) < 10:  ***REMOVED*** Need at least count + 1 channel (9 fields)
+            if len(values) < 10:  # Need at least count + 1 channel (9 fields)
                 _LOGGER.warning("Insufficient downstream data: %d values", len(values))
-                return channels  ***REMOVED*** Return empty list if insufficient data
+                return channels  # Return empty list if insufficient data
 
-            ***REMOVED*** First value is channel count
+            # First value is channel count
             channel_count = int(values[0])
             _LOGGER.debug("Found %d downstream channels", channel_count)
 
-            ***REMOVED*** Each channel has 9 fields: num|lock|modulation|id|frequency|power|snr|corrected|uncorrected
+            # Each channel has 9 fields: num|lock|modulation|id|frequency|power|snr|corrected|uncorrected
             fields_per_channel = 9
-            idx = 1  ***REMOVED*** Start after channel count
+            idx = 1  # Start after channel count
 
             for i in range(channel_count):
                 if idx + fields_per_channel > len(values):
@@ -352,15 +352,15 @@ class NetgearC3700Parser(ModemParser):
                     break
 
                 try:
-                    ***REMOVED*** Extract frequency value (remove " Hz" suffix if present)
+                    # Extract frequency value (remove " Hz" suffix if present)
                     freq_str = values[idx + 4].replace(" Hz", "").strip()
                     freq = int(freq_str)
 
-                    ***REMOVED*** Extract lock status
-                    lock_status = values[idx + 1]  ***REMOVED*** "Locked" or "Not Locked"
+                    # Extract lock status
+                    lock_status = values[idx + 1]  # "Locked" or "Not Locked"
 
-                    ***REMOVED*** Skip unlocked channels with 0 frequency (placeholder entries)
-                    ***REMOVED*** These are configured but not in use by the ISP
+                    # Skip unlocked channels with 0 frequency (placeholder entries)
+                    # These are configured but not in use by the ISP
                     if freq == 0 or lock_status != "Locked":
                         _LOGGER.debug(
                             "Skipping downstream channel %d: %s, freq=%d Hz",
@@ -372,13 +372,13 @@ class NetgearC3700Parser(ModemParser):
                         continue
 
                     channel = {
-                        "channel_id": values[idx + 3],  ***REMOVED*** Channel ID
-                        "frequency": freq,  ***REMOVED*** Frequency in Hz
-                        "power": float(values[idx + 5]),  ***REMOVED*** Power in dBmV
-                        "snr": float(values[idx + 6]),  ***REMOVED*** SNR in dB
-                        "modulation": values[idx + 2],  ***REMOVED*** Modulation (QAM256, etc.)
-                        "corrected": int(values[idx + 7]),  ***REMOVED*** Corrected errors
-                        "uncorrected": int(values[idx + 8]),  ***REMOVED*** Uncorrected errors
+                        "channel_id": values[idx + 3],  # Channel ID
+                        "frequency": freq,  # Frequency in Hz
+                        "power": float(values[idx + 5]),  # Power in dBmV
+                        "snr": float(values[idx + 6]),  # SNR in dB
+                        "modulation": values[idx + 2],  # Modulation (QAM256, etc.)
+                        "corrected": int(values[idx + 7]),  # Corrected errors
+                        "uncorrected": int(values[idx + 8]),  # Uncorrected errors
                     }
 
                     channels.append(channel)
@@ -390,14 +390,14 @@ class NetgearC3700Parser(ModemParser):
                     continue
 
             _LOGGER.info("Parsed %d downstream channels", len(channels))
-            ***REMOVED*** No break here, as we want to parse all channels
+            # No break here, as we want to parse all channels
 
         except Exception as e:
             _LOGGER.error("Error parsing C3700 downstream channels: %s", e, exc_info=True)
 
         return channels
 
-    def parse_upstream(self, soup: BeautifulSoup) -> list[dict]:  ***REMOVED*** noqa: C901
+    def parse_upstream(self, soup: BeautifulSoup) -> list[dict]:  # noqa: C901
         """Parse upstream channel data from DocsisStatus.htm.
 
         The C3700 embeds channel data in JavaScript variables. The data format is:
@@ -411,28 +411,28 @@ class NetgearC3700Parser(ModemParser):
         channels: list[dict] = []
 
         try:
-            ***REMOVED*** Find the InitUsTableTagValue function with upstream data
+            # Find the InitUsTableTagValue function with upstream data
             regex_pattern = re.compile("InitUsTableTagValue")
             _LOGGER.debug("C3700 Upstream: Compiled regex pattern: %s", regex_pattern)
             all_scripts = soup.find_all("script")
             _LOGGER.debug("C3700 Upstream: Found %d total script tags.", len(all_scripts))
 
-            match = None  ***REMOVED*** Initialize match to None
+            match = None  # Initialize match to None
             for script in all_scripts:
                 if script.string and regex_pattern.search(script.string):
                     _LOGGER.debug(
                         "C3700 Upstream: Found script tag with InitUsTableTagValue. Script string length: %d",
                         len(script.string),
                     )
-                    ***REMOVED*** Extract the function body first, then get tagValueList from within it
+                    # Extract the function body first, then get tagValueList from within it
                     func_match = re.search(
                         r"function InitUsTableTagValue\(\)[^{]*\{(.*?)\n\}", script.string, re.DOTALL
                     )
                     if func_match:
                         func_body = func_match.group(1)
-                        ***REMOVED*** Remove block comments /* ... */ to avoid matching commented-out code
+                        # Remove block comments /* ... */ to avoid matching commented-out code
                         func_body_clean = re.sub(r"/\*.*?\*/", "", func_body, flags=re.DOTALL)
-                        ***REMOVED*** Now find tagValueList within this function (skip // commented lines)
+                        # Now find tagValueList within this function (skip // commented lines)
                         match = re.search(r"^\s+var tagValueList = [\"']([^\"']+)[\"']", func_body_clean, re.MULTILINE)
                         if match:
                             _LOGGER.debug(
@@ -440,9 +440,9 @@ class NetgearC3700Parser(ModemParser):
                                 len(match.group(1)),
                             )
 
-                            ***REMOVED*** Split by pipe delimiter
+                            # Split by pipe delimiter
                             values = match.group(1).split("|")
-                            break  ***REMOVED*** Found the data, stop searching
+                            break  # Found the data, stop searching
                         else:
                             _LOGGER.debug("C3700 Upstream: No tagValueList match found in function body.")
                             continue
@@ -450,23 +450,23 @@ class NetgearC3700Parser(ModemParser):
                         _LOGGER.debug("C3700 Upstream: Could not extract function body.")
                         continue
 
-            if match is None:  ***REMOVED*** If no match was found after iterating all scripts
+            if match is None:  # If no match was found after iterating all scripts
                 _LOGGER.debug(
                     "C3700 Upstream: No script tag with InitUsTableTagValue found or no tagValueList extracted."
                 )
-                return channels  ***REMOVED*** Return empty list if no data found
+                return channels  # Return empty list if no data found
 
-            if len(values) < 8:  ***REMOVED*** Need at least count + 1 channel (7 fields)
+            if len(values) < 8:  # Need at least count + 1 channel (7 fields)
                 _LOGGER.warning("Insufficient upstream data: %d values", len(values))
-                return channels  ***REMOVED*** Return empty list if insufficient data
+                return channels  # Return empty list if insufficient data
 
-            ***REMOVED*** First value is channel count
+            # First value is channel count
             channel_count = int(values[0])
             _LOGGER.debug("Found %d upstream channels", channel_count)
 
-            ***REMOVED*** Each channel has 7 fields: num|lock|channel_type|id|symbol_rate|frequency|power
+            # Each channel has 7 fields: num|lock|channel_type|id|symbol_rate|frequency|power
             fields_per_channel = 7
-            idx = 1  ***REMOVED*** Start after channel count
+            idx = 1  # Start after channel count
 
             for i in range(channel_count):
                 if idx + fields_per_channel > len(values):
@@ -474,15 +474,15 @@ class NetgearC3700Parser(ModemParser):
                     break
 
                 try:
-                    ***REMOVED*** Extract frequency value (remove " Hz" suffix if present)
+                    # Extract frequency value (remove " Hz" suffix if present)
                     freq_str = values[idx + 5].replace(" Hz", "").strip()
                     freq = int(freq_str)
 
-                    ***REMOVED*** Extract lock status
-                    lock_status = values[idx + 1]  ***REMOVED*** "Locked" or "Not Locked"
+                    # Extract lock status
+                    lock_status = values[idx + 1]  # "Locked" or "Not Locked"
 
-                    ***REMOVED*** Skip unlocked channels with 0 frequency (placeholder entries)
-                    ***REMOVED*** These are configured but not in use by the ISP
+                    # Skip unlocked channels with 0 frequency (placeholder entries)
+                    # These are configured but not in use by the ISP
                     if freq == 0 or lock_status != "Locked":
                         _LOGGER.debug(
                             "Skipping upstream channel %d: %s, freq=%d Hz",
@@ -494,10 +494,10 @@ class NetgearC3700Parser(ModemParser):
                         continue
 
                     channel = {
-                        "channel_id": values[idx + 3],  ***REMOVED*** Channel ID
-                        "frequency": freq,  ***REMOVED*** Frequency in Hz
-                        "power": float(values[idx + 6]),  ***REMOVED*** Power in dBmV
-                        "channel_type": values[idx + 2],  ***REMOVED*** Channel type (ATDMA, etc.)
+                        "channel_id": values[idx + 3],  # Channel ID
+                        "frequency": freq,  # Frequency in Hz
+                        "power": float(values[idx + 6]),  # Power in dBmV
+                        "channel_type": values[idx + 2],  # Channel type (ATDMA, etc.)
                     }
 
                     channels.append(channel)
@@ -509,14 +509,14 @@ class NetgearC3700Parser(ModemParser):
                     continue
 
             _LOGGER.info("Parsed %d upstream channels", len(channels))
-            ***REMOVED*** No break here, as we want to parse all channels
+            # No break here, as we want to parse all channels
 
         except Exception as e:
             _LOGGER.error("Error parsing C3700 upstream channels: %s", e, exc_info=True)
 
         return channels
 
-    def parse_system_info(self, soup: BeautifulSoup) -> dict:  ***REMOVED*** noqa: C901
+    def parse_system_info(self, soup: BeautifulSoup) -> dict:  # noqa: C901
         """Parse system information from RouterStatus.htm or DashBoard.htm.
 
         Extracts:
@@ -531,43 +531,43 @@ class NetgearC3700Parser(ModemParser):
         info = {}
 
         try:
-            ***REMOVED*** Look for JavaScript variable tagValueList which contains system info
-            ***REMOVED*** Format: tagValueList = 'hw_ver|fw_ver|serial|...|uptime|current_time|...'
+            # Look for JavaScript variable tagValueList which contains system info
+            # Format: tagValueList = 'hw_ver|fw_ver|serial|...|uptime|current_time|...'
             script_tags = soup.find_all("script", text=re.compile("tagValueList"))
 
             for script in script_tags:
-                ***REMOVED*** Extract the tagValueList value
+                # Extract the tagValueList value
                 match = re.search(r"var tagValueList = [\"']([^\"']+)[\"']", script.string or "")
                 if match:
-                    ***REMOVED*** Split by pipe delimiter
+                    # Split by pipe delimiter
                     values = match.group(1).split("|")
 
                     if len(values) >= 3:
-                        ***REMOVED*** Based on RouterStatus.htm structure:
-                        ***REMOVED*** values[0] = Hardware Version
-                        ***REMOVED*** values[1] = Firmware Version
-                        ***REMOVED*** values[2] = Serial Number
+                        # Based on RouterStatus.htm structure:
+                        # values[0] = Hardware Version
+                        # values[1] = Firmware Version
+                        # values[2] = Serial Number
                         if values[0] and values[0] != "":
                             info["hardware_version"] = values[0]
                         if values[1] and values[1] != "":
                             info["software_version"] = values[1]
-                        ***REMOVED*** Skip serial number (PII)
+                        # Skip serial number (PII)
 
-                    ***REMOVED*** Extract uptime from values[33] if available
-                    ***REMOVED*** Format: "26 days 12:34:56" or similar
+                    # Extract uptime from values[33] if available
+                    # Format: "26 days 12:34:56" or similar
                     if len(values) > 33 and values[33]:
                         uptime = values[33].strip()
                         if uptime and uptime != "---" and "***" not in uptime:
                             info["system_uptime"] = uptime
                             _LOGGER.debug("C3700: Parsed system uptime: %s", uptime)
 
-                            ***REMOVED*** Calculate and add last boot time
+                            # Calculate and add last boot time
                             boot_time = self._calculate_boot_time(uptime)
                             if boot_time:
                                 info["last_boot_time"] = boot_time
                                 _LOGGER.debug("C3700: Calculated last boot time: %s", boot_time)
                         elif uptime and "***" not in uptime:
-                            ***REMOVED*** Still store even if it's just days without time
+                            # Still store even if it's just days without time
                             info["system_uptime"] = uptime
                             _LOGGER.debug("C3700: Parsed system uptime (partial): %s", uptime)
 
@@ -589,12 +589,12 @@ class NetgearC3700Parser(ModemParser):
             ISO format datetime string of boot time or None if parsing fails
         """
         try:
-            ***REMOVED*** Parse uptime string to seconds
+            # Parse uptime string to seconds
             uptime_seconds = parse_uptime_to_seconds(uptime_str)
             if uptime_seconds is None:
                 return None
 
-            ***REMOVED*** Calculate boot time: current time - uptime
+            # Calculate boot time: current time - uptime
             uptime_delta = timedelta(seconds=uptime_seconds)
             boot_time = datetime.now() - uptime_delta
 

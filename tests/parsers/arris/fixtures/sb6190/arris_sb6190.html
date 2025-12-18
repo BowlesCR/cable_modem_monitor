@@ -92,14 +92,14 @@
 			$(document).ready(function(){
 
 			// Strip the default values.
-			$("***REMOVED***binnacleWrapper1").removeClass("binnacleItems_0");
-			$("***REMOVED***binnacleWrapper2").removeClass("binnacleItems_0");
+			$("#binnacleWrapper1").removeClass("binnacleItems_0");
+			$("#binnacleWrapper2").removeClass("binnacleItems_0");
 			// Set number of items in binnacle (0 to 8)
-			$("***REMOVED***binnacleWrapper1").addClass("binnacleItems_0");
-			$("***REMOVED***binnacleWrapper2").addClass("binnacleItems_0");
+			$("#binnacleWrapper1").addClass("binnacleItems_0");
+			$("#binnacleWrapper2").addClass("binnacleItems_0");
 			// Show the binnacle.
-			$("***REMOVED***binnacleWrapper1").show();
-			$("***REMOVED***binnacleWrapper2").show();
+			$("#binnacleWrapper1").show();
+			$("#binnacleWrapper2").show();
 
 			});
 			// End READY functon
@@ -338,7 +338,7 @@ var hiddenMenuList = '';
 
 function ShowNewWindow1() 
 { 
-	window.open("configuration.htm***REMOVED***connection","_blank", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=500, height=500");
+	window.open("configuration.htm#connection","_blank", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=500, height=500");
 }
 
 function load()
@@ -348,7 +348,7 @@ function load()
 
 	if (userLoginAccess == "User")
 	{
-		$("***REMOVED***systime").hide();
+		$("#systime").hide();
 	}
 }
 

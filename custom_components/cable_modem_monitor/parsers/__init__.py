@@ -29,10 +29,10 @@ from .base_parser import ModemParser
 
 _LOGGER = logging.getLogger(__name__)
 
-***REMOVED*** Global cache for discovered parsers to avoid repeated filesystem scans
+# Global cache for discovered parsers to avoid repeated filesystem scans
 _PARSER_CACHE: list[type[ModemParser]] | None = None
 
-***REMOVED*** Cache for parser name lookups (built from discovery, not hardcoded)
+# Cache for parser name lookups (built from discovery, not hardcoded)
 _PARSER_NAME_CACHE: dict[str, type[ModemParser]] | None = None
 
 
@@ -51,19 +51,19 @@ def get_parser_by_name(parser_name: str) -> type[ModemParser] | None:
     """
     global _PARSER_NAME_CACHE
 
-    ***REMOVED*** Strip " *" suffix used to mark unverified parsers in the UI
+    # Strip " *" suffix used to mark unverified parsers in the UI
     parser_name_clean = parser_name.rstrip(" *")
 
     _LOGGER.debug("Attempting to get parser by name: %s", parser_name_clean)
 
-    ***REMOVED*** Build the name cache if not already built
+    # Build the name cache if not already built
     if _PARSER_NAME_CACHE is None:
         _LOGGER.debug("Building parser name cache from discovery")
         _PARSER_NAME_CACHE = {}
         for cls in get_parsers():
             _PARSER_NAME_CACHE[cls.name] = cls
 
-    ***REMOVED*** Look up in cache
+    # Look up in cache
     parser_cls = _PARSER_NAME_CACHE.get(parser_name_clean)
     if parser_cls:
         _LOGGER.debug("Found parser '%s' in cache", parser_name_clean)
@@ -73,7 +73,7 @@ def get_parser_by_name(parser_name: str) -> type[ModemParser] | None:
     return None
 
 
-def get_parsers(use_cache: bool = True) -> list[type[ModemParser]]:  ***REMOVED*** noqa: C901
+def get_parsers(use_cache: bool = True) -> list[type[ModemParser]]:  # noqa: C901
     """
     Auto-discover and return all parser modules in this package.
 
@@ -87,12 +87,12 @@ def get_parsers(use_cache: bool = True) -> list[type[ModemParser]]:  ***REMOVED*
     global _PARSER_CACHE
     global _PARSER_NAME_CACHE
 
-    ***REMOVED*** Return cached parsers if available
+    # Return cached parsers if available
     if use_cache and _PARSER_CACHE is not None:
         _LOGGER.debug("Returning %d cached parsers (skipped discovery)", len(_PARSER_CACHE))
         return _PARSER_CACHE
 
-    ***REMOVED*** Clear name cache when re-discovering (ensures consistency)
+    # Clear name cache when re-discovering (ensures consistency)
     if not use_cache:
         _PARSER_NAME_CACHE = None
 
@@ -101,7 +101,7 @@ def get_parsers(use_cache: bool = True) -> list[type[ModemParser]]:  ***REMOVED*
 
     _LOGGER.debug("Starting parser discovery in %s", package_dir)
 
-    ***REMOVED*** Iterate through manufacturer subdirectories (e.g., 'arris', 'motorola', 'technicolor')
+    # Iterate through manufacturer subdirectories (e.g., 'arris', 'motorola', 'technicolor')
     for manufacturer_dir_name in os.listdir(package_dir):
         manufacturer_dir_path = os.path.join(package_dir, manufacturer_dir_name)
         if not os.path.isdir(manufacturer_dir_path) or manufacturer_dir_name.startswith("__"):
@@ -109,7 +109,7 @@ def get_parsers(use_cache: bool = True) -> list[type[ModemParser]]:  ***REMOVED*
 
         _LOGGER.debug("Searching in manufacturer directory: %s", manufacturer_dir_name)
 
-        ***REMOVED*** Recursively find modules within each manufacturer directory
+        # Recursively find modules within each manufacturer directory
         for _, module_name, _ in pkgutil.iter_modules([manufacturer_dir_path]):
             _LOGGER.debug("Found module candidate: %s in %s", module_name, manufacturer_dir_name)
             if module_name in ("base_parser", "__init__", "parser_template"):
@@ -117,7 +117,7 @@ def get_parsers(use_cache: bool = True) -> list[type[ModemParser]]:  ***REMOVED*
                 continue
 
             try:
-                ***REMOVED*** Construct the full module path relative to the 'parsers' package
+                # Construct the full module path relative to the 'parsers' package
                 full_module_name = f".{manufacturer_dir_name}.{module_name}"
                 _LOGGER.debug("Attempting to import module: %s", full_module_name)
                 module = importlib.import_module(full_module_name, package=__name__)
@@ -126,7 +126,7 @@ def get_parsers(use_cache: bool = True) -> list[type[ModemParser]]:  ***REMOVED*
                 found_parser_in_module = False
                 for attr_name in dir(module):
                     attr = getattr(module, attr_name)
-                    ***REMOVED*** Only register parsers defined in this module (not imported ones)
+                    # Only register parsers defined in this module (not imported ones)
                     if (
                         isinstance(attr, type)
                         and issubclass(attr, ModemParser)
@@ -143,17 +143,17 @@ def get_parsers(use_cache: bool = True) -> list[type[ModemParser]]:  ***REMOVED*
             except Exception as e:
                 _LOGGER.error("Failed to load parser module %s: %s", full_module_name, e, exc_info=True)
 
-    ***REMOVED*** Sort parsers to match dropdown order (alphabetical by manufacturer, then name)
-    ***REMOVED*** Generic parsers go last within their manufacturer group
-    ***REMOVED*** Unknown manufacturer (fallback) goes to the very end
+    # Sort parsers to match dropdown order (alphabetical by manufacturer, then name)
+    # Generic parsers go last within their manufacturer group
+    # Unknown manufacturer (fallback) goes to the very end
     def sort_key(parser):
-        ***REMOVED*** Unknown manufacturer goes last
+        # Unknown manufacturer goes last
         if parser.manufacturer == "Unknown":
             return ("ZZZZ", "ZZZZ")
-        ***REMOVED*** Within each manufacturer, Generic parsers go last
+        # Within each manufacturer, Generic parsers go last
         if "Generic" in parser.name:
             return (parser.manufacturer, "ZZZZ")
-        ***REMOVED*** Regular parsers sort by manufacturer then name
+        # Regular parsers sort by manufacturer then name
         return (parser.manufacturer, parser.name)
 
     parsers.sort(key=sort_key)
@@ -161,7 +161,7 @@ def get_parsers(use_cache: bool = True) -> list[type[ModemParser]]:  ***REMOVED*
     _LOGGER.debug("Finished parser discovery. Found %d parsers.", len(parsers))
     _LOGGER.debug("Parser order (alphabetical): %s", [p.name for p in parsers])
 
-    ***REMOVED*** Cache the results
+    # Cache the results
     _PARSER_CACHE = parsers
 
     return parsers

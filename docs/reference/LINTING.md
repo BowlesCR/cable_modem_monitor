@@ -1,20 +1,20 @@
-***REMOVED*** Linting Guide
+# Linting Guide
 
 This guide covers all linting tools for code quality and security.
 
-***REMOVED******REMOVED*** Quick Start
+## Quick Start
 
 ```bash
-***REMOVED*** Run all checks (what CI runs)
+# Run all checks (what CI runs)
 pre-commit run --all-files
 
-***REMOVED*** Or individually
-.venv/bin/ruff check .           ***REMOVED*** Linting
-.venv/bin/black --check .        ***REMOVED*** Formatting
-.venv/bin/mypy .                 ***REMOVED*** Type checking
+# Or individually
+.venv/bin/ruff check .           # Linting
+.venv/bin/black --check .        # Formatting
+.venv/bin/mypy .                 # Type checking
 ```
 
-***REMOVED******REMOVED*** Tools Overview
+## Tools Overview
 
 | Tool | Purpose | Runs In |
 |------|---------|---------|
@@ -27,9 +27,9 @@ pre-commit run --all-files
 
 ---
 
-***REMOVED******REMOVED*** Part 1: Code Quality
+## Part 1: Code Quality
 
-***REMOVED******REMOVED******REMOVED*** Ruff Configuration
+### Ruff Configuration
 
 Primary linter - fast, comprehensive. Config in `pyproject.toml`.
 
@@ -50,49 +50,49 @@ Primary linter - fast, comprehensive. Config in `pyproject.toml`.
 - `SIM108` - Forced ternary
 - `TID252` - Relative imports
 
-***REMOVED******REMOVED******REMOVED*** Black Configuration
+### Black Configuration
 
 Formatter - 120 char lines, Python 3.12 target.
 
-***REMOVED******REMOVED******REMOVED*** mypy Configuration
+### mypy Configuration
 
 Type checker - config in `pyproject.toml`. Warns on return any, allows gradual typing.
 
-***REMOVED******REMOVED******REMOVED*** Common Fixes
+### Common Fixes
 
 ```bash
-***REMOVED*** Auto-fix linting
+# Auto-fix linting
 .venv/bin/ruff check --fix .
 
-***REMOVED*** Auto-fix imports
+# Auto-fix imports
 .venv/bin/ruff check --fix --select I .
 
-***REMOVED*** Auto-format
+# Auto-format
 .venv/bin/black .
 ```
 
-***REMOVED******REMOVED******REMOVED*** Disabling Rules
+### Disabling Rules
 
 ```python
-***REMOVED*** Disable one line
-result = complex_function()  ***REMOVED*** noqa: C901
+# Disable one line
+result = complex_function()  # noqa: C901
 
-***REMOVED*** Disable in pyproject.toml per-file
+# Disable in pyproject.toml per-file
 [tool.ruff.lint.per-file-ignores]
 "path/to/file.py" = ["E501"]
 ```
 
 ---
 
-***REMOVED******REMOVED*** Part 2: Security Linting
+## Part 2: Security Linting
 
-***REMOVED******REMOVED******REMOVED*** CodeQL (Primary - CI)
+### CodeQL (Primary - CI)
 
 Runs automatically on push/PR via GitHub Actions. See `.github/codeql/README.md` for details.
 
 Results: GitHub → Security tab → Code scanning alerts
 
-***REMOVED******REMOVED******REMOVED*** Bandit (Optional - Local)
+### Bandit (Optional - Local)
 
 Python security linter.
 
@@ -103,7 +103,7 @@ bandit -r custom_components/
 
 **Catches:** Hardcoded secrets, SQL injection, shell injection, weak crypto, SSL issues.
 
-***REMOVED******REMOVED******REMOVED*** Semgrep (Optional - Local)
+### Semgrep (Optional - Local)
 
 Multi-language security scanner.
 
@@ -114,7 +114,7 @@ semgrep --config=auto custom_components/
 
 **Catches:** SSL verification disabled, command injection, sensitive data in logs.
 
-***REMOVED******REMOVED******REMOVED*** Common Security Fixes
+### Common Security Fixes
 
 | Issue | Bad | Good |
 |-------|-----|------|
@@ -123,13 +123,13 @@ semgrep --config=auto custom_components/
 | Logging secrets | `f"user {name}"` | `"user %s", name` |
 | Broad except | `except Exception` | `except (ValueError, TypeError)` |
 
-***REMOVED******REMOVED******REMOVED*** Suppressing Security Warnings
+### Suppressing Security Warnings
 
 ```python
-***REMOVED*** Bandit
-password = get_password()  ***REMOVED*** nosec B105
+# Bandit
+password = get_password()  # nosec B105
 
-***REMOVED*** Semgrep (in .semgrep.yml)
+# Semgrep (in .semgrep.yml)
 paths:
   exclude:
     - tests/
@@ -137,27 +137,27 @@ paths:
 
 ---
 
-***REMOVED******REMOVED*** Pre-commit Hooks
+## Pre-commit Hooks
 
 All checks run automatically before commit:
 
 ```bash
-***REMOVED*** Install (one-time)
+# Install (one-time)
 pip install pre-commit
 pre-commit install
 
-***REMOVED*** Run manually
+# Run manually
 pre-commit run --all-files
 ```
 
-***REMOVED******REMOVED*** VS Code Integration
+## VS Code Integration
 
 Settings in `.vscode/settings.json`:
 - Ruff enabled, auto-fix on save
 - Black format on save
 - mypy type checking
 
-***REMOVED******REMOVED*** Resources
+## Resources
 
 - [Ruff](https://docs.astral.sh/ruff/)
 - [Black](https://black.readthedocs.io/)

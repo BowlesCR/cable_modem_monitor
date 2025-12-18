@@ -203,7 +203,7 @@ function doLogin(ifLogin_Username,ifLogin_Password,ifLogin_Captcha)
 	 var y=event.y;
 	 var tip = document.getElementById(pwdTxt);
 	 tip.innerHTML=w;
-	 tip.style.cssText="position: absolute; top: 45px; right: -30px; line-height: 24px; width: 160px; height: 40px; z-index:1;overflow: visible;visibility: hidden;padding: 8px 10px;border: 1px solid ***REMOVED***659aea;color: ***REMOVED***5F5F5F;font-size: 18px;border-radius: 4px;box-sizing: border-box;";
+	 tip.style.cssText="position: absolute; top: 45px; right: -30px; line-height: 24px; width: 160px; height: 40px; z-index:1;overflow: visible;visibility: hidden;padding: 8px 10px;border: 1px solid #659aea;color: #5F5F5F;font-size: 18px;border-radius: 4px;box-sizing: border-box;";
 	 tip.style.visibility="visible";
 	 tip.style.left=x+10;
 	  tip.style.pixelTop=y+document.body.scrollTop+10;
@@ -246,13 +246,13 @@ function doLogin(ifLogin_Username,ifLogin_Password,ifLogin_Captcha)
 
 		document.getElementById("translucent").style.display="none";
 		document.getElementById("device_status").style.display="none";
-		$('***REMOVED***login').click(function ()
+		$('#login').click(function ()
 		{
 			do_login();
 		});
 
 		document.onkeydown = keyLogin;
-		document.getElementById("loginUsername").style.cssText="box-sizing: border-box;height: 40px;padding: 8px 10px;line-height: 24px;border: 1px solid ***REMOVED***DDDDDD;color: ***REMOVED***5F5F5F;font-size: 20px;vertical-align: middle;border-radius: 4px;width: 320px;";
+		document.getElementById("loginUsername").style.cssText="box-sizing: border-box;height: 40px;padding: 8px 10px;line-height: 24px;border: 1px solid #DDDDDD;color: #5F5F5F;font-size: 20px;vertical-align: middle;border-radius: 4px;width: 320px;";
 		document.getElementById("bt-showpwd").onmousemove=function(e) {
 			showtip("tiploginpwd",'Show Password');
 		}
@@ -297,12 +297,12 @@ function doLogin(ifLogin_Username,ifLogin_Password,ifLogin_Captcha)
 
 		GetMultiXML_3rd();
 
-		$("***REMOVED***binnacleWrapper1").removeClass("binnacleItems_0");
-		$("***REMOVED***binnacleWrapper2").removeClass("binnacleItems_0");
+		$("#binnacleWrapper1").removeClass("binnacleItems_0");
+		$("#binnacleWrapper2").removeClass("binnacleItems_0");
 		// Set number of items in binnacle (0 to 8)
-		$("***REMOVED***binnacleWrapper1").addClass("binnacleItems_0");
-		$("***REMOVED***binnacleWrapper2").addClass("binnacleItems_0");
+		$("#binnacleWrapper1").addClass("binnacleItems_0");
+		$("#binnacleWrapper2").addClass("binnacleItems_0");
 		// Show the binnacle.
-		$("***REMOVED***binnacleWrapper1").show();
-		$("***REMOVED***binnacleWrapper2").show();
+		$("#binnacleWrapper1").show();
+		$("#binnacleWrapper2").show();
 	});

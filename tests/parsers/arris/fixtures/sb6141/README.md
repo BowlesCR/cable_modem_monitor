@@ -1,8 +1,8 @@
-***REMOVED*** Arris SB6141 Modem Fixtures
+# Arris SB6141 Modem Fixtures
 
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -14,11 +14,11 @@
 
 <!-- END AUTO-GENERATED -->
 
-***REMOVED******REMOVED*** Verification Status
+## Verification Status
 
 ✅ **VERIFIED** - Confirmed working by real user
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
@@ -33,7 +33,7 @@
 | **Captured By** | @captain-coredump |
 | **Capture Date** | October 2025 |
 
-***REMOVED******REMOVED*** User Verification
+## User Verification
 
 **Verified by:** @captain-coredump (vreihen)
 **Date:** October 2025 (v2.0.0)
@@ -53,9 +53,9 @@
 - ⚠️ Software version not available (not exposed by modem web interface)
 - ⚠️ System uptime not available (not exposed by modem web interface)
 
-***REMOVED******REMOVED*** Available Fixtures
+## Available Fixtures
 
-***REMOVED******REMOVED******REMOVED*** signal.html
+### signal.html
 - **Source:** HTML samples provided by @captain-coredump
 - **Size:** 4.9 KB
 - **Content:** Signal status page (`/cmSignal.html`)
@@ -67,7 +67,7 @@
 - Downstream channels: Channel ID, Frequency, SNR, Power, Corrected, Uncorrected
 - Upstream channels: Channel ID, Frequency, Power
 
-***REMOVED******REMOVED*** Parser Implementation
+## Parser Implementation
 
 **File:** `custom_components/cable_modem_monitor/parsers/arris/sb6141.py`
 
@@ -90,7 +90,7 @@ url_patterns = [
 - HTML table scraping with BeautifulSoup
 - No authentication required
 
-***REMOVED******REMOVED*** Test Coverage
+## Test Coverage
 
 **File:** `tests/parsers/arris/test_sb6141.py`
 
@@ -101,20 +101,20 @@ url_patterns = [
 - ✅ System info parsing
 - ✅ Transposed table parsing
 
-***REMOVED******REMOVED*** Attribution
+## Attribution
 
 - **HTML Samples:** @captain-coredump (vreihen)
 - **Parser Development:** Cable Modem Monitor project
 - **Verification:** Community testing on Home Assistant forum
 - **Documentation:** Commit cd49916 "Update documentation: ARRIS SB6141 confirmed working"
 
-***REMOVED******REMOVED*** Related Documentation
+## Related Documentation
 
 - Commit cd49916: Added to confirmed working status
 - ATTRIBUTION.md: Hardware testing contributors
 - Home Assistant Community Forum: User confirmation thread
 
-***REMOVED******REMOVED*** Notes
+## Notes
 
 - This is one of the older DOCSIS 3.0 modems still in use
 - No authentication required for status page

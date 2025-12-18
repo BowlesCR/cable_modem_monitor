@@ -21,7 +21,7 @@ class TestCoordinatorInterval:
         """Test default scan interval converts to timedelta correctly."""
         interval = timedelta(seconds=DEFAULT_SCAN_INTERVAL)
 
-        ***REMOVED*** Should be 10 minutes
+        # Should be 10 minutes
         assert interval.total_seconds() == 600
         assert interval == timedelta(minutes=10)
 
@@ -29,7 +29,7 @@ class TestCoordinatorInterval:
         """Test minimum scan interval converts to timedelta correctly."""
         interval = timedelta(seconds=MIN_SCAN_INTERVAL)
 
-        ***REMOVED*** Should be 1 minute
+        # Should be 1 minute
         assert interval.total_seconds() == 60
         assert interval == timedelta(minutes=1)
 
@@ -37,7 +37,7 @@ class TestCoordinatorInterval:
         """Test maximum scan interval converts to timedelta correctly."""
         interval = timedelta(seconds=MAX_SCAN_INTERVAL)
 
-        ***REMOVED*** Should be 30 minutes
+        # Should be 30 minutes
         assert interval.total_seconds() == 1800
         assert interval == timedelta(minutes=30)
 
@@ -81,7 +81,7 @@ class TestModemDataUpdate:
         """Test that scraper returns expected data structure."""
         data = mock_scraper.get_modem_data()
 
-        ***REMOVED*** Check required keys
+        # Check required keys
         assert "cable_modem_software_version" in data
         assert "cable_modem_connection_status" in data
         assert "cable_modem_downstream_channel_count" in data
@@ -101,18 +101,18 @@ class TestModemDataUpdate:
         """Test that scraper returns correct data types."""
         data = mock_scraper.get_modem_data()
 
-        ***REMOVED*** String fields
+        # String fields
         assert isinstance(data["cable_modem_software_version"], str)
         assert isinstance(data["cable_modem_system_uptime"], str)
         assert isinstance(data["cable_modem_connection_status"], str)
 
-        ***REMOVED*** Integer fields
+        # Integer fields
         assert isinstance(data["cable_modem_downstream_channel_count"], int)
         assert isinstance(data["cable_modem_upstream_channel_count"], int)
         assert isinstance(data["cable_modem_total_corrected"], int)
         assert isinstance(data["cable_modem_total_uncorrected"], int)
 
-        ***REMOVED*** List fields
+        # List fields
         assert isinstance(data["cable_modem_downstream"], list)
         assert isinstance(data["cable_modem_upstream"], list)
 
@@ -143,7 +143,7 @@ class TestCoordinatorConfiguration:
         """Test extracting scan interval from config entry data."""
         config_data = {
             "host": "192.168.100.1",
-            "scan_interval": 600,  ***REMOVED*** 10 minutes
+            "scan_interval": 600,  # 10 minutes
         }
 
         scan_interval = config_data.get("scan_interval", DEFAULT_SCAN_INTERVAL)
@@ -160,28 +160,28 @@ class TestCoordinatorConfiguration:
 
     def test_scan_interval_validation_minimum(self):
         """Test that scan interval respects minimum."""
-        configured_interval = 30  ***REMOVED*** Too low
+        configured_interval = 30  # Too low
 
-        ***REMOVED*** Should be clamped to minimum
+        # Should be clamped to minimum
         actual_interval = max(configured_interval, MIN_SCAN_INTERVAL)
         assert actual_interval == MIN_SCAN_INTERVAL
 
     def test_scan_interval_validation_maximum(self):
         """Test that scan interval respects maximum."""
-        configured_interval = 3600  ***REMOVED*** Too high (60 minutes)
+        configured_interval = 3600  # Too high (60 minutes)
 
-        ***REMOVED*** Should be clamped to maximum
+        # Should be clamped to maximum
         actual_interval = min(configured_interval, MAX_SCAN_INTERVAL)
         assert actual_interval == MAX_SCAN_INTERVAL
 
     def test_scan_interval_validation_range(self):
         """Test scan interval clamping to valid range."""
         test_cases = [
-            (30, MIN_SCAN_INTERVAL),  ***REMOVED*** Below min -> clamp to min
-            (60, 60),  ***REMOVED*** At min -> keep
-            (300, 300),  ***REMOVED*** Normal -> keep
-            (1800, 1800),  ***REMOVED*** At max -> keep
-            (3600, MAX_SCAN_INTERVAL),  ***REMOVED*** Above max -> clamp to max
+            (30, MIN_SCAN_INTERVAL),  # Below min -> clamp to min
+            (60, 60),  # At min -> keep
+            (300, 300),  # Normal -> keep
+            (1800, 1800),  # At max -> keep
+            (3600, MAX_SCAN_INTERVAL),  # Above max -> clamp to max
         ]
 
         for input_val, expected in test_cases:
@@ -194,9 +194,9 @@ class TestReloadFunctionality:
 
     def test_reload_function_exists(self):
         """Test that async_reload_entry function signature exists."""
-        ***REMOVED*** This is validated by the integration structure
-        ***REMOVED*** In real implementation, __init__.py has async_reload_entry
-        assert True  ***REMOVED*** Placeholder - would need full HA test harness
+        # This is validated by the integration structure
+        # In real implementation, __init__.py has async_reload_entry
+        assert True  # Placeholder - would need full HA test harness
 
     def test_config_change_detection(self):
         """Test detecting config changes that require reload."""
@@ -207,10 +207,10 @@ class TestReloadFunctionality:
 
         new_config = {
             "host": "192.168.100.1",
-            "scan_interval": 600,  ***REMOVED*** Changed
+            "scan_interval": 600,  # Changed
         }
 
-        ***REMOVED*** Scan interval changed
+        # Scan interval changed
         assert old_config["scan_interval"] != new_config["scan_interval"]
 
     def test_no_reload_when_config_unchanged(self):
@@ -225,5 +225,5 @@ class TestReloadFunctionality:
             "scan_interval": 300,
         }
 
-        ***REMOVED*** Config identical
+        # Config identical
         assert old_config == new_config

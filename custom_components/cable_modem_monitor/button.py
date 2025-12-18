@@ -29,7 +29,7 @@ class ModemButtonBase(CoordinatorEntity, ButtonEntity):
         super().__init__(coordinator)
         self._entry = entry
 
-        ***REMOVED*** Get detected modem info from config entry, with fallback to generic values
+        # Get detected modem info from config entry, with fallback to generic values
         manufacturer = entry.data.get("detected_manufacturer", "Unknown")
         model = entry.data.get("detected_modem", "Cable Modem Monitor")
 
@@ -50,11 +50,11 @@ async def async_setup_entry(
     """Set up Cable Modem Monitor button."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
 
-    ***REMOVED*** Check restart availability once during setup (avoid blocking in property)
+    # Check restart availability once during setup (avoid blocking in property)
     restart_available = await _check_restart_support(hass, entry)
 
-    ***REMOVED*** Add control buttons
-    ***REMOVED*** Note: Restart button will show error if modem doesn't support restart
+    # Add control buttons
+    # Note: Restart button will show error if modem doesn't support restart
     async_add_entities(
         [
             ModemRestartButton(coordinator, entry, restart_available),
@@ -70,11 +70,11 @@ async def _check_restart_support(hass: HomeAssistant, entry: ConfigEntry) -> boo
     parser_name = entry.data.get("parser_name", "")
     detected_modem = entry.data.get("detected_modem", "")
 
-    ***REMOVED*** Fallback mode doesn't support restart
+    # Fallback mode doesn't support restart
     if "Fallback Mode" in parser_name or "Unknown" in detected_modem:
         return False
 
-    ***REMOVED*** Check if parser has restart method
+    # Check if parser has restart method
     modem_choice = entry.data.get("modem_choice", "")
     if modem_choice and modem_choice != "auto":
         from .parsers import get_parser_by_name
@@ -88,7 +88,7 @@ async def _check_restart_support(hass: HomeAssistant, entry: ConfigEntry) -> boo
 
         return bool(await hass.async_add_executor_job(check_parser))
 
-    ***REMOVED*** Default to unavailable for safety
+    # Default to unavailable for safety
     return False
 
 
@@ -123,9 +123,9 @@ class ModemRestartButton(ModemButtonBase):
 
         _LOGGER.info("Modem restart button pressed")
 
-        ***REMOVED*** Get the scraper from the coordinator
-        ***REMOVED*** We need to access it from the coordinator's update method
-        ***REMOVED*** For now, we'll create a new scraper instance
+        # Get the scraper from the coordinator
+        # We need to access it from the coordinator's update method
+        # For now, we'll create a new scraper instance
         from .const import (
             CONF_HOST as HOST_KEY,
             CONF_PASSWORD,
@@ -141,10 +141,10 @@ class ModemRestartButton(ModemButtonBase):
         password = self._entry.data.get(CONF_PASSWORD)
         cached_url = self._entry.data.get(CONF_WORKING_URL)
         modem_choice = self._entry.data.get("modem_choice", "auto")
-        ***REMOVED*** Use hardcoded VERIFY_SSL constant (see const.py for security rationale)
+        # Use hardcoded VERIFY_SSL constant (see const.py for security rationale)
         verify_ssl = VERIFY_SSL
 
-        ***REMOVED*** Optimization: Only load the specific parser if user selected one
+        # Optimization: Only load the specific parser if user selected one
         if modem_choice and modem_choice != "auto":
             from .parsers import get_parser_by_name
 
@@ -153,20 +153,20 @@ class ModemRestartButton(ModemButtonBase):
                 parser = parser_class()
                 scraper = ModemScraper(host, username, password, parser, cached_url, verify_ssl=verify_ssl)
             else:
-                ***REMOVED*** Fallback to all parsers
+                # Fallback to all parsers
                 parsers = await self.hass.async_add_executor_job(get_parsers)
                 scraper = ModemScraper(host, username, password, parsers, cached_url, verify_ssl=verify_ssl)
         else:
-            ***REMOVED*** Auto mode - get all parsers (but use cache for speed)
+            # Auto mode - get all parsers (but use cache for speed)
             parsers = await self.hass.async_add_executor_job(get_parsers)
             scraper = ModemScraper(host, username, password, parsers, cached_url, verify_ssl=verify_ssl)
 
-        ***REMOVED*** Run the restart in an executor since it uses requests (blocking I/O)
+        # Run the restart in an executor since it uses requests (blocking I/O)
         success = await self.hass.async_add_executor_job(scraper.restart_modem)
 
         if success:
             _LOGGER.info("Modem restart initiated successfully")
-            ***REMOVED*** Create a user notification
+            # Create a user notification
             await self.hass.services.async_call(
                 "persistent_notification",
                 "create",
@@ -177,13 +177,13 @@ class ModemRestartButton(ModemButtonBase):
                 },
             )
 
-            ***REMOVED*** Start monitoring task
+            # Start monitoring task
             asyncio.create_task(self._monitor_restart())
         else:
             _LOGGER.warning("Failed to restart modem - may not be supported by this modem model")
-            ***REMOVED*** Check if it's an unsupported modem
+            # Check if it's an unsupported modem
             detected_modem = self._entry.data.get("detected_modem", "Unknown")
-            ***REMOVED*** Create an error notification with helpful message
+            # Create an error notification with helpful message
             await self.hass.services.async_call(
                 "persistent_notification",
                 "create",
@@ -253,7 +253,7 @@ class ModemRestartButton(ModemButtonBase):
                 upstream_count = self.coordinator.data.get("cable_modem_upstream_channel_count", 0)
                 connection_status = self.coordinator.data.get("cable_modem_connection_status")
 
-                ***REMOVED*** Check if channels are stable
+                # Check if channels are stable
                 if downstream_count == prev_downstream and upstream_count == prev_upstream:
                     stable_count += 1
                 else:
@@ -271,7 +271,7 @@ class ModemRestartButton(ModemButtonBase):
                 prev_downstream = downstream_count
                 prev_upstream = upstream_count
 
-                ***REMOVED*** Enter grace period after initial stability
+                # Enter grace period after initial stability
                 if (
                     connection_status == "online"
                     and downstream_count > 0
@@ -287,7 +287,7 @@ class ModemRestartButton(ModemButtonBase):
                         upstream_count,
                     )
 
-                ***REMOVED*** Check if grace period is complete
+                # Check if grace period is complete
                 if grace_period_active and (phase2_elapsed - grace_period_start) >= 30:
                     _LOGGER.info(
                         "Modem fully online with stable channels (%s down, %s up)", downstream_count, upstream_count
@@ -351,24 +351,24 @@ class ModemRestartButton(ModemButtonBase):
 
         _LOGGER.info("Starting modem restart monitoring")
 
-        ***REMOVED*** Save original update interval
+        # Save original update interval
         original_interval = self.coordinator.update_interval
 
         try:
-            ***REMOVED*** Set fast polling (10 seconds)
+            # Set fast polling (10 seconds)
             self.coordinator.update_interval = timedelta(seconds=10)
             _LOGGER.debug("Set polling interval to 10s (original: %s)", original_interval)
 
-            ***REMOVED*** Wait 5 seconds for modem to go offline
+            # Wait 5 seconds for modem to go offline
             await asyncio.sleep(5)
 
-            ***REMOVED*** Clear auth cache before polling resumes
-            ***REMOVED*** Modem invalidates all sessions on reboot, so cached credentials become stale
+            # Clear auth cache before polling resumes
+            # Modem invalidates all sessions on reboot, so cached credentials become stale
             if hasattr(self.coordinator, "scraper"):
                 self.coordinator.scraper.clear_auth_cache()
                 _LOGGER.debug("Cleared auth cache after modem restart")
 
-            ***REMOVED*** Phase 1: Wait for modem to respond (max 2 minutes)
+            # Phase 1: Wait for modem to respond (max 2 minutes)
             phase1_max_wait = 120
             modem_responding, elapsed_time = await self._wait_for_modem_response(phase1_max_wait)
 
@@ -377,7 +377,7 @@ class ModemRestartButton(ModemButtonBase):
                 await self._send_restart_notification(False, False, elapsed_time)
                 return
 
-            ***REMOVED*** Send intermediate notification
+            # Send intermediate notification
             await self.hass.services.async_call(
                 "persistent_notification",
                 "create",
@@ -388,21 +388,21 @@ class ModemRestartButton(ModemButtonBase):
                 },
             )
 
-            ***REMOVED*** Phase 2: Wait for channels to sync (max 5 minutes)
+            # Phase 2: Wait for channels to sync (max 5 minutes)
             phase2_max_wait = 300
             modem_fully_online, phase2_elapsed = await self._wait_for_channel_sync(phase2_max_wait)
 
-            ***REMOVED*** Send final notification
+            # Send final notification
             total_time = elapsed_time + phase2_elapsed
             await self._send_restart_notification(modem_responding, modem_fully_online, total_time)
 
         except Exception as e:
             _LOGGER.error("Critical error in restart monitoring: %s", e)
         finally:
-            ***REMOVED*** ALWAYS restore original polling interval, even if there's an error
+            # ALWAYS restore original polling interval, even if there's an error
             self.coordinator.update_interval = original_interval
             _LOGGER.info("Restored polling interval to %s", original_interval)
-            ***REMOVED*** Force one final refresh with restored interval
+            # Force one final refresh with restored interval
             await self.coordinator.async_request_refresh()
 
 
@@ -451,7 +451,7 @@ class ResetEntitiesButton(ModemButtonBase):
         self._attr_icon = "mdi:refresh"
         self._attr_entity_category = EntityCategory.CONFIG
         self._attr_entity_registry_enabled_default = True
-        ***REMOVED*** Add description to explain what this button does
+        # Add description to explain what this button does
         self._attr_extra_state_attributes = {
             "description": (
                 "Removes all cable modem entities from the registry and reloads the integration. "
@@ -480,7 +480,7 @@ class ResetEntitiesButton(ModemButtonBase):
 
         entity_reg = er.async_get(self.hass)
 
-        ***REMOVED*** Find all cable modem entities for this integration
+        # Find all cable modem entities for this integration
         entities_to_remove = [
             entity_entry.entity_id
             for entity_entry in entity_reg.entities.values()
@@ -489,16 +489,16 @@ class ResetEntitiesButton(ModemButtonBase):
 
         _LOGGER.info("Found %s entities to remove", len(entities_to_remove))
 
-        ***REMOVED*** Remove all entities
+        # Remove all entities
         for entity_id in entities_to_remove:
             entity_reg.async_remove(entity_id)
             _LOGGER.debug("Removed entity: %s", entity_id)
 
-        ***REMOVED*** Reload integration (recreates entities)
+        # Reload integration (recreates entities)
         _LOGGER.info("Reloading integration to recreate entities")
         await self.hass.config_entries.async_reload(self._entry.entry_id)
 
-        ***REMOVED*** Create notification
+        # Create notification
         await self.hass.services.async_call(
             "persistent_notification",
             "create",
@@ -529,10 +529,10 @@ class UpdateModemDataButton(ModemButtonBase):
         """Handle the button press."""
         _LOGGER.info("Update modem data button pressed")
 
-        ***REMOVED*** Trigger coordinator refresh
+        # Trigger coordinator refresh
         await self.coordinator.async_request_refresh()
 
-        ***REMOVED*** Create notification
+        # Create notification
         await self.hass.services.async_call(
             "persistent_notification",
             "create",
@@ -561,7 +561,7 @@ class CaptureHtmlButton(ModemButtonBase):
         """Handle the button press - capture raw HTML for diagnostics."""
         _LOGGER.info("Capture HTML button pressed")
 
-        ***REMOVED*** Get the scraper components from coordinator
+        # Get the scraper components from coordinator
         from .const import (
             CONF_HOST as HOST_KEY,
             CONF_PASSWORD,
@@ -579,7 +579,7 @@ class CaptureHtmlButton(ModemButtonBase):
         modem_choice = self._entry.data.get("modem_choice", "auto")
         verify_ssl = VERIFY_SSL
 
-        ***REMOVED*** Load parser (same logic as restart button)
+        # Load parser (same logic as restart button)
         if modem_choice and modem_choice != "auto":
             from .parsers import get_parser_by_name
 
@@ -594,19 +594,19 @@ class CaptureHtmlButton(ModemButtonBase):
             parsers = await self.hass.async_add_executor_job(get_parsers)
             scraper = ModemScraper(host, username, password, parsers, cached_url, verify_ssl=verify_ssl)
 
-        ***REMOVED*** Fetch data with HTML capture enabled
+        # Fetch data with HTML capture enabled
         try:
             data = await self.hass.async_add_executor_job(scraper.get_modem_data, True)
 
-            ***REMOVED*** Check if capture was successful
+            # Check if capture was successful
             if "_raw_html_capture" in data:
                 capture = data["_raw_html_capture"]
                 url_count = len(capture.get("urls", []))
                 total_size = sum(url.get("size_bytes", 0) for url in capture.get("urls", []))
                 size_kb = total_size / 1024
 
-                ***REMOVED*** Update coordinator data with the capture
-                ***REMOVED*** This makes it available to diagnostics for the next 5 minutes
+                # Update coordinator data with the capture
+                # This makes it available to diagnostics for the next 5 minutes
                 if self.coordinator.data:
                     self.coordinator.data["_raw_html_capture"] = capture
 

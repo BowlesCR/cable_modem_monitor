@@ -46,7 +46,7 @@ var vUnknown = "Unknown";
     $(document).ready(function()
     {
 //        $('.scroll-pane').jScrollPane('scrollbarMargin:5px');
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
             buttonFilter();
         });
 
@@ -78,14 +78,14 @@ var vUnknown = "Unknown";
     /*
     function moveToHTMLend()
     {
-        window.location.href='***REMOVED***helpframe-anchor';
+        window.location.href='#helpframe-anchor';
         setHelpIframeVisible();
     }
     */
 
     function loadhelp(fname,anchname)
     {
-                var pane = window.frames["helpframe"].$('***REMOVED***content');
+                var pane = window.frames["helpframe"].$('#content');
                 var imgSrc=document.getElementById('help-button');
                 if(imgSrc.src.search("up")<0)
                 {
@@ -101,7 +101,7 @@ var vUnknown = "Unknown";
                         }
                         else
                         {
-                                window.frames["helpframe"].location.href=fname+"_h."+"htm***REMOVED***" + anchname;
+                                window.frames["helpframe"].location.href=fname+"_h."+"htm#" + anchname;
                                 $(".help-frame-div").show();
                         }
 
@@ -168,7 +168,7 @@ function InitUpdateView(tagValues)
     document.getElementById("SecurityStatus").innerHTML = tagValues[8];
     document.getElementById("SecurityComment").innerHTML = tagValues[9];
     document.getElementById("CurrentSystemTime").innerHTML = 'Current System Time:' + tagValues[10];
-    $("***REMOVED***Startupfreq").val(tagValues[11]);   //20120525 jeffery implement goto freq
+    $("#Startupfreq").val(tagValues[11]);   //20120525 jeffery implement goto freq
     if( tagValues[12] == 0 )
     {
         document.getElementById("DownstreamBondedChannels").innerHTML = 'Downstream Bonded Channels';
@@ -346,7 +346,7 @@ function InitCmIpProvModeUpdateView(tagValues)
     }
     else
     {
-        $('***REMOVED***CmIpProvMode').hide();
+        $('#CmIpProvMode').hide();
     }
 }
 
@@ -419,7 +419,7 @@ function checkData()
 </head>
 <!-- Terry 20110926, remove loadhelp -->
 <!--
-<body onload='BodyInit();loadhelp("help","Connect");' style="margin:0px;background-color:***REMOVED***e5e5e5">
+<body onload='BodyInit();loadhelp("help","Connect");' style="margin:0px;background-color:#e5e5e5">
 -->
 <body onload="BodyInit();changeContentSize()" onResize="changeContentSize()" class="page-body">
 	<img alt="" id="bodyBackgroundImg" src="img/subhead2-background.jpg" style="width:650px;height:445px;position: absolute;top:31px">

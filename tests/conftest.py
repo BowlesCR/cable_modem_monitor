@@ -6,7 +6,7 @@ import socket
 
 import pytest
 
-***REMOVED*** Store the original socket before pytest-socket patches it
+# Store the original socket before pytest-socket patches it
 try:
     import pytest_socket
 
@@ -22,7 +22,7 @@ def pytest_configure(config):
     before any tests or fixtures run. This allows Home Assistant's event
     loop to create sockets for internal communication on both Windows and Linux.
     """
-    socket.socket = _original_socket  ***REMOVED*** type: ignore[misc]
+    socket.socket = _original_socket  # type: ignore[misc]
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -33,7 +33,7 @@ def pytest_runtest_setup(item):
     restore it before each test. This runs with tryfirst=True to ensure
     it executes before other plugins.
     """
-    socket.socket = _original_socket  ***REMOVED*** type: ignore[misc]
+    socket.socket = _original_socket  # type: ignore[misc]
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -43,4 +43,4 @@ def pytest_fixture_setup(fixturedef, request):
     This ensures the socket is unblocked when the event_loop fixture
     is created, which happens during fixture setup.
     """
-    socket.socket = _original_socket  ***REMOVED*** type: ignore[misc]
+    socket.socket = _original_socket  # type: ignore[misc]

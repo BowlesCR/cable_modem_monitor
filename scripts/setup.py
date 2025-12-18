@@ -1,6 +1,6 @@
-***REMOVED***!/usr/bin/env python3
-***REMOVED*** Cable Modem Monitor - Automated Development Environment Setup (Python)
-***REMOVED*** This script consolidates the setup logic for all platforms.
+#!/usr/bin/env python3
+# Cable Modem Monitor - Automated Development Environment Setup (Python)
+# This script consolidates the setup logic for all platforms.
 
 import os
 import platform
@@ -9,9 +9,9 @@ import shutil
 import subprocess
 import sys
 
-***REMOVED*** ========================================
-***REMOVED*** Color Codes
-***REMOVED*** ========================================
+# ========================================
+# Color Codes
+# ========================================
 GREEN = "\033[0;32m"
 YELLOW = "\033[1;33m"
 RED = "\033[0;31m"
@@ -19,9 +19,9 @@ CYAN = "\033[0;36m"
 NC = "\033[0m"
 
 
-***REMOVED*** ========================================
-***REMOVED*** Helper Functions
-***REMOVED*** ========================================
+# ========================================
+# Helper Functions
+# ========================================
 def print_step(message):
     print(f"{CYAN}➜{NC} {message}")
 
@@ -71,16 +71,16 @@ def is_privacy_safe_email(email: str) -> bool:
 def get_required_python_version():
     """Parse pyproject.toml to get the required Python version."""
     if not os.path.exists("pyproject.toml"):
-        return (3, 11)  ***REMOVED*** Default fallback
+        return (3, 11)  # Default fallback
 
     with open("pyproject.toml") as f:
         content = f.read()
 
-    ***REMOVED*** Match requires-python = ">=3.12" or ">=3.12,<3.13" etc.
+    # Match requires-python = ">=3.12" or ">=3.12,<3.13" etc.
     match = re.search(r'requires-python\s*=\s*">=(\d+)\.(\d+)', content)
     if match:
         return (int(match.group(1)), int(match.group(2)))
-    return (3, 11)  ***REMOVED*** Default fallback
+    return (3, 11)  # Default fallback
 
 
 def get_debian_version():
@@ -111,7 +111,7 @@ def print_python_install_instructions(required_major, required_minor):
         print("")
         print("  Option 1: Use pyenv (recommended)")
         print("    curl https://pyenv.run | bash")
-        print("    ***REMOVED*** Follow the instructions to add pyenv to your shell")
+        print("    # Follow the instructions to add pyenv to your shell")
         print("    pyenv install 3.12")
         print("    pyenv local 3.12")
         print("")
@@ -181,7 +181,7 @@ def configure_git_email_privacy():
     print("    3. Copy your noreply email (e.g., 12345+user@users.noreply.github.com)")
     print("")
 
-    ***REMOVED*** Try to prompt for email (works in interactive terminals)
+    # Try to prompt for email (works in interactive terminals)
     try:
         new_email = input("  Paste your GitHub noreply email (or press Enter to skip): ").strip()
         if new_email:
@@ -194,21 +194,21 @@ def configure_git_email_privacy():
         else:
             print_warning("Skipped - you can configure later with: ./scripts/dev/setup-git-email.sh")
     except (EOFError, KeyboardInterrupt):
-        ***REMOVED*** Non-interactive mode (CI, piped input, etc.)
+        # Non-interactive mode (CI, piped input, etc.)
         print_warning("Non-interactive mode - configure later with: ./scripts/dev/setup-git-email.sh")
 
 
-***REMOVED*** ========================================
-***REMOVED*** Main Setup Logic
-***REMOVED*** ========================================
-def main():  ***REMOVED*** noqa: C901
+# ========================================
+# Main Setup Logic
+# ========================================
+def main():  # noqa: C901
     print("")
     print("==========================================")
     print("Cable Modem Monitor - Development Setup")
     print("==========================================")
     print("")
 
-    ***REMOVED*** 1. Check if in project root
+    # 1. Check if in project root
     print_step("Checking if in project root directory...")
     if not os.path.exists("custom_components/cable_modem_monitor/__init__.py"):
         print_error("Not in project root directory")
@@ -219,7 +219,7 @@ def main():  ***REMOVED*** noqa: C901
     print_success("Running from project root")
     print("")
 
-    ***REMOVED*** 2. Check Python version against pyproject.toml requirement
+    # 2. Check Python version against pyproject.toml requirement
     print_step("Checking Python version...")
     current_major, current_minor = sys.version_info[:2]
     required_major, required_minor = get_required_python_version()
@@ -232,7 +232,7 @@ def main():  ***REMOVED*** noqa: C901
         sys.exit(1)
     print("")
 
-    ***REMOVED*** 3. Check for venv module
+    # 3. Check for venv module
     print_step("Checking for venv module...")
     import importlib.util
 
@@ -246,14 +246,14 @@ def main():  ***REMOVED*** noqa: C901
         sys.exit(1)
     print("")
 
-    ***REMOVED*** 4. Clean up old venv
+    # 4. Clean up old venv
     if os.path.isdir("venv"):
         print_warning("Found venv/ directory, removing it in favor of .venv/")
         shutil.rmtree("venv")
         print_success("Removed venv/ directory")
         print("")
 
-    ***REMOVED*** 5. Create virtual environment
+    # 5. Create virtual environment
     is_windows = platform.system() == "Windows"
     pip_cmd = os.path.join(".venv", "Scripts", "pip.exe") if is_windows else os.path.join(".venv", "bin", "pip")
     precommit_cmd = (
@@ -295,7 +295,7 @@ def main():  ***REMOVED*** noqa: C901
         print_success("Virtual environment created")
     print("")
 
-    ***REMOVED*** 6. Upgrade pip
+    # 6. Upgrade pip
     print_step("Upgrading pip...")
     try:
         run_command(f"{pip_cmd} install --upgrade pip", quiet=True)
@@ -304,7 +304,7 @@ def main():  ***REMOVED*** noqa: C901
         print_warning("pip upgrade skipped (will work next run)")
     print("")
 
-    ***REMOVED*** 7. Install dependencies
+    # 7. Install dependencies
     print_step("Installing development dependencies...")
     print("  (This may take a few minutes...)")
     if os.path.exists("requirements-dev.txt"):
@@ -312,7 +312,7 @@ def main():  ***REMOVED*** noqa: C901
         print_success("Development dependencies installed from requirements-dev.txt")
     else:
         print_warning("requirements-dev.txt not found, using fallback installation")
-        ***REMOVED*** Install packages manually (less ideal)
+        # Install packages manually (less ideal)
         packages = [
             "homeassistant>=2024.1.0",
             "beautifulsoup4",
@@ -339,11 +339,11 @@ def main():  ***REMOVED*** noqa: C901
         print_success("Development dependencies installed")
     print("")
 
-    ***REMOVED*** 8. Install pre-commit hooks
+    # 8. Install pre-commit hooks
     print_step("Setting up pre-commit hooks...")
     try:
         run_command(f"{pip_cmd} show pre-commit", quiet=True)
-        ***REMOVED*** Install both pre-commit and commit-msg hooks to catch formatting AND commit message issues
+        # Install both pre-commit and commit-msg hooks to catch formatting AND commit message issues
         run_command(
             f"{precommit_cmd} install --install-hooks --hook-type pre-commit --hook-type commit-msg",
             quiet=True,
@@ -354,7 +354,7 @@ def main():  ***REMOVED*** noqa: C901
         print("  Run manually: pre-commit install --hook-type pre-commit --hook-type commit-msg")
     print("")
 
-    ***REMOVED*** 9. Check Docker
+    # 9. Check Docker
     print_step("Checking Docker...")
     if shutil.which("docker"):
         try:
@@ -369,19 +369,19 @@ def main():  ***REMOVED*** noqa: C901
         print("  Optional: Install Docker Desktop for containerized development")
     print("")
 
-    ***REMOVED*** 10. Configure git email privacy
+    # 10. Configure git email privacy
     print_step("Checking git email privacy...")
     configure_git_email_privacy()
     print("")
 
-    ***REMOVED*** 11. Check VS Code extensions (renumbered from 10)
+    # 11. Check VS Code extensions (renumbered from 10)
     print_step("Checking VS Code...")
     if shutil.which("code"):
         try:
             code_version = run_command("code --version", quiet=True).splitlines()[0]
             print_success(f"VS Code {code_version} installed")
 
-            ***REMOVED*** Check for required extensions
+            # Check for required extensions
             extensions = run_command("code --list-extensions", quiet=True)
             required_extensions = {
                 "ms-python.python": "Python extension",
@@ -410,7 +410,7 @@ def main():  ***REMOVED*** noqa: C901
         print("  Optional: Install VS Code for better development experience")
     print("")
 
-    ***REMOVED*** 12. Run a quick test
+    # 12. Run a quick test
     print_step("Running quick test to verify setup...")
     try:
         run_command(f"{python_cmd} -m pytest tests/parsers/netgear/test_cm600.py::test_fixtures_exist -q", quiet=True)
@@ -419,7 +419,7 @@ def main():  ***REMOVED*** noqa: C901
         print_warning("Test execution had issues (may need additional setup)")
     print("")
 
-    ***REMOVED*** Final message
+    # Final message
     print("==========================================")
     print("Setup Complete!")
     print("==========================================")
@@ -437,7 +437,7 @@ def main():  ***REMOVED*** noqa: C901
     print("")
     print(f"  {CYAN}1. Run tests:{NC}")
     print("     make test")
-    print("     ***REMOVED*** or: .venv/bin/pytest tests/")
+    print("     # or: .venv/bin/pytest tests/")
     print("")
     print(f"  {CYAN}2. Run code quality checks:{NC}")
     print("     make lint")
@@ -445,11 +445,11 @@ def main():  ***REMOVED*** noqa: C901
     print("")
     print(f"  {CYAN}3. Start Docker development environment:{NC}")
     print("     make docker-start")
-    print("     ***REMOVED*** Then open http://localhost:8123")
+    print("     # Then open http://localhost:8123")
     print("")
     print(f"  {CYAN}4. Open in VS Code:{NC}")
     print("     code .")
-    print("     ***REMOVED*** Press F1 → 'Dev Containers: Reopen in Container'")
+    print("     # Press F1 → 'Dev Containers: Reopen in Container'")
     print("")
     print(f"  {CYAN}5. Verify your setup:{NC}")
     print("     ./scripts/verify-setup.sh")

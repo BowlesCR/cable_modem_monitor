@@ -21,7 +21,7 @@ def sb8200_html():
 def sb8200_alt_html():
     """Load SB8200 alternative HTML fixture (original)."""
     fixture_path = os.path.join(os.path.dirname(__file__), "fixtures", "sb8200", "cmconnectionstatus.html")
-    ***REMOVED*** This fixture uses Windows-1252 encoding (copyright symbol)
+    # This fixture uses Windows-1252 encoding (copyright symbol)
     with open(fixture_path, encoding="cp1252") as f:
         return f.read()
 
@@ -56,7 +56,7 @@ class TestSB8200ParserDetection:
         assert "SB8200" in ArrisSB8200Parser.models
         assert ArrisSB8200Parser.docsis_version == "3.1"
         assert ArrisSB8200Parser.status == ParserStatus.VERIFIED
-        ***REMOVED*** Also test the verified property via an instance
+        # Also test the verified property via an instance
         parser = ArrisSB8200Parser()
         assert parser.verified is True
 
@@ -104,7 +104,7 @@ class TestSB8200DownstreamParsing:
         data = parser.parse(soup)
 
         assert "downstream" in data
-        ***REMOVED*** SB8200 has 32 downstream channels (31 QAM256 + 1 OFDM)
+        # SB8200 has 32 downstream channels (31 QAM256 + 1 OFDM)
         assert len(data["downstream"]) == 32
 
     def test_first_downstream_channel(self, sb8200_html):
@@ -113,10 +113,10 @@ class TestSB8200DownstreamParsing:
         soup = BeautifulSoup(sb8200_html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** First channel in Tim's capture is channel 19
+        # First channel in Tim's capture is channel 19
         first_ds = data["downstream"][0]
         assert first_ds["channel_id"] == "19"
-        assert first_ds["frequency"] == 435000000  ***REMOVED*** 435 MHz
+        assert first_ds["frequency"] == 435000000  # 435 MHz
         assert first_ds["modulation"] == "QAM256"
         assert first_ds["power"] == 5.5
         assert first_ds["snr"] == 43.3
@@ -129,13 +129,13 @@ class TestSB8200DownstreamParsing:
         soup = BeautifulSoup(sb8200_html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** Find the OFDM channel (modulation "Other")
+        # Find the OFDM channel (modulation "Other")
         ofdm_channels = [ch for ch in data["downstream"] if ch.get("modulation") == "Other"]
         assert len(ofdm_channels) == 1
 
         ofdm = ofdm_channels[0]
         assert ofdm["channel_id"] == "33"
-        assert ofdm["frequency"] == 524000000  ***REMOVED*** 524 MHz
+        assert ofdm["frequency"] == 524000000  # 524 MHz
         assert ofdm.get("is_ofdm") is True
         assert ofdm["power"] == 6.3
         assert ofdm["snr"] == 41.8
@@ -151,7 +151,7 @@ class TestSB8200UpstreamParsing:
         data = parser.parse(soup)
 
         assert "upstream" in data
-        ***REMOVED*** SB8200 has 3 upstream channels (2 SC-QAM + 1 OFDM)
+        # SB8200 has 3 upstream channels (2 SC-QAM + 1 OFDM)
         assert len(data["upstream"]) == 3
 
     def test_first_upstream_channel(self, sb8200_html):
@@ -163,8 +163,8 @@ class TestSB8200UpstreamParsing:
         first_us = data["upstream"][0]
         assert first_us["channel_id"] == "4"
         assert first_us["channel_type"] == "SC-QAM Upstream"
-        assert first_us["frequency"] == 37000000  ***REMOVED*** 37 MHz
-        assert first_us["width"] == 6400000  ***REMOVED*** 6.4 MHz
+        assert first_us["frequency"] == 37000000  # 37 MHz
+        assert first_us["width"] == 6400000  # 6.4 MHz
         assert first_us["power"] == 42.0
 
     def test_ofdm_upstream_channel(self, sb8200_html):
@@ -173,15 +173,15 @@ class TestSB8200UpstreamParsing:
         soup = BeautifulSoup(sb8200_html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** Find the OFDM upstream channel
+        # Find the OFDM upstream channel
         ofdm_channels = [ch for ch in data["upstream"] if "OFDM" in ch.get("channel_type", "")]
         assert len(ofdm_channels) == 1
 
         ofdm = ofdm_channels[0]
         assert ofdm["channel_id"] == "1"
         assert ofdm["channel_type"] == "OFDM Upstream"
-        assert ofdm["frequency"] == 6025000  ***REMOVED*** 6.025 MHz
-        assert ofdm["width"] == 17200000  ***REMOVED*** 17.2 MHz
+        assert ofdm["frequency"] == 6025000  # 6.025 MHz
+        assert ofdm["width"] == 17200000  # 17.2 MHz
         assert ofdm.get("is_ofdm") is True
 
 
@@ -203,7 +203,7 @@ class TestSB8200SystemInfo:
         soup = BeautifulSoup(sb8200_html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** Check that current_time was parsed (may contain IPv6 placeholder)
+        # Check that current_time was parsed (may contain IPv6 placeholder)
         if "current_time" in data["system_info"]:
             assert "2025" in data["system_info"]["current_time"]
 
@@ -250,7 +250,7 @@ class TestSB8200ProductInfoParsing:
         info = parser._parse_product_info(soup)
 
         assert "system_uptime" in info
-        ***REMOVED*** Stored as raw string for display (matches other parsers)
+        # Stored as raw string for display (matches other parsers)
         assert info["system_uptime"] == "8 days 01h:16m:13s.00"
 
     def test_parse_hardware_version(self, sb8200_product_info_html):
@@ -288,7 +288,7 @@ class TestSB8200UptimeParsing:
         """Test parsing uptime with days."""
         parser = ArrisSB8200Parser()
         result = parser._parse_uptime("8 days 01h:16m:13s.00")
-        assert result == 695773  ***REMOVED*** 8*86400 + 1*3600 + 16*60 + 13
+        assert result == 695773  # 8*86400 + 1*3600 + 16*60 + 13
 
     def test_parse_uptime_one_day(self):
         """Test parsing uptime with singular 'day'."""
@@ -300,7 +300,7 @@ class TestSB8200UptimeParsing:
         """Test parsing uptime without days prefix."""
         parser = ArrisSB8200Parser()
         result = parser._parse_uptime("12h:30m:45s")
-        assert result == 45045  ***REMOVED*** 12*3600 + 30*60 + 45
+        assert result == 45045  # 12*3600 + 30*60 + 45
 
     def test_parse_uptime_invalid(self):
         """Test parsing invalid uptime returns None."""

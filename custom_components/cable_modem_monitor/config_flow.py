@@ -47,8 +47,8 @@ def _get_parser_display_name(parser_class) -> str:
     from .parsers.base_parser import ParserStatus
 
     name: str = str(parser_class.name)
-    ***REMOVED*** Check status class attribute directly (not the verified property,
-    ***REMOVED*** which requires an instance to evaluate correctly)
+    # Check status class attribute directly (not the verified property,
+    # which requires an instance to evaluate correctly)
     if parser_class.status != ParserStatus.VERIFIED:
         name += " *"
     return name
@@ -70,8 +70,8 @@ def _select_parser_for_validation(
         - parser_name_hint: Cached parser name or None
     """
     if modem_choice and modem_choice != "auto":
-        ***REMOVED*** User explicitly selected a parser
-        ***REMOVED*** Strip " *" suffix if present for matching
+        # User explicitly selected a parser
+        # Strip " *" suffix if present for matching
         choice_clean = modem_choice.rstrip(" *")
         for parser_class in all_parsers:
             if parser_class.name == choice_clean:
@@ -79,7 +79,7 @@ def _select_parser_for_validation(
                 return parser_class(), None
         return None, None
     else:
-        ***REMOVED*** Auto mode - use all parsers with cached name hint
+        # Auto mode - use all parsers with cached name hint
         _LOGGER.info("Using auto-detection mode (modem_choice=%s, cached_parser=%s)", modem_choice, cached_parser_name)
         if cached_parser_name:
             _LOGGER.info("Will try cached parser first: %s", cached_parser_name)
@@ -93,7 +93,7 @@ def _create_title(detection_info: dict, host: str) -> str:
     detected_modem = detection_info.get("modem_name", "Cable Modem")
     detected_manufacturer = detection_info.get("manufacturer", "")
 
-    ***REMOVED*** Avoid duplicate manufacturer name if already in modem name
+    # Avoid duplicate manufacturer name if already in modem name
     if (
         detected_manufacturer
         and detected_manufacturer != "Unknown"
@@ -124,7 +124,7 @@ async def _connect_to_modem(hass: HomeAssistant, scraper) -> dict[str, Any]:
         _LOGGER.error("Error connecting to modem: %s", err)
         raise CannotConnectError from err
 
-    ***REMOVED*** Check for authentication failures (login page detected)
+    # Check for authentication failures (login page detected)
     if modem_data.get("_auth_failure") or modem_data.get("_login_page_detected"):
         _LOGGER.error(
             "Authentication failure detected. Modem returned login page. Diagnostic context: %s",
@@ -136,11 +136,11 @@ async def _connect_to_modem(hass: HomeAssistant, scraper) -> dict[str, Any]:
         )
         raise InvalidAuthError("Received login page - please check username and password")
 
-    ***REMOVED*** Allow installation for various status levels:
-    ***REMOVED*** - "online": Normal operation with channel data
-    ***REMOVED*** - "limited": Fallback mode (unsupported modem)
-    ***REMOVED*** - "parser_issue": Known parser but no channel data (bridge mode, parser bug, etc.)
-    ***REMOVED*** Only reject truly offline/unreachable modems
+    # Allow installation for various status levels:
+    # - "online": Normal operation with channel data
+    # - "limited": Fallback mode (unsupported modem)
+    # - "parser_issue": Known parser but no channel data (bridge mode, parser bug, etc.)
+    # Only reject truly offline/unreachable modems
     status = modem_data.get("cable_modem_connection_status")
     if status in ["offline", "unreachable"]:
         raise CannotConnectError
@@ -163,13 +163,13 @@ def _do_quick_connectivity_check(host: str) -> tuple[bool, str | None]:
 
     import requests
 
-    ***REMOVED*** Determine base URL - try HTTPS first like main scraper
+    # Determine base URL - try HTTPS first like main scraper
     if host.startswith(("http://", "https://")):
         test_urls = [host]
     else:
         test_urls = [f"https://{host}", f"http://{host}"]
 
-    ***REMOVED*** Disable SSL warnings for this test
+    # Disable SSL warnings for this test
     import urllib3
 
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -185,23 +185,23 @@ def _do_quick_connectivity_check(host: str) -> tuple[bool, str | None]:
         start_time = time.time()
 
         try:
-            ***REMOVED*** Try HEAD request first (faster, less intrusive)
-            ***REMOVED*** Security justification: Cable modems use self-signed certificates on private LAN (192.168.x.x, 10.x.x.x)
-            ***REMOVED*** This is a pre-flight connectivity check only - actual data fetching uses proper SSL validation
+            # Try HEAD request first (faster, less intrusive)
+            # Security justification: Cable modems use self-signed certificates on private LAN (192.168.x.x, 10.x.x.x)
+            # This is a pre-flight connectivity check only - actual data fetching uses proper SSL validation
             response = requests.head(
                 test_url, timeout=timeout_value, verify=False, allow_redirects=True
-            )  ***REMOVED*** nosec: cable modem self-signed cert
+            )  # nosec: cable modem self-signed cert
             elapsed = time.time() - start_time
-            ***REMOVED*** Any response (200, 401, 403, etc.) means modem is reachable
+            # Any response (200, 401, 403, etc.) means modem is reachable
             _LOGGER.info(
                 "✓ Connectivity check PASSED: %s returned HTTP %d in %.2fs", test_url, response.status_code, elapsed
             )
             return True, None
         except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-            ***REMOVED*** BUG FIX (v3.4.0): Some modems (e.g., Netgear C3700 with "PS HTTP Server") reject
-            ***REMOVED*** HTTP HEAD requests with "Connection reset by peer" (ConnectionError).
-            ***REMOVED*** Previously only caught Timeout, missing ConnectionError cases.
-            ***REMOVED*** Now we catch BOTH and try GET fallback for either exception type.
+            # BUG FIX (v3.4.0): Some modems (e.g., Netgear C3700 with "PS HTTP Server") reject
+            # HTTP HEAD requests with "Connection reset by peer" (ConnectionError).
+            # Previously only caught Timeout, missing ConnectionError cases.
+            # Now we catch BOTH and try GET fallback for either exception type.
             elapsed = time.time() - start_time
             error_type = "timed out" if isinstance(e, requests.exceptions.Timeout) else "connection error"
             msg = f"{protocol} HEAD request {error_type} after {elapsed:.2f}s"
@@ -212,14 +212,14 @@ def _do_quick_connectivity_check(host: str) -> tuple[bool, str | None]:
             _LOGGER.warning("%s: %s - %s", test_url, msg, str(e))
             diagnostic_info.append(msg)
 
-            ***REMOVED*** Try GET as fallback - some modems don't support HEAD or reject HEAD requests
-            ***REMOVED*** This is critical for modems that return ConnectionError on HEAD requests
+            # Try GET as fallback - some modems don't support HEAD or reject HEAD requests
+            # This is critical for modems that return ConnectionError on HEAD requests
             _LOGGER.warning("Retrying %s with GET request as fallback...", test_url)
             start_time = time.time()
             try:
                 response = requests.get(
                     test_url, timeout=timeout_value, verify=False, allow_redirects=True
-                )  ***REMOVED*** nosec: cable modem self-signed cert
+                )  # nosec: cable modem self-signed cert
                 elapsed = time.time() - start_time
                 _LOGGER.warning(
                     "✓ Connectivity check PASSED (GET fallback): %s returned HTTP %d in %.2fs",
@@ -247,7 +247,7 @@ def _do_quick_connectivity_check(host: str) -> tuple[bool, str | None]:
             diagnostic_info.append(msg)
             continue
 
-    ***REMOVED*** All attempts failed - provide detailed diagnostic info
+    # All attempts failed - provide detailed diagnostic info
     _LOGGER.error("✗ Connectivity check FAILED for %s. Diagnostic details: %s", host, " | ".join(diagnostic_info))
     error_msg = (
         f"Cannot reach modem at {host}. "
@@ -261,13 +261,13 @@ def _do_quick_connectivity_check(host: str) -> tuple[bool, str | None]:
 
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
     """Validate the user input allows us to connect."""
-    ***REMOVED*** Validate host format
+    # Validate host format
     host = data[CONF_HOST]
     _validate_host_format(host)
 
-    ***REMOVED*** Quick connectivity pre-check (run in executor to avoid blocking)
-    ***REMOVED*** NOTE: Using WARNING level instead of INFO for visibility (HA default log level is WARNING)
-    ***REMOVED*** This helps users and developers debug setup issues without enabling debug logging
+    # Quick connectivity pre-check (run in executor to avoid blocking)
+    # NOTE: Using WARNING level instead of INFO for visibility (HA default log level is WARNING)
+    # This helps users and developers debug setup issues without enabling debug logging
     _LOGGER.warning("Performing quick connectivity check to %s", host)
     is_reachable, error_msg = await hass.async_add_executor_job(_do_quick_connectivity_check, host)
     if not is_reachable:
@@ -275,13 +275,13 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
         raise CannotConnectError(error_msg)
     _LOGGER.warning("Quick connectivity check PASSED for %s", host)
 
-    ***REMOVED*** Get parsers and select appropriate one(s)
+    # Get parsers and select appropriate one(s)
     all_parsers = await hass.async_add_executor_job(get_parsers)
     selected_parser, parser_name_hint = _select_parser_for_validation(
         all_parsers, data.get(CONF_MODEM_CHOICE), data.get(CONF_PARSER_NAME)
     )
 
-    ***REMOVED*** Create scraper
+    # Create scraper
     _LOGGER.warning("Creating scraper for %s", host)
     scraper = ModemScraper(
         host,
@@ -293,11 +293,11 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
         verify_ssl=VERIFY_SSL,
     )
 
-    ***REMOVED*** Connect and validate
+    # Connect and validate
     _LOGGER.warning("Attempting to connect to modem at %s", host)
     await _connect_to_modem(hass, scraper)
 
-    ***REMOVED*** Get detection info and create title
+    # Get detection info and create title
     detection_info = scraper.get_detection_info()
     _LOGGER.warning("Detection successful: %s", detection_info)
     title = _create_title(detection_info, host)
@@ -319,7 +319,7 @@ class CableModemMonitorConfigFlow(config_entries.ConfigFlow):
         self._user_input: dict[str, Any] | None = None
         self._validation_task: Any = None
         self._validation_error: Exception | None = None
-        self._validation_info: dict[str, Any] | None = None  ***REMOVED*** Added v3.4.0 for progress flow fix
+        self._validation_info: dict[str, Any] | None = None  # Added v3.4.0 for progress flow fix
 
     @staticmethod
     @callback
@@ -327,35 +327,35 @@ class CableModemMonitorConfigFlow(config_entries.ConfigFlow):
         """Get the options flow for this handler."""
         return OptionsFlowHandler()
 
-    async def async_step_user(  ***REMOVED*** noqa: C901  ***REMOVED*** noqa: C901
+    async def async_step_user(  # noqa: C901  # noqa: C901
         self, user_input: dict[str, Any] | None = None
     ) -> config_entries.ConfigFlowResult:
         """Handle the initial step."""
-        ***REMOVED*** When coming back from progress step, restore user input
+        # When coming back from progress step, restore user input
         if user_input is None and self._user_input:
             user_input = self._user_input
 
-        ***REMOVED*** Get parsers for the dropdown
+        # Get parsers for the dropdown
         parsers = await self.hass.async_add_executor_job(get_parsers)
 
-        ***REMOVED*** Sort by manufacturer (alphabetical), then by name (alphabetical)
-        ***REMOVED*** Generic parsers appear last within their manufacturer group
-        ***REMOVED*** Unknown/Fallback parsers appear at the very end
+        # Sort by manufacturer (alphabetical), then by name (alphabetical)
+        # Generic parsers appear last within their manufacturer group
+        # Unknown/Fallback parsers appear at the very end
         def sort_key(p):
-            ***REMOVED*** Unknown manufacturer goes last
+            # Unknown manufacturer goes last
             if p.manufacturer == "Unknown":
-                return ("ZZZZ", "ZZZZ")  ***REMOVED*** Sort to end
-            ***REMOVED*** Within each manufacturer, Generic parsers go last
+                return ("ZZZZ", "ZZZZ")  # Sort to end
+            # Within each manufacturer, Generic parsers go last
             if "Generic" in p.name:
-                return (p.manufacturer, "ZZZZ")  ***REMOVED*** Generic last in manufacturer
-            ***REMOVED*** Regular parsers sort by manufacturer then name
+                return (p.manufacturer, "ZZZZ")  # Generic last in manufacturer
+            # Regular parsers sort by manufacturer then name
             return (p.manufacturer, p.name)
 
         sorted_parsers = sorted(parsers, key=sort_key)
         modem_choices = ["auto"] + [_get_parser_display_name(p) for p in sorted_parsers]
 
         if user_input is not None:
-            ***REMOVED*** Store user input and start validation with progress
+            # Store user input and start validation with progress
             self._user_input = user_input
             return await self.async_step_validate()
 
@@ -384,7 +384,7 @@ class CableModemMonitorConfigFlow(config_entries.ConfigFlow):
             },
         )
 
-    async def async_step_validate(  ***REMOVED*** noqa: C901
+    async def async_step_validate(  # noqa: C901
         self, user_input: dict[str, Any] | None = None
     ) -> config_entries.ConfigFlowResult:
         """Handle validation with progress indicator."""
@@ -411,7 +411,7 @@ class CableModemMonitorConfigFlow(config_entries.ConfigFlow):
             errors["base"] = "unsupported_modem"
             self._validation_error = err
         except CannotConnectError as err:
-            ***REMOVED*** Use detailed error message if available, otherwise use generic error
+            # Use detailed error message if available, otherwise use generic error
             if hasattr(err, "user_message") and err.user_message:
                 errors["base"] = "network_unreachable"
             else:
@@ -422,7 +422,7 @@ class CableModemMonitorConfigFlow(config_entries.ConfigFlow):
             errors["base"] = "invalid_input"
             self._validation_error = err
         except Exception as err:
-            ***REMOVED*** Log exception details for debugging, but sanitize error shown to user
+            # Log exception details for debugging, but sanitize error shown to user
             _LOGGER.exception("Unexpected exception during validation")
             errors["base"] = "unknown"
             self._validation_error = err
@@ -430,18 +430,18 @@ class CableModemMonitorConfigFlow(config_entries.ConfigFlow):
             self._validation_task = None
 
         if errors or not info:
-            ***REMOVED*** Return to user form with errors
+            # Return to user form with errors
             return self.async_show_progress_done(next_step_id="user_with_errors")
 
-        ***REMOVED*** BUG FIX (v3.4.0): Home Assistant progress flow state machine fix
-        ***REMOVED*** CRITICAL: Must call async_show_progress_done() before creating entry
-        ***REMOVED*** State machine requires: progress -> progress_done -> final_step
-        ***REMOVED*** Previously tried to create entry directly, causing:
-        ***REMOVED*** "ValueError: Show progress can only transition to show progress or show progress done"
+        # BUG FIX (v3.4.0): Home Assistant progress flow state machine fix
+        # CRITICAL: Must call async_show_progress_done() before creating entry
+        # State machine requires: progress -> progress_done -> final_step
+        # Previously tried to create entry directly, causing:
+        # "ValueError: Show progress can only transition to show progress or show progress done"
 
-        ***REMOVED*** Store validation info for next step (data is lost between flow steps)
+        # Store validation info for next step (data is lost between flow steps)
         self._validation_info = info
-        ***REMOVED*** Validation successful - show progress done before completing
+        # Validation successful - show progress done before completing
         return self.async_show_progress_done(next_step_id="validate_success")
 
     async def async_step_validate_success(
@@ -460,23 +460,23 @@ class CableModemMonitorConfigFlow(config_entries.ConfigFlow):
         user_input = self._user_input
         info = self._validation_info
 
-        ***REMOVED*** Clear stored data
+        # Clear stored data
         self._user_input = None
         self._validation_info = None
 
-        ***REMOVED*** Set unique ID to prevent duplicate entries
+        # Set unique ID to prevent duplicate entries
         await self.async_set_unique_id(user_input[CONF_HOST])
         self._abort_if_unique_id_configured()
 
-        ***REMOVED*** Add default values for fields not in initial setup
+        # Add default values for fields not in initial setup
         user_input.setdefault(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
-        ***REMOVED*** Note: VERIFY_SSL is now a hardcoded constant (see const.py)
+        # Note: VERIFY_SSL is now a hardcoded constant (see const.py)
 
-        ***REMOVED*** Store detection info from validation
+        # Store detection info from validation
         detection_info = info.get("detection_info", {})
         if detection_info:
             detected_modem_name = detection_info.get("modem_name")
-            user_input[CONF_PARSER_NAME] = detected_modem_name  ***REMOVED*** Cache parser name
+            user_input[CONF_PARSER_NAME] = detected_modem_name  # Cache parser name
             user_input[CONF_DETECTED_MODEM] = detection_info.get("modem_name", "Unknown")
             user_input[CONF_DETECTED_MANUFACTURER] = detection_info.get("manufacturer", "Unknown")
             user_input[CONF_WORKING_URL] = detection_info.get("successful_url")
@@ -484,7 +484,7 @@ class CableModemMonitorConfigFlow(config_entries.ConfigFlow):
 
             user_input[CONF_LAST_DETECTION] = datetime.now().isoformat()
 
-            ***REMOVED*** If user selected "auto", update the choice to show what was detected
+            # If user selected "auto", update the choice to show what was detected
             if user_input.get(CONF_MODEM_CHOICE) == "auto" and detected_modem_name:
                 _LOGGER.warning(
                     "Auto-detection successful: updating modem_choice from 'auto' to '%s'", detected_modem_name
@@ -497,7 +497,7 @@ class CableModemMonitorConfigFlow(config_entries.ConfigFlow):
         self, user_input: dict[str, Any] | None = None
     ) -> config_entries.ConfigFlowResult:
         """Show form again with errors after validation failure."""
-        ***REMOVED*** Get parsers for the dropdown
+        # Get parsers for the dropdown
         parsers = await self.hass.async_add_executor_job(get_parsers)
 
         def sort_key(p):
@@ -512,11 +512,11 @@ class CableModemMonitorConfigFlow(config_entries.ConfigFlow):
 
         from homeassistant.helpers import selector
 
-        ***REMOVED*** Get the stored user input and errors
+        # Get the stored user input and errors
         saved_input = self._user_input or {}
-        errors = {"base": "cannot_connect"}  ***REMOVED*** Default error
+        errors = {"base": "cannot_connect"}  # Default error
 
-        ***REMOVED*** Extract specific error from saved validation error
+        # Extract specific error from saved validation error
         if self._validation_error:
             if isinstance(self._validation_error, InvalidAuthError):
                 errors["base"] = "invalid_auth"
@@ -532,12 +532,12 @@ class CableModemMonitorConfigFlow(config_entries.ConfigFlow):
             else:
                 errors["base"] = "unknown"
 
-        ***REMOVED*** Reset for next attempt
+        # Reset for next attempt
         self._user_input = None
         self._validation_task = None
         self._validation_error = None
 
-        ***REMOVED*** Preserve user input when showing form again after error
+        # Preserve user input when showing form again after error
         default_host = saved_input.get(CONF_HOST, "192.168.100.1")
         default_username = saved_input.get(CONF_USERNAME, "")
         default_password = saved_input.get(CONF_PASSWORD, "")
@@ -583,7 +583,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
 
             user_input[CONF_LAST_DETECTION] = datetime.now().isoformat()
 
-            ***REMOVED*** If user selected "auto", update choice to show what was detected
+            # If user selected "auto", update choice to show what was detected
             if user_input.get(CONF_MODEM_CHOICE) == "auto" and detected_modem_name:
                 _LOGGER.info(
                     "Auto-detection successful in options flow: updating modem_choice from 'auto' to '%s'",
@@ -591,7 +591,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 )
                 user_input[CONF_MODEM_CHOICE] = detected_modem_name
         else:
-            ***REMOVED*** Preserve existing detection info if validation didn't return new info
+            # Preserve existing detection info if validation didn't return new info
             user_input[CONF_PARSER_NAME] = self.config_entry.data.get(CONF_PARSER_NAME)
             user_input[CONF_DETECTED_MODEM] = self.config_entry.data.get(CONF_DETECTED_MODEM, "Unknown")
             user_input[CONF_DETECTED_MANUFACTURER] = self.config_entry.data.get(CONF_DETECTED_MANUFACTURER, "Unknown")
@@ -603,7 +603,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         detected_modem = user_input.get(CONF_DETECTED_MODEM, "Cable Modem")
         detected_manufacturer = user_input.get(CONF_DETECTED_MANUFACTURER, "")
 
-        ***REMOVED*** Avoid duplicate manufacturer name if modem name already includes it
+        # Avoid duplicate manufacturer name if modem name already includes it
         if (
             detected_manufacturer
             and detected_manufacturer != "Unknown"
@@ -613,36 +613,36 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         else:
             return f"Configured for {detected_modem}"
 
-    async def async_step_init(  ***REMOVED*** noqa: C901  ***REMOVED*** noqa: C901
+    async def async_step_init(  # noqa: C901  # noqa: C901
         self, user_input: dict[str, Any] | None = None
     ) -> config_entries.ConfigFlowResult:
         """Manage the options."""
         errors = {}
 
-        ***REMOVED*** Get parsers for the dropdown
+        # Get parsers for the dropdown
         parsers = await self.hass.async_add_executor_job(get_parsers)
 
-        ***REMOVED*** Sort by manufacturer (alphabetical), then by name (alphabetical)
-        ***REMOVED*** Generic parsers appear last within their manufacturer group
-        ***REMOVED*** Unknown/Fallback parsers appear at the very end
+        # Sort by manufacturer (alphabetical), then by name (alphabetical)
+        # Generic parsers appear last within their manufacturer group
+        # Unknown/Fallback parsers appear at the very end
         def sort_key(p):
-            ***REMOVED*** Unknown manufacturer goes last
+            # Unknown manufacturer goes last
             if p.manufacturer == "Unknown":
-                return ("ZZZZ", "ZZZZ")  ***REMOVED*** Sort to end
-            ***REMOVED*** Within each manufacturer, Generic parsers go last
+                return ("ZZZZ", "ZZZZ")  # Sort to end
+            # Within each manufacturer, Generic parsers go last
             if "Generic" in p.name:
-                return (p.manufacturer, "ZZZZ")  ***REMOVED*** Generic last in manufacturer
-            ***REMOVED*** Regular parsers sort by manufacturer then name
+                return (p.manufacturer, "ZZZZ")  # Generic last in manufacturer
+            # Regular parsers sort by manufacturer then name
             return (p.manufacturer, p.name)
 
         sorted_parsers = sorted(parsers, key=sort_key)
         modem_choices = ["auto"] + [_get_parser_display_name(p) for p in sorted_parsers]
 
         if user_input is not None:
-            ***REMOVED*** Preserve existing credentials if not provided
+            # Preserve existing credentials if not provided
             self._preserve_credentials(user_input)
 
-            ***REMOVED*** Validate the connection with new settings
+            # Validate the connection with new settings
             try:
                 info = await validate_input(self.hass, user_input)
             except UnsupportedModemError:
@@ -656,13 +656,13 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 _LOGGER.exception("Unexpected exception during options validation")
                 errors["base"] = "unknown"
             else:
-                ***REMOVED*** Update detection info from validation
+                # Update detection info from validation
                 self._update_detection_info(user_input, info)
 
-                ***REMOVED*** Update the config entry with all settings
+                # Update the config entry with all settings
                 self.hass.config_entries.async_update_entry(self.config_entry, data=user_input)
 
-                ***REMOVED*** Create notification with detected modem info
+                # Create notification with detected modem info
                 message = self._create_config_message(user_input)
                 await self.hass.services.async_call(
                     "persistent_notification",
@@ -676,28 +676,28 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
 
                 return self.async_create_entry(title="", data={})
 
-        ***REMOVED*** Pre-fill form with current values
+        # Pre-fill form with current values
         current_host = self.config_entry.data.get(CONF_HOST, "192.168.100.1")
         current_username = self.config_entry.data.get(CONF_USERNAME, "")
         stored_modem_choice = self.config_entry.data.get(CONF_MODEM_CHOICE, "auto")
         current_scan_interval = self.config_entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
 
-        ***REMOVED*** Normalize modem_choice to match dropdown options (which include " *" for unverified)
-        ***REMOVED*** The stored value may be the raw parser name without the asterisk
+        # Normalize modem_choice to match dropdown options (which include " *" for unverified)
+        # The stored value may be the raw parser name without the asterisk
         current_modem_choice = stored_modem_choice
         if stored_modem_choice and stored_modem_choice != "auto":
-            ***REMOVED*** Find matching parser and get its display name
+            # Find matching parser and get its display name
             for p in sorted_parsers:
                 if p.name == stored_modem_choice or _get_parser_display_name(p) == stored_modem_choice:
                     current_modem_choice = _get_parser_display_name(p)
                     break
 
-        ***REMOVED*** Get detection info for display
+        # Get detection info for display
         detected_modem = self.config_entry.data.get(CONF_DETECTED_MODEM, "Not detected")
         detected_manufacturer = self.config_entry.data.get(CONF_DETECTED_MANUFACTURER, "Unknown")
         last_detection = self.config_entry.data.get(CONF_LAST_DETECTION, "Never")
 
-        ***REMOVED*** Format last detection time if available
+        # Format last detection time if available
         if last_detection and last_detection != "Never":
             try:
                 from datetime import datetime
@@ -705,7 +705,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 dt = datetime.fromisoformat(last_detection)
                 last_detection = dt.strftime("%Y-%m-%d %H:%M:%S")
             except (ValueError, TypeError):
-                ***REMOVED*** Invalid datetime format, keep original string
+                # Invalid datetime format, keep original string
                 pass
 
         from homeassistant.helpers import selector

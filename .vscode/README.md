@@ -1,8 +1,8 @@
-***REMOVED*** VS Code Configuration
+# VS Code Configuration
 
 This directory contains VS Code settings for the Cable Modem Monitor project.
 
-***REMOVED******REMOVED*** Files
+## Files
 
 | File | Purpose |
 |------|---------|
@@ -11,17 +11,17 @@ This directory contains VS Code settings for the Cable Modem Monitor project.
 | `tasks.json` | Quick-access tasks (`Ctrl+Shift+P` → "Tasks: Run Task") |
 | `launch.json` | Debug configurations |
 
-***REMOVED******REMOVED*** Quick Start
+## Quick Start
 
 1. Open project: `code cable_modem_monitor.code-workspace` (recommended) or `code .`
 2. Install recommended extensions when prompted
 3. Run setup: `Ctrl+Shift+P` → Tasks → **⚙️ Setup Local Python Environment**
 
-***REMOVED******REMOVED*** Available Tasks
+## Available Tasks
 
 Press `Ctrl+Shift+P` → **"Tasks: Run Task"**
 
-***REMOVED******REMOVED******REMOVED*** Setup & Environment
+### Setup & Environment
 | Task | Purpose |
 |------|---------|
 | ⚙️ Setup Local Python Environment | Create .venv and install dependencies |
@@ -29,7 +29,7 @@ Press `Ctrl+Shift+P` → **"Tasks: Run Task"**
 | 🔒 Reconfigure Git Email Privacy | Set up GitHub noreply email |
 | 🔌 Check Extension Conflicts | Verify extension setup |
 
-***REMOVED******REMOVED******REMOVED*** Validation & Testing
+### Validation & Testing
 | Task | Purpose |
 |------|---------|
 | 🚀 Quick Validation (Pre-commit) | Fast check: lint + format + quick tests |
@@ -39,7 +39,7 @@ Press `Ctrl+Shift+P` → **"Tasks: Run Task"**
 | Lint Code | Check code with Ruff |
 | Format Code | Auto-format with Black |
 
-***REMOVED******REMOVED******REMOVED*** Home Assistant
+### Home Assistant
 
 **Which start option should I use?**
 
@@ -62,14 +62,14 @@ Press `Ctrl+Shift+P` → **"Tasks: Run Task"**
 | HA: Fix Port Conflicts | Kill orphan processes holding port 8123 |
 | HA: Clean All Data (Reset) | Nuclear option - removes all HA data and config |
 
-***REMOVED******REMOVED******REMOVED*** Development Tools
+### Development Tools
 | Task | Purpose |
 |------|---------|
 | 📹 Capture Modem Traffic | Start traffic capture for debugging |
 | 🚀 Create Release | Run release script |
 | Start/Stop Docker Dev Environment | Manage Docker containers |
 
-***REMOVED******REMOVED*** Extensions
+## Extensions
 
 **Recommended** (auto-suggested on open):
 - Python, Pylance, Black formatter, Ruff
@@ -80,14 +80,14 @@ Press `Ctrl+Shift+P` → **"Tasks: Run Task"**
 - Pylint, Flake8, isort, autopep8 (replaced by Ruff/Black)
 - Python Test Adapter (conflicts with native testing)
 
-***REMOVED******REMOVED*** Key Settings
+## Key Settings
 
 - **Format on save**: Enabled (Black, 120-char lines)
 - **Lint on save**: Enabled (Ruff only)
 - **Line endings**: LF (Unix-style, enforced)
 - **Python interpreter**: Auto-detects `.venv/`
 
-***REMOVED******REMOVED*** Related Documentation
+## Related Documentation
 
 | Topic | Location |
 |-------|----------|

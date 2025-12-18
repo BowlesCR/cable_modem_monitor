@@ -11,7 +11,7 @@ Fixtures available:
 - DocsisStatus.htm: DOCSIS channel data (31 DS + 4 US channels, 1 OFDM DS, 2 OFDMA US)
 - RouterStatus.htm: Restart endpoint
 
-Related: Issue ***REMOVED***38 (Netgear CM2000 Support Request)
+Related: Issue #38 (Netgear CM2000 Support Request)
 Contributor: @m4dh4tt3r-88
 """
 
@@ -57,14 +57,14 @@ class TestCM2000Detection:
     def test_can_parse_from_meta_description(self, cm2000_index_html):
         """Test detection via meta description."""
         soup = BeautifulSoup(cm2000_index_html, "html.parser")
-        ***REMOVED*** The meta description should contain CM2000
+        # The meta description should contain CM2000
         meta = soup.find("meta", attrs={"name": "description"})
         assert meta is not None
         assert "CM2000" in meta.get("content", "")
 
     def test_does_not_match_cm600(self):
         """Test that CM2000 parser doesn't match CM600 HTML."""
-        ***REMOVED*** Use CM600 style HTML
+        # Use CM600 style HTML
         cm600_html = """
         <html>
         <head>
@@ -111,9 +111,9 @@ class TestCM2000Metadata:
         """Test parser verified status - pending user confirmation of v3.8.1 fixes."""
         from custom_components.cable_modem_monitor.parsers.base_parser import ParserStatus
 
-        ***REMOVED*** Issue ***REMOVED***38: awaiting confirmation of software version and restart
+        # Issue #38: awaiting confirmation of software version and restart
         assert NetgearCM2000Parser.status == ParserStatus.AWAITING_VERIFICATION
-        ***REMOVED*** Also test the verified property via an instance
+        # Also test the verified property via an instance
         parser = NetgearCM2000Parser()
         assert parser.verified is False
 
@@ -152,7 +152,7 @@ class TestCM2000Parsing:
 
         result = parser.parse(soup)
 
-        ***REMOVED*** Login page shouldn't have channel data
+        # Login page shouldn't have channel data
         assert result["downstream"] == []
         assert result["upstream"] == []
 
@@ -171,17 +171,17 @@ class TestCM2000Parsing:
 
         result = parser.parse(soup)
 
-        ***REMOVED*** Once we have the fixture, we can add specific assertions
-        ***REMOVED*** For now, just verify the structure
+        # Once we have the fixture, we can add specific assertions
+        # For now, just verify the structure
         assert "downstream" in result
         assert "upstream" in result
         assert "system_info" in result
 
-        ***REMOVED*** Add specific assertions based on actual fixture data
-        ***REMOVED*** downstream = result["downstream"]
-        ***REMOVED*** assert len(downstream) > 0
-        ***REMOVED*** assert all("channel_id" in ch for ch in downstream)
-        ***REMOVED*** assert all("frequency" in ch for ch in downstream)
+        # Add specific assertions based on actual fixture data
+        # downstream = result["downstream"]
+        # assert len(downstream) > 0
+        # assert all("channel_id" in ch for ch in downstream)
+        # assert all("frequency" in ch for ch in downstream)
 
 
 class TestCM2000Login:
@@ -198,17 +198,17 @@ class TestCM2000Login:
         session.verify = False
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Mock the login page with dynamic form ID
+        # Mock the login page with dynamic form ID
         requests_mock.get(f"{base_url}/", text=cm2000_index_html)
 
-        ***REMOVED*** Mock the login POST using a regex pattern to match any /goform/Login URL
+        # Mock the login POST using a regex pattern to match any /goform/Login URL
         requests_mock.register_uri(
             "POST",
             re.compile(r".*/goform/Login.*"),
             text="<html><body>Logged in</body></html>",
         )
 
-        ***REMOVED*** Mock DocsisStatus.htm with channel data to verify success
+        # Mock DocsisStatus.htm with channel data to verify success
         docsis_html = """
         <html><script>
         function InitDsTableTagValue() { var tagValueList = '1|1|Locked|QAM256|1|500000000 Hz|5.0|40.0|0|0|'; }
@@ -220,7 +220,7 @@ class TestCM2000Login:
         success, html = parser.login(session, base_url, "admin", "password123")
 
         assert success is True
-        ***REMOVED*** Verify the login POST was made (check request history)
+        # Verify the login POST was made (check request history)
         assert any("/goform/Login" in str(req.url) for req in requests_mock.request_history if req.method == "POST")
 
     def test_login_fails_when_redirected_to_login(self, requests_mock, cm2000_index_html):
@@ -234,7 +234,7 @@ class TestCM2000Login:
         session.verify = False
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Mock the login page
+        # Mock the login page
         requests_mock.get(f"{base_url}/", text=cm2000_index_html)
         requests_mock.register_uri(
             "POST",
@@ -242,7 +242,7 @@ class TestCM2000Login:
             text="<html><body>Logged in</body></html>",
         )
 
-        ***REMOVED*** Mock DocsisStatus.htm returning login redirect (auth failed)
+        # Mock DocsisStatus.htm returning login redirect (auth failed)
         login_redirect_html = """
         <html><script>
         function redirect(){top.location.href="/Login.htm";}
@@ -262,7 +262,7 @@ class TestCM2000Login:
         session = requests.Session()
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Should return (True, None) when no credentials
+        # Should return (True, None) when no credentials
         success, html = parser.login(session, base_url, None, None)
         assert success is True
 
@@ -304,7 +304,7 @@ class TestCM2000SoftwareVersion:
 
         version = parser._parse_software_version_from_index(soup)
 
-        ***REMOVED*** index.htm contains: var tagValueList = 'V8.01.02|0|0|0|0|retail|...'
+        # index.htm contains: var tagValueList = 'V8.01.02|0|0|0|0|retail|...'
         assert version == "V8.01.02"
 
     def test_parse_software_version_empty_page(self):
@@ -337,15 +337,15 @@ class TestCM2000Restart:
         session.verify = False
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Load actual RouterStatus.htm fixture
+        # Load actual RouterStatus.htm fixture
         fixture_path = os.path.join(os.path.dirname(__file__), "fixtures", "cm2000", "RouterStatus.htm")
         with open(fixture_path) as f:
             router_status_html = f.read()
 
-        ***REMOVED*** Mock RouterStatus.htm
+        # Mock RouterStatus.htm
         requests_mock.get(f"{base_url}/RouterStatus.htm", text=router_status_html)
 
-        ***REMOVED*** Mock the goform POST endpoint
+        # Mock the goform POST endpoint
         requests_mock.register_uri(
             "POST",
             re.compile(r".*/goform/RouterStatus.*"),
@@ -355,7 +355,7 @@ class TestCM2000Restart:
         result = parser.restart(session, base_url)
 
         assert result is True
-        ***REMOVED*** Verify POST was made with buttonSelect=2
+        # Verify POST was made with buttonSelect=2
         post_requests = [r for r in requests_mock.request_history if r.method == "POST"]
         assert len(post_requests) == 1
         assert "buttonSelect=2" in post_requests[0].text
@@ -383,10 +383,10 @@ class TestCM2000OFDMParsing:
         parser = NetgearCM2000Parser()
         soup = BeautifulSoup(cm2000_docsis_status_html, "html.parser")
 
-        ***REMOVED*** Test the OFDM parsing directly
+        # Test the OFDM parsing directly
         ofdm_channels = parser._parse_ofdm_downstream(soup)
 
-        ***REMOVED*** Fixture has 1 locked OFDM channel (channel 33 at 762MHz)
+        # Fixture has 1 locked OFDM channel (channel 33 at 762MHz)
         assert len(ofdm_channels) == 1
         channel = ofdm_channels[0]
         assert channel["frequency"] == 762000000
@@ -408,10 +408,10 @@ class TestCM2000OFDMParsing:
         parser = NetgearCM2000Parser()
         soup = BeautifulSoup(cm2000_docsis_status_html, "html.parser")
 
-        ***REMOVED*** Test the OFDMA parsing directly
+        # Test the OFDMA parsing directly
         ofdma_channels = parser._parse_ofdma_upstream(soup)
 
-        ***REMOVED*** Fixture has 0 locked OFDMA channels (both are "Not Locked")
+        # Fixture has 0 locked OFDMA channels (both are "Not Locked")
         assert len(ofdma_channels) == 0
 
     def test_full_parse_includes_ofdm(self, cm2000_docsis_status_html):
@@ -424,11 +424,11 @@ class TestCM2000OFDMParsing:
 
         result = parser.parse(soup)
 
-        ***REMOVED*** Should have 31 QAM + 1 OFDM = 32 downstream channels
+        # Should have 31 QAM + 1 OFDM = 32 downstream channels
         downstream = result["downstream"]
         assert len(downstream) == 32
 
-        ***REMOVED*** Find the OFDM channel
+        # Find the OFDM channel
         ofdm_channels = [ch for ch in downstream if ch.get("is_ofdm") is True]
         assert len(ofdm_channels) == 1
         assert ofdm_channels[0]["modulation"] == "OFDM"
@@ -441,16 +441,16 @@ class TestCM2000OFDMParsing:
         parser = NetgearCM2000Parser()
         soup = BeautifulSoup(cm2000_docsis_status_html, "html.parser")
 
-        ***REMOVED*** Test extracting OFDM downstream tagValueList
+        # Test extracting OFDM downstream tagValueList
         values = parser._extract_tagvaluelist(soup, "InitDsOfdmTableTagValue")
         assert values is not None
-        assert values[0] == "2"  ***REMOVED*** Channel count
+        assert values[0] == "2"  # Channel count
 
-        ***REMOVED*** Test extracting OFDMA upstream tagValueList
+        # Test extracting OFDMA upstream tagValueList
         values = parser._extract_tagvaluelist(soup, "InitUsOfdmaTableTagValue")
         assert values is not None
-        assert values[0] == "2"  ***REMOVED*** Channel count
+        assert values[0] == "2"  # Channel count
 
-        ***REMOVED*** Test non-existent function returns None
+        # Test non-existent function returns None
         values = parser._extract_tagvaluelist(soup, "NonExistentFunction")
         assert values is None

@@ -1,4 +1,4 @@
-***REMOVED***!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 List all supported modems and their verification status.
 
@@ -6,9 +6,9 @@ This script parses parser files directly (no imports needed) to extract metadata
 Useful for AI tools, documentation generation, and release notes.
 
 Usage:
-    python scripts/dev/list-supported-modems.py           ***REMOVED*** Human-readable table
-    python scripts/dev/list-supported-modems.py --json    ***REMOVED*** JSON output
-    python scripts/dev/list-supported-modems.py --markdown ***REMOVED*** Markdown table
+    python scripts/dev/list-supported-modems.py           # Human-readable table
+    python scripts/dev/list-supported-modems.py --json    # JSON output
+    python scripts/dev/list-supported-modems.py --markdown # Markdown table
 """
 
 from __future__ import annotations
@@ -46,23 +46,23 @@ def eval_ast_value(node: ast.expr):
         return [eval_ast_value(el) for el in node.elts if eval_ast_value(el) is not None]
     elif isinstance(node, ast.Tuple):
         return tuple(eval_ast_value(el) for el in node.elts if eval_ast_value(el) is not None)
-    elif isinstance(node, ast.NameConstant):  ***REMOVED*** Python 3.7 compatibility
+    elif isinstance(node, ast.NameConstant):  # Python 3.7 compatibility
         return node.value
-    elif isinstance(node, ast.Str):  ***REMOVED*** Python 3.7 compatibility
+    elif isinstance(node, ast.Str):  # Python 3.7 compatibility
         return node.s
-    elif isinstance(node, ast.Num):  ***REMOVED*** Python 3.7 compatibility
+    elif isinstance(node, ast.Num):  # Python 3.7 compatibility
         return node.n
     elif isinstance(node, ast.Attribute):
-        ***REMOVED*** Handle ParserStatus.VERIFIED, ParserStatus.PENDING, etc.
-        return node.attr.lower()  ***REMOVED*** Returns "verified", "pending", "broken", etc.
+        # Handle ParserStatus.VERIFIED, ParserStatus.PENDING, etc.
+        return node.attr.lower()  # Returns "verified", "pending", "broken", etc.
     return None
 
 
-def discover_parsers() -> list[dict]:  ***REMOVED*** noqa: C901
+def discover_parsers() -> list[dict]:  # noqa: C901
     """Discover all parser classes by parsing Python files directly."""
     parsers = []
 
-    ***REMOVED*** Find parsers directory
+    # Find parsers directory
     script_dir = Path(__file__).parent
     project_root = script_dir.parent.parent
     parsers_dir = project_root / "custom_components" / "cable_modem_monitor" / "parsers"
@@ -71,12 +71,12 @@ def discover_parsers() -> list[dict]:  ***REMOVED*** noqa: C901
         print(f"Parsers directory not found: {parsers_dir}")
         return []
 
-    ***REMOVED*** Walk through manufacturer directories
+    # Walk through manufacturer directories
     for manufacturer_dir in parsers_dir.iterdir():
         if not manufacturer_dir.is_dir() or manufacturer_dir.name.startswith("_"):
             continue
 
-        ***REMOVED*** Parse each .py file
+        # Parse each .py file
         for py_file in manufacturer_dir.glob("*.py"):
             if py_file.name.startswith("_"):
                 continue
@@ -87,12 +87,12 @@ def discover_parsers() -> list[dict]:  ***REMOVED*** noqa: C901
             except (SyntaxError, UnicodeDecodeError):
                 continue
 
-            ***REMOVED*** Find parser classes
+            # Find parser classes
             for node in ast.walk(tree):
                 if not isinstance(node, ast.ClassDef):
                     continue
 
-                ***REMOVED*** Check if it inherits from a parser base class
+                # Check if it inherits from a parser base class
                 base_names = []
                 for base in node.bases:
                     if isinstance(base, ast.Name):
@@ -100,26 +100,26 @@ def discover_parsers() -> list[dict]:  ***REMOVED*** noqa: C901
                     elif isinstance(base, ast.Attribute):
                         base_names.append(base.attr)
 
-                ***REMOVED*** Skip if not a parser class
+                # Skip if not a parser class
                 is_parser = any("Parser" in name and name != "ModemParser" for name in base_names)
                 if not is_parser and "Parser" not in node.name:
                     continue
 
-                ***REMOVED*** Extract attributes
+                # Extract attributes
                 attrs = extract_class_attributes(node)
 
-                ***REMOVED*** Skip base/template/generic classes without real metadata
+                # Skip base/template/generic classes without real metadata
                 name = attrs.get("name", "")
                 if not name or name == "Unknown" or "Generic" in node.name or "Template" in node.name:
                     continue
 
-                ***REMOVED*** Skip fallback parser
+                # Skip fallback parser
                 if "fallback" in node.name.lower():
                     continue
 
-                ***REMOVED*** Handle status field (new) or verified field (legacy)
+                # Handle status field (new) or verified field (legacy)
                 status = attrs.get("status", attrs.get("verified", "pending"))
-                ***REMOVED*** Normalize: True -> "verified", False -> "pending", string -> as-is
+                # Normalize: True -> "verified", False -> "pending", string -> as-is
                 if status is True:
                     status = "verified"
                 elif status is False:
@@ -130,7 +130,7 @@ def discover_parsers() -> list[dict]:  ***REMOVED*** noqa: C901
                     "manufacturer": attrs.get("manufacturer", manufacturer_dir.name.title()),
                     "models": attrs.get("models", []),
                     "status": status,
-                    "verified": status == "verified",  ***REMOVED*** Backward compat
+                    "verified": status == "verified",  # Backward compat
                     "verification_source": attrs.get("verification_source"),
                     "priority": attrs.get("priority", 50),
                     "class_name": node.name,
@@ -139,7 +139,7 @@ def discover_parsers() -> list[dict]:  ***REMOVED*** noqa: C901
 
                 parsers.append(parser_info)
 
-    ***REMOVED*** Sort by manufacturer, then by name
+    # Sort by manufacturer, then by name
     parsers.sort(key=lambda p: (p["manufacturer"], p["name"]))
 
     return parsers
@@ -151,16 +151,16 @@ def print_table(parsers: list[dict]) -> None:
         print("No parsers found.")
         return
 
-    ***REMOVED*** Calculate column widths
+    # Calculate column widths
     name_width = max(len(p["name"]) for p in parsers)
     mfr_width = max(len(p["manufacturer"]) for p in parsers)
     models_width = max(len(", ".join(p["models"])) for p in parsers) if any(p["models"] for p in parsers) else 5
 
-    ***REMOVED*** Header
+    # Header
     print(f"{'Modem':<{name_width}}  {'Manufacturer':<{mfr_width}}  {'Models':<{models_width}}  Status")
     print(f"{'-' * name_width}  {'-' * mfr_width}  {'-' * models_width}  {'-' * 20}")
 
-    ***REMOVED*** Status display mapping
+    # Status display mapping
     status_display = {
         "verified": "✓ Verified",
         "in_progress": "🔧 In Progress",
@@ -169,7 +169,7 @@ def print_table(parsers: list[dict]) -> None:
         "deprecated": "⊘ Deprecated",
     }
 
-    ***REMOVED*** Rows
+    # Rows
     status_counts: dict[str, int] = {}
     for p in parsers:
         status = p.get("status", "awaiting_verification")
@@ -178,7 +178,7 @@ def print_table(parsers: list[dict]) -> None:
         models = ", ".join(p["models"]) or "-"
         print(f"{p['name']:<{name_width}}  {p['manufacturer']:<{mfr_width}}  {models:<{models_width}}  {display}")
 
-    ***REMOVED*** Summary
+    # Summary
     print()
     parts = [f"{status_counts.get('verified', 0)} verified"]
     if status_counts.get("in_progress"):
@@ -218,7 +218,7 @@ def print_markdown(parsers: list[dict]) -> None:
         source = p["verification_source"] or "-"
         print(f"| {p['name']} | {p['manufacturer']} | {models} | {display} | {source} |")
 
-    ***REMOVED*** Summary
+    # Summary
     print()
     parts = [f"{status_counts.get('verified', 0)} verified"]
     if status_counts.get("in_progress"):

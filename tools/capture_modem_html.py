@@ -1,4 +1,4 @@
-***REMOVED***!/usr/bin/env python3
+#!/usr/bin/env python3
 """Standalone script to capture and sanitize cable modem HTML for diagnostics.
 
 This script helps users capture HTML from their cable modem to assist
@@ -33,35 +33,35 @@ except ImportError:
     sys.exit(1)
 
 
-***REMOVED*** Generate modem page URLs dynamically using patterns
-***REMOVED*** Instead of hardcoding every variant, combine common base names with extensions.
-***REMOVED***
-***REMOVED*** Strategy:
-***REMOVED*** 1. Try priority "seed" pages first (common entry points)
-***REMOVED*** 2. Discover additional links from captured pages (link crawling)
-***REMOVED***
-***REMOVED*** To add support for new patterns:
-***REMOVED*** - New extension? Add to COMMON_EXTENSIONS (e.g., ".shtml")
-***REMOVED*** - New seed page? Add to SEED_BASES (e.g., "diagnostics")
+# Generate modem page URLs dynamically using patterns
+# Instead of hardcoding every variant, combine common base names with extensions.
+#
+# Strategy:
+# 1. Try priority "seed" pages first (common entry points)
+# 2. Discover additional links from captured pages (link crawling)
+#
+# To add support for new patterns:
+# - New extension? Add to COMMON_EXTENSIONS (e.g., ".shtml")
+# - New seed page? Add to SEED_BASES (e.g., "diagnostics")
 
-***REMOVED*** Priority seed bases - common entry points for modems
-***REMOVED*** These are generic patterns, not manufacturer-specific filenames
+# Priority seed bases - common entry points for modems
+# These are generic patterns, not manufacturer-specific filenames
 SEED_BASES = [
-    "",  ***REMOVED*** Root path
+    "",  # Root path
     "index",
     "status",
-    "connection",  ***REMOVED*** Generic - catches cmconnectionstatus, MotoConnection, etc.
+    "connection",  # Generic - catches cmconnectionstatus, MotoConnection, etc.
 ]
 
 COMMON_EXTENSIONS = [
-    "",  ***REMOVED*** No extension (for root and some pages)
+    "",  # No extension (for root and some pages)
     ".html",
     ".htm",
     ".asp",
     ".php",
     ".jsp",
     ".cgi",
-    ".jst",  ***REMOVED*** Technicolor
+    ".jst",  # Technicolor
 ]
 
 
@@ -76,18 +76,18 @@ def generate_seed_pages():
     """
     pages = []
 
-    ***REMOVED*** Generate combinations of seed bases + extensions
+    # Generate combinations of seed bases + extensions
     for base in SEED_BASES:
         for ext in COMMON_EXTENSIONS:
             if base == "":
-                ***REMOVED*** Root path - only add once without extension
+                # Root path - only add once without extension
                 if ext == "":
                     pages.append("/")
             else:
-                ***REMOVED*** Regular pages - combine base + extension
+                # Regular pages - combine base + extension
                 pages.append(f"/{base}{ext}")
 
-    ***REMOVED*** Remove duplicates while preserving order
+    # Remove duplicates while preserving order
     seen = set()
     unique_pages = []
     for page in pages:
@@ -102,16 +102,16 @@ SEED_PAGES = generate_seed_pages()
 
 
 try:
-    ***REMOVED*** Try to import from the custom_component structure
-    from custom_components.cable_modem_monitor.utils import sanitize_html  ***REMOVED*** type: ignore[attr-defined]
+    # Try to import from the custom_component structure
+    from custom_components.cable_modem_monitor.utils import sanitize_html  # type: ignore[attr-defined]
 except ImportError:
-    ***REMOVED*** If running as a standalone script, adjust the path
+    # If running as a standalone script, adjust the path
     try:
         import sys
         from pathlib import Path
 
-        ***REMOVED*** Add the parent directory of 'tools' to the path
-        ***REMOVED*** This allows importing from custom_components
+        # Add the parent directory of 'tools' to the path
+        # This allows importing from custom_components
         sys.path.append(str(Path(__file__).parent.parent))
         from custom_components.cable_modem_monitor.utils.html_helper import sanitize_html
     except ImportError:
@@ -136,21 +136,21 @@ def fetch_page(session: requests.Session, base_url: str, path: str, timeout: int
     url = f"{base_url}{path}"
 
     try:
-        ***REMOVED*** Cable modems use self-signed certificates on private LANs (192.168.x.x/10.0.x.x)
-        ***REMOVED*** Certificate validation disabled for the same reasons as in const.py:
-        ***REMOVED*** 1. No cable modem manufacturer provides CA-signed certificates
-        ***REMOVED*** 2. LANs are private networks where MITM risk is different threat model
-        ***REMOVED*** 3. Self-signed cert still provides encryption in transit
-        ***REMOVED*** 4. This is a diagnostic tool for local network devices only
+        # Cable modems use self-signed certificates on private LANs (192.168.x.x/10.0.x.x)
+        # Certificate validation disabled for the same reasons as in const.py:
+        # 1. No cable modem manufacturer provides CA-signed certificates
+        # 2. LANs are private networks where MITM risk is different threat model
+        # 3. Self-signed cert still provides encryption in transit
+        # 4. This is a diagnostic tool for local network devices only
         response = session.get(
             url, timeout=timeout, verify=False
-        )  ***REMOVED*** nosec B501 - Local network device with self-signed cert
+        )  # nosec B501 - Local network device with self-signed cert
 
-        ***REMOVED*** Consider 200 and 401 as "found" (401 means auth needed but page exists)
+        # Consider 200 and 401 as "found" (401 means auth needed but page exists)
         if response.status_code in (200, 401):
             html = response.text
 
-            ***REMOVED*** Sanitize the HTML
+            # Sanitize the HTML
             sanitized = sanitize_html(html)
 
             return {
@@ -171,7 +171,7 @@ def fetch_page(session: requests.Session, base_url: str, path: str, timeout: int
     return None
 
 
-def capture_modem_html(  ***REMOVED*** noqa: C901
+def capture_modem_html(  # noqa: C901
     host: str, username: str | None = None, password: str | None = None
 ) -> dict[str, Any]:
     """Capture HTML pages from a cable modem.
@@ -184,14 +184,14 @@ def capture_modem_html(  ***REMOVED*** noqa: C901
     Returns:
         Dict with capture results
     """
-    ***REMOVED*** Disable SSL warnings for self-signed certs
+    # Disable SSL warnings for self-signed certs
     import urllib3
 
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     base_url = f"http://{host}"
 
-    ***REMOVED*** Create session with auth if provided
+    # Create session with auth if provided
     session = requests.Session()
     if username and password:
         session.auth = HTTPBasicAuth(username, password)
@@ -205,7 +205,7 @@ def capture_modem_html(  ***REMOVED*** noqa: C901
     captured_pages = []
     failed_count = 0
 
-    ***REMOVED*** Phase 1: Fetch seed pages
+    # Phase 1: Fetch seed pages
     for page in SEED_PAGES:
         result = fetch_page(session, base_url, page)
         if result:
@@ -218,14 +218,14 @@ def capture_modem_html(  ***REMOVED*** noqa: C901
 
     print(f"\n📊 Phase 1 Complete: {len(captured_pages)} pages captured")
 
-    ***REMOVED*** Phase 2: Discover additional links from captured pages
+    # Phase 2: Discover additional links from captured pages
     if captured_pages:
         print("\n📄 Phase 2: Discovering additional pages via link crawling...\n")
 
-        ***REMOVED*** Import link discovery utilities
+        # Import link discovery utilities
         from urllib.parse import urljoin, urlparse
 
-        ***REMOVED*** Extract all links from captured HTML
+        # Extract all links from captured HTML
         discovered_links = set()
         captured_urls = {page["url"] for page in captured_pages}
 
@@ -238,23 +238,23 @@ def capture_modem_html(  ***REMOVED*** noqa: C901
                 for link_tag in soup.find_all("a", href=True):
                     href = link_tag["href"]
 
-                    ***REMOVED*** Skip anchors, javascript, mailto
-                    if href.startswith(("***REMOVED***", "javascript:", "mailto:")):
+                    # Skip anchors, javascript, mailto
+                    if href.startswith(("#", "javascript:", "mailto:")):
                         continue
 
-                    ***REMOVED*** Convert to absolute URL
+                    # Convert to absolute URL
                     absolute_url = urljoin(base_url, href)
 
-                    ***REMOVED*** Only same-host links
+                    # Only same-host links
                     if urlparse(absolute_url).netloc != urlparse(base_url).netloc:
                         continue
 
-                    ***REMOVED*** Skip binary files (but keep .js and .css for API/data discovery)
+                    # Skip binary files (but keep .js and .css for API/data discovery)
                     skip_exts = [".jpg", ".png", ".gif", ".ico", ".pdf", ".zip", ".svg", ".woff", ".woff2", ".ttf"]
                     if any(absolute_url.lower().endswith(ext) for ext in skip_exts):
                         continue
 
-                    ***REMOVED*** Add if not already captured
+                    # Add if not already captured
                     if absolute_url not in captured_urls:
                         discovered_links.add(absolute_url)
 
@@ -263,7 +263,7 @@ def capture_modem_html(  ***REMOVED*** noqa: C901
 
         print(f"  🔍 Discovered {len(discovered_links)} new pages to fetch")
 
-        ***REMOVED*** Fetch discovered pages
+        # Fetch discovered pages
         for url in discovered_links:
             path = urlparse(url).path
             result = fetch_page(session, base_url, path)
@@ -302,7 +302,7 @@ def create_zip_file(capture_data: dict[str, Any], output_path: Path) -> None:
         output_path: Path for output ZIP file
     """
     with zipfile.ZipFile(output_path, "w", zipfile.ZIP_DEFLATED) as zf:
-        ***REMOVED*** Add README
+        # Add README
         readme = f"""Modem HTML Capture
 ==================
 
@@ -339,7 +339,7 @@ Thank you for contributing! 🎉
 """
         zf.writestr("README.txt", readme)
 
-        ***REMOVED*** Add metadata JSON
+        # Add metadata JSON
         metadata = {
             "host": capture_data["host"],
             "captured_at": capture_data["captured_at"],
@@ -351,9 +351,9 @@ Thank you for contributing! 🎉
         }
         zf.writestr("capture_info.json", json.dumps(metadata, indent=2))
 
-        ***REMOVED*** Add each HTML page
+        # Add each HTML page
         for page in capture_data["pages"]:
-            ***REMOVED*** Create safe filename from path
+            # Create safe filename from path
             filename = page["path"].replace("/", "_").lstrip("_")
             if not filename:
                 filename = "index"
@@ -376,7 +376,7 @@ def main():
     print("=" * 60)
     print()
 
-    ***REMOVED*** Get modem info from user
+    # Get modem info from user
     try:
         host = input("Modem IP address [192.168.100.1]: ").strip()
         if not host:
@@ -387,7 +387,7 @@ def main():
         username = input("  Username: ").strip() or None
         password = input("  Password: ").strip() or None
 
-        ***REMOVED*** Capture HTML
+        # Capture HTML
         capture_data = capture_modem_html(host, username, password)
 
         if capture_data["pages_captured"] == 0:
@@ -404,7 +404,7 @@ def main():
             print("  4. Share this info in your GitHub issue")
             sys.exit(1)
 
-        ***REMOVED*** Create ZIP file
+        # Create ZIP file
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         output_filename = f"modem_capture_{timestamp}.zip"
         output_path = Path(output_filename)

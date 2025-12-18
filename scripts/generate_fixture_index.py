@@ -1,4 +1,4 @@
-***REMOVED***!/usr/bin/env python3
+#!/usr/bin/env python3
 """Generate a fixture index from multiple sources.
 
 Data sources (in priority order):
@@ -26,7 +26,7 @@ from urllib.parse import quote
 
 import yaml
 
-***REMOVED*** ISP display order (for consistent sorting)
+# ISP display order (for consistent sorting)
 ISP_ORDER = [
     "comcast",
     "xfinity",
@@ -46,12 +46,12 @@ ISP_ORDER = [
     "cableone",
     "rogers",
     "shaw",
-    "videotron",  ***REMOVED*** Canadian ISPs
-    "volia",  ***REMOVED*** Ukrainian ISP
+    "videotron",  # Canadian ISPs
+    "volia",  # Ukrainian ISP
 ]
 
-***REMOVED*** Chipset reference data for documentation
-***REMOVED*** Format: chipset_key -> (display_name, manufacturer, docsis, notes, link)
+# Chipset reference data for documentation
+# Format: chipset_key -> (display_name, manufacturer, docsis, notes, link)
 CHIPSET_INFO: dict[str, tuple[str, str, str, str, str]] = {
     "bcm3390": (
         "BCM3390",
@@ -107,8 +107,8 @@ CHIPSET_INFO: dict[str, tuple[str, str, str, str, str]] = {
     ),
 }
 
-***REMOVED*** ISP/Provider reference data with approval list links
-***REMOVED*** Format: isp_key -> (full_name, region, approval_list_url, notes)
+# ISP/Provider reference data with approval list links
+# Format: isp_key -> (full_name, region, approval_list_url, notes)
 ISP_INFO: dict[str, tuple[str, str, str, str]] = {
     "comcast": (
         "Comcast Xfinity",
@@ -178,8 +178,8 @@ ISP_INFO: dict[str, tuple[str, str, str, str]] = {
     ),
 }
 
-***REMOVED*** ISP brand colors for Shields.io badges (muted tones)
-***REMOVED*** Format: name -> (abbreviation, full_name, hex_color_muted)
+# ISP brand colors for Shields.io badges (muted tones)
+# Format: name -> (abbreviation, full_name, hex_color_muted)
 ISP_COLORS: dict[str, tuple[str, str, str]] = {
     "comcast": ("COM", "Comcast", "5588aa"),
     "xfinity": ("XFI", "Xfinity", "aa7788"),
@@ -201,7 +201,7 @@ ISP_COLORS: dict[str, tuple[str, str, str]] = {
     "shaw": ("SHAW", "Shaw Communications", "668899"),
     "videotron": ("VID", "Vidéotron", "779988"),
     "volia": ("VOLY", "Volia", "5599aa"),
-    "volya": ("VOLY", "Volia", "5599aa"),  ***REMOVED*** Alternative spelling
+    "volya": ("VOLY", "Volia", "5599aa"),  # Alternative spelling
 }
 
 
@@ -213,13 +213,13 @@ def isp_to_badge(isp_name: str) -> str:
         if key in isp_lower:
             badge_text = quote(abbrev, safe="")
             url = f"https://img.shields.io/badge/-{badge_text}-{color}?style=flat-square"
-            ***REMOVED*** Markdown image with title attribute for tooltip, wrapped in anchor to reference
+            # Markdown image with title attribute for tooltip, wrapped in anchor to reference
             badge = f'![{abbrev}]({url} "{full_name}")'
-            ***REMOVED*** Link to provider reference section (use key for anchor)
+            # Link to provider reference section (use key for anchor)
             anchor_key = key.replace(" ", "-").replace("&", "")
-            return f"[{badge}](***REMOVED***{anchor_key})"
+            return f"[{badge}](#{anchor_key})"
 
-    ***REMOVED*** Fallback: generic gray badge for unknown ISPs (use first 4 chars as abbrev)
+    # Fallback: generic gray badge for unknown ISPs (use first 4 chars as abbrev)
     abbrev = isp_name.strip()[:4].upper()
     badge_text = quote(abbrev, safe="")
     url = f"https://img.shields.io/badge/-{badge_text}-gray?style=flat-square"
@@ -230,7 +230,7 @@ def _is_duplicate_isp(matched_key: str, seen_keys: set[str]) -> bool:
     """Check if ISP is a duplicate (including Comcast/Xfinity equivalence)."""
     if matched_key in seen_keys:
         return True
-    ***REMOVED*** Comcast and Xfinity are same company
+    # Comcast and Xfinity are same company
     return matched_key in ("comcast", "xfinity") and ("comcast" in seen_keys or "xfinity" in seen_keys)
 
 
@@ -247,16 +247,16 @@ def isps_to_badges(isps: list[str] | str) -> str:
     if not isps:
         return ""
 
-    ***REMOVED*** Handle both list (from YAML) and string (legacy)
+    # Handle both list (from YAML) and string (legacy)
     if isinstance(isps, str):
         isps = [isp.strip() for isp in isps.split(",") if isp.strip()]
 
-    ***REMOVED*** Filter out generic phrases
+    # Filter out generic phrases
     skip_phrases = ["and most major", "most major", "and others", "etc"]
     isps = [isp for isp in isps if not any(phrase in isp.lower() for phrase in skip_phrases)]
 
-    ***REMOVED*** Match ISPs to keys and deduplicate
-    matched_isps: list[tuple[int, str, str]] = []  ***REMOVED*** (sort_order, key, original_name)
+    # Match ISPs to keys and deduplicate
+    matched_isps: list[tuple[int, str, str]] = []  # (sort_order, key, original_name)
     seen_keys: set[str] = set()
 
     for isp in isps:
@@ -270,10 +270,10 @@ def isps_to_badges(isps: list[str] | str) -> str:
             order = _get_isp_sort_order(matched_key)
             matched_isps.append((order, matched_key, isp))
         else:
-            ***REMOVED*** Unknown ISP - add at end
+            # Unknown ISP - add at end
             matched_isps.append((999, isp_lower, isp))
 
-    ***REMOVED*** Sort by order and generate badges
+    # Sort by order and generate badges
     matched_isps.sort(key=lambda x: x[0])
     return " ".join(isp_to_badge(isp) for _, _, isp in matched_isps)
 
@@ -292,21 +292,21 @@ def chipset_to_link(chipset: str) -> str:
 
     chipset_lower = chipset.lower()
 
-    ***REMOVED*** Find matching chipset in our reference data
+    # Find matching chipset in our reference data
     for key in CHIPSET_INFO:
         if key in chipset_lower:
             display_name, _, _, _, _ = CHIPSET_INFO[key]
             anchor = key.replace(" ", "-")
-            return f"[{display_name}](***REMOVED***{anchor})"
+            return f"[{display_name}](#{anchor})"
 
-    ***REMOVED*** Unknown chipset - return as plain text
+    # Unknown chipset - return as plain text
     return chipset
 
 
 def generate_chipset_reference() -> list[str]:
     """Generate the Chipset Reference section."""
     lines = [
-        "***REMOVED******REMOVED*** Chipset Reference",
+        "## Chipset Reference",
         "",
         "| Chipset | Manufacturer | DOCSIS | Notes |",
         "|---------|--------------|--------|-------|",
@@ -314,7 +314,7 @@ def generate_chipset_reference() -> list[str]:
 
     for key, (display_name, manufacturer, docsis, notes, link) in CHIPSET_INFO.items():
         anchor = key.replace(" ", "-")
-        ***REMOVED*** Create anchor target and optionally link the chipset name
+        # Create anchor target and optionally link the chipset name
         if link:
             chipset_cell = f'<span id="{anchor}"></span>[{display_name}]({link})'
         else:
@@ -327,7 +327,7 @@ def generate_chipset_reference() -> list[str]:
 def generate_provider_reference() -> list[str]:
     """Generate the Provider Reference section."""
     lines = [
-        "***REMOVED******REMOVED*** Provider Reference",
+        "## Provider Reference",
         "",
         "| Code | Provider | Region | Approved Modems | Notes |",
         "|------|----------|--------|-----------------|-------|",
@@ -336,17 +336,17 @@ def generate_provider_reference() -> list[str]:
     for key in ISP_ORDER:
         if key not in ISP_INFO:
             continue
-        if key in ("xfinity", "time warner"):  ***REMOVED*** Skip duplicates
+        if key in ("xfinity", "time warner"):  # Skip duplicates
             continue
 
         full_name, region, approval_url, notes = ISP_INFO[key]
         abbrev, _, _ = ISP_COLORS.get(key, (key.upper()[:4], key, "gray"))
         anchor = key.replace(" ", "-").replace("&", "")
 
-        ***REMOVED*** Create anchor target
+        # Create anchor target
         code_cell = f'<span id="{anchor}"></span>{abbrev}'
 
-        ***REMOVED*** Approval list link or placeholder
+        # Approval list link or placeholder
         if approval_url:
             approval_cell = f"[Official list]({approval_url})"
         else:
@@ -357,7 +357,7 @@ def generate_provider_reference() -> list[str]:
     return lines
 
 
-***REMOVED*** Add project root to path so we can import parsers
+# Add project root to path so we can import parsers
 script_dir = Path(__file__).parent
 repo_root = script_dir.parent
 sys.path.insert(0, str(repo_root))
@@ -376,7 +376,7 @@ def load_parser_metadata() -> dict[str, dict]:
     for parser_class in get_parsers():
         if parser_class.fixtures_path:
             fixtures_path = parser_class.fixtures_path.rstrip("/")
-            ***REMOVED*** Access status class attribute directly (works on class, unlike property)
+            # Access status class attribute directly (works on class, unlike property)
             status = getattr(parser_class, "status", ParserStatus.AWAITING_VERIFICATION)
             parser_map[fixtures_path] = {
                 "name": parser_class.name,
@@ -403,7 +403,7 @@ def load_fixture_metadata(fixture_dir: Path) -> dict:
     return {}
 
 
-***REMOVED*** Markers for auto-generated README section
+# Markers for auto-generated README section
 README_START_MARKER = "<!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->"
 README_END_MARKER = "<!-- END AUTO-GENERATED -->"
 
@@ -420,7 +420,7 @@ def generate_quick_facts(metadata: dict, parser_info: dict | None) -> str:
     """
     lines = [
         README_START_MARKER,
-        "***REMOVED******REMOVED*** Quick Facts",
+        "## Quick Facts",
         "",
         "| Spec | Value |",
         "|------|-------|",
@@ -470,18 +470,18 @@ def update_readme_quick_facts(fixture_dir: Path, metadata: dict, parser_info: di
     content = readme_path.read_text()
     quick_facts = generate_quick_facts(metadata, parser_info)
 
-    ***REMOVED*** Check if markers exist
+    # Check if markers exist
     if README_START_MARKER in content and README_END_MARKER in content:
-        ***REMOVED*** Replace existing section
+        # Replace existing section
         pattern = re.compile(re.escape(README_START_MARKER) + r".*?" + re.escape(README_END_MARKER), re.DOTALL)
         new_content = pattern.sub(quick_facts, content)
     else:
-        ***REMOVED*** Insert after first heading (***REMOVED*** Title)
-        match = re.match(r"(***REMOVED***[^\n]+\n+)", content)
+        # Insert after first heading (# Title)
+        match = re.match(r"(#[^\n]+\n+)", content)
         if match:
             new_content = match.group(1) + "\n" + quick_facts + "\n\n" + content[match.end() :]
         else:
-            ***REMOVED*** No heading found, prepend
+            # No heading found, prepend
             new_content = quick_facts + "\n\n" + content
 
     if new_content != content:
@@ -503,8 +503,8 @@ def _apply_metadata_to_info(info: dict[str, str | int | bool | None], metadata: 
     if metadata.get("chipset"):
         info["chipset"] = metadata["chipset"]
     if metadata.get("isps"):
-        info["isps"] = metadata["isps"]  ***REMOVED*** Keep as list
-    ***REMOVED*** Status can come from metadata.yaml for fixtures without parsers
+        info["isps"] = metadata["isps"]  # Keep as list
+    # Status can come from metadata.yaml for fixtures without parsers
     if metadata.get("status"):
         info["status"] = metadata["status"]
     if metadata.get("tracking_issue"):
@@ -526,7 +526,7 @@ def extract_fixture_info(
     info: dict[str, str | int | bool | None] = {
         "path": str(fixture_dir.relative_to(base_dir)),
         "model": fixture_dir.name.upper(),
-        ***REMOVED*** ARRIS is officially all caps; others use title case
+        # ARRIS is officially all caps; others use title case
         "manufacturer": (
             "ARRIS"
             if fixture_dir.parent.parent.name.lower() == "arris"
@@ -534,19 +534,19 @@ def extract_fixture_info(
         ),
     }
 
-    ***REMOVED*** 1. Load from metadata.yaml (source of truth for research data)
+    # 1. Load from metadata.yaml (source of truth for research data)
     metadata = load_fixture_metadata(fixture_dir)
     if metadata:
         _apply_metadata_to_info(info, metadata)
 
-    ***REMOVED*** 2. Load from parser (source of truth for code-related data) - overrides metadata
+    # 2. Load from parser (source of truth for code-related data) - overrides metadata
     parser_meta = parser_map.get(fixture_path_from_repo)
     if parser_meta:
         info["manufacturer"] = parser_meta.get("manufacturer") or info["manufacturer"]
         info["status"] = parser_meta.get("status", info.get("status", ""))
         info["verified"] = parser_meta.get("verified", False)
 
-    ***REMOVED*** 3. Fallback to README.md for model name
+    # 3. Fallback to README.md for model name
     readme_path = fixture_dir / "README.md"
     if readme_path.exists():
         content = readme_path.read_text()
@@ -554,7 +554,7 @@ def extract_fixture_info(
         if model_match:
             info["model"] = model_match.group(1).strip()
 
-    ***REMOVED*** Count fixture files
+    # Count fixture files
     exclude_files = {"README.md", "diagnostics.json", "metadata.yaml"}
     fixture_files = [f for f in fixture_dir.iterdir() if f.is_file() and f.name not in exclude_files]
     info["file_count"] = len(fixture_files)
@@ -646,7 +646,7 @@ def _format_status_summary(modems: list[dict]) -> str:
         if status in status_counts:
             status_counts[status] += 1
 
-    ***REMOVED*** Format status summary (only show non-zero counts)
+    # Format status summary (only show non-zero counts)
     status_parts = []
     if status_counts["verified"]:
         status_parts.append(f"{status_counts['verified']} ✅ verified")
@@ -669,7 +669,7 @@ def generate_index(output_path: Path | None = None, update_readmes: bool = True)
     """
     parsers_dir = repo_root / "tests" / "parsers"
 
-    ***REMOVED*** Load parser metadata (for verified status)
+    # Load parser metadata (for verified status)
     parser_map = load_parser_metadata()
 
     modems = []
@@ -677,11 +677,11 @@ def generate_index(output_path: Path | None = None, update_readmes: bool = True)
 
     for fixture_dir in sorted(parsers_dir.glob("*/fixtures/*/")):
         if (fixture_dir / "README.md").exists():
-            ***REMOVED*** Get fixture path for parser lookup
+            # Get fixture path for parser lookup
             fixture_path_from_repo = str(fixture_dir.relative_to(repo_root))
             parser_info = parser_map.get(fixture_path_from_repo)
 
-            ***REMOVED*** Load metadata and update README
+            # Load metadata and update README
             metadata = load_fixture_metadata(fixture_dir)
             if update_readmes and metadata and update_readme_quick_facts(fixture_dir, metadata, parser_info):
                 readmes_updated += 1
@@ -694,7 +694,7 @@ def generate_index(output_path: Path | None = None, update_readmes: bool = True)
     status_summary = _format_status_summary(modems)
 
     lines = [
-        "***REMOVED*** Modem Fixture Library",
+        "# Modem Fixture Library",
         "",
         "Auto-generated index of modem fixtures.",
         "",
@@ -705,21 +705,21 @@ def generate_index(output_path: Path | None = None, update_readmes: bool = True)
         "",
         f"**Total Modems:** {len(modems)}{status_summary}",
         "",
-        "***REMOVED******REMOVED*** Fixture Organization Guidelines",
+        "## Fixture Organization Guidelines",
         "",
         "All fixture directories should follow this structure:",
         "",
         "```",
         "{model}/",
-        "├── metadata.yaml            ***REMOVED*** Modem specs (can be backfilled)",
-        "├── README.md                ***REMOVED*** Human-friendly notes",
-        "├── DocsisStatus.htm         ***REMOVED*** Channel data (required)",
-        "├── RouterStatus.htm         ***REMOVED*** System info",
-        "├── index.htm                ***REMOVED*** Detection/navigation",
-        "└── extended/                ***REMOVED*** Reference files (optional)",
+        "├── metadata.yaml            # Modem specs (can be backfilled)",
+        "├── README.md                # Human-friendly notes",
+        "├── DocsisStatus.htm         # Channel data (required)",
+        "├── RouterStatus.htm         # System info",
+        "├── index.htm                # Detection/navigation",
+        "└── extended/                # Reference files (optional)",
         "```",
         "",
-        "***REMOVED******REMOVED*** Supported Modems",
+        "## Supported Modems",
         "",
         "| Manufacturer | Model | DOCSIS | Protocol | Chipset | ISPs | Files | Status |",
         "|--------------|-------|--------|----------|---------|------|-------|--------|",
@@ -741,9 +741,9 @@ def generate_index(output_path: Path | None = None, update_readmes: bool = True)
         isps_list: list[str] | str = isps_raw if isinstance(isps_raw, list | str) else []
         isps_badges = isps_to_badges(isps_list)
 
-        ***REMOVED*** Get protocol and chipset, with sensible defaults
+        # Get protocol and chipset, with sensible defaults
         protocol_raw = str(m.get("protocol", "HTML") or "HTML")
-        ***REMOVED*** HTML gets official orange badge, HNAP stays bold black (no official branding)
+        # HTML gets official orange badge, HNAP stays bold black (no official branding)
         if protocol_raw == "HTML":
             protocol = '![HTML](https://img.shields.io/badge/-HTML-E34C26?style=flat-square "Standard web scraping")'
         elif protocol_raw == "HNAP":
@@ -764,13 +764,13 @@ def generate_index(output_path: Path | None = None, update_readmes: bool = True)
             f"{status_display} |"
         )
 
-    lines.extend(["", "***REMOVED******REMOVED*** Model Timeline", ""])
+    lines.extend(["", "## Model Timeline", ""])
     lines.extend(generate_timeline(modems))
 
     lines.extend(
         [
             "",
-            "***REMOVED******REMOVED*** Legend",
+            "## Legend",
             "",
             "- **Files**: Number of fixture files (excludes README.md, metadata.yaml)",
             "- **Status**: ✅ Verified | 🔧 In Progress | ⏳ Awaiting Verification | ❌ Broken | ❓ No parser",
@@ -781,7 +781,7 @@ def generate_index(output_path: Path | None = None, update_readmes: bool = True)
         ]
     )
 
-    ***REMOVED*** Add reference sections
+    # Add reference sections
     lines.extend(generate_chipset_reference())
     lines.append("")
     lines.extend(generate_provider_reference())

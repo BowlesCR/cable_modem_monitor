@@ -27,10 +27,10 @@ jobs:
       - name: Extract version from tag
         id: version
         run: |
-          ***REMOVED*** Extract version from tag (e.g., v2.5.0 -> 2.5.0)
-          VERSION=${GITHUB_REF***REMOVED***refs/tags/v}
+          # Extract version from tag (e.g., v2.5.0 -> 2.5.0)
+          VERSION=${GITHUB_REF#refs/tags/v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "tag=${GITHUB_REF***REMOVED***refs/tags/}" >> $GITHUB_OUTPUT
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Verify version consistency
         run: |
@@ -51,10 +51,10 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
 
-          ***REMOVED*** Extract the section for this version from CHANGELOG.md
-          ***REMOVED*** This uses awk to extract text between version headers
+          # Extract the section for this version from CHANGELOG.md
+          # This uses awk to extract text between version headers
           CHANGELOG=$(awk -v ver="$VERSION" '
-            /^***REMOVED******REMOVED*** \[/ {
+            /^## \[/ {
               if (found) exit;
               if ($0 ~ "\\[" ver "\\]") {
                 found=1;
@@ -69,7 +69,7 @@ jobs:
             CHANGELOG="See [CHANGELOG.md](https://github.com/solentlabs/cable_modem_monitor/blob/main/CHANGELOG.md) for details."
           fi
 
-          ***REMOVED*** Save to file to preserve formatting
+          # Save to file to preserve formatting
           echo "$CHANGELOG" > /tmp/changelog.txt
 
       - name: Run tests

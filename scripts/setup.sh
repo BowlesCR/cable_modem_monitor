@@ -1,18 +1,18 @@
-***REMOVED***!/bin/bash
-***REMOVED*** This script is a thin wrapper that executes the main Python setup script.
+#!/bin/bash
+# This script is a thin wrapper that executes the main Python setup script.
 
-***REMOVED*** Exit on error
+# Exit on error
 set -e
 
-***REMOVED*** Initialize pyenv if available (for Python version management)
+# Initialize pyenv if available (for Python version management)
 if [ -d "$HOME/.pyenv" ]; then
     export PYENV_ROOT="$HOME/.pyenv"
     export PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init -)"
 fi
 
-***REMOVED*** Find a suitable Python interpreter
-***REMOVED*** Prefer 'python' (works with pyenv shims) over 'python3' (system default)
+# Find a suitable Python interpreter
+# Prefer 'python' (works with pyenv shims) over 'python3' (system default)
 if command -v python &> /dev/null; then
     PYTHON_CMD="python"
 elif command -v python3 &> /dev/null; then
@@ -22,8 +22,8 @@ else
     exit 1
 fi
 
-***REMOVED*** Get the directory of this script
+# Get the directory of this script
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-***REMOVED*** Execute the main Python setup script
+# Execute the main Python setup script
 $PYTHON_CMD "$SCRIPT_DIR/setup.py"

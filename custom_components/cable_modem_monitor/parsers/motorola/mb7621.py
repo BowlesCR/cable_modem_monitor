@@ -26,8 +26,8 @@ from ..base_parser import ModemCapability, ModemParser, ParserStatus
 
 _LOGGER = logging.getLogger(__name__)
 
-***REMOVED*** During modem restart, power readings may be temporarily zero.
-***REMOVED*** Ignore zero power readings during the first 5 minutes after boot.
+# During modem restart, power readings may be temporarily zero.
+# Ignore zero power readings during the first 5 minutes after boot.
 RESTART_WINDOW_SECONDS = 300
 
 
@@ -38,23 +38,23 @@ class MotorolaMB7621Parser(ModemParser):
     manufacturer = "Motorola"
     models = ["MB7621"]
 
-    ***REMOVED*** Parser status
+    # Parser status
     status = ParserStatus.VERIFIED
     verification_source = "kwschulz (maintainer)"
 
-    ***REMOVED*** Device metadata
+    # Device metadata
     release_date = "2017"
     docsis_version = "3.0"
     fixtures_path = "tests/parsers/motorola/fixtures/mb7621"
 
-    ***REMOVED*** Authentication configuration
-    ***REMOVED*** MB7621 requires Base64-encoded passwords (not secure, just encoding)
+    # Authentication configuration
+    # MB7621 requires Base64-encoded passwords (not secure, just encoding)
     auth_config = FormAuthConfig(
         strategy=AuthStrategyType.FORM_PLAIN_AND_BASE64,
         login_url="/goform/login",
         username_field="loginUsername",
         password_field="loginPassword",
-        success_indicator="10000",  ***REMOVED*** Min response size indicates success
+        success_indicator="10000",  # Min response size indicates success
     )
 
     url_patterns = [
@@ -63,7 +63,7 @@ class MotorolaMB7621Parser(ModemParser):
         {"path": "/MotoHome.asp", "auth_method": "form", "auth_required": True},
     ]
 
-    ***REMOVED*** Capabilities
+    # Capabilities
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
@@ -75,7 +75,7 @@ class MotorolaMB7621Parser(ModemParser):
     @classmethod
     def can_parse(cls, soup: BeautifulSoup, url: str, html: str) -> bool:
         """Detect if this is a Motorola MB7621 modem."""
-        ***REMOVED*** Check for MB7621-specific indicators in the HTML
+        # Check for MB7621-specific indicators in the HTML
         return "MB7621" in html or "MB 7621" in html or "2480-MB7621" in html
 
     def login(self, session, base_url, username, password) -> tuple[bool, str | None]:
@@ -97,10 +97,10 @@ class MotorolaMB7621Parser(ModemParser):
 
         login_url = f"{base_url}/goform/login"
 
-        ***REMOVED*** Try plain password first, then Base64-encoded (MB7621 requires Base64)
+        # Try plain password first, then Base64-encoded (MB7621 requires Base64)
         passwords_to_try = [
-            password,  ***REMOVED*** Plain password
-            base64.b64encode(password.encode("utf-8")).decode("utf-8"),  ***REMOVED*** Base64-encoded
+            password,  # Plain password
+            base64.b64encode(password.encode("utf-8")).decode("utf-8"),  # Base64-encoded
         ]
 
         for attempt, pwd in enumerate(passwords_to_try, 1):
@@ -114,7 +114,7 @@ class MotorolaMB7621Parser(ModemParser):
             response = session.post(login_url, data=login_data, timeout=10, allow_redirects=True)
             _LOGGER.debug("Login response: status=%s, url=%s", response.status_code, response.url)
 
-            ***REMOVED*** Security check: Validate redirect stayed on same host or local network
+            # Security check: Validate redirect stayed on same host or local network
             import ipaddress
             from urllib.parse import urlparse
 
@@ -170,7 +170,7 @@ class MotorolaMB7621Parser(ModemParser):
         """Parse all data from the modem."""
         system_info = self._parse_system_info(soup)
 
-        ***REMOVED*** If software version not found, try fetching MotoHome.asp
+        # If software version not found, try fetching MotoHome.asp
         if not system_info.get("software_version") and session and base_url:
             try:
                 _LOGGER.debug("Software version not found on connection page, fetching MotoHome.asp")
@@ -219,7 +219,7 @@ class MotorolaMB7621Parser(ModemParser):
             return None
 
         try:
-            ***REMOVED*** Channel ID is in column 3 (not column 0 which is just a row counter)
+            # Channel ID is in column 3 (not column 0 which is just a row counter)
             channel_id = extract_number(cols[3].text)
             if channel_id is None:
                 _LOGGER.debug("Skipping row - could not extract channel_id from: %s", cols[3].text)
@@ -311,7 +311,7 @@ class MotorolaMB7621Parser(ModemParser):
                         cols = row.find_all("td")
                         if len(cols) >= 7:
                             try:
-                                ***REMOVED*** Channel ID is in column 3 (not column 0 which is just a row counter)
+                                # Channel ID is in column 3 (not column 0 which is just a row counter)
                                 channel_id = extract_number(cols[3].text)
                                 if channel_id is None:
                                     _LOGGER.debug("Skipping row - could not extract channel_id from: %s", cols[3].text)

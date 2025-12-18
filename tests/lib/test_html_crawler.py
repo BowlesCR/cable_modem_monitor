@@ -25,14 +25,14 @@ class TestGenerateSeedUrls:
         """Test default seed URL generation."""
         urls = generate_seed_urls()
 
-        ***REMOVED*** Should include root
+        # Should include root
         assert "/" in urls
-        ***REMOVED*** Should include index variations
+        # Should include index variations
         assert "/index" in urls
         assert "/index.html" in urls
         assert "/index.htm" in urls
         assert "/index.asp" in urls
-        ***REMOVED*** Should include status variations
+        # Should include status variations
         assert "/status" in urls
         assert "/status.html" in urls
 
@@ -47,21 +47,21 @@ class TestGenerateSeedUrls:
         assert "/test.php" in urls
         assert "/admin.html" in urls
         assert "/admin.php" in urls
-        ***REMOVED*** Root should not be included when not in bases
+        # Root should not be included when not in bases
         assert "/" not in urls
 
     def test_empty_base_with_empty_extension_adds_root(self):
         """Test that empty base with empty extension adds root path."""
         urls = generate_seed_urls(bases=[""], extensions=[""])
 
-        ***REMOVED*** Empty base with empty extension produces root
+        # Empty base with empty extension produces root
         assert "/" in urls
 
     def test_empty_base_with_extensions_skipped(self):
         """Test that empty base with extensions is skipped (no /.html)."""
         urls = generate_seed_urls(bases=[""], extensions=[".html", ".htm"])
 
-        ***REMOVED*** Empty base + extensions would create invalid paths like "/.html", so skipped
+        # Empty base + extensions would create invalid paths like "/.html", so skipped
         assert "/.html" not in urls
         assert "/.htm" not in urls
 
@@ -72,7 +72,7 @@ class TestGenerateSeedUrls:
             extensions=[".html", ".html"],
         )
 
-        ***REMOVED*** Count occurrences of /index.html
+        # Count occurrences of /index.html
         count = sum(1 for u in urls if u == "/index.html")
         assert count == 1
 
@@ -93,10 +93,10 @@ class TestNormalizeUrl:
 
     def test_removes_fragment(self):
         """Test that URL fragments are removed."""
-        url = "http://192.168.100.1/status.html***REMOVED***section1"
+        url = "http://192.168.100.1/status.html#section1"
         normalized = normalize_url(url)
 
-        assert "***REMOVED***section1" not in normalized
+        assert "#section1" not in normalized
         assert normalized == "http://192.168.100.1/status.html"
 
     def test_removes_trailing_slash(self):
@@ -122,7 +122,7 @@ class TestNormalizeUrl:
 
     def test_handles_complex_url(self):
         """Test normalization of complex URL."""
-        url = "http://192.168.100.1/path/to/page.html?foo=bar***REMOVED***anchor"
+        url = "http://192.168.100.1/path/to/page.html?foo=bar#anchor"
         normalized = normalize_url(url)
 
         assert normalized == "http://192.168.100.1/path/to/page.html?foo=bar"
@@ -172,7 +172,7 @@ class TestExtractLinksFromHtml:
 
     def test_ignores_anchors(self):
         """Test that anchor-only links are ignored."""
-        html = '<a href="***REMOVED***section1">Jump to section</a>'
+        html = '<a href="#section1">Jump to section</a>'
         links = extract_links_from_html(html, "http://192.168.100.1")
 
         assert len(links) == 0
@@ -219,7 +219,7 @@ class TestExtractLinksFromHtml:
         html = "<a href='/status.html'>Unclosed tag"
         links = extract_links_from_html(html, "http://192.168.100.1")
 
-        ***REMOVED*** Should still extract the link
+        # Should still extract the link
         assert "http://192.168.100.1/status.html" in links
 
 
@@ -257,7 +257,7 @@ class TestDiscoverLinksFromPages:
         ]
         links = discover_links_from_pages(pages, "http://192.168.100.1")
 
-        ***REMOVED*** Count occurrences
+        # Count occurrences
         count = sum(1 for link in links if "status.html" in link)
         assert count == 1
 
@@ -356,7 +356,7 @@ class TestExtractAllResourcesFromHtml:
         html = """
         <html>
             <script>
-                $('***REMOVED***header').load('header.htm');
+                $('#header').load('header.htm');
                 $(".content").load('/fragments/menu.html');
             </script>
         </html>
@@ -399,7 +399,7 @@ class TestExtractAllResourcesFromHtml:
         """
         resources = extract_all_resources_from_html(html, "http://192.168.100.1")
 
-        ***REMOVED*** Should only have the external script
+        # Should only have the external script
         assert "http://192.168.100.1/app.js" in resources[RESOURCE_TYPE_JS]
         assert len(resources[RESOURCE_TYPE_JS]) == 1
 

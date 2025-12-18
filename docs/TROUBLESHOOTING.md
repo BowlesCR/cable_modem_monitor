@@ -1,18 +1,18 @@
-***REMOVED*** Troubleshooting Guide
+# Troubleshooting Guide
 
 Common issues and solutions for Cable Modem Monitor integration.
 
-***REMOVED******REMOVED*** Table of Contents
-- [Connection and Authentication Issues](***REMOVED***connection-and-authentication-issues)
-- [Upstream Sensors Not Appearing](***REMOVED***upstream-sensors-not-appearing)
-- [Orphaned Channel Sensors](***REMOVED***orphaned-channel-sensors)
-- [Duplicate Entities](***REMOVED***duplicate-entities)
+## Table of Contents
+- [Connection and Authentication Issues](#connection-and-authentication-issues)
+- [Upstream Sensors Not Appearing](#upstream-sensors-not-appearing)
+- [Orphaned Channel Sensors](#orphaned-channel-sensors)
+- [Duplicate Entities](#duplicate-entities)
 
 ---
 
-***REMOVED******REMOVED*** Connection and Authentication Issues
+## Connection and Authentication Issues
 
-***REMOVED******REMOVED******REMOVED*** Problem: Login Failures and Timeout Errors
+### Problem: Login Failures and Timeout Errors
 
 **Symptoms:**
 - "Failed to log in to modem" error message
@@ -30,7 +30,7 @@ This reduces log noise while still capturing important diagnostic information.
 
 **Common Causes & Solutions:**
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** 1. Modem Rebooting or Busy
+#### 1. Modem Rebooting or Busy
 
 **Symptoms:**
 - Intermittent timeout errors
@@ -45,7 +45,7 @@ Cable modems periodically reboot or become busy during channel maintenance. This
 - Check `sensor.cable_modem_status` to see current operational state
 - If timeouts persist for >10 minutes, check modem power and connections
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** 2. Network Issues vs. Web Server Issues
+#### 2. Network Issues vs. Web Server Issues
 
 **Dual-Layer Health Monitoring**
 
@@ -68,7 +68,7 @@ The integration performs both ICMP ping and HTTP checks to diagnose connectivity
 - **Unresponsive**: Check modem power, cables, and network connection
 - **Parser Error**: Modem reachable but data format changed - report issue with diagnostics
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** 3. Wrong Credentials
+#### 3. Wrong Credentials
 
 **Symptoms:**
 - Consistent login failures
@@ -82,7 +82,7 @@ The integration performs both ICMP ping and HTTP checks to diagnose connectivity
    - Settings → Devices & Services → Cable Modem Monitor
    - Click Configure → Update credentials
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** 4. Incorrect IP Address or Port
+#### 4. Incorrect IP Address or Port
 
 **Symptoms:**
 - Connection errors every poll
@@ -92,14 +92,14 @@ The integration performs both ICMP ping and HTTP checks to diagnose connectivity
 **Solution:**
 1. Verify modem IP address:
    ```bash
-   ping 192.168.100.1  ***REMOVED*** or your modem IP
+   ping 192.168.100.1  # or your modem IP
    ```
 2. Check if HTTP is enabled on modem (some ISPs disable web interface)
 3. Try default gateway IP:
    - Windows: `ipconfig | findstr "Default Gateway"`
    - Linux/Mac: `ip route | grep default`
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** 5. ISP Disabled Web Interface
+#### 5. ISP Disabled Web Interface
 
 **Symptoms:**
 - Cannot access modem web interface from ANY device
@@ -111,7 +111,7 @@ The integration performs both ICMP ping and HTTP checks to diagnose connectivity
 - **No workaround available** - Contact your ISP
 - Consider using modem stats from ISP app if available
 
-***REMOVED******REMOVED******REMOVED*** Using Health Monitoring to Diagnose Issues
+### Using Health Monitoring to Diagnose Issues
 
 **Diagnostic Sensors**
 
@@ -151,7 +151,7 @@ automation:
           message: "Cable modem is not responding. Check power and connections."
 ```
 
-***REMOVED******REMOVED******REMOVED*** Modem Model Selection
+### Modem Model Selection
 
 During setup and in settings, you can select your specific modem model or use auto-detection:
 
@@ -208,7 +208,7 @@ If you see errors or auto-detection doesn't find your modem:
 3. Try manually selecting your modem model if you know it
 4. Open a GitHub issue with the auto-detection logs
 
-***REMOVED******REMOVED******REMOVED*** Viewing Detailed Logs
+### Viewing Detailed Logs
 
 **Normal Logs (INFO level):**
 ```
@@ -217,7 +217,7 @@ XB7: Successfully authenticated and fetched status page
 
 **Debug Logs (for troubleshooting):**
 ```yaml
-***REMOVED*** configuration.yaml
+# configuration.yaml
 logger:
   default: info
   logs:
@@ -239,9 +239,9 @@ logger:
 
 ---
 
-***REMOVED******REMOVED*** Upstream Sensors Not Appearing
+## Upstream Sensors Not Appearing
 
-***REMOVED******REMOVED******REMOVED*** Problem: No Upstream Channel Sensors Created
+### Problem: No Upstream Channel Sensors Created
 
 **Symptoms:**
 - You see `sensor.cable_modem_upstream_channel_count` showing 4-8 channels
@@ -278,9 +278,9 @@ If upstream sensors still don't appear after upgrading to v2.0.0+, please [open 
 
 ---
 
-***REMOVED******REMOVED*** Orphaned Channel Sensors
+## Orphaned Channel Sensors
 
-***REMOVED******REMOVED******REMOVED*** Problem: Unavailable Channel Sensors After Cable Company Changes
+### Problem: Unavailable Channel Sensors After Cable Company Changes
 
 **Symptoms:**
 - Some channel sensors show "unavailable" permanently
@@ -301,9 +301,9 @@ Historical data is preserved - the same channels will reconnect to their history
 
 ---
 
-***REMOVED******REMOVED*** Duplicate Entities
+## Duplicate Entities
 
-***REMOVED******REMOVED******REMOVED*** Problem: Seeing Same Entity Twice (One Under Device, One Ungrouped)
+### Problem: Seeing Same Entity Twice (One Under Device, One Ungrouped)
 
 **Symptoms:**
 - Same sensor name appears twice in entity list
@@ -332,7 +332,7 @@ The "Ungrouped" entity will disappear once the browser cache is cleared.
 
 ---
 
-***REMOVED******REMOVED*** Getting Help
+## Getting Help
 
 If you encounter issues not covered here:
 
@@ -360,9 +360,9 @@ If you encounter issues not covered here:
 
 ---
 
-***REMOVED******REMOVED*** Quick Reference
+## Quick Reference
 
-***REMOVED******REMOVED******REMOVED*** Correct Entity ID Format (v2.0+)
+### Correct Entity ID Format (v2.0+)
 
 | Sensor Type | Entity ID | Display Name |
 |------------|-----------|--------------|

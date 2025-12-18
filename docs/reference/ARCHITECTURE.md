@@ -1,14 +1,14 @@
-***REMOVED*** Parser Architecture Design & Rationale
+# Parser Architecture Design & Rationale
 
 This document captures the key architectural decisions, design rationale, and lessons learned from building the parser plugin system. It serves as a reference for future maintainers and contributors.
 
 ---
 
-***REMOVED******REMOVED*** Parser Plugin System Overview
+## Parser Plugin System Overview
 
 The Cable Modem Monitor uses a **modular parser plugin architecture** that allows adding support for new modem models without modifying core integration code.
 
-***REMOVED******REMOVED******REMOVED*** Key Benefits
+### Key Benefits
 
 - **Zero core changes needed** - Just add a new parser file
 - **Auto-discovery** - Plugin system finds parsers automatically
@@ -18,9 +18,9 @@ The Cable Modem Monitor uses a **modular parser plugin architecture** that allow
 
 ---
 
-***REMOVED******REMOVED*** Architectural Decisions
+## Architectural Decisions
 
-***REMOVED******REMOVED******REMOVED*** 1. Auto-Discovery Over Manual Registration
+### 1. Auto-Discovery Over Manual Registration
 
 **Decision:** Parsers auto-register on import via plugin discovery system
 
@@ -38,7 +38,7 @@ The Cable Modem Monitor uses a **modular parser plugin architecture** that allow
 - Imports all modules and registers `ModemParser` subclasses
 - Sorted by manufacturer and priority for predictable ordering
 
-***REMOVED******REMOVED******REMOVED*** 2. Parser-Specific Validation
+### 2. Parser-Specific Validation
 
 **Decision:** Each parser implements its own `validate_channels()` method
 
@@ -58,10 +58,10 @@ def validate_channels(self, downstream, upstream):
     """Custom validation for this modem model."""
     if not (8 <= len(downstream) <= 32):
         raise ValueError(f"Expected 8-32 downstream channels, got {len(downstream)}")
-    ***REMOVED*** Model-specific validation logic...
+    # Model-specific validation logic...
 ```
 
-***REMOVED******REMOVED******REMOVED*** 3. Parser Priority System
+### 3. Parser Priority System
 
 **Decision:** Parsers have a `priority` attribute (default: 50, higher = tried first)
 
@@ -78,10 +78,10 @@ def validate_channels(self, downstream, upstream):
 **Implementation:**
 ```python
 class MotorolarMB7621Parser(ModemParser):
-    priority = 60  ***REMOVED*** Tried before generic Motorola parser (priority=40)
+    priority = 60  # Tried before generic Motorola parser (priority=40)
 ```
 
-***REMOVED******REMOVED******REMOVED*** 4. Parser-Owned URL Patterns
+### 4. Parser-Owned URL Patterns
 
 **Decision:** Each parser defines its own `url_patterns` with auth methods
 
@@ -95,11 +95,11 @@ class MotorolarMB7621Parser(ModemParser):
 ```python
 url_patterns = [
     {"path": "/status.html", "auth_method": "basic"},
-    {"path": "/connection.asp", "auth_method": "form"},  ***REMOVED*** fallback
+    {"path": "/connection.asp", "auth_method": "form"},  # fallback
 ]
 ```
 
-***REMOVED******REMOVED******REMOVED*** 5. Three-Tier Parser Selection Strategy
+### 5. Three-Tier Parser Selection Strategy
 
 **Decision:** Tiered fallback system for parser selection
 
@@ -124,7 +124,7 @@ url_patterns = [
 - Performance optimization via caching
 - Automatic detection for ease of setup
 
-***REMOVED******REMOVED******REMOVED*** 6. Manufacturer Subdirectories
+### 6. Manufacturer Subdirectories
 
 **Decision:** Organize parsers in manufacturer-specific subdirectories
 
@@ -149,9 +149,9 @@ parsers/
 
 ---
 
-***REMOVED******REMOVED*** Lessons Learned
+## Lessons Learned
 
-***REMOVED******REMOVED******REMOVED*** What Worked Well
+### What Worked Well
 
 1. **Auto-discovery system worked perfectly first try**
    - Plugin pattern is well-understood in Python
@@ -173,7 +173,7 @@ parsers/
    - Parser handles HTML parsing only
    - Validation is parser-specific
 
-***REMOVED******REMOVED******REMOVED*** What Could Be Improved
+### What Could Be Improved
 
 1. **Parser-specific unit tests**
    - Currently tests focus on integration testing
@@ -197,9 +197,9 @@ parsers/
 
 ---
 
-***REMOVED******REMOVED*** Technical Implementation Notes
+## Technical Implementation Notes
 
-***REMOVED******REMOVED******REMOVED*** BeautifulSoup Import Placement
+### BeautifulSoup Import Placement
 
 **Note:** BeautifulSoup is imported in `parsers/__init__.py`
 
@@ -208,7 +208,7 @@ parsers/
 - Import cost is negligible
 - All parsers need it anyway
 
-***REMOVED******REMOVED******REMOVED*** Parser Detection Order
+### Parser Detection Order
 
 **Note:** Detection order is deterministic (manufacturer + priority)
 
@@ -217,7 +217,7 @@ parsers/
 - Higher priority parsers tried first within manufacturer
 - Prevents random behavior from dictionary ordering
 
-***REMOVED******REMOVED******REMOVED*** Validation Method Override
+### Validation Method Override
 
 **Note:** `validate_channels()` can be overridden per-parser
 
@@ -225,11 +225,11 @@ parsers/
 ```python
 def validate_channels(self, downstream, upstream):
     """Custom validation for this specific modem."""
-    ***REMOVED*** Override base class validation if needed
-    ***REMOVED*** or call super().validate_channels() and add checks
+    # Override base class validation if needed
+    # or call super().validate_channels() and add checks
 ```
 
-***REMOVED******REMOVED******REMOVED*** System Info Merging
+### System Info Merging
 
 **Note:** System info uses dictionary unpacking for clean merging
 
@@ -238,13 +238,13 @@ def validate_channels(self, downstream, upstream):
 return {
     "downstream": downstream,
     "upstream": upstream,
-    **system_info,  ***REMOVED*** Merge system info at top level
+    **system_info,  # Merge system info at top level
 }
 ```
 
 **Why:** Allows parsers to add arbitrary system fields without modifying core code
 
-***REMOVED******REMOVED******REMOVED*** Detection Markers
+### Detection Markers
 
 **Best Practice:** Use unique, stable HTML markers for detection
 
@@ -261,9 +261,9 @@ return {
 
 ---
 
-***REMOVED******REMOVED*** Future Considerations
+## Future Considerations
 
-***REMOVED******REMOVED******REMOVED*** Potential Enhancements
+### Potential Enhancements
 
 1. **Parser capability flags**
    - Some parsers support restart, others don't
@@ -292,39 +292,39 @@ return {
 
 ---
 
-***REMOVED******REMOVED*** Contributing New Parsers
+## Contributing New Parsers
 
 When creating a new parser, consider:
 
-***REMOVED******REMOVED******REMOVED*** Detection Method (`can_parse`)
+### Detection Method (`can_parse`)
 
 - Use **unique, stable markers** that won't change with firmware updates
 - Check multiple markers if possible (belt-and-suspenders)
 - Return False quickly if clearly not this modem
 - Avoid expensive parsing in detection
 
-***REMOVED******REMOVED******REMOVED*** URL Patterns
+### URL Patterns
 
 - List URLs in **preferred order** (best/most reliable first)
 - Include fallback URLs if the modem has multiple pages
 - Specify correct auth method for each URL
 - Document any special URL handling needed
 
-***REMOVED******REMOVED******REMOVED*** Error Handling
+### Error Handling
 
 - Gracefully handle missing tables/fields
 - Return empty lists rather than raising errors when possible
 - Log warnings for unexpected HTML structure
 - Consider firmware variations in your error handling
 
-***REMOVED******REMOVED******REMOVED*** Validation
+### Validation
 
 - Implement `validate_channels()` for model-specific constraints
 - Validate data types and ranges
 - Provide helpful error messages for debugging
 - Consider if validation should be strict or permissive
 
-***REMOVED******REMOVED******REMOVED*** Testing
+### Testing
 
 - Provide real HTML fixture (sanitized)
 - Test detection with fixture from your modem
@@ -334,7 +334,7 @@ When creating a new parser, consider:
 
 ---
 
-***REMOVED******REMOVED*** References
+## References
 
 - **Parser Base Class:** `custom_components/cable_modem_monitor/parsers/base_parser.py`
 - **Auto-Discovery Code:** `custom_components/cable_modem_monitor/parsers/__init__.py`

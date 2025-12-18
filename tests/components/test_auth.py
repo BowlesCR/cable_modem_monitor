@@ -11,7 +11,7 @@ class TestAuth:
     def test_form_auth(self, mocker):
         """Test form-based authentication."""
         scraper = ModemScraper("192.168.100.1", "admin", "password", parser=[MotorolaMB7621Parser])
-        ***REMOVED*** _fetch_data now returns (html, url, parser_class)
+        # _fetch_data now returns (html, url, parser_class)
         mocker.patch.object(
             scraper, "_fetch_data", return_value=("<html></html>", "http://192.168.100.1", MotorolaMB7621Parser)
         )
@@ -24,7 +24,7 @@ class TestAuth:
     def test_basic_auth(self, mocker):
         """Test basic HTTP authentication."""
         scraper = ModemScraper("192.168.100.1", "admin", "password", parser=[TechnicolorTC4400Parser])
-        ***REMOVED*** _fetch_data now returns (html, url, parser_class)
+        # _fetch_data now returns (html, url, parser_class)
         mocker.patch.object(
             scraper, "_fetch_data", return_value=("<html></html>", "http://192.168.100.1", TechnicolorTC4400Parser)
         )

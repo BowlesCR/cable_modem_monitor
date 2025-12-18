@@ -34,7 +34,7 @@ var email_confirm = "";
     $(document).ready(function()
     {
 //        $('.scroll-pane').jScrollPane('scrollbarMargin:5px');
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
             buttonFilter();
         });
 
@@ -71,7 +71,7 @@ var email_confirm = "";
         //We don't have auto (width) resize, so hard code the width now.
         var width = 650;
         $('.help-frame-div').css("width", width-50);
-        $('***REMOVED***helpframe').css("width", width-50);
+        $('#helpframe').css("width", width-50);
         if(document.getElementById('helpframe')) {
             try{
                 document.getElementById('helpframe').contentWindow.change_size_helpPage(width);
@@ -81,13 +81,13 @@ var email_confirm = "";
 
     function moveToHTMLend()
     {
-        window.location.href='***REMOVED***helpframe-anchor';
+        window.location.href='#helpframe-anchor';
         setHelpIframeVisible();
     }
 
     function loadhelp2(fname,anchname)
     {
-        var pane = window.frames["helpframe"].$('***REMOVED***content');
+        var pane = window.frames["helpframe"].$('#content');
         var imgSrc=document.getElementById('help-button');
         pane.jScrollPane({showArrows:true});
 
@@ -96,14 +96,14 @@ var email_confirm = "";
         if ((loadhelp2.arguments.length == 1 ) || (anchname == "" ))
            window.frames["helpframe"].location.href=fname+"_h."+"htm";
         else
-           window.frames["helpframe"].location.href=fname+"_h."+"htm***REMOVED***" + anchname;
+           window.frames["helpframe"].location.href=fname+"_h."+"htm#" + anchname;
 
         pane.jScrollPane({showArrows:true});
     }
 
     function loadhelp(fname,anchname)
     {
-                var pane = window.frames["helpframe"].$('***REMOVED***content');
+                var pane = window.frames["helpframe"].$('#content');
                 var imgSrc=document.getElementById('help-button');
                 if(imgSrc.src.search("up")<0)
                 {
@@ -119,7 +119,7 @@ var email_confirm = "";
                         }
                         else
                         {
-                                window.frames["helpframe"].location.href=fname+"_h."+"htm***REMOVED***" + anchname;
+                                window.frames["helpframe"].location.href=fname+"_h."+"htm#" + anchname;
                                 $(".help-frame-div").show();
                         }
 
@@ -804,8 +804,8 @@ function chgDns()
             document.getElementById("Netgear_register").style.display="none";
             document.getElementById("Netgear_account_status").style.display="none";
             document.getElementById("Netgear_account").style.display="none";
-            $("***REMOVED***success_reset_hostname").html(cf.ntgr_hostname.value);
-            $("***REMOVED***success_reset_email").html(cf.ntgr_email.value);
+            $("#success_reset_hostname").html(cf.ntgr_hostname.value);
+            $("#success_reset_email").html(cf.ntgr_email.value);
             ddns_active();
         }
     }
@@ -897,7 +897,7 @@ function loadSettings()
                 document.getElementById("account_error").style.display="block";
                 if(ntgr_noip_error_msg != "")
                 {
-                    $("***REMOVED***account_error_msg").html(ntgr_noip_error_msg);
+                    $("#account_error_msg").html(ntgr_noip_error_msg);
                 }
             }
             else if(netgear_haveaccount == "0")
@@ -929,7 +929,7 @@ function loadSettings()
                 document.getElementById("register_error").style.display="block";
                 if(ntgr_noip_error_msg != "")
                 {
-                    $("***REMOVED***register_error_msg").html(ntgr_noip_error_msg);
+                    $("#register_error_msg").html(ntgr_noip_error_msg);
                 }
                 document.getElementById("Netgear_img").style.display="none";
                 document.getElementById("Netgear_img_no").style.display="none";
@@ -944,8 +944,8 @@ function loadSettings()
             document.getElementById("Netgear_account").style.display="none";
             document.getElementById("registration_text").style.display="none";
             document.getElementById("registration_button_text").style.display="none";
-            $("***REMOVED***success_reset_hostname").html(hostname);
-            $("***REMOVED***success_reset_email").html(email);
+            $("#success_reset_hostname").html(hostname);
+            $("#success_reset_email").html(email);
             ddns_active();
         }
     }
@@ -1326,7 +1326,7 @@ function BodyInit()
                                                 <tr>
                                                     <td width="50%" align="right"></td>
                                                     <td width="50%" align="right">
-                                                        <div id="text_host_result_id" style="display: none;text-align:right;color:***REMOVED***FF0000">The hostname is not valid. The characters allowed here are '0'~'9', 'a'~'z', 'A'~'Z', and hyphen '-'</div>
+                                                        <div id="text_host_result_id" style="display: none;text-align:right;color:#FF0000">The hostname is not valid. The characters allowed here are '0'~'9', 'a'~'z', 'A'~'Z', and hyphen '-'</div>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1338,7 +1338,7 @@ function BodyInit()
                                                     <td width="50%" align="right">
                                                     </td>
                                                     <td width="50%" align="right">
-                                                        <div id="text_email_result_id" style="display: none;text-align:right;color:***REMOVED***FF0000">
+                                                        <div id="text_email_result_id" style="display: none;text-align:right;color:#FF0000">
                                                             The email address is not valid
                                                         </div>
                                                     </td>
@@ -1356,7 +1356,7 @@ function BodyInit()
                                                     <td width="50%" align="right">
                                                     </td>
                                                     <td width="50%" align="right">
-                                                        <div id="text_pass_result_register_id" style="display: none;text-align:right;color:***REMOVED***FF0000">
+                                                        <div id="text_pass_result_register_id" style="display: none;text-align:right;color:#FF0000">
                                                             Your password must be at least 6 characters long and at most 32 characters long
                                                         </div>
                                                     </td>
@@ -1364,7 +1364,7 @@ function BodyInit()
                                                 <tr>
                                                     <td width="50%" align="left">
                                                         <div id="register_error" style="display: none;">
-                                                            <font id=register_error_msg color="***REMOVED***FF0000"></font>
+                                                            <font id=register_error_msg color="#FF0000"></font>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -1412,7 +1412,7 @@ function BodyInit()
                                                     <td width="50%" align="right">
                                                     </td>
                                                     <td width="50%" align="right">
-                                                        <div id="text_host_result_account_id" style="display: none;text-align:right;color:***REMOVED***FF0000">
+                                                        <div id="text_host_result_account_id" style="display: none;text-align:right;color:#FF0000">
                                                             The hostname is not valid. The characters allowed here are '0'~'9', 'a'~'z', 'A'~'Z', and hyphen '-'
                                                         </div>
                                                     </td>
@@ -1432,7 +1432,7 @@ function BodyInit()
                                                     <td width="50%" align="right">
                                                     </td>
                                                     <td width="50%" align="right">
-                                                        <div id="text_email_result_account_id" style="display: none;text-align:right;color:***REMOVED***FF0000">
+                                                        <div id="text_email_result_account_id" style="display: none;text-align:right;color:#FF0000">
                                                             The email address is not valid
                                                         </div>
                                                     </td>
@@ -1449,7 +1449,7 @@ function BodyInit()
                                                 <tr>
                                                     <td width="50%" align="right"></td>
                                                     <td width="50%" align="right">
-                                                        <div id="text_pass_result_account_id" style="display: none;text-align:right;color:***REMOVED***FF0000">
+                                                        <div id="text_pass_result_account_id" style="display: none;text-align:right;color:#FF0000">
                                                             Your password must be at least 6 characters long and at most 32 characters long
                                                         </div>
                                                     </td>
@@ -1457,7 +1457,7 @@ function BodyInit()
                                                 <tr>
                                                     <td width="50%" align="left">
                                                         <div id="account_error" style="display: none;">
-                                                            <font id="account_error_msg" color="***REMOVED***FF0000"></font>
+                                                            <font id="account_error_msg" color="#FF0000"></font>
                                                         </div>
                                                     </td>
                                                     <td width="50%" align="right"></td>

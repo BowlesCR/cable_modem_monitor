@@ -12,7 +12,7 @@ Extended fixtures (in extended/):
 - GPL_rev1.htm: GPL license
 - SetPassword.asp: Password change page
 
-Related: Issue ***REMOVED***3 (Netgear CM600 - Login Doesn't Work)
+Related: Issue #3 (Netgear CM600 - Login Doesn't Work)
 """
 
 from __future__ import annotations
@@ -62,7 +62,7 @@ def test_fixtures_exist():
     fixtures_dir = os.path.join(os.path.dirname(__file__), "fixtures", "cm600")
     extended_dir = os.path.join(fixtures_dir, "extended")
 
-    ***REMOVED*** Core files used by parser (at root)
+    # Core files used by parser (at root)
     core_files = [
         "DashBoard.asp",
         "DocsisOffline.asp",
@@ -71,7 +71,7 @@ def test_fixtures_exist():
         "RouterStatus.asp",
     ]
 
-    ***REMOVED*** Extended files for reference (in extended/)
+    # Extended files for reference (in extended/)
     extended_files = [
         "EventLog.asp",
         "GPL_rev1.htm",
@@ -138,15 +138,15 @@ def test_parser_system_info(cm600_router_status_html):
     """Test parsing of Netgear CM600 system info from RouterStatus.asp."""
     parser = NetgearCM600Parser()
 
-    ***REMOVED*** Parse just the RouterStatus page using the internal method
+    # Parse just the RouterStatus page using the internal method
     soup = BeautifulSoup(cm600_router_status_html, "html.parser")
     system_info = parser._parse_router_system_info(soup)
 
-    ***REMOVED*** Check that we extracted firmware version
+    # Check that we extracted firmware version
     assert "software_version" in system_info
     assert system_info["software_version"] == "V1.01.22"
 
-    ***REMOVED*** Check hardware version
+    # Check hardware version
     assert "hardware_version" in system_info
     assert system_info["hardware_version"] == "1.01B"
 
@@ -156,22 +156,22 @@ def test_parser_uptime_from_docsis_status(cm600_docsis_status_html):
     parser = NetgearCM600Parser()
     soup = BeautifulSoup(cm600_docsis_status_html, "html.parser")
 
-    ***REMOVED*** Parse system info from DocsisStatus.asp
+    # Parse system info from DocsisStatus.asp
     system_info = parser.parse_system_info(soup)
 
-    ***REMOVED*** Check uptime is parsed (CM600 uses HH:MM:SS format like "1308:19:22")
+    # Check uptime is parsed (CM600 uses HH:MM:SS format like "1308:19:22")
     assert "system_uptime" in system_info
     assert system_info["system_uptime"] == "1308:19:22"
 
-    ***REMOVED*** Check last boot time is calculated
+    # Check last boot time is calculated
     assert "last_boot_time" in system_info
-    ***REMOVED*** Boot time should be an ISO formatted datetime string
+    # Boot time should be an ISO formatted datetime string
     from datetime import datetime
 
     boot_time = datetime.fromisoformat(system_info["last_boot_time"])
     assert boot_time < datetime.now()
 
-    ***REMOVED*** Check current time is parsed
+    # Check current time is parsed
     assert "current_time" in system_info
     assert "Tue Oct 28" in system_info["current_time"]
 
@@ -182,22 +182,22 @@ def test_calculate_boot_time():
 
     parser = NetgearCM600Parser()
 
-    ***REMOVED*** Test with typical uptime format: "0d 1h 23m 45s"
+    # Test with typical uptime format: "0d 1h 23m 45s"
     boot_time_str = parser._calculate_boot_time("0d 1h 23m 45s")
     assert boot_time_str is not None
 
-    ***REMOVED*** Parse the ISO formatted boot time
+    # Parse the ISO formatted boot time
     boot_time = datetime.fromisoformat(boot_time_str)
-    ***REMOVED*** Boot time should be in the past
+    # Boot time should be in the past
     assert boot_time < datetime.now()
 
-    ***REMOVED*** Calculate expected boot time (within 1 second tolerance)
+    # Calculate expected boot time (within 1 second tolerance)
     expected_uptime = timedelta(days=0, hours=1, minutes=23, seconds=45)
     expected_boot = datetime.now() - expected_uptime
-    ***REMOVED*** Allow 2 second tolerance for test execution time
+    # Allow 2 second tolerance for test execution time
     assert abs((boot_time - expected_boot).total_seconds()) < 2
 
-    ***REMOVED*** Test with longer uptime
+    # Test with longer uptime
     boot_time_str = parser._calculate_boot_time("5d 12h 30m 15s")
     assert boot_time_str is not None
     boot_time = datetime.fromisoformat(boot_time_str)
@@ -205,16 +205,16 @@ def test_calculate_boot_time():
     expected_boot = datetime.now() - expected_uptime
     assert abs((boot_time - expected_boot).total_seconds()) < 2
 
-    ***REMOVED*** Test with CM600 HH:MM:SS format (e.g., "1308:19:22" = 1308 hours)
+    # Test with CM600 HH:MM:SS format (e.g., "1308:19:22" = 1308 hours)
     boot_time_str = parser._calculate_boot_time("1308:19:22")
     assert boot_time_str is not None
     boot_time = datetime.fromisoformat(boot_time_str)
-    ***REMOVED*** 1308 hours = 54.5 days
+    # 1308 hours = 54.5 days
     expected_uptime = timedelta(hours=1308, minutes=19, seconds=22)
     expected_boot = datetime.now() - expected_uptime
     assert abs((boot_time - expected_boot).total_seconds()) < 2
 
-    ***REMOVED*** Test with shorter HH:MM:SS format
+    # Test with shorter HH:MM:SS format
     boot_time_str = parser._calculate_boot_time("24:30:15")
     assert boot_time_str is not None
     boot_time = datetime.fromisoformat(boot_time_str)
@@ -222,11 +222,11 @@ def test_calculate_boot_time():
     expected_boot = datetime.now() - expected_uptime
     assert abs((boot_time - expected_boot).total_seconds()) < 2
 
-    ***REMOVED*** Test with invalid uptime string
+    # Test with invalid uptime string
     boot_time_str = parser._calculate_boot_time("invalid")
     assert boot_time_str is None
 
-    ***REMOVED*** Test with empty string
+    # Test with empty string
     boot_time_str = parser._calculate_boot_time("")
     assert boot_time_str is None
 
@@ -237,10 +237,10 @@ def test_parse_with_session_fetches_pages(cm600_docsis_status_html, cm600_router
 
     parser = NetgearCM600Parser()
 
-    ***REMOVED*** Create mock session that returns our fixture data
+    # Create mock session that returns our fixture data
     mock_session = Mock()
 
-    ***REMOVED*** Mock responses for DocsisStatus.asp and RouterStatus.asp
+    # Mock responses for DocsisStatus.asp and RouterStatus.asp
     docsis_response = Mock()
     docsis_response.status_code = 200
     docsis_response.text = cm600_docsis_status_html
@@ -258,14 +258,14 @@ def test_parse_with_session_fetches_pages(cm600_docsis_status_html, cm600_router
 
     mock_session.get.side_effect = mock_get
 
-    ***REMOVED*** Parse with an empty initial soup - should fetch real data
+    # Parse with an empty initial soup - should fetch real data
     empty_soup = BeautifulSoup("<html></html>", "html.parser")
     data = parser.parse(empty_soup, session=mock_session, base_url="http://192.168.100.1")
 
-    ***REMOVED*** Verify pages were fetched
+    # Verify pages were fetched
     assert mock_session.get.call_count == 2
 
-    ***REMOVED*** Verify data was parsed from fetched pages
+    # Verify data was parsed from fetched pages
     assert len(data["downstream"]) == 24
     assert len(data["upstream"]) == 6
     assert "system_uptime" in data["system_info"]
@@ -277,17 +277,17 @@ def test_parse_with_session_handles_fetch_failures(cm600_docsis_status_html):
 
     parser = NetgearCM600Parser()
 
-    ***REMOVED*** Create mock session that returns errors
+    # Create mock session that returns errors
     mock_session = Mock()
     error_response = Mock()
     error_response.status_code = 500
     mock_session.get.return_value = error_response
 
-    ***REMOVED*** Parse with fixture data as initial soup - should use it as fallback
+    # Parse with fixture data as initial soup - should use it as fallback
     soup = BeautifulSoup(cm600_docsis_status_html, "html.parser")
     data = parser.parse(soup, session=mock_session, base_url="http://192.168.100.1")
 
-    ***REMOVED*** Should still work using the provided soup as fallback
+    # Should still work using the provided soup as fallback
     assert len(data["downstream"]) == 24
     assert len(data["upstream"]) == 6
 
@@ -298,15 +298,15 @@ def test_parse_with_session_handles_exceptions():
 
     parser = NetgearCM600Parser()
 
-    ***REMOVED*** Create mock session that raises exceptions
+    # Create mock session that raises exceptions
     mock_session = Mock()
     mock_session.get.side_effect = Exception("Network error")
 
-    ***REMOVED*** Parse with minimal soup
+    # Parse with minimal soup
     soup = BeautifulSoup("<html></html>", "html.parser")
     data = parser.parse(soup, session=mock_session, base_url="http://192.168.100.1")
 
-    ***REMOVED*** Should return empty data without crashing
+    # Should return empty data without crashing
     assert data["downstream"] == []
     assert data["upstream"] == []
 
@@ -317,24 +317,24 @@ def test_parsing_downstream(cm600_docsis_status_html):
     soup = BeautifulSoup(cm600_docsis_status_html, "html.parser")
     data = parser.parse(soup)
 
-    ***REMOVED*** Verify downstream channels were parsed
+    # Verify downstream channels were parsed
     assert "downstream" in data
-    assert len(data["downstream"]) == 24  ***REMOVED*** CM600 supports 24 downstream channels
+    assert len(data["downstream"]) == 24  # CM600 supports 24 downstream channels
 
-    ***REMOVED*** Check first downstream channel (from HTML table)
+    # Check first downstream channel (from HTML table)
     first_ds = data["downstream"][0]
     assert first_ds["channel_id"] == "28"
-    assert first_ds["frequency"] == 573000000  ***REMOVED*** 573 MHz in Hz
-    assert first_ds["power"] == 6.6  ***REMOVED*** dBmV
-    assert first_ds["snr"] == 40.9  ***REMOVED*** dB
+    assert first_ds["frequency"] == 573000000  # 573 MHz in Hz
+    assert first_ds["power"] == 6.6  # dBmV
+    assert first_ds["snr"] == 40.9  # dB
     assert first_ds["modulation"] == "QAM256"
     assert first_ds["corrected"] == 22
     assert first_ds["uncorrected"] == 0
 
-    ***REMOVED*** Check second channel to verify parsing continues correctly
+    # Check second channel to verify parsing continues correctly
     second_ds = data["downstream"][1]
     assert second_ds["channel_id"] == "21"
-    assert second_ds["frequency"] == 525000000  ***REMOVED*** 525 MHz
+    assert second_ds["frequency"] == 525000000  # 525 MHz
     assert second_ds["power"] == 6.0
 
 
@@ -344,21 +344,21 @@ def test_parsing_upstream(cm600_docsis_status_html):
     soup = BeautifulSoup(cm600_docsis_status_html, "html.parser")
     data = parser.parse(soup)
 
-    ***REMOVED*** Verify upstream channels were parsed
+    # Verify upstream channels were parsed
     assert "upstream" in data
-    assert len(data["upstream"]) == 6  ***REMOVED*** CM600 has 6 locked upstream channels in this fixture
+    assert len(data["upstream"]) == 6  # CM600 has 6 locked upstream channels in this fixture
 
-    ***REMOVED*** Check first upstream channel (from HTML table)
+    # Check first upstream channel (from HTML table)
     first_us = data["upstream"][0]
     assert first_us["channel_id"] == "5"
-    assert first_us["frequency"] == 40400000  ***REMOVED*** 40.4 MHz in Hz
-    assert first_us["power"] == 42.5  ***REMOVED*** dBmV
+    assert first_us["frequency"] == 40400000  # 40.4 MHz in Hz
+    assert first_us["power"] == 42.5  # dBmV
     assert first_us["channel_type"] == "ATDMA"
 
-    ***REMOVED*** Check second channel to verify parsing
+    # Check second channel to verify parsing
     second_us = data["upstream"][1]
     assert second_us["channel_id"] == "2"
-    assert second_us["frequency"] == 22800000  ***REMOVED*** 22.8 MHz
+    assert second_us["frequency"] == 22800000  # 22.8 MHz
     assert second_us["power"] == 42.3
 
 
@@ -380,20 +380,20 @@ class TestAuthentication:
         """Test that protected URLs require authentication."""
         parser = NetgearCM600Parser()
 
-        ***REMOVED*** DocsisStatus.asp should require auth
+        # DocsisStatus.asp should require auth
         docsis_pattern = next(p for p in parser.url_patterns if p["path"] == "/DocsisStatus.asp")
         assert docsis_pattern["auth_required"] is True
         assert docsis_pattern["auth_method"] == "basic"
 
-        ***REMOVED*** DashBoard.asp should require auth
+        # DashBoard.asp should require auth
         dashboard_pattern = next(p for p in parser.url_patterns if p["path"] == "/DashBoard.asp")
         assert dashboard_pattern["auth_required"] is True
 
-        ***REMOVED*** RouterStatus.asp should require auth
+        # RouterStatus.asp should require auth
         router_pattern = next(p for p in parser.url_patterns if p["path"] == "/RouterStatus.asp")
         assert router_pattern["auth_required"] is True
 
-        ***REMOVED*** Index page should NOT require auth
+        # Index page should NOT require auth
         index_pattern = next(p for p in parser.url_patterns if p["path"] == "/")
         assert index_pattern["auth_required"] is False
 
@@ -405,7 +405,7 @@ class TestAuthentication:
         mock_session = Mock()
         base_url = "http://192.168.100.1"
 
-        ***REMOVED*** Mock AuthFactory where it's imported, not where it's defined
+        # Mock AuthFactory where it's imported, not where it's defined
         auth_path = "custom_components.cable_modem_monitor.parsers.netgear.cm600.AuthFactory"
         with patch(auth_path) as mock_factory:
             mock_strategy = Mock()
@@ -425,11 +425,11 @@ class TestAuthentication:
         mock_session = Mock()
         base_url = "http://192.168.100.1"
 
-        ***REMOVED*** Mock AuthFactory - Basic Auth should skip when no credentials
+        # Mock AuthFactory - Basic Auth should skip when no credentials
         auth_path = "custom_components.cable_modem_monitor.core.authentication.AuthFactory"
         with patch(auth_path) as mock_factory:
             mock_strategy = Mock()
-            mock_strategy.login.return_value = (True, None)  ***REMOVED*** Skip login, return success
+            mock_strategy.login.return_value = (True, None)  # Skip login, return success
             mock_factory.get_strategy.return_value = mock_strategy
 
             success, html = parser.login(mock_session, base_url, None, None)
@@ -443,7 +443,7 @@ class TestEdgeCases:
     def test_empty_downstream_data(self):
         """Test parsing when no downstream channels are present."""
         parser = NetgearCM600Parser()
-        ***REMOVED*** Create HTML without downstream channel data
+        # Create HTML without downstream channel data
         html = "<html><head><title>CM600</title></head><body></body></html>"
         soup = BeautifulSoup(html, "html.parser")
         data = parser.parse(soup)
@@ -455,7 +455,7 @@ class TestEdgeCases:
     def test_malformed_downstream_entry(self):
         """Test handling of malformed downstream channel data."""
         parser = NetgearCM600Parser()
-        ***REMOVED*** Create HTML with malformed table row (missing cells)
+        # Create HTML with malformed table row (missing cells)
         html = """
         <html>
         <table id="dsTable">
@@ -467,9 +467,9 @@ class TestEdgeCases:
         soup = BeautifulSoup(html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** Should handle gracefully and skip malformed entries
+        # Should handle gracefully and skip malformed entries
         assert "downstream" in data
-        assert len(data["downstream"]) == 0  ***REMOVED*** Missing cells, should skip
+        assert len(data["downstream"]) == 0  # Missing cells, should skip
 
     def test_malformed_upstream_entry(self):
         """Test handling of malformed upstream channel data."""
@@ -486,7 +486,7 @@ class TestEdgeCases:
         data = parser.parse(soup)
 
         assert "upstream" in data
-        assert len(data["upstream"]) == 0  ***REMOVED*** Incomplete row, should skip
+        assert len(data["upstream"]) == 0  # Incomplete row, should skip
 
     def test_invalid_frequency_values(self):
         """Test handling of invalid frequency values."""
@@ -508,9 +508,9 @@ class TestEdgeCases:
         soup = BeautifulSoup(html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** Parser should handle ValueError and skip invalid entries
+        # Parser should handle ValueError and skip invalid entries
         assert "downstream" in data
-        assert len(data["downstream"]) == 0  ***REMOVED*** Invalid frequency, should skip
+        assert len(data["downstream"]) == 0  # Invalid frequency, should skip
 
     def test_missing_tables(self):
         """Test parsing when HTML tables are not present."""
@@ -519,7 +519,7 @@ class TestEdgeCases:
         soup = BeautifulSoup(html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** Should return empty data structures without crashing
+        # Should return empty data structures without crashing
         assert data["downstream"] == []
         assert data["upstream"] == []
         assert data["system_info"] == {}
@@ -542,7 +542,7 @@ class TestRestart:
         mock_session = Mock()
         mock_response = Mock()
         mock_response.status_code = 200
-        mock_response.text = ""  ***REMOVED*** Must be set for len() in logging
+        mock_response.text = ""  # Must be set for len() in logging
         mock_session.post.return_value = mock_response
 
         base_url = "http://192.168.100.1"
@@ -582,7 +582,7 @@ class TestRestart:
         base_url = "http://192.168.100.1"
         success = parser.restart(mock_session, base_url)
 
-        ***REMOVED*** Connection drop = modem is rebooting = success
+        # Connection drop = modem is rebooting = success
         assert success is True
 
     def test_restart_handles_connection_error(self):
@@ -598,7 +598,7 @@ class TestRestart:
         base_url = "http://192.168.100.1"
         success = parser.restart(mock_session, base_url)
 
-        ***REMOVED*** ConnectionError during restart = modem is rebooting = success
+        # ConnectionError during restart = modem is rebooting = success
         assert success is True
 
     def test_restart_handles_generic_exception(self):
@@ -612,7 +612,7 @@ class TestRestart:
         base_url = "http://192.168.100.1"
         success = parser.restart(mock_session, base_url)
 
-        ***REMOVED*** Generic exception = failure
+        # Generic exception = failure
         assert success is False
 
 
@@ -637,7 +637,7 @@ class TestMetadata:
     def test_priority(self):
         """Test parser priority."""
         parser = NetgearCM600Parser()
-        assert parser.priority == 50  ***REMOVED*** Standard priority
+        assert parser.priority == 50  # Standard priority
 
     def test_capabilities(self):
         """Test parser capabilities include uptime and last boot time."""
@@ -645,11 +645,11 @@ class TestMetadata:
 
         parser = NetgearCM600Parser()
 
-        ***REMOVED*** Verify uptime capabilities are declared
+        # Verify uptime capabilities are declared
         assert ModemCapability.SYSTEM_UPTIME in parser.capabilities
         assert ModemCapability.LAST_BOOT_TIME in parser.capabilities
 
-        ***REMOVED*** Verify other expected capabilities
+        # Verify other expected capabilities
         assert ModemCapability.DOWNSTREAM_CHANNELS in parser.capabilities
         assert ModemCapability.UPSTREAM_CHANNELS in parser.capabilities
         assert ModemCapability.HARDWARE_VERSION in parser.capabilities

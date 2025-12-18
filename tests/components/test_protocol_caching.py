@@ -17,7 +17,7 @@ class TestProtocolCaching:
             cached_url=cached_url,
         )
 
-        ***REMOVED*** Should use HTTPS from cached URL
+        # Should use HTTPS from cached URL
         assert scraper.base_url == "https://192.168.100.1"
 
     def test_protocol_from_http_cached_url(self):
@@ -29,7 +29,7 @@ class TestProtocolCaching:
             cached_url=cached_url,
         )
 
-        ***REMOVED*** Should use HTTP from cached URL
+        # Should use HTTP from cached URL
         assert scraper.base_url == "http://192.168.100.1"
 
     def test_no_cached_url_defaults_to_https(self):
@@ -40,7 +40,7 @@ class TestProtocolCaching:
             cached_url=None,
         )
 
-        ***REMOVED*** Should default to HTTPS
+        # Should default to HTTPS
         assert scraper.base_url == "https://192.168.100.1"
 
     def test_explicit_protocol_in_host_overrides_cache(self):
@@ -52,24 +52,24 @@ class TestProtocolCaching:
             cached_url=cached_url,
         )
 
-        ***REMOVED*** Explicit protocol in host should take precedence
+        # Explicit protocol in host should take precedence
         assert scraper.base_url == "http://192.168.100.1"
 
     def test_cached_url_without_protocol_ignored(self):
         """Test that cached URL without protocol is ignored."""
-        cached_url = "192.168.100.1/MotoConnection.asp"  ***REMOVED*** No protocol
+        cached_url = "192.168.100.1/MotoConnection.asp"  # No protocol
         scraper = ModemScraper(
             host="192.168.100.1",
             parser=[],
             cached_url=cached_url,
         )
 
-        ***REMOVED*** Should default to HTTPS since cached URL has no protocol
+        # Should default to HTTPS since cached URL has no protocol
         assert scraper.base_url == "https://192.168.100.1"
 
     def test_cached_url_with_path_only_uses_protocol(self):
         """Test that protocol is extracted even with different path."""
-        ***REMOVED*** User might have cached URL with one path but trying different path
+        # User might have cached URL with one path but trying different path
         cached_url = "http://192.168.100.1/oldpath.html"
         scraper = ModemScraper(
             host="192.168.100.1",
@@ -77,21 +77,21 @@ class TestProtocolCaching:
             cached_url=cached_url,
         )
 
-        ***REMOVED*** Should still use HTTP protocol from cached URL
+        # Should still use HTTP protocol from cached URL
         assert scraper.base_url == "http://192.168.100.1"
 
     def test_with_different_hosts(self):
         """Test that protocol caching only applies to same host."""
-        ***REMOVED*** This is a defensive test - cached URL is from different host
+        # This is a defensive test - cached URL is from different host
         cached_url = "http://192.168.1.1/MotoConnection.asp"
         scraper = ModemScraper(
-            host="192.168.100.1",  ***REMOVED*** Different host
+            host="192.168.100.1",  # Different host
             parser=[],
             cached_url=cached_url,
         )
 
-        ***REMOVED*** Should still extract protocol from cached URL
-        ***REMOVED*** (current implementation doesn't validate host match)
+        # Should still extract protocol from cached URL
+        # (current implementation doesn't validate host match)
         assert scraper.base_url == "http://192.168.100.1"
 
 
@@ -103,15 +103,15 @@ class TestProtocolDiscoveryBehavior:
         scraper = ModemScraper(
             host="192.168.100.1",
             parser=[],
-            cached_url=None,  ***REMOVED*** No cache, defaults to HTTPS
+            cached_url=None,  # No cache, defaults to HTTPS
         )
 
-        ***REMOVED*** Mock parser class for _get_url_patterns_to_try
+        # Mock parser class for _get_url_patterns_to_try
         mock_parser = mocker.Mock()
         mock_parser.url_patterns = [{"path": "/test.html", "auth_method": "none", "auth_required": False}]
         scraper.parser = mock_parser
 
-        ***REMOVED*** Should try both HTTPS and HTTP
+        # Should try both HTTPS and HTTP
         assert scraper.base_url.startswith("https://")
 
     def test_protocols_to_try_with_http_cache(self, mocker):
@@ -119,18 +119,18 @@ class TestProtocolDiscoveryBehavior:
         scraper = ModemScraper(
             host="192.168.100.1",
             parser=[],
-            cached_url="http://192.168.100.1/test.html",  ***REMOVED*** HTTP cached
+            cached_url="http://192.168.100.1/test.html",  # HTTP cached
         )
 
-        ***REMOVED*** With HTTP cached, base_url should be HTTP
+        # With HTTP cached, base_url should be HTTP
         assert scraper.base_url.startswith("http://")
 
-        ***REMOVED*** Mock parser class
+        # Mock parser class
         mock_parser = mocker.Mock()
         mock_parser.url_patterns = [{"path": "/test.html", "auth_method": "none", "auth_required": False}]
         scraper.parser = mock_parser
 
-        ***REMOVED*** Should prioritize HTTP (from cache)
+        # Should prioritize HTTP (from cache)
         assert scraper.base_url == "http://192.168.100.1"
 
 
@@ -166,5 +166,5 @@ class TestSSLVerification:
             verify_ssl=False,
         )
 
-        ***REMOVED*** Verify that session has correct verify setting
+        # Verify that session has correct verify setting
         assert scraper.session.verify is False

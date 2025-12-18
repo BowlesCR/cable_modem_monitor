@@ -1,4 +1,4 @@
-***REMOVED***!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 Fresh Start Script - Reset VS Code state to test new developer experience
 
@@ -7,7 +7,7 @@ Normal development doesn't require this script.
 
 Usage:
     python scripts/dev/fresh_start.py
-    ***REMOVED*** OR
+    # OR
     python3 scripts/dev/fresh_start.py
 """
 
@@ -53,7 +53,7 @@ def print_error(text: str) -> None:
 
 def is_running_from_vscode() -> bool:
     """Check if script is running from VS Code integrated terminal."""
-    ***REMOVED*** Check common VS Code environment variables
+    # Check common VS Code environment variables
     return any(
         [
             os.environ.get("TERM_PROGRAM") == "vscode",
@@ -66,7 +66,7 @@ def is_running_from_vscode() -> bool:
 
 def is_vscode_running() -> bool:
     """Check if VS Code is running."""
-    ***REMOVED*** Skip check if we're running FROM VS Code
+    # Skip check if we're running FROM VS Code
     if is_running_from_vscode():
         return False
 
@@ -97,9 +97,9 @@ def get_vscode_cache_path() -> Path:
 
     if system == "Windows":
         cache_path = Path(os.environ.get("APPDATA", "")) / "Code" / "User" / "workspaceStorage"
-    elif system == "Darwin":  ***REMOVED*** macOS
+    elif system == "Darwin":  # macOS
         cache_path = Path.home() / "Library" / "Application Support" / "Code" / "User" / "workspaceStorage"
-    else:  ***REMOVED*** Linux
+    else:  # Linux
         cache_path = Path.home() / ".config" / "Code" / "User" / "workspaceStorage"
 
     return cache_path
@@ -107,11 +107,11 @@ def get_vscode_cache_path() -> Path:
 
 def is_running_from_venv() -> bool:
     """Check if script is running from the project's .venv."""
-    ***REMOVED*** Check if running in a virtual environment
+    # Check if running in a virtual environment
     if not hasattr(sys, "prefix") or sys.prefix == sys.base_prefix:
         return False
 
-    ***REMOVED*** Check if the venv is in the current directory
+    # Check if the venv is in the current directory
     venv_path = Path(".venv").resolve()
     current_prefix = Path(sys.prefix).resolve()
 
@@ -168,7 +168,7 @@ def remove_venv() -> bool:
         print_info("No .venv found")
         return True
 
-    ***REMOVED*** Check if we're running from the venv itself
+    # Check if we're running from the venv itself
     if is_running_from_venv():
         print_error("Cannot remove .venv while running from it")
         print()
@@ -196,7 +196,7 @@ def remove_venv() -> bool:
     if platform.system() == "Windows":
         return _handle_windows_remove(venv_path)
 
-    ***REMOVED*** Linux/Mac: Usually no file locking issues
+    # Linux/Mac: Usually no file locking issues
     try:
         shutil.rmtree(venv_path)
         print_success("Removed .venv")
@@ -246,7 +246,7 @@ def main() -> None:
     print_warning("Note: This is ONLY for testing. Normal development doesn't need this.")
     print()
 
-    ***REMOVED*** Step 1: Check if running from VS Code
+    # Step 1: Check if running from VS Code
     if is_running_from_vscode():
         print_warning("Running from VS Code integrated terminal")
         print()
@@ -266,13 +266,13 @@ def main() -> None:
         input("Close all VS Code windows and press Enter to continue (or Ctrl+C to cancel)... ")
         print()
 
-    ***REMOVED*** Step 2: Detect OS
+    # Step 2: Detect OS
     system_name = platform.system()
     display_name = {"Windows": "Windows", "Darwin": "macOS", "Linux": "Linux"}.get(system_name, system_name)
     print(f"🖥️  Detected: {display_name}")
     print()
 
-    ***REMOVED*** Step 3: Clear workspace cache
+    # Step 3: Clear workspace cache
     print_step("Clearing VS Code workspace cache for this project...")
     found = clear_workspace_cache()
 
@@ -281,7 +281,7 @@ def main() -> None:
     else:
         print_info("No cached workspace found (already clean)")
 
-    ***REMOVED*** Step 4: Optional - Remove .venv
+    # Step 4: Optional - Remove .venv
     print()
     print_header("Optional: Test Setup From Scratch")
     print()
@@ -295,7 +295,7 @@ def main() -> None:
     else:
         print_info("Keeping .venv (faster testing)")
 
-    ***REMOVED*** Step 5: Summary
+    # Step 5: Summary
     print()
     print_header("✅ Fresh start ready!")
     print()

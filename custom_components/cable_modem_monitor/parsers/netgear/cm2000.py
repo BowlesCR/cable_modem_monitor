@@ -24,7 +24,7 @@ Channel data:
 - OFDM downstream (DOCSIS 3.1)
 - OFDM upstream (DOCSIS 3.1)
 
-Related: Issue ***REMOVED***38 (Netgear CM2000 Support Request)
+Related: Issue #38 (Netgear CM2000 Support Request)
 Contributor: @m4dh4tt3r-88
 """
 
@@ -49,27 +49,27 @@ class NetgearCM2000Parser(ModemParser):
     name = "Netgear CM2000"
     manufacturer = "Netgear"
     models = ["CM2000"]
-    priority = 50  ***REMOVED*** Standard priority
+    priority = 50  # Standard priority
 
-    ***REMOVED*** Parser status - awaiting user confirmation
+    # Parser status - awaiting user confirmation
     status = ParserStatus.AWAITING_VERIFICATION
     verification_source = "https://github.com/solentlabs/cable_modem_monitor/issues/38"
 
-    ***REMOVED*** Device metadata
+    # Device metadata
     release_date = "2020-08"
     docsis_version = "3.1"
     fixtures_path = "tests/parsers/netgear/fixtures/cm2000"
 
-    ***REMOVED*** CM2000 uses form-based authentication
+    # CM2000 uses form-based authentication
     auth_config = FormAuthConfig(
         strategy=AuthStrategyType.FORM_PLAIN,
         login_url="/goform/Login",
         username_field="loginName",
         password_field="loginPassword",
-        success_indicator="DocsisStatus",  ***REMOVED*** Redirect or page content after login
+        success_indicator="DocsisStatus",  # Redirect or page content after login
     )
 
-    ***REMOVED*** Capabilities - CM2000 provides full system info including uptime and restart
+    # Capabilities - CM2000 provides full system info including uptime and restart
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
@@ -82,7 +82,7 @@ class NetgearCM2000Parser(ModemParser):
         ModemCapability.RESTART,
     }
 
-    ***REMOVED*** URL patterns to try for modem data
+    # URL patterns to try for modem data
     url_patterns = [
         {"path": "/", "auth_method": "form", "auth_required": False},
         {"path": "/index.htm", "auth_method": "form", "auth_required": False},
@@ -111,16 +111,16 @@ class NetgearCM2000Parser(ModemParser):
             return (True, None)
 
         try:
-            ***REMOVED*** Step 1: Extract login URL from the login page
+            # Step 1: Extract login URL from the login page
             login_url = self._extract_login_url(session, base_url)
             if login_url is None:
                 return (False, None)
 
-            ***REMOVED*** Step 2: Submit login form
+            # Step 2: Submit login form
             if not self._submit_login_form(session, login_url, username, password):
                 return (False, None)
 
-            ***REMOVED*** Step 3: Verify login success
+            # Step 3: Verify login success
             success = self._verify_login_success(session, base_url)
             return (success, None)
 
@@ -185,17 +185,17 @@ class NetgearCM2000Parser(ModemParser):
             _LOGGER.warning("CM2000: DocsisStatus.htm returned status %d", verify_response.status_code)
             return False
 
-        ***REMOVED*** Check if we got redirected back to login page
+        # Check if we got redirected back to login page
         if "redirect()" in verify_response.text and "Login.htm" in verify_response.text:
             _LOGGER.warning("CM2000: Login failed - got redirected to login page")
             return False
 
-        ***REMOVED*** Check if we got actual channel data
+        # Check if we got actual channel data
         if "InitDsTableTagValue" in verify_response.text or "InitUsTableTagValue" in verify_response.text:
             _LOGGER.info("CM2000: Login successful - DocsisStatus.htm contains channel data")
             return True
 
-        ***REMOVED*** If we got a 200 but no channel data, login might have worked
+        # If we got a 200 but no channel data, login might have worked
         _LOGGER.warning("CM2000: DocsisStatus.htm accessible but no channel data found")
         return True
 
@@ -210,8 +210,8 @@ class NetgearCM2000Parser(ModemParser):
         Returns:
             Dictionary with downstream, upstream, and system_info
         """
-        ***REMOVED*** CM2000 requires fetching DocsisStatus.htm for channel data
-        docsis_soup = soup  ***REMOVED*** Default to provided soup
+        # CM2000 requires fetching DocsisStatus.htm for channel data
+        docsis_soup = soup  # Default to provided soup
 
         if session and base_url:
             try:
@@ -220,7 +220,7 @@ class NetgearCM2000Parser(ModemParser):
                 docsis_response = session.get(docsis_url, timeout=10)
 
                 if docsis_response.status_code == 200:
-                    ***REMOVED*** Check if we got redirected to login page
+                    # Check if we got redirected to login page
                     if "redirect()" in docsis_response.text and "Login.htm" in docsis_response.text:
                         _LOGGER.warning("CM2000: Session expired, got login redirect")
                     else:
@@ -236,14 +236,14 @@ class NetgearCM2000Parser(ModemParser):
             except Exception as e:
                 _LOGGER.warning("CM2000: Error fetching DocsisStatus.htm: %s - using provided page", e)
 
-        ***REMOVED*** Parse channel data from DocsisStatus.htm
+        # Parse channel data from DocsisStatus.htm
         downstream_channels = self.parse_downstream(docsis_soup)
         upstream_channels = self.parse_upstream(docsis_soup)
 
-        ***REMOVED*** Parse system info from DocsisStatus.htm (uptime, current time)
+        # Parse system info from DocsisStatus.htm (uptime, current time)
         system_info = self.parse_system_info(docsis_soup)
 
-        ***REMOVED*** Fetch index.htm for software version (it's not in DocsisStatus.htm)
+        # Fetch index.htm for software version (it's not in DocsisStatus.htm)
         if session and base_url:
             try:
                 _LOGGER.debug("CM2000: Fetching index.htm for software version")
@@ -280,13 +280,13 @@ class NetgearCM2000Parser(ModemParser):
         Returns:
             True if this is a Netgear CM2000, False otherwise
         """
-        ***REMOVED*** Check title tag
+        # Check title tag
         title = soup.find("title")
         if title and "CM2000" in title.text and "NETGEAR" in title.text:
             _LOGGER.info("Detected Netgear CM2000 from page title")
             return True
 
-        ***REMOVED*** Check meta description
+        # Check meta description
         meta_desc = soup.find("meta", attrs={"name": "description"})
         if meta_desc:
             content = meta_desc.get("content", "")
@@ -294,8 +294,8 @@ class NetgearCM2000Parser(ModemParser):
                 _LOGGER.info("Detected Netgear CM2000 from meta description")
                 return True
 
-        ***REMOVED*** Check for CM2000 in page text with NETGEAR
-        ***REMOVED*** Make sure it's not another model that mentions CM2000
+        # Check for CM2000 in page text with NETGEAR
+        # Make sure it's not another model that mentions CM2000
         if (
             "CM2000" in html
             and "NETGEAR" in html.upper()
@@ -306,7 +306,7 @@ class NetgearCM2000Parser(ModemParser):
 
         return False
 
-    def parse_downstream(self, soup: BeautifulSoup) -> list[dict]:  ***REMOVED*** noqa: C901
+    def parse_downstream(self, soup: BeautifulSoup) -> list[dict]:  # noqa: C901
         """Parse downstream channel data from DocsisStatus.htm.
 
         The CM2000 embeds channel data in JavaScript variables:
@@ -319,18 +319,18 @@ class NetgearCM2000Parser(ModemParser):
         channels: list[dict] = []
 
         try:
-            ***REMOVED*** Parse DOCSIS 3.0 QAM channels
+            # Parse DOCSIS 3.0 QAM channels
             qam_channels = self._parse_downstream_from_js(soup)
             channels.extend(qam_channels)
 
-            ***REMOVED*** Fallback to HTML table if JS method fails
+            # Fallback to HTML table if JS method fails
             if not qam_channels:
                 qam_channels = self._parse_downstream_from_table(soup)
                 channels.extend(qam_channels)
 
             _LOGGER.info("CM2000: Parsed %d downstream QAM channels", len(qam_channels))
 
-            ***REMOVED*** Parse DOCSIS 3.1 OFDM channels
+            # Parse DOCSIS 3.1 OFDM channels
             ofdm_channels = self._parse_ofdm_downstream(soup)
             channels.extend(ofdm_channels)
             _LOGGER.info("CM2000: Parsed %d downstream OFDM channels", len(ofdm_channels))
@@ -340,7 +340,7 @@ class NetgearCM2000Parser(ModemParser):
 
         return channels
 
-    def _parse_downstream_from_js(self, soup: BeautifulSoup) -> list[dict]:  ***REMOVED*** noqa: C901
+    def _parse_downstream_from_js(self, soup: BeautifulSoup) -> list[dict]:  # noqa: C901
         """Parse downstream channels from JavaScript variables."""
         channels: list[dict] = []
 
@@ -350,7 +350,7 @@ class NetgearCM2000Parser(ModemParser):
 
             for script in all_scripts:
                 if script.string and regex_pattern.search(script.string):
-                    ***REMOVED*** Extract the function body
+                    # Extract the function body
                     func_match = re.search(
                         r"function InitDsTableTagValue\(\)[^{]*\{(.*?)\n\}", script.string, re.DOTALL
                     )
@@ -358,10 +358,10 @@ class NetgearCM2000Parser(ModemParser):
                         continue
 
                     func_body = func_match.group(1)
-                    ***REMOVED*** Remove block comments
+                    # Remove block comments
                     func_body_clean = re.sub(r"/\*.*?\*/", "", func_body, flags=re.DOTALL)
 
-                    ***REMOVED*** Find tagValueList
+                    # Find tagValueList
                     match = re.search(r"^\s+var tagValueList = [\"']([^\"']+)[\"']", func_body_clean, re.MULTILINE)
                     if not match:
                         continue
@@ -369,10 +369,10 @@ class NetgearCM2000Parser(ModemParser):
                     values = match.group(1).split("|")
                     _LOGGER.debug("CM2000 Downstream JS: Found %d values", len(values))
 
-                    if len(values) < 10:  ***REMOVED*** Need at least count + 1 channel
+                    if len(values) < 10:  # Need at least count + 1 channel
                         continue
 
-                    ***REMOVED*** First value is channel count
+                    # First value is channel count
                     channel_count = int(values[0])
                     fields_per_channel = 9
                     idx = 1
@@ -406,22 +406,22 @@ class NetgearCM2000Parser(ModemParser):
 
                         idx += fields_per_channel
 
-                    break  ***REMOVED*** Found data, stop searching
+                    break  # Found data, stop searching
 
         except Exception as e:
             _LOGGER.debug("CM2000: JS downstream parsing failed: %s", e)
 
         return channels
 
-    def _parse_downstream_from_table(self, soup: BeautifulSoup) -> list[dict]:  ***REMOVED*** noqa: C901
+    def _parse_downstream_from_table(self, soup: BeautifulSoup) -> list[dict]:  # noqa: C901
         """Parse downstream channels from HTML table (fallback method)."""
         channels: list[dict] = []
 
         try:
-            ***REMOVED*** Look for downstream table by id or class
+            # Look for downstream table by id or class
             ds_table = soup.find("table", {"id": "dsTable"})
             if not ds_table:
-                ***REMOVED*** Try finding by header text
+                # Try finding by header text
                 tables = soup.find_all("table")
                 for table in tables:
                     header = table.find("tr")
@@ -432,7 +432,7 @@ class NetgearCM2000Parser(ModemParser):
             if not ds_table:
                 return channels
 
-            rows = ds_table.find_all("tr")[1:]  ***REMOVED*** Skip header
+            rows = ds_table.find_all("tr")[1:]  # Skip header
 
             for row in rows:
                 cells = row.find_all("td")
@@ -469,7 +469,7 @@ class NetgearCM2000Parser(ModemParser):
 
         return channels
 
-    def parse_upstream(self, soup: BeautifulSoup) -> list[dict]:  ***REMOVED*** noqa: C901
+    def parse_upstream(self, soup: BeautifulSoup) -> list[dict]:  # noqa: C901
         """Parse upstream channel data from DocsisStatus.htm.
 
         The CM2000 embeds channel data in JavaScript variables:
@@ -482,18 +482,18 @@ class NetgearCM2000Parser(ModemParser):
         channels: list[dict] = []
 
         try:
-            ***REMOVED*** Parse DOCSIS 3.0 ATDMA channels
+            # Parse DOCSIS 3.0 ATDMA channels
             atdma_channels = self._parse_upstream_from_js(soup)
             channels.extend(atdma_channels)
 
-            ***REMOVED*** Fallback to HTML table if JS method fails
+            # Fallback to HTML table if JS method fails
             if not atdma_channels:
                 atdma_channels = self._parse_upstream_from_table(soup)
                 channels.extend(atdma_channels)
 
             _LOGGER.info("CM2000: Parsed %d upstream ATDMA channels", len(atdma_channels))
 
-            ***REMOVED*** Parse DOCSIS 3.1 OFDMA channels
+            # Parse DOCSIS 3.1 OFDMA channels
             ofdma_channels = self._parse_ofdma_upstream(soup)
             channels.extend(ofdma_channels)
             _LOGGER.info("CM2000: Parsed %d upstream OFDMA channels", len(ofdma_channels))
@@ -503,7 +503,7 @@ class NetgearCM2000Parser(ModemParser):
 
         return channels
 
-    def _parse_upstream_from_js(self, soup: BeautifulSoup) -> list[dict]:  ***REMOVED*** noqa: C901
+    def _parse_upstream_from_js(self, soup: BeautifulSoup) -> list[dict]:  # noqa: C901
         """Parse upstream channels from JavaScript variables."""
         channels: list[dict] = []
 
@@ -529,7 +529,7 @@ class NetgearCM2000Parser(ModemParser):
                     values = match.group(1).split("|")
                     _LOGGER.debug("CM2000 Upstream JS: Found %d values", len(values))
 
-                    if len(values) < 8:  ***REMOVED*** Need at least count + 1 channel
+                    if len(values) < 8:  # Need at least count + 1 channel
                         continue
 
                     channel_count = int(values[0])
@@ -570,7 +570,7 @@ class NetgearCM2000Parser(ModemParser):
 
         return channels
 
-    def _parse_upstream_from_table(self, soup: BeautifulSoup) -> list[dict]:  ***REMOVED*** noqa: C901
+    def _parse_upstream_from_table(self, soup: BeautifulSoup) -> list[dict]:  # noqa: C901
         """Parse upstream channels from HTML table (fallback method)."""
         channels: list[dict] = []
 
@@ -769,8 +769,8 @@ class NetgearCM2000Parser(ModemParser):
         info = {}
 
         try:
-            ***REMOVED*** Try to extract from JavaScript InitTagValue function
-            ***REMOVED*** Filter script tags manually to satisfy mypy (find_all with both name and string has typing issues)
+            # Try to extract from JavaScript InitTagValue function
+            # Filter script tags manually to satisfy mypy (find_all with both name and string has typing issues)
             script_tags = [
                 tag for tag in soup.find_all("script") if tag.string and re.search("InitTagValue", tag.string)
             ]
@@ -779,7 +779,7 @@ class NetgearCM2000Parser(ModemParser):
                 if not script.string:
                     continue
 
-                ***REMOVED*** Look for InitTagValue function
+                # Look for InitTagValue function
                 func_match = re.search(r"function InitTagValue\(\)[^{]*\{(.*?)\n\}", script.string, re.DOTALL)
                 if not func_match:
                     continue
@@ -790,17 +790,17 @@ class NetgearCM2000Parser(ModemParser):
                 match = re.search(r"var tagValueList = [\"']([^\"']+)[\"']", func_body_clean)
                 if match:
                     values = match.group(1).split("|")
-                    ***REMOVED*** Extract current system time (index 10)
+                    # Extract current system time (index 10)
                     if len(values) > 10 and values[10] and values[10] != "&nbsp;":
                         info["current_time"] = values[10]
                         _LOGGER.debug("CM2000: Parsed current time: %s", values[10])
 
-                    ***REMOVED*** Extract system uptime (index 14) - CM2000 provides this!
+                    # Extract system uptime (index 14) - CM2000 provides this!
                     if len(values) > 14 and values[14] and values[14] != "&nbsp;":
                         info["system_uptime"] = values[14]
                         _LOGGER.debug("CM2000: Parsed system uptime: %s", values[14])
 
-                        ***REMOVED*** Calculate last boot time from uptime
+                        # Calculate last boot time from uptime
                         boot_time = self._calculate_boot_time(values[14])
                         if boot_time:
                             info["last_boot_time"] = boot_time
@@ -809,7 +809,7 @@ class NetgearCM2000Parser(ModemParser):
                     _LOGGER.debug("CM2000: Parsed system info from InitTagValue")
                     break
 
-            ***REMOVED*** Also try to find firmware version from page content
+            # Also try to find firmware version from page content
             fw_match = re.search(r"Cable Firmware Version[:\s]*([^\s<]+)", str(soup))
             if fw_match:
                 info["software_version"] = fw_match.group(1)
@@ -833,12 +833,12 @@ class NetgearCM2000Parser(ModemParser):
         try:
             total_seconds = 0
 
-            ***REMOVED*** Parse days (e.g., "7 days")
+            # Parse days (e.g., "7 days")
             days_match = re.search(r"(\d+)\s*days?", uptime_str, re.IGNORECASE)
             if days_match:
                 total_seconds += int(days_match.group(1)) * 86400
 
-            ***REMOVED*** Parse HH:MM:SS format (e.g., "00:00:01")
+            # Parse HH:MM:SS format (e.g., "00:00:01")
             time_match = re.search(r"(\d{1,2}):(\d{2}):(\d{2})", uptime_str)
             if time_match:
                 hours = int(time_match.group(1))
@@ -849,7 +849,7 @@ class NetgearCM2000Parser(ModemParser):
             if total_seconds == 0:
                 return None
 
-            ***REMOVED*** Calculate boot time: current time - uptime
+            # Calculate boot time: current time - uptime
             uptime_delta = timedelta(seconds=total_seconds)
             boot_time = datetime.now() - uptime_delta
 
@@ -877,14 +877,14 @@ class NetgearCM2000Parser(ModemParser):
             Firmware version string or None if not found
         """
         try:
-            ***REMOVED*** Find script containing InitTagValue
+            # Find script containing InitTagValue
             for script in soup.find_all("script"):
                 if not script.string or "InitTagValue" not in script.string:
                     continue
 
-                ***REMOVED*** Extract tagValueList from the function (first non-commented assignment)
-                ***REMOVED*** Look for lines that start with whitespace then "var tagValueList"
-                ***REMOVED*** Skip lines that start with "//" (comments)
+                # Extract tagValueList from the function (first non-commented assignment)
+                # Look for lines that start with whitespace then "var tagValueList"
+                # Skip lines that start with "//" (comments)
                 match = re.search(
                     r"function InitTagValue\(\)[^{]*\{[^}]*?^\s+var tagValueList = ['\"]([^'\"]+)['\"]",
                     script.string,
@@ -918,7 +918,7 @@ class NetgearCM2000Parser(ModemParser):
             True if restart command was sent successfully
         """
         try:
-            ***REMOVED*** Step 1: Fetch RouterStatus.htm to get the form action with dynamic ID
+            # Step 1: Fetch RouterStatus.htm to get the form action with dynamic ID
             _LOGGER.debug("CM2000: Fetching RouterStatus.htm for restart")
             status_response = session.get(f"{base_url}/RouterStatus.htm", timeout=10)
 
@@ -926,7 +926,7 @@ class NetgearCM2000Parser(ModemParser):
                 _LOGGER.error("CM2000: Failed to fetch RouterStatus.htm, status %d", status_response.status_code)
                 return False
 
-            ***REMOVED*** Step 2: Extract form action URL with dynamic ID
+            # Step 2: Extract form action URL with dynamic ID
             soup = BeautifulSoup(status_response.text, "html.parser")
             form = soup.find("form", {"action": re.compile(r"/goform/RouterStatus")})
 
@@ -942,7 +942,7 @@ class NetgearCM2000Parser(ModemParser):
 
             _LOGGER.debug("CM2000: Restart URL: %s", restart_url)
 
-            ***REMOVED*** Step 3: POST with buttonSelect=2 to trigger reboot
+            # Step 3: POST with buttonSelect=2 to trigger reboot
             restart_data = {"buttonSelect": "2"}
             restart_response = session.post(restart_url, data=restart_data, timeout=10)
 

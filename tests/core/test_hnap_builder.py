@@ -63,7 +63,7 @@ class TestEnvelopeBuilding:
         """Test that built envelope is valid XML."""
         envelope = builder._build_envelope("TestAction", {"Param1": "Value1"})
 
-        ***REMOVED*** Should parse without error
+        # Should parse without error
         root = fromstring(envelope)
         assert root is not None
 
@@ -90,7 +90,7 @@ class TestEnvelopeBuilding:
         actions = ["Action1", "Action2"]
         envelope = builder._build_multi_envelope(actions)
 
-        ***REMOVED*** Should parse without error
+        # Should parse without error
         root = fromstring(envelope)
         assert root is not None
 
@@ -108,7 +108,7 @@ class TestCallSingle:
 
         assert result == "<xml>response</xml>"
 
-        ***REMOVED*** Verify request
+        # Verify request
         mock_session.post.assert_called_once()
         call_args = mock_session.post.call_args
 
@@ -128,7 +128,7 @@ class TestCallSingle:
 
         assert result == "<xml>response</xml>"
 
-        ***REMOVED*** Verify envelope contains parameters
+        # Verify envelope contains parameters
         call_args = mock_session.post.call_args
         envelope = call_args[1]["data"]
         assert "<Username>admin</Username>" in envelope
@@ -169,7 +169,7 @@ class TestCallMultiple:
 
         assert result == "<xml>batched response</xml>"
 
-        ***REMOVED*** Verify request
+        # Verify request
         call_args = mock_session.post.call_args
         assert call_args[1]["headers"]["SOAPAction"] == '"http://purenetworks.com/HNAP1/GetMultipleHNAPs"'
 
@@ -271,7 +271,7 @@ class TestGetTextValue:
 
         value = HNAPRequestBuilder.get_text_value(element, "NonExistent")
 
-        assert value == ""  ***REMOVED*** Default value
+        assert value == ""  # Default value
 
     def test_with_custom_default(self):
         """Test custom default value."""
@@ -295,7 +295,7 @@ class TestGetTextValue:
 
         value = HNAPRequestBuilder.get_text_value(element, "EmptyTag", default="default")
 
-        assert value == "default"  ***REMOVED*** Empty text returns default
+        assert value == "default"  # Empty text returns default
 
     def test_strips_whitespace(self):
         """Test that whitespace is stripped from values."""
@@ -312,7 +312,7 @@ class TestIntegration:
 
     def test_full_workflow_single_action(self, builder, mock_session):
         """Test complete workflow: build envelope, call, parse response."""
-        ***REMOVED*** Mock response - namespace is handled by parse_response, child elements should not be namespaced
+        # Mock response - namespace is handled by parse_response, child elements should not be namespaced
         mock_response_xml = """<?xml version="1.0"?>
         <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
           <soap:Body>
@@ -327,15 +327,15 @@ class TestIntegration:
         mock_response.text = mock_response_xml
         mock_session.post.return_value = mock_response
 
-        ***REMOVED*** Make call
+        # Make call
         result_xml = builder.call_single(mock_session, "http://192.168.100.1", "GetMotoStatusConnectionInfo")
 
-        ***REMOVED*** Parse result
+        # Parse result
         result = HNAPRequestBuilder.parse_response(result_xml, "GetMotoStatusConnectionInfo", builder.namespace)
 
         assert result is not None
 
-        ***REMOVED*** Extract values
+        # Extract values
         frequency = HNAPRequestBuilder.get_text_value(result, "Frequency")
         power = HNAPRequestBuilder.get_text_value(result, "Power")
 

@@ -14,7 +14,7 @@ class TestCanParse:
 
     def test_always_returns_true_for_any_html(self):
         """Test that can_parse always returns True regardless of HTML content."""
-        ***REMOVED*** Test with random HTML
+        # Test with random HTML
         soup = BeautifulSoup("<html><body><h1>Random Page</h1></body></html>", "html.parser")
         assert UniversalFallbackParser.can_parse(soup, "http://192.168.1.1", "<html></html>") is True
 
@@ -172,14 +172,14 @@ class TestLogin:
         parser = UniversalFallbackParser()
         session = Mock()
 
-        ***REMOVED*** Mock successful authentication
+        # Mock successful authentication
         mock_strategy = Mock()
         mock_strategy.login.return_value = (True, "<html>authenticated</html>")
         mock_auth_factory.get_strategy.return_value = mock_strategy
 
         success, html = parser.login(session, "http://192.168.1.1", "admin", "password")
 
-        ***REMOVED*** Should attempt authentication
+        # Should attempt authentication
         mock_auth_factory.get_strategy.assert_called_once()
         mock_strategy.login.assert_called_once_with(
             session, "http://192.168.1.1", "admin", "password", parser.auth_config
@@ -193,14 +193,14 @@ class TestLogin:
         parser = UniversalFallbackParser()
         session = Mock()
 
-        ***REMOVED*** Mock failed authentication
+        # Mock failed authentication
         mock_strategy = Mock()
         mock_strategy.login.return_value = (False, None)
         mock_auth_factory.get_strategy.return_value = mock_strategy
 
         success, html = parser.login(session, "http://192.168.1.1", "admin", "wrong")
 
-        ***REMOVED*** Should still return True to allow installation
+        # Should still return True to allow installation
         assert success is True
         assert html is None
 
@@ -210,12 +210,12 @@ class TestLogin:
         parser = UniversalFallbackParser()
         session = Mock()
 
-        ***REMOVED*** Mock exception during authentication
+        # Mock exception during authentication
         mock_auth_factory.get_strategy.side_effect = Exception("Auth error")
 
         success, html = parser.login(session, "http://192.168.1.1", "admin", "password")
 
-        ***REMOVED*** Should still return True to allow installation
+        # Should still return True to allow installation
         assert success is True
         assert html is None
 

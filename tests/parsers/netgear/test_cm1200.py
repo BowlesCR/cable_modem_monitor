@@ -9,7 +9,7 @@ Parser Status: Awaiting user verification
 Fixtures available:
 - DocsisStatus.htm: DOCSIS channel data (32 DS + 3 US locked)
 
-Related: Issue ***REMOVED***63 (Netgear CM1200 Support Request)
+Related: Issue #63 (Netgear CM1200 Support Request)
 Contributor: @DeFlanko
 """
 
@@ -127,34 +127,34 @@ class TestCM1200Parsing:
 
         result = parser.parse(soup)
 
-        ***REMOVED*** Verify structure
+        # Verify structure
         assert "downstream" in result
         assert "upstream" in result
         assert "system_info" in result
 
-        ***REMOVED*** Verify downstream channels (31 QAM locked + 1 OFDM locked = 32 total)
+        # Verify downstream channels (31 QAM locked + 1 OFDM locked = 32 total)
         downstream = result["downstream"]
         assert len(downstream) == 32, f"Expected 32 downstream channels, got {len(downstream)}"
 
-        ***REMOVED*** Verify downstream channel structure (common fields)
+        # Verify downstream channel structure (common fields)
         for ch in downstream:
             assert "channel_id" in ch
             assert "frequency" in ch
             assert "power" in ch
             assert "snr" in ch
             assert "modulation" in ch
-            ***REMOVED*** corrected/uncorrected only present on QAM channels
+            # corrected/uncorrected only present on QAM channels
             if not ch.get("is_ofdm"):
                 assert "corrected" in ch
                 assert "uncorrected" in ch
 
-        ***REMOVED*** Verify specific QAM downstream values (from fixture)
+        # Verify specific QAM downstream values (from fixture)
         first_ds = downstream[0]
         assert first_ds["frequency"] == 765000000
         assert first_ds["modulation"] == "QAM256"
         assert first_ds["channel_id"] == "32"
 
-        ***REMOVED*** Verify OFDM channel exists
+        # Verify OFDM channel exists
         ofdm_channels = [ch for ch in downstream if ch.get("is_ofdm")]
         assert len(ofdm_channels) == 1
         assert ofdm_channels[0]["modulation"] == "OFDM"
@@ -166,27 +166,27 @@ class TestCM1200Parsing:
 
         result = parser.parse(soup)
 
-        ***REMOVED*** Verify upstream channels (2 ATDMA locked + 1 OFDMA locked = 3 total)
+        # Verify upstream channels (2 ATDMA locked + 1 OFDMA locked = 3 total)
         upstream = result["upstream"]
         assert len(upstream) == 3, f"Expected 3 upstream channels, got {len(upstream)}"
 
-        ***REMOVED*** Verify upstream channel structure (common fields)
+        # Verify upstream channel structure (common fields)
         for ch in upstream:
             assert "channel_id" in ch
             assert "frequency" in ch
             assert "power" in ch
             assert "channel_type" in ch
-            ***REMOVED*** symbol_rate only present on ATDMA channels
+            # symbol_rate only present on ATDMA channels
             if not ch.get("is_ofdm"):
                 assert "symbol_rate" in ch
 
-        ***REMOVED*** Verify specific ATDMA upstream values (from fixture)
+        # Verify specific ATDMA upstream values (from fixture)
         first_us = upstream[0]
         assert first_us["frequency"] == 13200000
         assert first_us["channel_type"] == "ATDMA"
         assert first_us["symbol_rate"] == 5120
 
-        ***REMOVED*** Verify OFDMA channel exists
+        # Verify OFDMA channel exists
         ofdma_channels = [ch for ch in upstream if ch.get("is_ofdm")]
         assert len(ofdma_channels) == 1
         assert ofdma_channels[0]["channel_type"] == "OFDMA"
@@ -203,7 +203,7 @@ class TestCM1200Parsing:
         assert "system_uptime" in system_info
         assert "last_boot_time" in system_info
 
-        ***REMOVED*** Verify values from fixture
+        # Verify values from fixture
         assert "Sun Dec 14" in system_info["current_time"]
         assert "39 days" in system_info["system_uptime"]
 
@@ -234,7 +234,7 @@ class TestCM1200Login:
         """Test login returns success when no credentials provided."""
         parser = NetgearCM1200Parser()
 
-        ***REMOVED*** Mock session (not used when no credentials)
+        # Mock session (not used when no credentials)
         class MockSession:
             pass
 
@@ -341,7 +341,7 @@ class TestCM1200BootTimeCalculation:
         result = parser._calculate_boot_time("39 days 15:47:33")
 
         assert result is not None
-        ***REMOVED*** Result should be an ISO format datetime string
+        # Result should be an ISO format datetime string
         assert "T" in result
 
     def test_calculate_boot_time_single_day(self):
@@ -439,7 +439,7 @@ class TestCM1200EdgeCases:
         soup = BeautifulSoup(html, "html.parser")
         result = parser.parse_downstream(soup)
 
-        ***REMOVED*** Only the locked channel should be parsed
+        # Only the locked channel should be parsed
         assert len(result) == 1
         assert result[0]["frequency"] == 579000000
 
@@ -455,12 +455,12 @@ class TestCM1200EdgeCases:
             def get(self, url, timeout=None):
                 return MockResponse()
 
-        ***REMOVED*** Start with empty soup
+        # Start with empty soup
         empty_soup = BeautifulSoup("<html></html>", "html.parser")
 
         result = parser.parse(empty_soup, session=MockSession(), base_url="http://192.168.100.1")
 
-        ***REMOVED*** Should have parsed channels from fetched page (31 QAM + 1 OFDM, 2 ATDMA + 1 OFDMA)
+        # Should have parsed channels from fetched page (31 QAM + 1 OFDM, 2 ATDMA + 1 OFDMA)
         assert len(result["downstream"]) == 32
         assert len(result["upstream"]) == 3
 
@@ -479,7 +479,7 @@ class TestCM1200EdgeCases:
         empty_soup = BeautifulSoup("<html></html>", "html.parser")
         result = parser.parse(empty_soup, session=MockSession(), base_url="http://192.168.100.1")
 
-        ***REMOVED*** Should fall back to empty results from provided soup
+        # Should fall back to empty results from provided soup
         assert result["downstream"] == []
         assert result["upstream"] == []
 
@@ -494,7 +494,7 @@ class TestCM1200EdgeCases:
         empty_soup = BeautifulSoup("<html></html>", "html.parser")
         result = parser.parse(empty_soup, session=MockSession(), base_url="http://192.168.100.1")
 
-        ***REMOVED*** Should fall back to empty results
+        # Should fall back to empty results
         assert result["downstream"] == []
         assert result["upstream"] == []
 
@@ -516,7 +516,7 @@ class TestCM1200EdgeCases:
         </html>
         """
         soup = BeautifulSoup(html, "html.parser")
-        ***REMOVED*** Manually set content to a list (edge case)
+        # Manually set content to a list (edge case)
         meta = soup.find("meta", attrs={"name": "description"})
         meta["content"] = ["not", "a", "string"]
 

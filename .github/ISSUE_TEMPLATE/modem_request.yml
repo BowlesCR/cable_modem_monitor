@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        ***REMOVED******REMOVED*** Request Support for a New Modem
+        ## Request Support for a New Modem
 
         Thank you for helping expand modem support! This template will guide you through providing the information needed to add support for your modem.
 
@@ -83,9 +83,9 @@ body:
       value: |
         ---
 
-        ***REMOVED******REMOVED*** 📥 How to Provide Modem Data
+        ## 📥 How to Provide Modem Data
 
-        ***REMOVED******REMOVED******REMOVED*** ✅ Method 1: Fallback Mode + Capture HTML (RECOMMENDED)
+        ### ✅ Method 1: Fallback Mode + Capture HTML (RECOMMENDED)
 
         **This is the easiest and safest method** - works even if your modem isn't supported yet!
 
@@ -106,18 +106,18 @@ body:
 
         ---
 
-        ***REMOVED******REMOVED******REMOVED*** 🔐 Method 2: HAR Capture (For Authentication Issues)
+        ### 🔐 Method 2: HAR Capture (For Authentication Issues)
 
         **Use this only if** your modem requires login AND Fallback Mode can't reach the status pages.
 
         HAR capture records the full authentication flow, which helps us understand login requirements.
 
         ```bash
-        ***REMOVED*** Clone the repo first
+        # Clone the repo first
         git clone https://github.com/solentlabs/cable_modem_monitor.git
         cd cable_modem_monitor
 
-        ***REMOVED*** Install playwright and run capture
+        # Install playwright and run capture
         pip install playwright
         playwright install chromium
         python scripts/capture_modem.py
@@ -129,7 +129,7 @@ body:
 
         ---
 
-        ***REMOVED******REMOVED******REMOVED*** ⚠️ Method 3: Manual HTML Capture (Last Resort)
+        ### ⚠️ Method 3: Manual HTML Capture (Last Resort)
 
         **Only use this if Methods 1 and 2 don't work for your situation.**
 
@@ -201,7 +201,7 @@ body:
       value: |
         ---
 
-        ***REMOVED******REMOVED*** 🙏 Thank You!
+        ## 🙏 Thank You!
 
         Your contribution helps everyone with the same modem model. Once the parser is developed, we'll ask you to test it and provide feedback.
 

@@ -1,8 +1,8 @@
-***REMOVED*** Modem Request Issue Replies
+# Modem Request Issue Replies
 
 Standard response templates for new modem support requests on cable_modem_monitor.
 
-***REMOVED******REMOVED*** Workflow Overview
+## Workflow Overview
 
 1. **Triage** - Is the data actionable?
 2. **Assess** - Auth complexity? Similar to existing parser?
@@ -11,7 +11,7 @@ Standard response templates for new modem support requests on cable_modem_monito
 
 ---
 
-***REMOVED******REMOVED*** Part 1: Initial Acknowledgment + Triage
+## Part 1: Initial Acknowledgment + Triage
 
 Use this immediately when a new request comes in:
 
@@ -30,9 +30,9 @@ I'll review what you've sent and follow up shortly.
 
 ---
 
-***REMOVED******REMOVED*** Part 2: Response Templates
+## Part 2: Response Templates
 
-***REMOVED******REMOVED******REMOVED*** 2a: Data looks good - proceeding
+### 2a: Data looks good - proceeding
 
 ```markdown
 **Assessment:**
@@ -50,7 +50,7 @@ These requests often take a few iterations - first pass gets basic data working,
 I'll follow up here with progress.
 ```
 
-***REMOVED******REMOVED******REMOVED*** 2b: Need more data - missing HTML capture
+### 2b: Need more data - missing HTML capture
 
 ```markdown
 **What's missing:** The diagnostics don't include `raw_html_capture` data.
@@ -65,12 +65,12 @@ This usually means the "Capture HTML" button wasn't clicked before downloading d
 This captures the actual HTML pages I need to build the parser.
 ```
 
-***REMOVED******REMOVED******REMOVED*** 2c: Need more data - HAR quality concerns
+### 2c: Need more data - HAR quality concerns
 
 ```markdown
 **About the HAR capture:**
 
-I noticed you used [Chrome's built-in HAR export / manual capture]. This can work, but our [capture script](https://github.com/solentlabs/cable_modem_monitor/blob/main/docs/MODEM_REQUEST.md***REMOVED***-method-2-har-capture-for-authentication-issues) has advantages:
+I noticed you used [Chrome's built-in HAR export / manual capture]. This can work, but our [capture script](https://github.com/solentlabs/cable_modem_monitor/blob/main/docs/MODEM_REQUEST.md#-method-2-har-capture-for-authentication-issues) has advantages:
 - Automatic PII sanitization (passwords, MACs, serials)
 - Disables browser caching (captures all async requests)
 - Compresses output
@@ -78,7 +78,7 @@ I noticed you used [Chrome's built-in HAR export / manual capture]. This can wor
 I'll review what you sent and see if it has what I need. If the status pages are missing or incomplete, I may ask for a re-capture with the script.
 ```
 
-***REMOVED******REMOVED******REMOVED*** 2d: Auth complexity detected (HNAP/SOAP)
+### 2d: Auth complexity detected (HNAP/SOAP)
 
 ```markdown
 **Assessment:**
@@ -104,7 +104,7 @@ Log in normally, navigate to the status/connection pages, then close the browser
 Fair warning: HNAP parsers typically take longer and require more back-and-forth than simple HTML parsers. But we've done several successfully (MB8611, S33), so it's definitely doable.
 ```
 
-***REMOVED******REMOVED******REMOVED*** 2e: Blocked on sanitization / PII concerns
+### 2e: Blocked on sanitization / PII concerns
 
 ```markdown
 **Thanks for flagging the PII concern!**
@@ -123,9 +123,9 @@ If you find anything that should have been sanitized, let me know what pattern i
 
 ---
 
-***REMOVED******REMOVED*** Closing Responses
+## Closing Responses
 
-***REMOVED******REMOVED******REMOVED*** Parser released - request testing
+### Parser released - request testing
 
 ```markdown
 **Good news!** I've added initial support for the [MODEL] in v[X.X.X].
@@ -143,7 +143,7 @@ Let me know:
 If anything's broken, share the error logs and I'll fix it in the next release.
 ```
 
-***REMOVED******REMOVED******REMOVED*** Issue resolved
+### Issue resolved
 
 ```markdown
 Glad it's working! 🎉
@@ -155,7 +155,7 @@ Feel free to close this issue, or leave it open if you notice any other problems
 
 ---
 
-***REMOVED******REMOVED*** Notes
+## Notes
 
 - **Engaged users are gold** - prioritize requests where users respond quickly
 - **Auth is the hard part** - set expectations early for HNAP/SOAP modems

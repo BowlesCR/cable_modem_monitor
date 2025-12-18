@@ -39,7 +39,7 @@ class TestCM820BParserDetection:
         assert ArrisCM820BParser.manufacturer == "ARRIS"
         assert "CM820B" in ArrisCM820BParser.models
         assert ArrisCM820BParser.docsis_version == "3.0"
-        assert ArrisCM820BParser().verified is True  ***REMOVED*** Verified by @dimkalinux (PR ***REMOVED***57)
+        assert ArrisCM820BParser().verified is True  # Verified by @dimkalinux (PR #57)
 
 
 class TestCM820BParserCapabilities:
@@ -67,11 +67,11 @@ class TestCM820BDownstreamParsing:
         soup = BeautifulSoup(arris_cm820b_status_html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** Verify downstream channels (8 channels in fixture)
+        # Verify downstream channels (8 channels in fixture)
         assert "downstream" in data
         assert len(data["downstream"]) == 8
 
-        ***REMOVED*** Check first downstream channel
+        # Check first downstream channel
         first_ds = data["downstream"][0]
         assert first_ds["channel_id"] == "73"
         assert first_ds["frequency"] == 178000000
@@ -81,7 +81,7 @@ class TestCM820BDownstreamParsing:
         assert first_ds["uncorrected"] == 445244
         assert first_ds["modulation"] == "256QAM"
 
-        ***REMOVED*** Check second channel to verify parsing
+        # Check second channel to verify parsing
         second_ds = data["downstream"][1]
         assert second_ds["channel_id"] == "74"
         assert second_ds["frequency"] == 186000000
@@ -97,11 +97,11 @@ class TestCM820BUpstreamParsing:
         soup = BeautifulSoup(arris_cm820b_status_html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** Verify upstream channels (4 channels expected)
+        # Verify upstream channels (4 channels expected)
         assert "upstream" in data
         assert len(data["upstream"]) == 4
 
-        ***REMOVED*** Check first upstream channel
+        # Check first upstream channel
         first_us = data["upstream"][0]
         assert first_us["channel_id"] == "6"
         assert first_us["frequency"] == 47000000
@@ -119,7 +119,7 @@ class TestCM820BSystemInfo:
         soup = BeautifulSoup(arris_cm820b_status_html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** Verify system info exists
+        # Verify system info exists
         assert "system_info" in data
         assert isinstance(data["system_info"], dict)
         assert data["system_info"]["system_uptime"] == "6 d:  2 h: 33  m"
@@ -166,7 +166,7 @@ class TestCM820BEdgeCases:
     def test_malformed_table_handled_gracefully(self):
         """Test that malformed tables don't crash the parser."""
         parser = ArrisCM820BParser()
-        ***REMOVED*** Table with Downstream 1 but incomplete rows
+        # Table with Downstream 1 but incomplete rows
         html = """
         <html><body>
         <table>
@@ -177,7 +177,7 @@ class TestCM820BEdgeCases:
         soup = BeautifulSoup(html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** Should return empty list, not crash
+        # Should return empty list, not crash
         assert data["downstream"] == []
 
     def test_missing_uptime_handled_gracefully(self):

@@ -1,16 +1,16 @@
-***REMOVED*** -----------------------------
-***REMOVED*** Python bytecode and compiled files
+# -----------------------------
+# Python bytecode and compiled files
 __pycache__/
 *.py[cod]
 *$py.class
 *.pyc
 *.so
 
-***REMOVED*** Python environment markers
+# Python environment markers
 .Python
 
-***REMOVED*** -----------------------------
-***REMOVED*** IDE and editor files
+# -----------------------------
+# IDE and editor files
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
@@ -21,36 +21,36 @@ __pycache__/
 .DS_Store
 .claude/
 
-***REMOVED*** -----------------------------
-***REMOVED*** Logs and temporary files
+# -----------------------------
+# Logs and temporary files
 *.log
 .pytest_cache/
 
-***REMOVED*** -----------------------------
-***REMOVED*** Python package and distribution files
+# -----------------------------
+# Python package and distribution files
 *.egg-info/
 dist/
 build/
 
-***REMOVED*** -----------------------------
-***REMOVED*** Virtual environments
+# -----------------------------
+# Virtual environments
 .venv/
 venv/
 env/
 ENV/
 
-***REMOVED*** -----------------------------
-***REMOVED*** Code quality and linting
+# -----------------------------
+# Code quality and linting
 .ruff_cache/
 
-***REMOVED*** -----------------------------
-***REMOVED*** Test coverage reports
+# -----------------------------
+# Test coverage reports
 .coverage
 coverage.xml
 htmlcov/
 
-***REMOVED*** -----------------------------
-***REMOVED*** Home Assistant test environment
+# -----------------------------
+# Home Assistant test environment
 test-ha-config/
 *.db
 *.db-shm
@@ -65,36 +65,36 @@ tts/
 *.sqlite-shm
 *.sqlite-wal
 
-***REMOVED*** -----------------------------
-***REMOVED*** CodeQL artifacts (exclude runtime/build artifacts, keep custom queries and config)
+# -----------------------------
+# CodeQL artifacts (exclude runtime/build artifacts, keep custom queries and config)
 codeql-pack.lock.yml
 db-*/
 *.testproj/
 .codeql/
 .aider*
 
-***REMOVED*** CodeQL CLI installation (local development only)
+# CodeQL CLI installation (local development only)
 /codeql/
 
-***REMOVED*** GitHub CodeQL workflow artifacts
+# GitHub CodeQL workflow artifacts
 .github/codeql/databases/
 .github/codeql/results/
 
-***REMOVED*** Keep custom queries and configuration
+# Keep custom queries and configuration
 !.github/codeql/queries/
 !.github/codeql/*.yml
 
-***REMOVED*** CodeQL test outputs
+# CodeQL test outputs
 *.actual
 *.diff
 *.result
 *.sarif
 
-***REMOVED*** -----------------------------
-***REMOVED*** Miscellaneous
+# -----------------------------
+# Miscellaneous
 
-***REMOVED*** HAR capture artifacts
+# HAR capture artifacts
 captures/
 
-***REMOVED*** Raw data from issue debugging (user-submitted logs, configs, etc.)
+# Raw data from issue debugging (user-submitted logs, configs, etc.)
 RAW_DATA/

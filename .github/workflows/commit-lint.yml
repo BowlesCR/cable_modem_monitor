@@ -60,10 +60,10 @@ jobs:
 
       - name: Validate PR commits
         run: |
-          ***REMOVED*** Get the list of commits in this PR
+          # Get the list of commits in this PR
           git fetch origin ${{ github.base_ref }}
 
-          ***REMOVED*** Validate each commit message
+          # Validate each commit message
           npx commitlint --from origin/${{ github.base_ref }} --to HEAD --verbose
 
       - name: Comment on PR (if validation fails)
@@ -71,11 +71,11 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const message = `***REMOVED******REMOVED*** ❌ Commit Message Validation Failed
+            const message = `## ❌ Commit Message Validation Failed
 
             Your commit messages don't follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
 
-            ***REMOVED******REMOVED******REMOVED*** Expected Format:
+            ### Expected Format:
             \`\`\`
             <type>(<optional scope>): <description>
 
@@ -84,7 +84,7 @@ jobs:
             [optional footer]
             \`\`\`
 
-            ***REMOVED******REMOVED******REMOVED*** Valid Types:
+            ### Valid Types:
             - **feat**: A new feature
             - **fix**: A bug fix
             - **docs**: Documentation changes
@@ -97,7 +97,7 @@ jobs:
             - **chore**: Other changes that don't modify src or test files
             - **deps**: Dependency updates
 
-            ***REMOVED******REMOVED******REMOVED*** Examples:
+            ### Examples:
             \`\`\`
             feat: add support for ARRIS SB8200 modem
             fix: resolve authentication timeout on Motorola modems
@@ -108,7 +108,7 @@ jobs:
             deps: update beautifulsoup4 to 4.12.3
             \`\`\`
 
-            ***REMOVED******REMOVED******REMOVED*** How to Fix:
+            ### How to Fix:
             1. Amend your commit messages to follow the format above
             2. Use \`git commit --amend\` for the most recent commit
             3. Use \`git rebase -i\` for older commits

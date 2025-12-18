@@ -34,18 +34,18 @@ class CapturingSession(requests.Session):
         super().__init__()
         self._capture_callback = capture_callback
 
-    def request(self, method: str, url: str, **kwargs) -> requests.Response:  ***REMOVED*** type: ignore[override]
+    def request(self, method: str, url: str, **kwargs) -> requests.Response:  # type: ignore[override]
         """Override request to capture responses."""
         response = super().request(method, url, **kwargs)
 
-        ***REMOVED*** Determine description based on URL and request headers
+        # Determine description based on URL and request headers
         description = "Parser fetch"
 
-        ***REMOVED*** Check for HNAP/SOAP requests (uses SOAPAction header)
+        # Check for HNAP/SOAP requests (uses SOAPAction header)
         headers = kwargs.get("headers", {})
         soap_action = headers.get("SOAPAction", "")
         if soap_action or "/hnap" in url.lower():
-            ***REMOVED*** Extract action name from SOAPAction header (e.g., '"http://...Login"' -> 'Login')
+            # Extract action name from SOAPAction header (e.g., '"http://...Login"' -> 'Login')
             action_name = soap_action.strip('"').split("/")[-1] if soap_action else "unknown"
             description = f"HNAP: {action_name}"
         elif "login" in url.lower() or "auth" in url.lower():
@@ -89,29 +89,29 @@ class ModemScraper:
             verify_ssl: Enable SSL certificate verification (default: False for compatibility with self-signed certs)
         """
         self.host = host
-        ***REMOVED*** Support both plain IP addresses and full URLs (http:// or https://)
+        # Support both plain IP addresses and full URLs (http:// or https://)
         if host.startswith(("http://", "https://")):
             self.base_url = host.rstrip("/")
         elif cached_url and (cached_url.startswith("http://") or cached_url.startswith("https://")):
-            ***REMOVED*** Optimization: Use protocol from cached working URL (skip protocol discovery)
+            # Optimization: Use protocol from cached working URL (skip protocol discovery)
             protocol = "https" if cached_url.startswith("https://") else "http"
             self.base_url = f"{protocol}://{host}"
             _LOGGER.debug("Using cached protocol %s from working URL: %s", protocol, cached_url)
         else:
-            ***REMOVED*** Try HTTPS first (MB8611 and newer modems), fallback to HTTP
+            # Try HTTPS first (MB8611 and newer modems), fallback to HTTP
             self.base_url = f"https://{host}"
         self.username = username
         self.password = password
         self.verify_ssl = verify_ssl
         self.session = requests.Session()
 
-        ***REMOVED*** Configure SSL verification with security warnings
+        # Configure SSL verification with security warnings
         if not self.verify_ssl:
-            ***REMOVED*** Disable SSL warnings for the session only (not globally)
+            # Disable SSL warnings for the session only (not globally)
             import urllib3
 
             self.session.verify = False
-            ***REMOVED*** Disable warnings only for this session
+            # Disable warnings only for this session
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
             _LOGGER.info(
                 "SSL certificate verification is disabled for this modem connection. "
@@ -121,16 +121,16 @@ class ModemScraper:
             self.session.verify = True
             _LOGGER.info("SSL certificate verification is enabled for secure connections")
 
-        ***REMOVED*** Handle parser parameter - can be instance, class, or list of classes
+        # Handle parser parameter - can be instance, class, or list of classes
         if isinstance(parser, list):
             self.parsers: list[Any] = parser
             self.parser: ModemParser | None = None
         elif parser and isinstance(parser, type):
-            ***REMOVED*** Parser class passed in
+            # Parser class passed in
             self.parsers = [parser]
             self.parser = None
         elif parser:
-            ***REMOVED*** Parser instance passed in
+            # Parser instance passed in
             self.parsers = [parser]
             self.parser = parser
         else:
@@ -138,11 +138,11 @@ class ModemScraper:
             self.parser = None
 
         self.cached_url = cached_url
-        self.parser_name = parser_name  ***REMOVED*** For Tier 2: load cached parser by name
+        self.parser_name = parser_name  # For Tier 2: load cached parser by name
         self.last_successful_url = ""
-        self._captured_urls: list[dict[str, Any]] = []  ***REMOVED*** For HTML capture feature
-        self._failed_urls: list[dict[str, Any]] = []  ***REMOVED*** Track failed fetches for diagnostics
-        self._capture_enabled: bool = False  ***REMOVED*** Flag to enable HTML capture
+        self._captured_urls: list[dict[str, Any]] = []  # For HTML capture feature
+        self._failed_urls: list[dict[str, Any]] = []  # Track failed fetches for diagnostics
+        self._capture_enabled: bool = False  # Flag to enable HTML capture
 
     def clear_auth_cache(self) -> None:
         """Clear cached authentication and create fresh session.
@@ -153,12 +153,12 @@ class ModemScraper:
         """
         import requests as req
 
-        ***REMOVED*** Create fresh session (clears cookies)
+        # Create fresh session (clears cookies)
         old_verify = self.session.verify if hasattr(self.session, "verify") else not self.verify_ssl
         self.session = req.Session()
         self.session.verify = old_verify
 
-        ***REMOVED*** Clear parser's HNAP builder cache if present
+        # Clear parser's HNAP builder cache if present
         if (
             hasattr(self, "parser")
             and self.parser is not None
@@ -180,20 +180,20 @@ class ModemScraper:
             return
 
         try:
-            ***REMOVED*** Normalize URL for deduplication
+            # Normalize URL for deduplication
             from urllib.parse import urlparse, urlunparse
 
             def normalize_url(url: str) -> str:
                 """Normalize URL for deduplication."""
                 parsed = urlparse(url)
-                ***REMOVED*** Remove fragment, normalize path
+                # Remove fragment, normalize path
                 path = parsed.path.rstrip("/") if parsed.path != "/" else "/"
                 normalized = urlunparse((parsed.scheme, parsed.netloc, path, parsed.params, parsed.query, ""))
                 return normalized
 
             normalized_url = normalize_url(response.url)
 
-            ***REMOVED*** Check if we've already captured this URL
+            # Check if we've already captured this URL
             for existing in self._captured_urls:
                 if normalize_url(existing["url"]) == normalized_url:
                     _LOGGER.debug(
@@ -203,10 +203,10 @@ class ModemScraper:
                     )
                     return
 
-            ***REMOVED*** Get parser name if available
+            # Get parser name if available
             parser_name = self.parser.name if self.parser else "unknown"
 
-            ***REMOVED*** Capture timing data for performance analysis
+            # Capture timing data for performance analysis
             elapsed_ms = response.elapsed.total_seconds() * 1000 if hasattr(response, "elapsed") else None
 
             self._captured_urls.append(
@@ -262,7 +262,7 @@ class ModemScraper:
         )
         _LOGGER.debug("Recorded failed URL: %s - %s", url, reason)
 
-    def _fetch_parser_url_patterns(self) -> None:  ***REMOVED*** noqa: C901
+    def _fetch_parser_url_patterns(self) -> None:  # noqa: C901
         """Fetch all URLs defined in the parser's url_patterns.
 
         This ensures that all parser-defined URLs are captured, even if they're
@@ -287,7 +287,7 @@ class ModemScraper:
 
             url = f"{self.base_url}{path}"
 
-            ***REMOVED*** Skip if already captured (avoid duplicates)
+            # Skip if already captured (avoid duplicates)
             from urllib.parse import urlparse, urlunparse
 
             def normalize_url(url_str: str) -> str:
@@ -303,7 +303,7 @@ class ModemScraper:
             try:
                 _LOGGER.debug("Fetching parser URL pattern: %s", url)
 
-                ***REMOVED*** Check if auth is required
+                # Check if auth is required
                 auth = None
                 if (
                     pattern.get("auth_required", False)
@@ -340,7 +340,7 @@ class ModemScraper:
 
         _LOGGER.info("Finished fetching parser URL patterns. Total captured: %d pages", len(self._captured_urls))
 
-    def _crawl_additional_pages(self, max_pages: int = 50) -> None:  ***REMOVED*** noqa: C901
+    def _crawl_additional_pages(self, max_pages: int = 50) -> None:  # noqa: C901
         """Comprehensive crawl to capture ALL modem resources.
 
         Modern cable modem UIs use JavaScript to dynamically build navigation.
@@ -371,21 +371,21 @@ class ModemScraper:
 
         _LOGGER.info("Starting comprehensive resource capture (max %d resources)", max_pages)
 
-        ***REMOVED*** Track what we've already captured (normalized URLs)
+        # Track what we've already captured (normalized URLs)
         captured_url_set = {normalize_url(item["url"]) for item in self._captured_urls}
         total_fetched = 0
         iteration = 0
-        max_iterations = 5  ***REMOVED*** Prevent infinite loops
+        max_iterations = 5  # Prevent infinite loops
 
         while iteration < max_iterations and total_fetched < max_pages:
             iteration += 1
             _LOGGER.info("Discovery iteration %d (captured so far: %d)", iteration, len(captured_url_set))
 
-            ***REMOVED*** Discover all resources from currently captured pages
+            # Discover all resources from currently captured pages
             resources = discover_all_resources(self._captured_urls, self.base_url)
 
-            ***REMOVED*** Collect all URLs to try, prioritized by type
-            ***REMOVED*** Priority: JS first (contains menu configs), then fragments, then HTML, then CSS
+            # Collect all URLs to try, prioritized by type
+            # Priority: JS first (contains menu configs), then fragments, then HTML, then CSS
             urls_to_try: list[tuple[str, str]] = []
 
             for url in resources[RESOURCE_TYPE_JS]:
@@ -404,7 +404,7 @@ class ModemScraper:
                 if normalize_url(url) not in captured_url_set:
                     urls_to_try.append((url, "stylesheet"))
 
-            ***REMOVED*** Also try API endpoints (best effort)
+            # Also try API endpoints (best effort)
             for url in resources[RESOURCE_TYPE_API]:
                 if normalize_url(url) not in captured_url_set:
                     urls_to_try.append((url, "api"))
@@ -415,7 +415,7 @@ class ModemScraper:
 
             _LOGGER.info("Found %d new resources to fetch in iteration %d", len(urls_to_try), iteration)
 
-            ***REMOVED*** Fetch discovered resources
+            # Fetch discovered resources
             fetched_this_iteration = 0
             for url, resource_type in urls_to_try:
                 if total_fetched >= max_pages:
@@ -427,7 +427,7 @@ class ModemScraper:
                     response = self.session.get(url, timeout=10)
 
                     if response.status_code == 200:
-                        ***REMOVED*** Capture with resource type info
+                        # Capture with resource type info
                         description = f"Comprehensive crawl: {resource_type}"
                         self._capture_response(response, description)
                         captured_url_set.add(normalize_url(url))
@@ -464,11 +464,11 @@ class ModemScraper:
                 fetched_this_iteration,
             )
 
-            ***REMOVED*** If we didn't fetch anything new, stop
+            # If we didn't fetch anything new, stop
             if fetched_this_iteration == 0:
                 break
 
-        ***REMOVED*** Final summary
+        # Final summary
         total_captured = len(self._captured_urls)
         _LOGGER.info(
             "Comprehensive capture complete: %d total resources captured in %d iterations",
@@ -510,7 +510,7 @@ class ModemScraper:
         """Find parser by name from available parsers."""
         for parser_class in self.parsers:
             if parser_class.name == self.parser_name:
-                ***REMOVED*** Cast to type[ModemParser] to satisfy type checker
+                # Cast to type[ModemParser] to satisfy type checker
                 return cast(type[ModemParser], parser_class)
         return None
 
@@ -542,25 +542,25 @@ class ModemScraper:
         if not cached_parser:
             return []
 
-        ***REMOVED*** Cast to type[ModemParser] to satisfy type checker after None check
+        # Cast to type[ModemParser] to satisfy type checker after None check
         parser = cached_parser
         _LOGGER.info("Found cached parser: %s", parser.name)
         urls: list[tuple[str, str, type[ModemParser]]] = []
 
-        ***REMOVED*** Try cached URL first if available
+        # Try cached URL first if available
         if self.cached_url:
             self._add_cached_url_if_matching(urls, parser, self.cached_url)
 
-        ***REMOVED*** Add other URLs from cached parser
+        # Add other URLs from cached parser
         self._add_parser_urls(urls, parser, exclude_url=self.cached_url)
 
-        ***REMOVED*** Add other parsers as fallback (excluding fallback parser itself)
+        # Add other parsers as fallback (excluding fallback parser itself)
         for parser_class in self.parsers:
             if parser_class.name != self.parser_name:
-                ***REMOVED*** Skip fallback parser - it should only be tried as last resort
+                # Skip fallback parser - it should only be tried as last resort
                 if parser_class.manufacturer == "Unknown":
                     continue
-                ***REMOVED*** Cast to type[ModemParser] to satisfy type checker
+                # Cast to type[ModemParser] to satisfy type checker
                 self._add_parser_urls(urls, cast(type[ModemParser], parser_class))
 
         return urls
@@ -574,10 +574,10 @@ class ModemScraper:
         _LOGGER.info("Tier 3: Auto-detection mode - trying all parsers")
         urls = []
 
-        ***REMOVED*** Try cached URL first with any compatible parser (excluding fallback)
+        # Try cached URL first with any compatible parser (excluding fallback)
         if self.cached_url:
             for parser_class in self.parsers:
-                ***REMOVED*** Skip fallback parser - it should only be tried as last resort
+                # Skip fallback parser - it should only be tried as last resort
                 if parser_class.manufacturer == "Unknown":
                     continue
 
@@ -587,9 +587,9 @@ class ModemScraper:
                         urls.append((self.cached_url, str(pattern["auth_method"]), parser_class))
                         break
 
-        ***REMOVED*** Add all parser URLs (excluding fallback)
+        # Add all parser URLs (excluding fallback)
         for parser_class in self.parsers:
-            ***REMOVED*** Skip fallback parser - it should only be tried as last resort during detection
+            # Skip fallback parser - it should only be tried as last resort during detection
             if parser_class.manufacturer == "Unknown":
                 _LOGGER.debug("Skipping fallback parser in URL discovery: %s", parser_class.name)
                 continue
@@ -610,17 +610,17 @@ class ModemScraper:
         2. If parser_name cached: load that parser and use its URLs first
         3. Auto-detect mode: try all parsers' URLs
         """
-        ***REMOVED*** Tier 1: User explicitly selected a parser
+        # Tier 1: User explicitly selected a parser
         if self.parser:
             return self._get_tier1_urls()
 
-        ***REMOVED*** Tier 2: Cached parser from previous successful detection
+        # Tier 2: Cached parser from previous successful detection
         if self.parser_name and self.parsers:
             urls = self._get_tier2_urls()
             if urls:
                 return urls
 
-        ***REMOVED*** Tier 3: Auto-detection mode
+        # Tier 3: Auto-detection mode
         return self._get_tier3_urls()
 
     def _fetch_data(self, capture_raw: bool = False) -> tuple[str, str, type[ModemParser]] | None:
@@ -640,7 +640,7 @@ class ModemScraper:
             _LOGGER.error("No URL patterns available to try")
             return None
 
-        ***REMOVED*** Try HTTPS first, then HTTP fallback for each URL
+        # Try HTTPS first, then HTTP fallback for each URL
         protocols_to_try = ["https", "http"] if self.base_url.startswith("https://") else ["http"]
         _LOGGER.debug("Protocols to try: %s (base_url: %s)", protocols_to_try, self.base_url)
 
@@ -649,7 +649,7 @@ class ModemScraper:
             _LOGGER.debug("Trying protocol: %s (current_base_url: %s)", protocol, current_base_url)
 
             for url_template, auth_method, parser_class in urls_to_try:
-                ***REMOVED*** Replace protocol in URL to match current attempt
+                # Replace protocol in URL to match current attempt
                 target_url = url_template.replace(self.base_url, current_base_url)
 
                 try:
@@ -663,7 +663,7 @@ class ModemScraper:
                     if auth_method == "basic" and self.username and self.password:
                         auth = (self.username, self.password)
 
-                    ***REMOVED*** Use configured SSL verification setting
+                    # Use configured SSL verification setting
                     response = self.session.get(target_url, timeout=10, auth=auth, verify=self.verify_ssl)
 
                     if response.status_code == 200:
@@ -676,10 +676,10 @@ class ModemScraper:
                         )
                         self.last_successful_url = target_url
 
-                        ***REMOVED*** Capture raw HTML if requested
+                        # Capture raw HTML if requested
                         self._capture_response(response, "Initial connection page")
 
-                        ***REMOVED*** Update base_url to the working protocol
+                        # Update base_url to the working protocol
                         _LOGGER.debug("About to update base_url from %s to %s", self.base_url, current_base_url)
                         self.base_url = current_base_url
                         _LOGGER.debug("Updated! base_url is now: %s", self.base_url)
@@ -700,7 +700,7 @@ class ModemScraper:
         _LOGGER.info("Phase 1: Attempting anonymous probing before authentication")
 
         for parser_class in self.parsers:
-            ***REMOVED*** Skip fallback parser - it should only be used as last resort
+            # Skip fallback parser - it should only be used as last resort
             if parser_class.manufacturer == "Unknown":
                 continue
 
@@ -777,7 +777,7 @@ class ModemScraper:
         _LOGGER.debug("Attempting to detect parser from %s available parsers (prioritized)", len(prioritized_parsers))
 
         for parser_class in prioritized_parsers:
-            ***REMOVED*** Skip fallback parser - it should only be used as last resort
+            # Skip fallback parser - it should only be used as last resort
             if parser_class.manufacturer == "Unknown":
                 _LOGGER.debug("Skipping fallback parser in detection: %s", parser_class.name)
                 continue
@@ -786,7 +786,7 @@ class ModemScraper:
                 break
 
             if suggested_parser and parser_class == suggested_parser:
-                continue  ***REMOVED*** Already tried this one
+                continue  # Already tried this one
 
             try:
                 circuit_breaker.record_attempt(parser_class.name)
@@ -827,23 +827,23 @@ class ModemScraper:
         circuit_breaker = DiscoveryCircuitBreaker(max_attempts=15, timeout_seconds=90)
         attempted_parsers: list[str] = []
 
-        ***REMOVED*** Try anonymous probing first
+        # Try anonymous probing first
         parser = self._try_anonymous_probing(circuit_breaker, attempted_parsers)
         if parser:
             return parser
 
-        ***REMOVED*** Try suggested parser from URL matching
+        # Try suggested parser from URL matching
         parser = self._try_suggested_parser(soup, url, html, suggested_parser, circuit_breaker, attempted_parsers)
         if parser:
             return parser
 
-        ***REMOVED*** Try prioritized parsers using heuristics
+        # Try prioritized parsers using heuristics
         parser = self._try_prioritized_parsers(soup, url, html, suggested_parser, circuit_breaker, attempted_parsers)
         if parser:
             return parser
 
-        ***REMOVED*** No parser matched - raise detailed error
-        ***REMOVED*** User can manually select "Unknown Modem (Fallback Mode)" from the list
+        # No parser matched - raise detailed error
+        # User can manually select "Unknown Modem (Fallback Mode)" from the list
         modem_info = {
             "title": soup.title.string if soup.title else "NO TITLE",
             "url": url,
@@ -862,7 +862,7 @@ class ModemScraper:
         if self.parser is None:
             raise RuntimeError("Cannot parse data: parser is not set")
         soup = BeautifulSoup(html, "html.parser")
-        ***REMOVED*** Pass session and base_url to parser in case it needs to fetch additional pages
+        # Pass session and base_url to parser in case it needs to fetch additional pages
         data = self.parser.parse(soup, session=self.session, base_url=self.base_url)
         return data
 
@@ -875,17 +875,17 @@ class ModemScraper:
         Returns:
             Dictionary with modem data and optionally raw HTML captures
         """
-        ***REMOVED*** Clear previous captures and enable capture mode
+        # Clear previous captures and enable capture mode
         self._captured_urls = []
         self._failed_urls = []
         self._capture_enabled = capture_raw
 
-        ***REMOVED*** Replace session with capturing session if capture is enabled
+        # Replace session with capturing session if capture is enabled
         original_session = None
         if capture_raw:
             original_session = self.session
             self.session = CapturingSession(self._capture_response)
-            ***REMOVED*** Copy SSL verification settings to capturing session
+            # Copy SSL verification settings to capturing session
             self.session.verify = original_session.verify
             _LOGGER.debug("Enabled HTML capture mode with CapturingSession")
 
@@ -896,30 +896,30 @@ class ModemScraper:
 
             html, successful_url, suggested_parser = fetched_data
 
-            ***REMOVED*** Detect or instantiate parser
+            # Detect or instantiate parser
             if not self._ensure_parser(html, successful_url, suggested_parser):
                 return self._create_error_response("offline")
 
-            ***REMOVED*** Login and get authenticated HTML
+            # Login and get authenticated HTML
             html_or_none = self._handle_login_result(html)
             if html_or_none is None:
                 return self._create_error_response("unreachable")
             html = html_or_none
 
-            ***REMOVED*** Parse data and build response
+            # Parse data and build response
             data = self._parse_data(html)
             response = self._build_response(data)
 
-            ***REMOVED*** Capture additional pages if in capture mode
+            # Capture additional pages if in capture mode
             if capture_raw and self._captured_urls:
-                ***REMOVED*** First, fetch all URLs defined in the parser's url_patterns
-                ***REMOVED*** This ensures we get critical pages like DocsisStatus.htm that may not be linked
+                # First, fetch all URLs defined in the parser's url_patterns
+                # This ensures we get critical pages like DocsisStatus.htm that may not be linked
                 self._fetch_parser_url_patterns()
 
-                ***REMOVED*** Then crawl for additional pages by following links
+                # Then crawl for additional pages by following links
                 self._crawl_additional_pages()
 
-            ***REMOVED*** Include captured HTML if requested
+            # Include captured HTML if requested
             if capture_raw and self._captured_urls:
                 from datetime import datetime, timedelta
 
@@ -928,7 +928,7 @@ class ModemScraper:
                     "trigger": "manual",
                     "ttl_expires": (datetime.now() + timedelta(minutes=5)).isoformat(),
                     "urls": self._captured_urls,
-                    "failed_urls": self._failed_urls,  ***REMOVED*** Include failed fetches for diagnostics
+                    "failed_urls": self._failed_urls,  # Include failed fetches for diagnostics
                 }
                 _LOGGER.info(
                     "Captured %d HTML pages for diagnostics (%d URLs failed)",
@@ -942,7 +942,7 @@ class ModemScraper:
             _LOGGER.error("Error fetching modem data: %s", e)
             return self._create_error_response("unreachable")
         finally:
-            ***REMOVED*** Restore original session if we replaced it
+            # Restore original session if we replaced it
             if original_session is not None:
                 self.session = original_session
                 _LOGGER.debug("Restored original session")
@@ -967,7 +967,7 @@ class ModemScraper:
             _LOGGER.info(
                 "Troubleshooting steps:\n%s", "\n".join(f"  - {step}" for step in e.get_troubleshooting_steps())
             )
-            ***REMOVED*** Re-raise so config_flow can show detailed error
+            # Re-raise so config_flow can show detailed error
             raise
 
         if not self.parser:
@@ -988,7 +988,7 @@ class ModemScraper:
             _LOGGER.error("Failed to log in to modem")
             return None
 
-        ***REMOVED*** Use authenticated HTML from login if available, otherwise use original
+        # Use authenticated HTML from login if available, otherwise use original
         if authenticated_html:
             _LOGGER.debug("Using authenticated HTML from login (%s bytes)", len(authenticated_html))
             return authenticated_html
@@ -1004,16 +1004,16 @@ class ModemScraper:
         total_corrected = sum(ch.get("corrected") or 0 for ch in downstream)
         total_uncorrected = sum(ch.get("uncorrected") or 0 for ch in downstream)
 
-        ***REMOVED*** Determine connection status
-        ***REMOVED*** If fallback mode is active (unsupported modem), use "limited" status
-        ***REMOVED*** This allows installation to succeed without showing dummy channel data
+        # Determine connection status
+        # If fallback mode is active (unsupported modem), use "limited" status
+        # This allows installation to succeed without showing dummy channel data
         if system_info.get("fallback_mode"):
             status = "limited"
         elif not downstream and not upstream:
-            ***REMOVED*** Known parser detected but extracted no channel data
-            ***REMOVED*** This could happen if: modem in bridge mode, parser bug, HTML format changed
+            # Known parser detected but extracted no channel data
+            # This could happen if: modem in bridge mode, parser bug, HTML format changed
             status = "parser_issue"
-            ***REMOVED*** Add helpful status message if not already present
+            # Add helpful status message if not already present
             if "status_message" not in system_info:
                 parser_name = self.parser.name if self.parser else "Unknown"
                 system_info["status_message"] = (
@@ -1029,10 +1029,10 @@ class ModemScraper:
                     f"3. Wait a few minutes if modem just rebooted"
                 )
         else:
-            ***REMOVED*** Normal operation - parser found channel data
+            # Normal operation - parser found channel data
             status = "online"
 
-        ***REMOVED*** Prefix system_info keys with cable_modem_
+        # Prefix system_info keys with cable_modem_
         prefixed_system_info = {f"cable_modem_{key}": value for key, value in system_info.items()}
 
         return {
@@ -1065,14 +1065,14 @@ class ModemScraper:
                 "manufacturer": self.parser.manufacturer,
                 "successful_url": self.last_successful_url,
             }
-            ***REMOVED*** Add device metadata from parser class
+            # Add device metadata from parser class
             if self.parser.release_date:
                 info["release_date"] = self.parser.release_date
             if self.parser.docsis_version:
                 info["docsis_version"] = self.parser.docsis_version
             if self.parser.fixtures_path:
                 info["fixtures_path"] = self.parser.fixtures_path
-                ***REMOVED*** Generate GitHub URL for fixtures
+                # Generate GitHub URL for fixtures
                 fixtures_url = self.parser.__class__.get_fixtures_url()
                 if fixtures_url:
                     info["fixtures_url"] = fixtures_url
@@ -1105,8 +1105,8 @@ class ModemScraper:
         Returns:
             True if preparation successful, False otherwise
         """
-        ***REMOVED*** Always fetch data to ensure we have the correct protocol (HTTP vs HTTPS)
-        ***REMOVED*** This is critical because the saved config might have HTTPS but modem only supports HTTP
+        # Always fetch data to ensure we have the correct protocol (HTTP vs HTTPS)
+        # This is critical because the saved config might have HTTPS but modem only supports HTTP
         _LOGGER.debug("restart_modem() called - about to fetch data")
         fetched_data = self._fetch_data()
         if not fetched_data:
@@ -1116,7 +1116,7 @@ class ModemScraper:
         html, successful_url, suggested_parser = fetched_data
         _LOGGER.debug("Successfully fetched data from: %s, base_url is now: %s", successful_url, self.base_url)
 
-        ***REMOVED*** Detect parser if not already set
+        # Detect parser if not already set
         if not self.parser:
             self.parser = self._detect_parser(html, successful_url, suggested_parser)
             self._update_base_url_from_successful_url(successful_url)
@@ -1161,7 +1161,7 @@ class ModemScraper:
         _LOGGER.debug("Attempting login with base_url: %s", self.base_url)
         login_result = self._login()
 
-        ***REMOVED*** Handle both old-style bool and new-style tuple returns
+        # Handle both old-style bool and new-style tuple returns
         if isinstance(login_result, tuple):
             success, _ = login_result
             if not success:
@@ -1183,7 +1183,7 @@ class ModemScraper:
             _LOGGER.error("Cannot execute restart: parser is not set")
             return False
         _LOGGER.info("Attempting to restart modem using %s parser", self.parser.name)
-        ***REMOVED*** Use getattr to access restart method dynamically (not all parsers support it)
+        # Use getattr to access restart method dynamically (not all parsers support it)
         restart_method = getattr(self.parser, "restart", None)
         if restart_method is None:
             _LOGGER.error("Parser does not support restart functionality")

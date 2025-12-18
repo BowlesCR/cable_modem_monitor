@@ -36,7 +36,7 @@ var isSupportComHem =  false;
     $(document).ready(function()
     {
 //        $('.scroll-pane').jScrollPane('scrollbarMargin:5px');
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
             buttonFilter();
         });
 
@@ -67,14 +67,14 @@ var isSupportComHem =  false;
     }
     function moveToHTMLend()
     {
-        window.location.href='***REMOVED***helpframe-anchor';
+        window.location.href='#helpframe-anchor';
         setHelpIframeVisible();
     }
 
 
     function loadhelp(fname,anchname)
     {
-                var pane = window.frames["helpframe"].$('***REMOVED***content');
+                var pane = window.frames["helpframe"].$('#content');
                 var imgSrc=document.getElementById('help-button');
 
 				linkName = fname+"_h." +"htm";
@@ -93,7 +93,7 @@ var isSupportComHem =  false;
                         }
                         else
                         {
-                                window.frames["helpframe"].location.href=linkName+"***REMOVED***" + anchname;
+                                window.frames["helpframe"].location.href=linkName+"#" + anchname;
                                 $(".help-frame-div").show();
                         }
 
@@ -614,10 +614,10 @@ function InitUpdateView(tagValues)
     isSupportComHem = ((tagValues[9]== "1")?true:false);
     if(isSupportComHem)
     {
-        $('***REMOVED***dhcpTr').hide();
+        $('#dhcpTr').hide();
     }
     else
-    	  $('***REMOVED***dhcpTr2').hide();
+    	  $('#dhcpTr2').hide();
 }
 
 /*
@@ -861,7 +861,7 @@ class="page-body">
                                                 </td>
                                                 <td style="white-space: nowrap;text-align:center;width:3%">
                                                     <span class="thead">
-                                                        ***REMOVED***
+                                                        #
                                                     </span>
                                                 </td>
                                                 <td style="white-space: nowrap;text-align:center;">

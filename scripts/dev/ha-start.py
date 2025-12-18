@@ -1,4 +1,4 @@
-***REMOVED***!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 Cross-platform Home Assistant test environment startup script.
 Starts HA container with verification and clear error reporting.
@@ -19,7 +19,7 @@ import sys
 import time
 from pathlib import Path
 
-***REMOVED*** Color codes
+# Color codes
 GREEN = "\033[0;32m"
 RED = "\033[0;31m"
 YELLOW = "\033[1;33m"
@@ -45,10 +45,10 @@ CONTAINER_NAME = "ha-cable-modem-test"
 COMPOSE_FILE = "docker-compose.test.yml"
 HA_PORT = 8123
 
-***REMOVED*** Other HA test containers that might be using the same port
+# Other HA test containers that might be using the same port
 OTHER_HA_CONTAINERS = [
     "ha-internet-health-test",
-    ***REMOVED*** Add other project containers here as needed
+    # Add other project containers here as needed
 ]
 
 
@@ -116,21 +116,21 @@ def run_command(cmd: list, capture: bool = False, check: bool = True, timeout: i
         )
     except subprocess.CalledProcessError as e:
         if capture:
-            ***REMOVED*** Return a failed CompletedProcess for consistent return type
+            # Return a failed CompletedProcess for consistent return type
             return subprocess.CompletedProcess(args=e.args, returncode=e.returncode, stdout=e.stdout, stderr=e.stderr)
         raise
 
 
 def check_port_in_use(port: int) -> tuple[bool, str]:
     """Check if a port is in use and try to identify what's using it."""
-    ***REMOVED*** Quick socket check
+    # Quick socket check
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         in_use = s.connect_ex(("localhost", port)) == 0
 
     if not in_use:
         return False, ""
 
-    ***REMOVED*** Try to identify what's using it
+    # Try to identify what's using it
     process_info = ""
     system = platform.system()
 
@@ -141,10 +141,10 @@ def check_port_in_use(port: int) -> tuple[bool, str]:
                 if f":{port}" in line and "LISTENING" in line:
                     process_info = line.strip()
                     break
-        elif system == "Darwin":  ***REMOVED*** macOS
+        elif system == "Darwin":  # macOS
             result = subprocess.run(["lsof", "-i", f":{port}"], capture_output=True, text=True, timeout=10)
             process_info = result.stdout.strip()
-        else:  ***REMOVED*** Linux
+        else:  # Linux
             result = subprocess.run(["ss", "-tulpn"], capture_output=True, text=True, timeout=10)
             for line in result.stdout.splitlines():
                 if f":{port}" in line:
@@ -158,16 +158,16 @@ def check_port_in_use(port: int) -> tuple[bool, str]:
 
 def docker_compose_cmd() -> list:
     """Get the docker compose command (handles 'docker-compose' vs 'docker compose')."""
-    ***REMOVED*** Try 'docker compose' first (newer)
+    # Try 'docker compose' first (newer)
     result = subprocess.run(["docker", "compose", "version"], capture_output=True, timeout=10)
     if result.returncode == 0:
         return ["docker", "compose"]
 
-    ***REMOVED*** Fall back to 'docker-compose'
+    # Fall back to 'docker-compose'
     if shutil.which("docker-compose"):
         return ["docker-compose"]
 
-    return ["docker", "compose"]  ***REMOVED*** Default, will fail with clear error
+    return ["docker", "compose"]  # Default, will fail with clear error
 
 
 def get_container_status() -> tuple[str, bool]:
@@ -208,7 +208,7 @@ def wait_for_http(port: int, timeout: int = 60) -> bool:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.settimeout(2)
                 s.connect(("localhost", port))
-                ***REMOVED*** Try a simple HTTP request
+                # Try a simple HTTP request
                 s.send(b"GET / HTTP/1.0\r\n\r\n")
                 response = s.recv(100)
                 if b"HTTP" in response:
@@ -237,7 +237,7 @@ def stop_other_ha_containers() -> list[str]:
     """Stop other HA test containers that might be using port 8123."""
     stopped = []
     for container in OTHER_HA_CONTAINERS:
-        ***REMOVED*** Check if container is running
+        # Check if container is running
         result = subprocess.run(
             ["docker", "inspect", container, "--format", "{{.State.Running}}"],
             capture_output=True,
@@ -253,7 +253,7 @@ def stop_other_ha_containers() -> list[str]:
 
 def run_cleanup():
     """Run the cleanup script if it exists, otherwise do basic cleanup."""
-    ***REMOVED*** First, stop any other HA test containers using port 8123
+    # First, stop any other HA test containers using port 8123
     stopped = stop_other_ha_containers()
     if stopped:
         print_info(f"Stopped other HA containers: {', '.join(stopped)}")
@@ -263,12 +263,12 @@ def run_cleanup():
     if cleanup_script.exists() and platform.system() != "Windows":
         subprocess.run(["bash", str(cleanup_script)], cwd=get_project_dir())
     else:
-        ***REMOVED*** Basic cleanup - just stop containers
+        # Basic cleanup - just stop containers
         subprocess.run(["docker", "stop", CONTAINER_NAME], capture_output=True, timeout=30)
         subprocess.run(["docker", "rm", "-f", CONTAINER_NAME], capture_output=True, timeout=30)
 
 
-def main():  ***REMOVED*** noqa: C901
+def main():  # noqa: C901
     parser = argparse.ArgumentParser(description="Start Home Assistant test environment")
     parser.add_argument("--fresh", action="store_true", help="Remove volumes and start fresh")
     args = parser.parse_args()
@@ -278,12 +278,12 @@ def main():  ***REMOVED*** noqa: C901
 
     print_header("Home Assistant Test Environment Startup")
 
-    ***REMOVED*** Step 1: Pre-flight port check
+    # Step 1: Pre-flight port check
     print_step(1, 4, "Checking port availability...")
     port_in_use, process_info = check_port_in_use(HA_PORT)
 
     if port_in_use:
-        ***REMOVED*** Check if it's our container
+        # Check if it's our container
         status, running = get_container_status()
         if running:
             print_info(f"Port {HA_PORT} is in use by existing HA container")
@@ -296,12 +296,12 @@ def main():  ***REMOVED*** noqa: C901
     else:
         print_success(f"Port {HA_PORT} is available")
 
-    ***REMOVED*** Step 2: Cleanup
+    # Step 2: Cleanup
     print()
     print_step(2, 4, "Cleaning up existing containers...")
     run_cleanup()
 
-    ***REMOVED*** Stop compose services
+    # Stop compose services
     down_cmd = compose_cmd + ["-f", compose_file, "down"]
     if args.fresh:
         down_cmd.append("-v")
@@ -310,7 +310,7 @@ def main():  ***REMOVED*** noqa: C901
     subprocess.run(down_cmd, capture_output=True, timeout=60)
     print_success("Cleanup complete")
 
-    ***REMOVED*** Step 3: Start container
+    # Step 3: Start container
     print()
     print_step(3, 4, "Starting Home Assistant container...")
 
@@ -326,12 +326,12 @@ def main():  ***REMOVED*** noqa: C901
         print_error_header("STARTUP FAILED")
         print("Docker compose failed to start the container.\n")
 
-        ***REMOVED*** Show the error
+        # Show the error
         if result.stderr:
             print(f"{YELLOW}Error output:{NC}")
             print(result.stderr)
 
-        ***REMOVED*** Check for common issues
+        # Check for common issues
         if "port is already allocated" in result.stderr.lower() or "address already in use" in result.stderr.lower():
             print(f"\n{YELLOW}This is a port conflict.{NC}")
             print("Another process is using a required port.\n")
@@ -344,7 +344,7 @@ def main():  ***REMOVED*** noqa: C901
 
     print_success("Container created")
 
-    ***REMOVED*** Step 4: Verify startup
+    # Step 4: Verify startup
     print()
     print_step(4, 4, "Verifying container started successfully...")
     time.sleep(2)
@@ -355,7 +355,7 @@ def main():  ***REMOVED*** noqa: C901
         print_error_header("CONTAINER FAILED TO START")
         print(f"Container status: {YELLOW}{status}{NC}\n")
 
-        ***REMOVED*** Show logs
+        # Show logs
         print(f"{YELLOW}Container logs:{NC}")
         subprocess.run(["docker", "logs", CONTAINER_NAME, "--tail", "30"], timeout=10)
 
@@ -367,7 +367,7 @@ def main():  ***REMOVED*** noqa: C901
 
     print_success("Container running")
 
-    ***REMOVED*** Check port mapping
+    # Check port mapping
     port_mapping = get_port_mapping()
     if not port_mapping:
         print_error_header("PORT MAPPING FAILED")
@@ -386,7 +386,7 @@ def main():  ***REMOVED*** noqa: C901
 
     print_success(f"Port mapped: {port_mapping}")
 
-    ***REMOVED*** Wait for HTTP
+    # Wait for HTTP
     print()
     print_info(
         "Waiting for Home Assistant to initialize",
@@ -400,7 +400,7 @@ def main():  ***REMOVED*** noqa: C901
         print()
         print_warning("HTTP not responding after 60s (may still be initializing)")
 
-    ***REMOVED*** Success!
+    # Success!
     print_success_header("HOME ASSISTANT STARTED SUCCESSFULLY")
 
     print(f"   URL: {BLUE}http://localhost:{HA_PORT}{NC}\n")

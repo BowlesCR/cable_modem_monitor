@@ -1,6 +1,6 @@
-***REMOVED***!/bin/bash
-***REMOVED*** Docker development environment management script for Cable Modem Monitor
-***REMOVED*** Simplifies running Home Assistant with the integration for local testing
+#!/bin/bash
+# Docker development environment management script for Cable Modem Monitor
+# Simplifies running Home Assistant with the integration for local testing
 
 set -e
 
@@ -9,12 +9,12 @@ COMPOSE_FILE="$PROJECT_ROOT/docker-compose.test.yml"
 CONTAINER_NAME="ha-cable-modem-test"
 TEST_CONFIG_DIR="$PROJECT_ROOT/test-ha-config"
 
-***REMOVED*** Colors for output
+# Colors for output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
 BLUE='\033[0;34m'
-NC='\033[0m' ***REMOVED*** No Color
+NC='\033[0m' # No Color
 
 print_header() {
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -72,14 +72,14 @@ start_container() {
 
     cd "$PROJECT_ROOT"
 
-    ***REMOVED*** Check if container is already running
+    # Check if container is already running
     if docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
         print_warning "Container is already running"
         print_info "Use '$0 restart' to restart or '$0 logs' to view logs"
         return
     fi
 
-    ***REMOVED*** Start the container
+    # Start the container
     docker compose -f "$COMPOSE_FILE" up -d
 
     echo ""
@@ -187,17 +187,17 @@ show_help() {
     echo "  help       Show this help message"
     echo ""
     echo "Examples:"
-    echo "  $0 start          ***REMOVED*** Start Home Assistant"
-    echo "  $0 logs           ***REMOVED*** Watch the logs"
-    echo "  $0 restart        ***REMOVED*** Restart after making changes"
-    echo "  $0 clean          ***REMOVED*** Clean up everything"
+    echo "  $0 start          # Start Home Assistant"
+    echo "  $0 logs           # Watch the logs"
+    echo "  $0 restart        # Restart after making changes"
+    echo "  $0 clean          # Clean up everything"
     echo ""
     echo "URLs:"
     echo "  Home Assistant UI: http://localhost:8123"
     echo ""
 }
 
-***REMOVED*** Main script logic
+# Main script logic
 case "${1:-help}" in
     start)
         start_container

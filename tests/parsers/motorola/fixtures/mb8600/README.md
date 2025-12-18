@@ -1,8 +1,8 @@
-***REMOVED*** Motorola MB8600 Modem Fixtures
+# Motorola MB8600 Modem Fixtures
 
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -13,7 +13,7 @@
 
 <!-- END AUTO-GENERATED -->
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
@@ -24,19 +24,19 @@
 | **Release Year** | 2018 |
 | **ISPs** | Comcast, Xfinity, Cox, Spectrum, and most major ISPs |
 | **Max Speed** | 1 Gbps (single ethernet), 2 Gbps (LAG) |
-| **Related Issue** | [***REMOVED***40](https://github.com/solentlabs/cable_modem_monitor/issues/40) |
+| **Related Issue** | [#40](https://github.com/solentlabs/cable_modem_monitor/issues/40) |
 | **Captured By** | @bigfluffycloud |
 | **Capture Date** | November 2025 |
 | **Parser Status** | Pending parser development |
 
-***REMOVED******REMOVED*** Known URLs
+## Known URLs
 
 - **Base URL:** `https://192.168.100.1` (HTTPS with self-signed cert)
 - **Login Page:** `/` or `/Login.html`
 - **Home Page:** `/MotoHome.html` (after login)
 - **HNAP Endpoint:** `/HNAP1/`
 
-***REMOVED******REMOVED*** Authentication
+## Authentication
 
 **Type:** HNAP two-phase challenge-response (same as MB8611)
 
@@ -69,9 +69,9 @@ LoginPassword = HMAC-MD5(PrivateKey, Challenge).upper()
 - Default password: On modem label
 - Note: Multiple failed logins trigger 5-minute lockout
 
-***REMOVED******REMOVED*** Available Fixtures
+## Available Fixtures
 
-***REMOVED******REMOVED******REMOVED*** Login.html
+### Login.html
 
 - **Source:** Diagnostics capture from fallback parser
 - **Status Code:** 200 OK
@@ -86,12 +86,12 @@ LoginPassword = HMAC-MD5(PrivateKey, Challenge).upper()
 - HNAP JavaScript includes (HNAP_XML, SOAPAction.js)
 - Copyright: "© MTRLC LLC 2020"
 
-***REMOVED******REMOVED******REMOVED*** HAR File (in RAW_DATA)
+### HAR File (in RAW_DATA)
 
 The RAW_DATA/MB8600 folder contains a sanitized HAR file with HNAP authentication flow.
 This can be analyzed to understand the exact request/response sequence.
 
-***REMOVED******REMOVED*** Data Fetching (HNAP Actions)
+## Data Fetching (HNAP Actions)
 
 Based on reference implementations and MB8611 analysis, the MB8600 uses these HNAP actions:
 
@@ -107,7 +107,7 @@ GET_ACTIONS = [
 
 Use `GetMultipleHNAPs` to batch these into a single request.
 
-***REMOVED******REMOVED*** Channel Data Format
+## Channel Data Format
 
 Same format as MB8611 - uses `|+|` as separator, `^` between fields:
 
@@ -121,9 +121,9 @@ Channel^LockStatus^Modulation^ChannelID^Freq^Power^SNR^Corrected^Uncorrected
 Channel^LockStatus^ChannelType^ChannelID^SymbRate^Freq^Power
 ```
 
-***REMOVED******REMOVED*** Parser Implementation Notes
+## Parser Implementation Notes
 
-***REMOVED******REMOVED******REMOVED*** Relationship to MB8611
+### Relationship to MB8611
 
 The MB8600 and MB8611 share the same HNAP protocol. Key differences:
 
@@ -135,7 +135,7 @@ The MB8600 and MB8611 share the same HNAP protocol. Key differences:
 | Authentication | HNAP | HNAP |
 | Action Prefix | GetMoto... | GetMoto... |
 
-***REMOVED******REMOVED******REMOVED*** Implementation Approach
+### Implementation Approach
 
 Since the protocol is identical to MB8611, the parser can share authentication logic:
 
@@ -144,7 +144,7 @@ class MotorolaMB8600Parser(ModemParser):
     name = "Motorola MB8600"
     manufacturer = "Motorola"
     models = ["MB8600"]
-    priority = 102  ***REMOVED*** Higher than MB8611 (101)
+    priority = 102  # Higher than MB8611 (101)
 
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
@@ -155,20 +155,20 @@ class MotorolaMB8600Parser(ModemParser):
     }
 ```
 
-***REMOVED******REMOVED******REMOVED*** SSL Considerations
+### SSL Considerations
 
 The MB8600 uses HTTPS with a self-signed certificate:
 - Use `verify=False` when making requests
 - Suppress InsecureRequestWarning
 
-***REMOVED******REMOVED*** Reference Implementations
+## Reference Implementations
 
 External projects with working MB8600 code:
 
 1. **BowlesCR/MB8600_Login** - Clean authentication implementation
 2. **xNinjaKittyx/mb8600** - Complete implementation with data fetching
 
-***REMOVED******REMOVED*** Comparison with Other Motorola Modems
+## Comparison with Other Motorola Modems
 
 | Feature | MB7621 | MB8600 | MB8611 |
 |---------|--------|--------|--------|
@@ -178,13 +178,13 @@ External projects with working MB8600 code:
 | Data Format | HTML tables | JSON/HNAP | JSON/HNAP |
 | SSL | None | Self-signed | Self-signed |
 
-***REMOVED******REMOVED*** Related Issues
+## Related Issues
 
-- **Issue ***REMOVED***40:** Motorola MB8600 support request
-- **Issue ***REMOVED***4:** MB8611 HNAP authentication challenges
-- **Issue ***REMOVED***6:** MB8611 SSL certificate verification failures
+- **Issue #40:** Motorola MB8600 support request
+- **Issue #4:** MB8611 HNAP authentication challenges
+- **Issue #6:** MB8611 SSL certificate verification failures
 
-***REMOVED******REMOVED*** RAW_DATA Contents
+## RAW_DATA Contents
 
 > **Note:** We use both HAR and HTML page captures to obtain real page data that has been properly PII-scrubbed. HAR files capture the full request/response flow (including authentication sequences), while HTML captures provide clean, static fixtures for parser testing. See the [Modem Request Guide](../../../../../docs/MODEM_REQUEST.md) for details.
 
@@ -198,9 +198,9 @@ The `/home/kwschulz/Projects/RAW_DATA/MB8600/` folder contains:
 | capture_info.json | 226 B | Capture metadata |
 | README.txt | 799 B | Privacy notes |
 
-***REMOVED******REMOVED*** Notes
+## Notes
 
 - The MB8600 is a popular DOCSIS 3.1 cable modem
-- HNAP authentication has proven challenging (see issues ***REMOVED***4, ***REMOVED***6)
+- HNAP authentication has proven challenging (see issues #4, #6)
 - Consider implementing alongside HNAP improvements for MB8611
 - Self-signed SSL certificates require special handling

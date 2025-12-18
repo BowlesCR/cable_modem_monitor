@@ -35,7 +35,7 @@ XmlDocument.prototype =
 		{
 			/* skip the empty token */
 			if (token[i] == "") continue;
-			/* parse the tag name & seq***REMOVED*** */
+			/* parse the tag name & seq# */
 			if (token[i].indexOf(":")<0)
 			{
 				tagname = token[i];
@@ -140,7 +140,7 @@ XmlDocument.prototype =
 
 		var node;
 
-		if (path.indexOf("***REMOVED***") < 0)
+		if (path.indexOf("#") < 0)
 		{
 			/* return the value of the node */
 			node = this.Find(path, false);
@@ -155,9 +155,9 @@ XmlDocument.prototype =
 			return "";
 		}
 
-		/* If the path is end with '***REMOVED***', count the number of node. */
+		/* If the path is end with '#', count the number of node. */
 		var count = 0;
-		var tokens = path.split("***REMOVED***");
+		var tokens = path.split("#");
 		/* Find the target */
 		node = this.Find(tokens[0]);
 		if (node)
@@ -173,7 +173,7 @@ XmlDocument.prototype =
 	GetAttr : function (path, attr)
 	{
 		var node;
-		if (path.indexOf("***REMOVED***") < 0)
+		if (path.indexOf("#") < 0)
 		{
 			/* return the value of the node */
 			node = this.Find(path, false);
@@ -352,7 +352,7 @@ Object.extend(StringDoc.prototype,
 		var lasttagname_obj = path.split("/") [path.split("/").length-1];
 		var node_obj;
 
-		if (path.indexOf("***REMOVED***") < 0)
+		if (path.indexOf("#") < 0)
 		{
 			node_obj = this.Find(path, false);
 			if (node_obj)
@@ -371,7 +371,7 @@ Object.extend(StringDoc.prototype,
 
 		var node;
 
-		if (path.indexOf("***REMOVED***") < 0)
+		if (path.indexOf("#") < 0)
 		{
 			/* return the value of the node */
 			node = this.Find(path, false);
@@ -386,9 +386,9 @@ Object.extend(StringDoc.prototype,
 			return "";
 		}
 
-		/* If the path is end with '***REMOVED***', count the number of node. */
+		/* If the path is end with '#', count the number of node. */
 		var count = 0;
-		var tokens = path.split("***REMOVED***");
+		var tokens = path.split("#");
 		/* Find the target */
 		node = this.Find(tokens[0]);
 		if (node)
@@ -424,7 +424,7 @@ Object.extend(StringDoc.prototype,
 		{
 			/* skip the empty token */
 			if (token[i] == "") continue;
-			/* parse the tag name & seq***REMOVED*** */
+			/* parse the tag name & seq# */
 			if (token[i].indexOf(":")<0)
 			{
 				tagname = token[i];

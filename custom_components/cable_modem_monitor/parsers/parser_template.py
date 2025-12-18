@@ -75,16 +75,16 @@ _LOGGER = logging.getLogger(__name__)
 class YourModemParser(ModemParser):
     """Parser for [Your Modem Brand/Model]."""
 
-    ***REMOVED*** =========================================================================
-    ***REMOVED*** STEP 2: UPDATE THESE METADATA FIELDS
-    ***REMOVED*** =========================================================================
-    name = "Your Modem Model"  ***REMOVED*** e.g., "Netgear CM1000"
-    manufacturer = "Your Manufacturer"  ***REMOVED*** e.g., "Netgear"
-    models = ["MODEL1", "MODEL2"]  ***REMOVED*** e.g., ["CM1000", "CM1100"]
+    # =========================================================================
+    # STEP 2: UPDATE THESE METADATA FIELDS
+    # =========================================================================
+    name = "Your Modem Model"  # e.g., "Netgear CM1000"
+    manufacturer = "Your Manufacturer"  # e.g., "Netgear"
+    models = ["MODEL1", "MODEL2"]  # e.g., ["CM1000", "CM1100"]
 
-    ***REMOVED*** =========================================================================
-    ***REMOVED*** STEP 3: IMPLEMENT MODEM DETECTION
-    ***REMOVED*** =========================================================================
+    # =========================================================================
+    # STEP 3: IMPLEMENT MODEM DETECTION
+    # =========================================================================
     @classmethod
     def can_parse(cls, soup: BeautifulSoup, url: str, html: str) -> bool:
         """Detect if this is your modem.
@@ -114,24 +114,24 @@ class YourModemParser(ModemParser):
 
             return False
         """
-        ***REMOVED*** TODO: Implement your detection logic here
-        ***REMOVED*** Example checks:
+        # TODO: Implement your detection logic here
+        # Example checks:
 
-        ***REMOVED*** Check page title
+        # Check page title
         title = soup.find("title")
         if title and "YOUR MODEM NAME" in title.text:
             return True
 
-        ***REMOVED*** Check for unique CSS class
+        # Check for unique CSS class
         if soup.find("div", class_="your-unique-class"):
             return True
 
-        ***REMOVED*** Check URL pattern
+        # Check URL pattern
         return "your_modem_page.html" in url.lower()
 
-    ***REMOVED*** =========================================================================
-    ***REMOVED*** STEP 4: IMPLEMENT login() METHOD
-    ***REMOVED*** =========================================================================
+    # =========================================================================
+    # STEP 4: IMPLEMENT login() METHOD
+    # =========================================================================
     def login(self, session, base_url, username, password) -> tuple[bool, str | None]:
         """Perform authentication if required.
 
@@ -158,15 +158,15 @@ class YourModemParser(ModemParser):
             return auth_strategy.login(session, base_url, username, password, self.auth_config)
 
         Example (No auth):
-            return (True, None)  ***REMOVED*** No authentication needed
+            return (True, None)  # No authentication needed
         """
-        ***REMOVED*** TODO: Implement your login logic
-        ***REMOVED*** For no authentication:
+        # TODO: Implement your login logic
+        # For no authentication:
         return (True, None)
 
-    ***REMOVED*** =========================================================================
-    ***REMOVED*** STEP 5: IMPLEMENT parse() METHOD - REQUIRED
-    ***REMOVED*** =========================================================================
+    # =========================================================================
+    # STEP 5: IMPLEMENT parse() METHOD - REQUIRED
+    # =========================================================================
     def parse(self, soup: BeautifulSoup, session=None, base_url=None) -> dict:
         """Parse all data from the modem.
 
@@ -181,9 +181,9 @@ class YourModemParser(ModemParser):
         Returns:
             Dictionary with ALL parsed data:
             {
-                "downstream": [...],  ***REMOVED*** List of downstream channel dicts
-                "upstream": [...],    ***REMOVED*** List of upstream channel dicts
-                "system_info": {...}  ***REMOVED*** Dict with system information
+                "downstream": [...],  # List of downstream channel dicts
+                "upstream": [...],    # List of upstream channel dicts
+                "system_info": {...}  # Dict with system information
             }
 
         Tips:
@@ -192,27 +192,27 @@ class YourModemParser(ModemParser):
         - Handle errors gracefully - return empty lists/dicts on failure
         - Log helpful debug/warning messages
         """
-        ***REMOVED*** TODO: Implement your parsing logic
+        # TODO: Implement your parsing logic
 
-        ***REMOVED*** Option 1: Parse everything inline (simple modems)
+        # Option 1: Parse everything inline (simple modems)
         downstream: list[dict] = []
         upstream: list[dict] = []
         system_info: dict[str, str] = {}
 
-        ***REMOVED*** ... your parsing code here ...
+        # ... your parsing code here ...
 
-        ***REMOVED*** Option 2: Use helper methods (recommended for complex modems)
-        ***REMOVED*** downstream = self._parse_downstream(soup)
-        ***REMOVED*** upstream = self._parse_upstream(soup)
-        ***REMOVED*** system_info = self._parse_system_info(soup)
+        # Option 2: Use helper methods (recommended for complex modems)
+        # downstream = self._parse_downstream(soup)
+        # upstream = self._parse_upstream(soup)
+        # system_info = self._parse_system_info(soup)
 
-        ***REMOVED*** Option 3: Multi-page parsing (if modem data is on multiple pages)
-        ***REMOVED*** if session and base_url:
-        ***REMOVED***     ***REMOVED*** Fetch additional page
-        ***REMOVED***     response = session.get(f"{base_url}/channel_status.html", timeout=10)
-        ***REMOVED***     if response.status_code == 200:
-        ***REMOVED***         channel_soup = BeautifulSoup(response.text, "html.parser")
-        ***REMOVED***         downstream = self._parse_downstream(channel_soup)
+        # Option 3: Multi-page parsing (if modem data is on multiple pages)
+        # if session and base_url:
+        #     # Fetch additional page
+        #     response = session.get(f"{base_url}/channel_status.html", timeout=10)
+        #     if response.status_code == 200:
+        #         channel_soup = BeautifulSoup(response.text, "html.parser")
+        #         downstream = self._parse_downstream(channel_soup)
 
         return {
             "downstream": downstream,
@@ -220,9 +220,9 @@ class YourModemParser(ModemParser):
             "system_info": system_info,
         }
 
-    ***REMOVED*** =========================================================================
-    ***REMOVED*** STEP 6: HELPER METHOD - DOWNSTREAM PARSING (OPTIONAL)
-    ***REMOVED*** =========================================================================
+    # =========================================================================
+    # STEP 6: HELPER METHOD - DOWNSTREAM PARSING (OPTIONAL)
+    # =========================================================================
     def _parse_downstream(self, soup: BeautifulSoup) -> list[dict]:
         """Parse downstream channel data.
 
@@ -246,12 +246,12 @@ class YourModemParser(ModemParser):
         channels = []
 
         try:
-            ***REMOVED*** TODO: Find the downstream table
-            ***REMOVED*** Example: Look for table with "Downstream" in header
+            # TODO: Find the downstream table
+            # Example: Look for table with "Downstream" in header
             tables = soup.find_all("table")
 
             for table in tables:
-                ***REMOVED*** Check if this is the downstream table
+                # Check if this is the downstream table
                 header_row = table.find("tr")
                 if not header_row:
                     continue
@@ -260,22 +260,22 @@ class YourModemParser(ModemParser):
                 if "downstream" not in header_text:
                     continue
 
-                ***REMOVED*** Parse each data row
-                for row in table.find_all("tr")[1:]:  ***REMOVED*** Skip header
+                # Parse each data row
+                for row in table.find_all("tr")[1:]:  # Skip header
                     cols = row.find_all("td")
 
-                    if len(cols) < 4:  ***REMOVED*** Need at least channel, freq, power, snr
+                    if len(cols) < 4:  # Need at least channel, freq, power, snr
                         continue
 
                     try:
                         channel = {
                             "channel_id": str(cols[0].text.strip()),
-                            "frequency": int(cols[1].text.strip()),  ***REMOVED*** Adjust index
+                            "frequency": int(cols[1].text.strip()),  # Adjust index
                             "power": float(cols[2].text.strip()),
                             "snr": float(cols[3].text.strip()),
                         }
 
-                        ***REMOVED*** Add optional error stats if available
+                        # Add optional error stats if available
                         if len(cols) > 4:
                             channel["corrected"] = int(cols[4].text.strip())
                         if len(cols) > 5:
@@ -294,9 +294,9 @@ class YourModemParser(ModemParser):
 
         return channels
 
-    ***REMOVED*** =========================================================================
-    ***REMOVED*** STEP 7: HELPER METHOD - UPSTREAM PARSING (OPTIONAL)
-    ***REMOVED*** =========================================================================
+    # =========================================================================
+    # STEP 7: HELPER METHOD - UPSTREAM PARSING (OPTIONAL)
+    # =========================================================================
     def _parse_upstream(self, soup: BeautifulSoup) -> list[dict]:
         """Parse upstream channel data.
 
@@ -314,7 +314,7 @@ class YourModemParser(ModemParser):
         channels = []
 
         try:
-            ***REMOVED*** TODO: Find the upstream table
+            # TODO: Find the upstream table
             tables = soup.find_all("table")
 
             for table in tables:
@@ -326,11 +326,11 @@ class YourModemParser(ModemParser):
                 if "upstream" not in header_text:
                     continue
 
-                ***REMOVED*** Parse each data row
-                for row in table.find_all("tr")[1:]:  ***REMOVED*** Skip header
+                # Parse each data row
+                for row in table.find_all("tr")[1:]:  # Skip header
                     cols = row.find_all("td")
 
-                    if len(cols) < 3:  ***REMOVED*** Need at least channel, freq, power
+                    if len(cols) < 3:  # Need at least channel, freq, power
                         continue
 
                     try:
@@ -353,9 +353,9 @@ class YourModemParser(ModemParser):
 
         return channels
 
-    ***REMOVED*** =========================================================================
-    ***REMOVED*** STEP 8: HELPER METHOD - SYSTEM INFO PARSING (OPTIONAL)
-    ***REMOVED*** =========================================================================
+    # =========================================================================
+    # STEP 8: HELPER METHOD - SYSTEM INFO PARSING (OPTIONAL)
+    # =========================================================================
     def _parse_system_info(self, soup: BeautifulSoup) -> dict:
         """Parse system information.
 
@@ -375,18 +375,18 @@ class YourModemParser(ModemParser):
         info = {}
 
         try:
-            ***REMOVED*** TODO: Find system info
-            ***REMOVED*** Example: Look for specific labels in the HTML
+            # TODO: Find system info
+            # Example: Look for specific labels in the HTML
 
-            ***REMOVED*** Software version
+            # Software version
             version_elem = soup.find(text="Software Version")
             if version_elem:
-                ***REMOVED*** Get the value (might be in next sibling, parent, etc.)
+                # Get the value (might be in next sibling, parent, etc.)
                 value = version_elem.find_next("td")
                 if value:
                     info["software_version"] = value.text.strip()
 
-            ***REMOVED*** System uptime
+            # System uptime
             uptime_elem = soup.find(text="Uptime")
             if uptime_elem:
                 value = uptime_elem.find_next("td")
@@ -401,28 +401,28 @@ class YourModemParser(ModemParser):
         return info
 
 
-***REMOVED*** =============================================================================
-***REMOVED*** TESTING CHECKLIST
-***REMOVED*** =============================================================================
-***REMOVED*** Before submitting your parser, verify:
-***REMOVED***
-***REMOVED*** □ can_parse() returns True ONLY for your modem
-***REMOVED*** □ can_parse() returns False for other modems
-***REMOVED*** □ login() authenticates successfully (or returns True if no auth needed)
-***REMOVED*** □ parse() returns dict with "downstream", "upstream", "system_info" keys
-***REMOVED*** □ parse() downstream list contains valid channel data
-***REMOVED*** □ parse() upstream list contains valid channel data
-***REMOVED*** □ All channel IDs are present
-***REMOVED*** □ Frequencies are in Hz (not MHz)
-***REMOVED*** □ Power levels are reasonable (-15 to +15 dBmV typical)
-***REMOVED*** □ SNR values are reasonable (30-45 dB typical)
-***REMOVED*** □ Empty/missing data handled gracefully
-***REMOVED*** □ Logs helpful debug/warning messages
-***REMOVED*** □ No exceptions on valid HTML
-***REMOVED*** □ Works with your modem's actual HTML
-***REMOVED***
-***REMOVED*** To test:
-***REMOVED*** 1. Save your modem's HTML: curl http://192.168.100.1 > tests/fixtures/your_modem.html
-***REMOVED*** 2. Run tests: pytest tests/test_modem_scraper.py -v
-***REMOVED*** 3. Check logs for warnings/errors
-***REMOVED*** 4. Verify channel counts and values look correct
+# =============================================================================
+# TESTING CHECKLIST
+# =============================================================================
+# Before submitting your parser, verify:
+#
+# □ can_parse() returns True ONLY for your modem
+# □ can_parse() returns False for other modems
+# □ login() authenticates successfully (or returns True if no auth needed)
+# □ parse() returns dict with "downstream", "upstream", "system_info" keys
+# □ parse() downstream list contains valid channel data
+# □ parse() upstream list contains valid channel data
+# □ All channel IDs are present
+# □ Frequencies are in Hz (not MHz)
+# □ Power levels are reasonable (-15 to +15 dBmV typical)
+# □ SNR values are reasonable (30-45 dB typical)
+# □ Empty/missing data handled gracefully
+# □ Logs helpful debug/warning messages
+# □ No exceptions on valid HTML
+# □ Works with your modem's actual HTML
+#
+# To test:
+# 1. Save your modem's HTML: curl http://192.168.100.1 > tests/fixtures/your_modem.html
+# 2. Run tests: pytest tests/test_modem_scraper.py -v
+# 3. Check logs for warnings/errors
+# 4. Verify channel counts and values look correct

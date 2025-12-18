@@ -1,15 +1,15 @@
-***REMOVED*** Dashboard & Automation Examples
+# Dashboard & Automation Examples
 
 Ready-to-use examples for monitoring your cable modem in Home Assistant.
 
-***REMOVED******REMOVED*** Table of Contents
-- [Example Dashboard](***REMOVED***example-dashboard)
-- [Last Boot Time Display Options](***REMOVED***last-boot-time-display-options)
-- [Automation Examples](***REMOVED***automation-examples)
+## Table of Contents
+- [Example Dashboard](#example-dashboard)
+- [Last Boot Time Display Options](#last-boot-time-display-options)
+- [Automation Examples](#automation-examples)
 
 ---
 
-***REMOVED******REMOVED*** Example Dashboard
+## Example Dashboard
 
 Create a comprehensive dashboard to monitor your modem health. This example shows all 24 downstream channels (typical for DOCSIS 3.0 modems), upstream channels, and error tracking.
 
@@ -192,7 +192,7 @@ cards:
 
 ---
 
-***REMOVED******REMOVED*** Last Boot Time Display Options
+## Last Boot Time Display Options
 
 The `sensor.cable_modem_last_boot_time` is a timestamp sensor. You can customize how it displays:
 
@@ -237,9 +237,9 @@ content: >
 
 ---
 
-***REMOVED******REMOVED*** Automation Examples
+## Automation Examples
 
-***REMOVED******REMOVED******REMOVED*** Alert on High Uncorrected Errors
+### Alert on High Uncorrected Errors
 
 ```yaml
 automation:
@@ -255,7 +255,7 @@ automation:
           message: "High uncorrected errors detected. Check your cable connection."
 ```
 
-***REMOVED******REMOVED******REMOVED*** Alert on Low SNR
+### Alert on Low SNR
 
 ```yaml
 automation:
@@ -271,7 +271,7 @@ automation:
           message: "Low signal quality detected on downstream channel 1."
 ```
 
-***REMOVED******REMOVED******REMOVED*** Alert on Channel Count Changes
+### Alert on Channel Count Changes
 
 ```yaml
 automation:
@@ -291,7 +291,7 @@ automation:
           message: "Channel count changed: {{ trigger.to_state.name }} is now {{ trigger.to_state.state }}"
 ```
 
-***REMOVED******REMOVED******REMOVED*** Auto-Restart on Network Issues
+### Auto-Restart on Network Issues
 
 ```yaml
 automation:
@@ -310,7 +310,7 @@ automation:
           entity_id: button.cable_modem_restart_modem
 ```
 
-***REMOVED******REMOVED******REMOVED*** Modem Status Alert (v3.10.0+)
+### Modem Status Alert (v3.10.0+)
 
 ```yaml
 automation:

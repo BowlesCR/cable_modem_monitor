@@ -33,27 +33,27 @@ class ArrisS33HnapParser(ModemParser):
     name = "Arris S33"
     manufacturer = "Arris/CommScope"
     models = ["S33", "CommScope S33", "ARRIS S33"]
-    priority = 101  ***REMOVED*** Higher priority for the API-based method
+    priority = 101  # Higher priority for the API-based method
 
-    ***REMOVED*** Parser status
+    # Parser status
     status = ParserStatus.AWAITING_VERIFICATION
     verification_source = "https://github.com/solentlabs/cable_modem_monitor/issues/32"
 
-    ***REMOVED*** Device metadata
+    # Device metadata
     release_date = "2020"
     docsis_version = "3.1"
     fixtures_path = "tests/parsers/arris/fixtures/s33"
 
-    ***REMOVED*** S33 blocks ICMP ping - skip ping check and use HTTP-only health status
+    # S33 blocks ICMP ping - skip ping check and use HTTP-only health status
     supports_icmp = False
 
     def __init__(self):
         """Initialize the parser with instance-level state."""
         super().__init__()
-        ***REMOVED*** Store the JSON builder instance to preserve private_key across login/parse calls
+        # Store the JSON builder instance to preserve private_key across login/parse calls
         self._json_builder: HNAPJsonRequestBuilder | None = None
 
-    ***REMOVED*** HNAP authentication configuration
+    # HNAP authentication configuration
     auth_config = HNAPAuthConfig(
         strategy=AuthStrategyType.HNAP_SESSION,
         login_url="/Login.html",
@@ -67,25 +67,25 @@ class ArrisS33HnapParser(ModemParser):
         {"path": "/Cmconnectionstatus.html", "auth_method": "hnap", "auth_required": True},
     ]
 
-    ***REMOVED*** Capabilities - S33 HNAP parser
+    # Capabilities - S33 HNAP parser
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
         ModemCapability.SYSTEM_UPTIME,
         ModemCapability.SOFTWARE_VERSION,
-        ModemCapability.RESTART,  ***REMOVED*** Uses SetArrisConfigurationInfo Action="reboot"
+        ModemCapability.RESTART,  # Uses SetArrisConfigurationInfo Action="reboot"
     }
 
     @classmethod
     def can_parse(cls, soup: BeautifulSoup, url: str, html: str) -> bool:
         """Detect if this is an Arris/CommScope S33 modem."""
-        ***REMOVED*** Check for S33 model identifiers
+        # Check for S33 model identifiers
         if "S33" in html:
             return True
-        ***REMOVED*** Check for Arris/CommScope branding with HNAP
+        # Check for Arris/CommScope branding with HNAP
         if ("ARRIS" in html or "CommScope" in html) and "purenetworks.com/HNAP1" in html:
             return True
-        ***REMOVED*** Check for SURFboard branding (S33 is a SURFboard model)
+        # Check for SURFboard branding (S33 is a SURFboard model)
         return "SURFboard" in html and "HNAP" in html
 
     def login(self, session, base_url, username, password) -> tuple[bool, str | None]:
@@ -97,8 +97,8 @@ class ArrisS33HnapParser(ModemParser):
         Note: S33 typically uses HTTPS with self-signed certificates.
         The session should have verify=False for self-signed certs.
         """
-        ***REMOVED*** Try JSON-based HNAP login
-        ***REMOVED*** S33 requires empty string "" for action values (observed in HAR captures)
+        # Try JSON-based HNAP login
+        # S33 requires empty string "" for action values (observed in HAR captures)
         self._json_builder = HNAPJsonRequestBuilder(
             endpoint=self.auth_config.hnap_endpoint,
             namespace=self.auth_config.soap_action_namespace,
@@ -114,10 +114,10 @@ class ArrisS33HnapParser(ModemParser):
             _LOGGER.info("S33: JSON HNAP login successful")
             return (True, response)
 
-        ***REMOVED*** JSON login failed - clear the builder
+        # JSON login failed - clear the builder
         self._json_builder = None
 
-        ***REMOVED*** Fall back to XML/SOAP-based HNAP login
+        # Fall back to XML/SOAP-based HNAP login
         _LOGGER.debug("S33: JSON login failed, trying XML/SOAP-based HNAP login")
         auth_strategy = AuthFactory.get_strategy(self.auth_config.strategy)
         success, response = auth_strategy.login(session, base_url, username, password, self.auth_config)
@@ -169,14 +169,14 @@ class ArrisS33HnapParser(ModemParser):
         except Exception as json_error:
             _LOGGER.error("S33: HNAP parsing failed: %s", str(json_error), exc_info=True)
 
-            ***REMOVED*** Check if failure is due to authentication
+            # Check if failure is due to authentication
             auth_failure = self._is_auth_failure(json_error)
 
             result: dict[str, list | dict] = {"downstream": [], "upstream": [], "system_info": {}}
 
             if auth_failure:
-                result["_auth_failure"] = True  ***REMOVED*** type: ignore[assignment]
-                result["_login_page_detected"] = True  ***REMOVED*** type: ignore[assignment]
+                result["_auth_failure"] = True  # type: ignore[assignment]
+                result["_login_page_detected"] = True  # type: ignore[assignment]
                 result["_diagnostic_context"] = {
                     "parser": "S33 HNAP",
                     "error": str(json_error)[:200],
@@ -190,7 +190,7 @@ class ArrisS33HnapParser(ModemParser):
         """Parse modem data using JSON-based HNAP requests."""
         _LOGGER.debug("S33: Attempting JSON-based HNAP communication")
 
-        ***REMOVED*** Reuse the builder from login() to preserve the private_key
+        # Reuse the builder from login() to preserve the private_key
         if self._json_builder is not None:
             builder = self._json_builder
             _LOGGER.debug("S33: Reusing JSON builder from login (private_key preserved)")
@@ -202,9 +202,9 @@ class ArrisS33HnapParser(ModemParser):
             )
             _LOGGER.warning("S33: No stored JSON builder - creating new one (may lack auth)")
 
-        ***REMOVED*** Make batched HNAP request for all data
-        ***REMOVED*** S33 uses GetCustomer* action names (vs MB8611's GetMoto*)
-        ***REMOVED*** GetArrisDeviceStatus provides firmware version
+        # Make batched HNAP request for all data
+        # S33 uses GetCustomer* action names (vs MB8611's GetMoto*)
+        # GetArrisDeviceStatus provides firmware version
         hnap_actions = [
             "GetCustomerStatusStartupSequence",
             "GetCustomerStatusConnectionInfo",
@@ -216,10 +216,10 @@ class ArrisS33HnapParser(ModemParser):
         _LOGGER.debug("S33: Fetching modem data via JSON HNAP GetMultipleHNAPs")
         json_response = builder.call_multiple(session, base_url, hnap_actions)
 
-        ***REMOVED*** Parse JSON response
+        # Parse JSON response
         response_data = json.loads(json_response)
 
-        ***REMOVED*** Extract nested response
+        # Extract nested response
         hnap_data = response_data.get("GetMultipleHNAPsResponse", response_data)
 
         _LOGGER.debug(
@@ -228,7 +228,7 @@ class ArrisS33HnapParser(ModemParser):
             len(json_response),
         )
 
-        ***REMOVED*** Parse channels and system info
+        # Parse channels and system info
         downstream = self._parse_downstream_from_hnap(hnap_data)
         upstream = self._parse_upstream_from_hnap(hnap_data)
         system_info = self._parse_system_info_from_hnap(hnap_data)
@@ -255,7 +255,7 @@ class ArrisS33HnapParser(ModemParser):
         channels: list[dict] = []
 
         try:
-            ***REMOVED*** S33 uses CustomerConn* keys (vs MB8611's MotoConn*)
+            # S33 uses CustomerConn* keys (vs MB8611's MotoConn*)
             downstream_response = hnap_data.get("GetCustomerStatusDownstreamChannelInfoResponse", {})
             channel_data = downstream_response.get("CustomerConnDownstreamChannel", "")
 
@@ -267,14 +267,14 @@ class ArrisS33HnapParser(ModemParser):
                 )
                 return channels
 
-            ***REMOVED*** Split by |+| delimiter
+            # Split by |+| delimiter
             channel_entries = channel_data.split("|+|")
 
             for entry in channel_entries:
                 if not entry.strip():
                     continue
 
-                ***REMOVED*** Split by ^ delimiter
+                # Split by ^ delimiter
                 fields = entry.split("^")
 
                 if len(fields) < 9:
@@ -282,26 +282,26 @@ class ArrisS33HnapParser(ModemParser):
                     continue
 
                 try:
-                    ***REMOVED*** Parse channel fields
-                    ***REMOVED*** fields[0] = row index (display order only)
-                    ***REMOVED*** fields[3] = DOCSIS Channel ID
+                    # Parse channel fields
+                    # fields[0] = row index (display order only)
+                    # fields[3] = DOCSIS Channel ID
                     channel_id = int(fields[3])
                     lock_status = fields[1].strip()
                     modulation = fields[2].strip()
 
-                    ***REMOVED*** Frequency - could be Hz or need conversion
+                    # Frequency - could be Hz or need conversion
                     freq_str = fields[4].strip()
                     if "Hz" in freq_str:
                         frequency = int(freq_str.replace(" Hz", "").replace("Hz", ""))
                     else:
-                        ***REMOVED*** Assume MHz, convert to Hz
+                        # Assume MHz, convert to Hz
                         frequency = int(round(float(freq_str) * 1_000_000))
 
-                    ***REMOVED*** Power - strip units if present
+                    # Power - strip units if present
                     power_str = fields[5].strip().replace(" dBmV", "").replace("dBmV", "")
                     power = float(power_str)
 
-                    ***REMOVED*** SNR - strip units if present
+                    # SNR - strip units if present
                     snr_str = fields[6].strip().replace(" dB", "").replace("dB", "")
                     snr = float(snr_str)
 
@@ -340,7 +340,7 @@ class ArrisS33HnapParser(ModemParser):
         channels: list[dict] = []
 
         try:
-            ***REMOVED*** S33 uses CustomerConn* keys
+            # S33 uses CustomerConn* keys
             upstream_response = hnap_data.get("GetCustomerStatusUpstreamChannelInfoResponse", {})
             channel_data = upstream_response.get("CustomerConnUpstreamChannel", "")
 
@@ -352,14 +352,14 @@ class ArrisS33HnapParser(ModemParser):
                 )
                 return channels
 
-            ***REMOVED*** Split by |+| delimiter
+            # Split by |+| delimiter
             channel_entries = channel_data.split("|+|")
 
             for entry in channel_entries:
                 if not entry.strip():
                     continue
 
-                ***REMOVED*** Split by ^ delimiter
+                # Split by ^ delimiter
                 fields = entry.split("^")
 
                 if len(fields) < 7:
@@ -367,21 +367,21 @@ class ArrisS33HnapParser(ModemParser):
                     continue
 
                 try:
-                    ***REMOVED*** Parse channel fields
+                    # Parse channel fields
                     channel_id = int(fields[3])
                     lock_status = fields[1].strip()
                     modulation = fields[2].strip()
-                    symbol_rate = fields[4].strip()  ***REMOVED*** Keep as string, may have units
+                    symbol_rate = fields[4].strip()  # Keep as string, may have units
 
-                    ***REMOVED*** Frequency - could be Hz or need conversion
+                    # Frequency - could be Hz or need conversion
                     freq_str = fields[5].strip()
                     if "Hz" in freq_str:
                         frequency = int(freq_str.replace(" Hz", "").replace("Hz", ""))
                     else:
-                        ***REMOVED*** Assume MHz, convert to Hz
+                        # Assume MHz, convert to Hz
                         frequency = int(round(float(freq_str) * 1_000_000))
 
-                    ***REMOVED*** Power - strip units if present
+                    # Power - strip units if present
                     power_str = fields[6].strip().replace(" dBmV", "").replace("dBmV", "")
                     power = float(power_str)
 
@@ -420,7 +420,7 @@ class ArrisS33HnapParser(ModemParser):
 
     def _extract_connection_info(self, hnap_data: dict, system_info: dict) -> None:
         """Extract connection info fields from HNAP data."""
-        ***REMOVED*** S33 uses CustomerConn* keys
+        # S33 uses CustomerConn* keys
         conn_info = hnap_data.get("GetCustomerStatusConnectionInfoResponse", {})
         if not conn_info:
             return
@@ -446,7 +446,7 @@ class ArrisS33HnapParser(ModemParser):
         if not device_status:
             return
 
-        ***REMOVED*** FirmwareVersion -> software_version
+        # FirmwareVersion -> software_version
         self._set_if_present(device_status, "FirmwareVersion", system_info, "software_version")
         self._set_if_present(device_status, "InternetConnection", system_info, "internet_connection")
 
@@ -494,7 +494,7 @@ class ArrisS33HnapParser(ModemParser):
         """
         _LOGGER.info("S33: Sending restart command via SetArrisConfigurationInfo")
 
-        ***REMOVED*** Use JSON builder if available from login
+        # Use JSON builder if available from login
         if self._json_builder is not None:
             builder = self._json_builder
             _LOGGER.debug("S33: Using stored JSON builder for restart")
@@ -507,11 +507,11 @@ class ArrisS33HnapParser(ModemParser):
             _LOGGER.warning("S33: No stored JSON builder for restart - creating new one (may lack auth)")
 
         try:
-            ***REMOVED*** First, get current configuration values (EEE and LED settings)
-            ***REMOVED*** The browser does this before sending reboot to preserve current settings
+            # First, get current configuration values (EEE and LED settings)
+            # The browser does this before sending reboot to preserve current settings
             current_config = self._get_current_config(builder, session, base_url)
 
-            ***REMOVED*** Build restart request with current settings preserved
+            # Build restart request with current settings preserved
             restart_data = {
                 "Action": "reboot",
                 "SetEEEEnable": current_config.get("ethSWEthEEE", "0"),
@@ -521,10 +521,10 @@ class ArrisS33HnapParser(ModemParser):
             _LOGGER.debug("S33: Sending restart with config: %s", restart_data)
             response = builder.call_single(session, base_url, "SetArrisConfigurationInfo", restart_data)
 
-            ***REMOVED*** Log response for debugging
+            # Log response for debugging
             _LOGGER.debug("S33: Restart response: %s", response[:500] if response else "empty")
 
-            ***REMOVED*** Parse response to check result
+            # Parse response to check result
             response_data = json.loads(response)
             result = response_data.get("SetArrisConfigurationInfoResponse", {}).get(
                 "SetArrisConfigurationInfoResult", ""
@@ -537,7 +537,7 @@ class ArrisS33HnapParser(ModemParser):
                 _LOGGER.info("S33: Restart command accepted - modem is rebooting")
                 return True
             elif result == "OK":
-                ***REMOVED*** OK but no REBOOT action - might still work
+                # OK but no REBOOT action - might still work
                 _LOGGER.info(
                     "S33: Restart command returned OK (action=%s) - modem may be rebooting",
                     action_status,
@@ -552,7 +552,7 @@ class ArrisS33HnapParser(ModemParser):
                 return False
 
         except ConnectionResetError:
-            ***REMOVED*** Connection reset often means the modem is rebooting
+            # Connection reset often means the modem is rebooting
             _LOGGER.info("S33: Restart likely successful (connection reset by rebooting modem)")
             return True
 

@@ -1,31 +1,31 @@
-***REMOVED*** Development Guide
+# Development Guide
 
-***REMOVED******REMOVED*** Running Tests Locally
+## Running Tests Locally
 
-***REMOVED******REMOVED******REMOVED*** Pre-commit Hooks
+### Pre-commit Hooks
 All tests run automatically via pre-commit hooks before each commit:
 ```bash
-***REMOVED*** Install pre-commit hooks (one-time setup)
+# Install pre-commit hooks (one-time setup)
 pip install pre-commit
 pre-commit install
 
-***REMOVED*** Run all checks manually
+# Run all checks manually
 pre-commit run --all-files
 ```
 
-***REMOVED******REMOVED******REMOVED*** Code Quality Checks
+### Code Quality Checks
 ```bash
-***REMOVED*** Run Black (code formatting)
+# Run Black (code formatting)
 .venv/bin/black .
 
-***REMOVED*** Run Ruff (linting)
+# Run Ruff (linting)
 .venv/bin/ruff check .
 
-***REMOVED*** Run mypy (type checking)
+# Run mypy (type checking)
 .venv/bin/mypy custom_components/cable_modem_monitor
 ```
 
-***REMOVED******REMOVED******REMOVED*** CodeQL Security Scanning
+### CodeQL Security Scanning
 
 **Important:** CodeQL tests run in CI but are NOT currently set up to run locally in pre-commit.
 
@@ -39,7 +39,7 @@ To catch CodeQL issues before pushing:
 2. **Common CodeQL issues to watch for:**
    - `py/request-without-cert-validation`: Using `verify=False` in requests
      - **When acceptable:** Cable modem connectivity on private LANs (192.168.x.x, 10.x.x.x)
-     - **How to handle:** Add `***REMOVED*** nosec` comment + justification, or add to query-filters exclusions
+     - **How to handle:** Add `# nosec` comment + justification, or add to query-filters exclusions
 
    - `py/hardcoded-credentials`: Hardcoded passwords/tokens
      - **When acceptable:** Test fixtures, example values
@@ -53,11 +53,11 @@ To catch CodeQL issues before pushing:
 
 3. **If you add new `verify=False` calls:**
    - Add justification comment with keywords: "self-signed", "private LAN", "cable modem"
-   - Add `***REMOVED*** nosec` marker on the same line
+   - Add `# nosec` marker on the same line
    - Example:
      ```python
-     ***REMOVED*** Security justification: Cable modems use self-signed certificates on private LAN
-     response = requests.get(url, verify=False)  ***REMOVED*** nosec: cable modem self-signed cert
+     # Security justification: Cable modems use self-signed certificates on private LAN
+     response = requests.get(url, verify=False)  # nosec: cable modem self-signed cert
      ```
 
 4. **If CodeQL fails in CI:**
@@ -68,23 +68,23 @@ To catch CodeQL issues before pushing:
    - If it's a real security issue:
      - Fix the code to address the vulnerability
 
-***REMOVED******REMOVED******REMOVED*** Testing Locally (Optional - Advanced)
+### Testing Locally (Optional - Advanced)
 
 To run CodeQL locally, you need to install the CodeQL CLI:
 
 ```bash
-***REMOVED*** Install CodeQL CLI (one-time setup)
+# Install CodeQL CLI (one-time setup)
 cd /path/to/project
 wget https://github.com/github/codeql-cli-binaries/releases/latest/download/codeql-linux64.zip
 unzip codeql-linux64.zip && rm codeql-linux64.zip
 
-***REMOVED*** Run custom CodeQL tests
+# Run custom CodeQL tests
 ./scripts/dev/test-codeql.sh
 ```
 
 **Note:** The local CodeQL tests only run our custom queries, not the full GitHub security suite. Some issues may only appear in CI.
 
-***REMOVED******REMOVED*** Security Best Practices
+## Security Best Practices
 
 1. **SSL/TLS Configuration:**
    - Cable modems require `verify=False` (self-signed certs on private LANs)
@@ -101,7 +101,7 @@ unzip codeql-linux64.zip && rm codeql-linux64.zip
    - Sanitize data before logging
    - Use parameterized queries for any database access
 
-***REMOVED******REMOVED*** Pre-push Checklist
+## Pre-push Checklist
 
 Before pushing code:
 - [ ] All pre-commit hooks pass

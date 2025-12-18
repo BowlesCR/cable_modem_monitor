@@ -96,7 +96,7 @@ $(document).ready(function(){
         buildSiteMap();
         /* ARRIS-MOD START*/
         if ( custID == 16 || custID == 17 || custID == 18 ) // Hide menu if customer ID: ***REDACTED*** not Retail
-         $("***REMOVED***menu_5").hide(); // Hide Advance menu
+         $("#menu_5").hide(); // Hide Advance menu
         /* ARRIS-MOD END*/
 });
 
@@ -240,7 +240,7 @@ function buildSiteMap()
             }
         }
         htmlOutput += '</ul>';
-        $("***REMOVED***siteMapBottom").html(htmlOutput);
+        $("#siteMapBottom").html(htmlOutput);
 
 }
 
@@ -329,7 +329,7 @@ function buildMenus()
 
         htmlOutput += '</ul>';
 
-        $("***REMOVED***topMenu").html(htmlOutput);
+        $("#topMenu").html(htmlOutput);
 //window.alert("topMenu="+htmlOutput);
 //document.write(htmlOutput);
         bindMenus();

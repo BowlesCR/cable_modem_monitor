@@ -72,7 +72,7 @@ class TestParserDetectionContract:
         manual_only = []
 
         for parser_class in all_parsers:
-            ***REMOVED*** Skip fallback parser - it's a special case
+            # Skip fallback parser - it's a special case
             if parser_class == UniversalFallbackParser:
                 continue
 
@@ -83,15 +83,15 @@ class TestParserDetectionContract:
             else:
                 manual_only.append(parser_class.name)
 
-        ***REMOVED*** This test always passes - it's just reporting
-        ***REMOVED*** Uncomment the assertion below if you want to enforce auto-detection
+        # This test always passes - it's just reporting
+        # Uncomment the assertion below if you want to enforce auto-detection
         print(f"\nAuto-detectable parsers ({len(auto_detectable)}): {auto_detectable}")
         print(f"Manual selection only ({len(manual_only)}): {manual_only}")
 
-        ***REMOVED*** Optional: Enforce that most parsers are auto-detectable
-        ***REMOVED*** assert len(auto_detectable) >= len(manual_only), (
-        ***REMOVED***     f"Too many parsers require manual selection: {manual_only}"
-        ***REMOVED*** )
+        # Optional: Enforce that most parsers are auto-detectable
+        # assert len(auto_detectable) >= len(manual_only), (
+        #     f"Too many parsers require manual selection: {manual_only}"
+        # )
 
     def test_first_url_pattern_is_detection_url_when_anonymous(self, all_parsers):
         """If a parser has anonymous URLs, the first one should be for detection.
@@ -116,7 +116,7 @@ class TestParserDetectionContract:
                         f"detection page comes first."
                     )
 
-        ***REMOVED*** This is a warning, not a failure
+        # This is a warning, not a failure
         if warnings:
             print("\n⚠️  URL ordering suggestions:")
             for w in warnings:
@@ -134,7 +134,7 @@ class TestParserMetadata:
     def test_all_parsers_have_name(self, all_parsers):
         """Every parser must have a name."""
         missing = [p for p in all_parsers if not p.name or p.name == "Unknown"]
-        ***REMOVED*** Filter out fallback which is expected to be "Unknown"
+        # Filter out fallback which is expected to be "Unknown"
         missing = [p for p in missing if p != UniversalFallbackParser]
 
         assert not missing, f"Parsers missing name: {[p.__name__ for p in missing]}"
@@ -142,7 +142,7 @@ class TestParserMetadata:
     def test_all_parsers_have_manufacturer(self, all_parsers):
         """Every parser must have a manufacturer."""
         missing = [p for p in all_parsers if not p.manufacturer or p.manufacturer == "Unknown"]
-        ***REMOVED*** Filter out fallback which is expected to be "Unknown"
+        # Filter out fallback which is expected to be "Unknown"
         missing = [p for p in missing if p != UniversalFallbackParser]
 
         assert not missing, f"Parsers missing manufacturer: {[p.__name__ for p in missing]}"
@@ -150,7 +150,7 @@ class TestParserMetadata:
     def test_all_parsers_have_models(self, all_parsers):
         """Every parser must list supported models."""
         missing = [p for p in all_parsers if not p.models]
-        ***REMOVED*** Filter out fallback
+        # Filter out fallback
         missing = [p for p in missing if p != UniversalFallbackParser]
 
         assert not missing, f"Parsers missing models: {[p.__name__ for p in missing]}"

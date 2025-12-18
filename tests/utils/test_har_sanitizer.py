@@ -83,9 +83,9 @@ class TestPostDataSanitization:
         result = sanitize_post_data(post_data)
 
         assert result is not None
-        ***REMOVED*** Username preserved
+        # Username preserved
         assert result["params"][0]["value"] == "admin"
-        ***REMOVED*** Password redacted
+        # Password redacted
         assert result["params"][1]["value"] == "[REDACTED]"
 
     def test_sanitizes_password_in_text(self):
@@ -203,11 +203,11 @@ class TestEntrySanitization:
 
         result = sanitize_entry(entry)
 
-        ***REMOVED*** Check params
+        # Check params
         password_param = next(p for p in result["request"]["postData"]["params"] if p["name"] == "password")
         assert password_param["value"] == "[REDACTED]"
 
-        ***REMOVED*** Check text
+        # Check text
         assert "password=[REDACTED]" in result["request"]["postData"]["text"]
         assert "secret" not in result["request"]["postData"]["text"]
 
@@ -256,11 +256,11 @@ class TestFullHarSanitization:
 
         result = sanitize_har(har_data)
 
-        ***REMOVED*** Check first entry
+        # Check first entry
         entry1 = result["log"]["entries"][0]
         assert "11:22:33:44:55:66" not in entry1["response"]["content"]["text"]
 
-        ***REMOVED*** Check second entry
+        # Check second entry
         entry2 = result["log"]["entries"][1]
         assert entry2["request"]["postData"]["params"][0]["value"] == "[REDACTED]"
 
@@ -268,7 +268,7 @@ class TestFullHarSanitization:
         """Test handling of invalid HAR without log key."""
         har_data = {"invalid": "structure"}
         result = sanitize_har(har_data)
-        assert "invalid" in result  ***REMOVED*** Returns input with warning
+        assert "invalid" in result  # Returns input with warning
 
     def test_preserves_har_structure(self):
         """Test HAR structure is preserved after sanitization."""

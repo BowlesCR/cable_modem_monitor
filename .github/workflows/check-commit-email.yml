@@ -21,10 +21,10 @@ jobs:
       - name: Check commit author emails
         id: check-emails
         run: |
-          ***REMOVED*** Get commits in this PR
+          # Get commits in this PR
           git fetch origin ${{ github.base_ref }}
 
-          ***REMOVED*** Allowed email patterns
+          # Allowed email patterns
           ALLOWED_PATTERNS=(
             "@users.noreply.github.com$"
             "^noreply@anthropic.com$"
@@ -32,7 +32,7 @@ jobs:
             "^.*\[bot\]@users.noreply.github.com$"
           )
 
-          ***REMOVED*** Check each commit
+          # Check each commit
           FOUND_PERSONAL=0
           PERSONAL_EMAILS=""
 
@@ -90,17 +90,17 @@ jobs:
               return;
             }
 
-            const message = `***REMOVED******REMOVED*** :information_source: Personal Email Detected in Commits
+            const message = `## :information_source: Personal Email Detected in Commits
 
             > **Note:** This is an informational check only. It does **not** block your PR.
 
             One or more commits in this PR contain personal email addresses:
             ${{ steps.check-emails.outputs.emails }}
 
-            ***REMOVED******REMOVED******REMOVED*** Why This Matters
+            ### Why This Matters
             Personal emails in git history are **permanently public** and can be harvested by spammers.
 
-            ***REMOVED******REMOVED******REMOVED*** How to Fix (Optional but Recommended)
+            ### How to Fix (Optional but Recommended)
 
             1. **Configure GitHub email privacy:**
                - Go to [GitHub Email Settings](https://github.com/settings/emails)
@@ -114,7 +114,7 @@ jobs:
 
             3. **Or use VS Code task:** "🔒 Setup Git Email Privacy"
 
-            ***REMOVED******REMOVED******REMOVED*** For Future Commits
+            ### For Future Commits
             Once configured, all your future commits will use the privacy-safe email automatically.
 
             ---

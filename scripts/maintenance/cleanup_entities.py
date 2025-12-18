@@ -1,4 +1,4 @@
-***REMOVED***!/usr/bin/env python3
+#!/usr/bin/env python3
 """CLI wrapper for cable_modem_monitor entity cleanup.
 
 This script provides a friendly, interactive CLI while delegating the
@@ -15,7 +15,7 @@ import json
 import sys
 from pathlib import Path
 
-***REMOVED*** Ensure project root is on sys.path so we can import the integration module
+# Ensure project root is on sys.path so we can import the integration module
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -23,7 +23,7 @@ if str(PROJECT_ROOT) not in sys.path:
 try:
     from custom_components.cable_modem_monitor.utils import entity_cleanup as ec
 except Exception:
-    ec = None  ***REMOVED*** type: ignore[assignment]
+    ec = None  # type: ignore[assignment]
 
 
 class Colors:
@@ -171,7 +171,7 @@ def handle_nuclear_operation(data: dict, stats: dict, entity_registry_path: Path
         backup_path = ec.backup_entity_registry()
         print_success(f"Backup created: {backup_path}")
 
-    ***REMOVED*** Recompute stats in case something changed
+    # Recompute stats in case something changed
     if ec is not None:
         stats = ec.analyze_entities(data)
     all_entities = data["data"]["entities"]
@@ -206,7 +206,7 @@ def main():
     group.add_argument("--dry-run", action="store_true", help="Preview cleanup without making changes")
     args = parser.parse_args()
 
-    ***REMOVED*** Determine entity registry path from module if available, else fallback
+    # Determine entity registry path from module if available, else fallback
     entity_registry_path = getattr(ec, "ENTITY_REGISTRY_PATH", Path("/config/.storage/core.entity_registry"))
 
     try:
@@ -216,7 +216,7 @@ def main():
         sys.exit(1)
 
     try:
-        ***REMOVED*** Use module analysis when available, else fallback
+        # Use module analysis when available, else fallback
         stats = ec.analyze_entities(data) if ec is not None else analyze_entities_fallback(data)
 
         if args.check:

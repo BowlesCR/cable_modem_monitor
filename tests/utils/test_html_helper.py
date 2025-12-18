@@ -18,7 +18,7 @@ class TestCheckForPii:
         content = "Device MAC: AA:BB:CC:DD:EE:FF"
         findings = check_for_pii(content)
 
-        ***REMOVED*** MAC addresses may also match IPv6 pattern due to colon format
+        # MAC addresses may also match IPv6 pattern due to colon format
         mac_findings = [f for f in findings if f["pattern"] == "mac_address"]
         assert len(mac_findings) == 1
         assert mac_findings[0]["match"] == "AA:BB:CC:DD:EE:FF"
@@ -37,7 +37,7 @@ class TestCheckForPii:
         content = "External DNS: 8.8.8.8"
         findings = check_for_pii(content)
 
-        ***REMOVED*** Should detect public IP
+        # Should detect public IP
         public_ip_findings = [f for f in findings if f["pattern"] == "public_ip"]
         assert len(public_ip_findings) == 1
         assert public_ip_findings[0]["match"] == "8.8.8.8"
@@ -56,7 +56,7 @@ class TestCheckForPii:
         content = "Uptime: 12:34:56"
         findings = check_for_pii(content)
 
-        ***REMOVED*** Time format should not be flagged
+        # Time format should not be flagged
         ipv6_findings = [f for f in findings if f["pattern"] == "ipv6"]
         assert len(ipv6_findings) == 0
 
@@ -69,7 +69,7 @@ class TestCheckForPii:
         """
         findings = check_for_pii(content)
 
-        ***REMOVED*** Allowlisted placeholders should not be flagged
+        # Allowlisted placeholders should not be flagged
         assert len(findings) == 0
 
     def test_returns_line_numbers(self):
@@ -77,7 +77,7 @@ class TestCheckForPii:
         content = "Line 1\nLine 2\nMAC: AA:BB:CC:DD:EE:FF on line 3"
         findings = check_for_pii(content)
 
-        ***REMOVED*** Filter to MAC pattern specifically
+        # Filter to MAC pattern specifically
         mac_findings = [f for f in findings if f["pattern"] == "mac_address"]
         assert len(mac_findings) == 1
         assert mac_findings[0]["line"] == 3
@@ -87,7 +87,7 @@ class TestCheckForPii:
         content = "MAC: AA:BB:CC:DD:EE:FF"
         findings = check_for_pii(content, filename="test.html")
 
-        ***REMOVED*** Filter to MAC pattern specifically
+        # Filter to MAC pattern specifically
         mac_findings = [f for f in findings if f["pattern"] == "mac_address"]
         assert len(mac_findings) == 1
         assert mac_findings[0]["filename"] == "test.html"
@@ -101,7 +101,7 @@ class TestCheckForPii:
         """
         findings = check_for_pii(content)
 
-        ***REMOVED*** Should find 2 MACs and 1 email
+        # Should find 2 MACs and 1 email
         mac_findings = [f for f in findings if f["pattern"] == "mac_address"]
         email_findings = [f for f in findings if f["pattern"] == "email"]
 
@@ -169,7 +169,7 @@ class TestSanitizeHtmlEdgeCases:
         content = "Uptime: 01:23:45"
         sanitized = sanitize_html(content)
 
-        ***REMOVED*** Should be preserved since it's not a valid IPv6
+        # Should be preserved since it's not a valid IPv6
         assert "01:23:45" in sanitized
 
     def test_config_file_path_sanitized(self):
@@ -203,15 +203,15 @@ class TestTagValueListSanitization:
     def test_sanitizes_wifi_passphrase_in_dashboard(self):
         """Test that WiFi passphrases in DashBoard tagValueList are sanitized."""
         content = (
-            "var tagValueList = '0|Good|| |***SSID***|***SSID***-5G|"
-            "***WIFI_CRED***|***WIFI_CRED***|20|0|1|0|none|NETGEAR-Guest|"
+            "var tagValueList = '0|Good|| |NETGEAR38|NETGEAR38-5G|"
+            "happymango167|happymango167|20|0|1|0|none|NETGEAR-Guest|"
             "None|NETGEAR-5G-Guest|None|0|0|0|0|0|1|0|0|1|0|0|0|0|"
             "---.---.---.---|1|';"
         )
         sanitized = sanitize_html(content)
 
-        ***REMOVED*** WiFi passphrases should be redacted
-        assert "***WIFI_CRED***" not in sanitized
+        # WiFi passphrases should be redacted
+        assert "happymango167" not in sanitized
         assert "***WIFI_CRED***" in sanitized
 
     def test_preserves_status_values_in_tagvaluelist(self):
@@ -222,7 +222,7 @@ class TestTagValueListSanitization:
         )
         sanitized = sanitize_html(content)
 
-        ***REMOVED*** Status values should be preserved
+        # Status values should be preserved
         assert "Locked" in sanitized
         assert "OK" in sanitized
         assert "Operational" in sanitized
@@ -234,7 +234,7 @@ class TestTagValueListSanitization:
         content = "var tagValueList = '345000000|8|1|256|5120000|30840000';"
         sanitized = sanitize_html(content)
 
-        ***REMOVED*** Numeric values should be preserved
+        # Numeric values should be preserved
         assert "345000000" in sanitized
         assert "5120000" in sanitized
         assert "30840000" in sanitized
@@ -244,7 +244,7 @@ class TestTagValueListSanitization:
         content = "var tagValueList = 'V2.02.18|0|0|1|0|retail|0|1|0|0|0|1|1|';"
         sanitized = sanitize_html(content)
 
-        ***REMOVED*** Version strings should be preserved
+        # Version strings should be preserved
         assert "V2.02.18" in sanitized
         assert "retail" in sanitized
 
@@ -253,7 +253,7 @@ class TestTagValueListSanitization:
         content = 'var tagValueList = "0|Good|both|none|MySSID1234|secretpass99";'
         sanitized = sanitize_html(content)
 
-        ***REMOVED*** Passphrase-like values should be redacted
+        # Passphrase-like values should be redacted
         assert "secretpass99" not in sanitized
         assert "***WIFI_CRED***" in sanitized
 
@@ -262,7 +262,7 @@ class TestTagValueListSanitization:
         content = "var tagValueList = '0|Good|| |ABC|XYZ123|none|Off|On';"
         sanitized = sanitize_html(content)
 
-        ***REMOVED*** Short values should be preserved (under 8 chars)
+        # Short values should be preserved (under 8 chars)
         assert "ABC" in sanitized
         assert "Good" in sanitized
         assert "none" in sanitized
@@ -275,7 +275,7 @@ class TestTagValueListSanitization:
         )
         sanitized = sanitize_html(content)
 
-        ***REMOVED*** DOCSIS data should be preserved
+        # DOCSIS data should be preserved
         assert "Locked" in sanitized
         assert "QAM256" in sanitized
         assert "345000000 Hz" in sanitized
@@ -293,9 +293,9 @@ class TestTagValueListSanitization:
         )
         sanitized = sanitize_html(content)
 
-        ***REMOVED*** Device names should be redacted
+        # Device names should be redacted
         assert "MyDevice" not in sanitized
         assert "AnotherDevice" not in sanitized
         assert "***DEVICE***" in sanitized
-        ***REMOVED*** Empty placeholder should be preserved
+        # Empty placeholder should be preserved
         assert "|--|" in sanitized

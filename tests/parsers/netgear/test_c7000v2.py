@@ -6,7 +6,7 @@ Model: C7000v2
 Firmware: V1.03.08
 Hardware: 2.01
 
-Captured fixtures (from Issue ***REMOVED***61 - @Anthranilic):
+Captured fixtures (from Issue #61 - @Anthranilic):
 - index.htm, DocsisStatus.htm, RouterStatus.htm (core)
 - DashBoard.htm, eventLog.htm, DocsisOffline.htm (extended)
 """
@@ -111,11 +111,11 @@ class TestParsing:
         soup = BeautifulSoup(c7000v2_docsis_status_html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** Verify downstream channels were parsed
+        # Verify downstream channels were parsed
         assert "downstream" in data
         assert len(data["downstream"]) > 0
 
-        ***REMOVED*** Check first downstream channel structure
+        # Check first downstream channel structure
         first_ds = data["downstream"][0]
         assert "channel_id" in first_ds
         assert "frequency" in first_ds
@@ -131,11 +131,11 @@ class TestParsing:
         soup = BeautifulSoup(c7000v2_docsis_status_html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** Verify upstream channels were parsed
+        # Verify upstream channels were parsed
         assert "upstream" in data
         assert len(data["upstream"]) > 0
 
-        ***REMOVED*** Check first upstream channel structure
+        # Check first upstream channel structure
         first_us = data["upstream"][0]
         assert "channel_id" in first_us
         assert "frequency" in first_us
@@ -148,7 +148,7 @@ class TestParsing:
         soup = BeautifulSoup(c7000v2_router_status_html, "html.parser")
         system_info = parser.parse_system_info(soup)
 
-        ***REMOVED*** Verify system info was parsed
+        # Verify system info was parsed
         assert "hardware_version" in system_info
         assert "software_version" in system_info
 
@@ -177,7 +177,7 @@ class TestParsing:
         index_soup = BeautifulSoup(c7000v2_index_html, "html.parser")
         data = parser.parse(index_soup, session=mock_session, base_url="http://192.168.100.1")
 
-        ***REMOVED*** Verify channel data was parsed
+        # Verify channel data was parsed
         assert len(data["downstream"]) > 0
         assert len(data["upstream"]) > 0
 
@@ -200,11 +200,11 @@ class TestAuthentication:
         """Test that protected URLs require authentication."""
         parser = NetgearC7000v2Parser()
 
-        ***REMOVED*** DocsisStatus.htm should require auth
+        # DocsisStatus.htm should require auth
         docsis_pattern = next(p for p in parser.url_patterns if p["path"] == "/DocsisStatus.htm")
         assert docsis_pattern["auth_required"] is True
 
-        ***REMOVED*** Index page should NOT require auth
+        # Index page should NOT require auth
         index_pattern = next(p for p in parser.url_patterns if p["path"] == "/")
         assert index_pattern["auth_required"] is False
 
@@ -271,7 +271,7 @@ class TestEdgeCases:
         index_soup = BeautifulSoup(c7000v2_index_html, "html.parser")
         data = parser.parse(index_soup, session=mock_session, base_url="http://192.168.100.1")
 
-        ***REMOVED*** Should return empty data structures without crashing
+        # Should return empty data structures without crashing
         assert data["downstream"] == []
         assert data["upstream"] == []
 

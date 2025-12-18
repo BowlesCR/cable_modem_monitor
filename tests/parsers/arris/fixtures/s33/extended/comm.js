@@ -641,7 +641,7 @@ function COMM_AddBR2Str(str,len)
 
 //for XML encoding
 var encoding_code = new Array("20", "22", "23", "24", "25", "26", "27", "2B", "2C", "2F", "3A", "3B", "3C", "3D", "3E", "3F", "40", "5B", "5C", "5D", "5E", "60", "7B", "7C", "7D", "7E");
-var encoding_char = new Array(' ', '"', '***REMOVED***', '$', '%', '&', '\'', '+', ',', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '`', '{', '|', '}', '~');
+var encoding_char = new Array(' ', '"', '#', '$', '%', '&', '\'', '+', ',', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '`', '{', '|', '}', '~');
 
 function asciiToHex(ascii)
 {
@@ -783,12 +783,12 @@ function filtercode(str)
 		return " ";
 
 	str = str.replace(/&/ig, "&amp;");
-	str = str.replace(/\`/ig, "&***REMOVED***x60;");
+	str = str.replace(/\`/ig, "&#x60;");
 	str = str.replace(/\"/ig, "&quot;");
     str = str.replace(/</ig, "&lt;");
     str = str.replace(/>/ig, "&gt;");
-    str = str.replace(/\//ig, "&***REMOVED***x2F;");
-	str = str.replace(/\'/ig, "&***REMOVED***x27;");
+    str = str.replace(/\//ig, "&#x2F;");
+	str = str.replace(/\'/ig, "&#x27;");
 
 	return str;
 }

@@ -107,7 +107,7 @@ class TestAuthentication:
         parser = TechnicolorTC4400Parser()
         session = Mock()
 
-        ***REMOVED*** Test with credentials - should set session.auth
+        # Test with credentials - should set session.auth
         success, html = parser.login(session, "http://192.168.0.1", "admin", "password")
 
         assert success is True
@@ -118,16 +118,16 @@ class TestAuthentication:
         parser = TechnicolorTC4400Parser()
         session = Mock()
 
-        ***REMOVED*** Test without username
+        # Test without username
         success, html = parser.login(session, "http://192.168.0.1", "", "password")
         assert success is True
 
-        ***REMOVED*** Test without password
+        # Test without password
         session2 = Mock()
         success, html = parser.login(session2, "http://192.168.0.1", "admin", "")
         assert success is True
 
-        ***REMOVED*** Test without both
+        # Test without both
         session3 = Mock()
         success, html = parser.login(session3, "http://192.168.0.1", "", "")
         assert success is True
@@ -135,22 +135,22 @@ class TestAuthentication:
     def test_login_signature(self):
         """Test that login method accepts all required parameters including base_url.
 
-        This test verifies the fix for GitHub Issue ***REMOVED***1 where the login signature
+        This test verifies the fix for GitHub Issue #1 where the login signature
         was missing the base_url parameter, causing authentication to fail.
         """
         parser = TechnicolorTC4400Parser()
         session = Mock()
 
-        ***REMOVED*** This should not raise TypeError - all 4 parameters should be accepted
+        # This should not raise TypeError - all 4 parameters should be accepted
         success, html = parser.login(session, "http://192.168.0.1", "admin", "password")
         assert success is True
 
-        ***REMOVED*** Verify the signature matches what ModemScraper.login() calls
-        ***REMOVED*** ModemScraper calls: parser.login(session, base_url, username, password)
+        # Verify the signature matches what ModemScraper.login() calls
+        # ModemScraper calls: parser.login(session, base_url, username, password)
         sig = inspect.signature(parser.login)
         params = list(sig.parameters.keys())
 
-        ***REMOVED*** Should have: session, base_url, username, password (self is implicit)
+        # Should have: session, base_url, username, password (self is implicit)
         assert len(params) == 4
         assert params[0] == "session"
         assert params[1] == "base_url"
@@ -183,10 +183,10 @@ class TestRestartDetection:
         soup = BeautifulSoup(html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** During restart (< 5 min), zero power/SNR should be filtered to None
+        # During restart (< 5 min), zero power/SNR should be filtered to None
         assert len(data["downstream"]) == 1
-        assert data["downstream"][0]["power"] is None  ***REMOVED*** Filtered out
-        assert data["downstream"][0]["snr"] is None  ***REMOVED*** Filtered out
+        assert data["downstream"][0]["power"] is None  # Filtered out
+        assert data["downstream"][0]["snr"] is None  # Filtered out
         assert data["system_info"]["system_uptime"] == "0 days 00h:03m:45s"
 
     def test_preserves_nonzero_power(self):
@@ -211,10 +211,10 @@ class TestRestartDetection:
         soup = BeautifulSoup(html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** During restart, non-zero values should be preserved
+        # During restart, non-zero values should be preserved
         assert len(data["downstream"]) == 1
-        assert data["downstream"][0]["power"] == 3.0  ***REMOVED*** Preserved
-        assert data["downstream"][0]["snr"] == 40.1  ***REMOVED*** Preserved
+        assert data["downstream"][0]["power"] == 3.0  # Preserved
+        assert data["downstream"][0]["snr"] == 40.1  # Preserved
 
     def test_no_filtering_after_window(self):
         """Test that zero power values are NOT filtered after restart window."""
@@ -238,10 +238,10 @@ class TestRestartDetection:
         soup = BeautifulSoup(html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** After restart window (>= 5 min), zero values should be kept
+        # After restart window (>= 5 min), zero values should be kept
         assert len(data["downstream"]) == 1
-        assert data["downstream"][0]["power"] == 0  ***REMOVED*** NOT filtered
-        assert data["downstream"][0]["snr"] == 0  ***REMOVED*** NOT filtered
+        assert data["downstream"][0]["power"] == 0  # NOT filtered
+        assert data["downstream"][0]["snr"] == 0  # NOT filtered
 
     def test_filters_upstream_zero_power(self):
         """Test that zero power values are filtered for upstream during restart."""
@@ -262,9 +262,9 @@ class TestRestartDetection:
         soup = BeautifulSoup(html, "html.parser")
         data = parser.parse(soup)
 
-        ***REMOVED*** During restart, zero upstream power should be filtered
+        # During restart, zero upstream power should be filtered
         assert len(data["upstream"]) == 1
-        assert data["upstream"][0]["power"] is None  ***REMOVED*** Filtered out
+        assert data["upstream"][0]["power"] is None  # Filtered out
 
 
 class TestConstants:
@@ -273,4 +273,4 @@ class TestConstants:
     def test_window_constant(self):
         """Test that the restart window constant is correctly defined."""
         assert RESTART_WINDOW_SECONDS == 300
-        assert RESTART_WINDOW_SECONDS == 5 * 60  ***REMOVED*** 5 minutes
+        assert RESTART_WINDOW_SECONDS == 5 * 60  # 5 minutes

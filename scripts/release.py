@@ -1,4 +1,4 @@
-***REMOVED***!/usr/bin/env python3
+#!/usr/bin/env python3
 """Release automation script for Cable Modem Monitor.
 
 This script automates the complete release process by:
@@ -18,11 +18,11 @@ This script automates the complete release process by:
 11. Creating a GitHub release (optional)
 
 Usage:
-    python scripts/release.py 3.5.2                    ***REMOVED*** Full release
-    python scripts/release.py 3.5.2 --no-push          ***REMOVED*** Test locally without pushing
-    python scripts/release.py 3.5.2 --skip-tests       ***REMOVED*** Skip tests (not recommended)
-    python scripts/release.py 3.5.2 --skip-quality     ***REMOVED*** Skip code quality checks
-    python scripts/release.py 3.5.2 --skip-changelog   ***REMOVED*** Don't update changelog
+    python scripts/release.py 3.5.2                    # Full release
+    python scripts/release.py 3.5.2 --no-push          # Test locally without pushing
+    python scripts/release.py 3.5.2 --skip-tests       # Skip tests (not recommended)
+    python scripts/release.py 3.5.2 --skip-quality     # Skip code quality checks
+    python scripts/release.py 3.5.2 --skip-changelog   # Don't update changelog
 """
 
 from __future__ import annotations
@@ -104,7 +104,7 @@ def update_manifest(repo_root: Path, version: str) -> bool:
 
         with open(manifest_path, "w", encoding="utf-8") as f:
             json.dump(manifest, f, indent=2)
-            f.write("\n")  ***REMOVED*** Add trailing newline
+            f.write("\n")  # Add trailing newline
 
         print_success(f"Updated manifest.json: {old_version} → {version}")
         return True
@@ -121,7 +121,7 @@ def update_const_py(repo_root: Path, version: str) -> bool:
         with open(const_path, encoding="utf-8") as f:
             content = f.read()
 
-        ***REMOVED*** Find the current version
+        # Find the current version
         version_match = re.search(r'VERSION = "([^"]+)"', content)
         if not version_match:
             print_error("Could not find VERSION constant in const.py")
@@ -129,7 +129,7 @@ def update_const_py(repo_root: Path, version: str) -> bool:
 
         old_version = version_match.group(1)
 
-        ***REMOVED*** Replace the version
+        # Replace the version
         new_content = re.sub(r'VERSION = "[^"]+"', f'VERSION = "{version}"', content, count=1)
 
         with open(const_path, "w", encoding="utf-8") as f:
@@ -150,7 +150,7 @@ def update_version_test(repo_root: Path, version: str) -> bool:
         with open(test_path, encoding="utf-8") as f:
             content = f.read()
 
-        ***REMOVED*** Find the current version in the test
+        # Find the current version in the test
         version_match = re.search(r'assert VERSION == "([^"]+)"', content)
         if not version_match:
             print_error("Could not find version assertion in test file")
@@ -158,7 +158,7 @@ def update_version_test(repo_root: Path, version: str) -> bool:
 
         old_version = version_match.group(1)
 
-        ***REMOVED*** Replace the version
+        # Replace the version
         new_content = re.sub(
             r'assert VERSION == "[^"]+"',
             f'assert VERSION == "{version}"',
@@ -184,20 +184,20 @@ def update_changelog(repo_root: Path, version: str) -> bool:
         with open(changelog_path, encoding="utf-8") as f:
             content = f.read()
 
-        ***REMOVED*** Check if there's an Unreleased section
-        if "***REMOVED******REMOVED*** [Unreleased]" not in content:
+        # Check if there's an Unreleased section
+        if "## [Unreleased]" not in content:
             print_warning("No [Unreleased] section found in CHANGELOG.md")
             return True
 
-        ***REMOVED*** Get today's date
+        # Get today's date
         from datetime import datetime
 
         today = datetime.now().strftime("%Y-%m-%d")
 
-        ***REMOVED*** Replace ***REMOVED******REMOVED*** [Unreleased] with ***REMOVED******REMOVED*** [version] - date and add new [Unreleased]
+        # Replace ## [Unreleased] with ## [version] - date and add new [Unreleased]
         new_content = content.replace(
-            "***REMOVED******REMOVED*** [Unreleased]",
-            f"***REMOVED******REMOVED*** [Unreleased]\n\n***REMOVED******REMOVED*** [{version}] - {today}",
+            "## [Unreleased]",
+            f"## [Unreleased]\n\n## [{version}] - {today}",
             1,
         )
 
@@ -214,7 +214,7 @@ def update_changelog(repo_root: Path, version: str) -> bool:
 def create_commit(version: str, skip_verify: bool = False) -> bool:
     """Create a git commit with version changes."""
     try:
-        ***REMOVED*** Stage the files
+        # Stage the files
         subprocess.run(
             [
                 "git",
@@ -227,7 +227,7 @@ def create_commit(version: str, skip_verify: bool = False) -> bool:
             check=True,
         )
 
-        ***REMOVED*** Create commit
+        # Create commit
         commit_msg = f"chore: bump version to {version}"
         cmd = ["git", "commit", "-m", commit_msg]
         if skip_verify:
@@ -262,7 +262,7 @@ def push_changes(version: str, skip_verify: bool = False) -> bool:
     try:
         tag_name = f"v{version}"
 
-        ***REMOVED*** Push commit
+        # Push commit
         cmd = ["git", "push", "origin", "main"]
         if skip_verify:
             cmd.append("--no-verify")
@@ -270,7 +270,7 @@ def push_changes(version: str, skip_verify: bool = False) -> bool:
         subprocess.run(cmd, check=True)
         print_success("Pushed commit to origin/main")
 
-        ***REMOVED*** Push tag
+        # Push tag
         cmd = ["git", "push", "origin", tag_name]
         if skip_verify:
             cmd.append("--no-verify")
@@ -289,13 +289,13 @@ def create_github_release(version: str, repo_root: Path) -> bool:
     try:
         tag_name = f"v{version}"
 
-        ***REMOVED*** Extract release notes from CHANGELOG
+        # Extract release notes from CHANGELOG
         changelog_path = repo_root / "CHANGELOG.md"
         with open(changelog_path, encoding="utf-8") as f:
             content = f.read()
 
-        ***REMOVED*** Find the section for this version
-        version_pattern = rf"***REMOVED******REMOVED*** \[{re.escape(version)}\][^\n]*\n(.*?)(?=***REMOVED******REMOVED*** \[|$)"
+        # Find the section for this version
+        version_pattern = rf"## \[{re.escape(version)}\][^\n]*\n(.*?)(?=## \[|$)"
         match = re.search(version_pattern, content, re.DOTALL)
 
         if match:
@@ -303,7 +303,7 @@ def create_github_release(version: str, repo_root: Path) -> bool:
         else:
             release_notes = f"Release version {version}"
 
-        ***REMOVED*** Create release
+        # Create release
         subprocess.run(
             [
                 "gh",
@@ -350,7 +350,7 @@ def run_code_quality_checks(repo_root: Path) -> bool:
     try:
         venv_python = str(repo_root / ".venv" / "bin" / "python")
 
-        ***REMOVED*** Run ruff - check entire repo (matches CI)
+        # Run ruff - check entire repo (matches CI)
         print_info("Running ruff on entire repository...")
         subprocess.run(
             [venv_python, "-m", "ruff", "check", "."],
@@ -359,7 +359,7 @@ def run_code_quality_checks(repo_root: Path) -> bool:
         )
         print_success("Ruff checks passed")
 
-        ***REMOVED*** Run black - check entire repo (matches CI)
+        # Run black - check entire repo (matches CI)
         print_info("Running black on entire repository...")
         subprocess.run(
             [venv_python, "-m", "black", "--check", "."],
@@ -368,7 +368,7 @@ def run_code_quality_checks(repo_root: Path) -> bool:
         )
         print_success("Black formatting checks passed")
 
-        ***REMOVED*** Run mypy - check entire repo with config (matches CI)
+        # Run mypy - check entire repo with config (matches CI)
         print_info("Running mypy with config file...")
         subprocess.run(
             [venv_python, "-m", "mypy", ".", "--config-file=mypy.ini"],
@@ -389,7 +389,7 @@ def verify_translations(repo_root: Path) -> bool:
         strings_path = repo_root / "custom_components" / "cable_modem_monitor" / "strings.json"
         translations_path = repo_root / "custom_components" / "cable_modem_monitor" / "translations" / "en.json"
 
-        ***REMOVED*** Read both files
+        # Read both files
         with open(strings_path, encoding="utf-8") as f:
             strings_content = json.load(f)
 
@@ -422,12 +422,12 @@ def verify_translations(repo_root: Path) -> bool:
 
 def validate_release_preconditions(version: str, repo_root: Path) -> None:
     """Validate all preconditions for creating a release."""
-    ***REMOVED*** Validate version format
+    # Validate version format
     if not validate_version(version):
         print_error(f"Invalid version format: {version}. Must be X.Y.Z (e.g., 3.5.1)")
         sys.exit(1)
 
-    ***REMOVED*** Check if pre-commit is installed
+    # Check if pre-commit is installed
     try:
         result = subprocess.run(
             ["git", "config", "--get", "core.hooksPath"],
@@ -448,12 +448,12 @@ def validate_release_preconditions(version: str, repo_root: Path) -> None:
     except Exception as e:
         print_warning(f"Could not check pre-commit installation: {e}")
 
-    ***REMOVED*** Check git status
+    # Check git status
     if not check_git_clean():
         print_error("Git working directory is not clean. Commit or stash changes first.")
         sys.exit(1)
 
-    ***REMOVED*** Check if version tag already exists
+    # Check if version tag already exists
     try:
         result = subprocess.run(
             ["git", "tag", "-l", f"v{version}"],
@@ -494,7 +494,7 @@ def verify_version_consistency(repo_root: Path, version: str) -> bool:
 
     all_correct = True
 
-    ***REMOVED*** Check manifest.json
+    # Check manifest.json
     manifest_path = repo_root / "custom_components" / "cable_modem_monitor" / "manifest.json"
     try:
         with open(manifest_path, encoding="utf-8") as f:
@@ -509,7 +509,7 @@ def verify_version_consistency(repo_root: Path, version: str) -> bool:
         print_error(f"Failed to read manifest.json: {e}")
         all_correct = False
 
-    ***REMOVED*** Check const.py
+    # Check const.py
     const_path = repo_root / "custom_components" / "cable_modem_monitor" / "const.py"
     try:
         with open(const_path, encoding="utf-8") as f:
@@ -523,7 +523,7 @@ def verify_version_consistency(repo_root: Path, version: str) -> bool:
         print_error(f"Failed to read const.py: {e}")
         all_correct = False
 
-    ***REMOVED*** Check test file
+    # Check test file
     test_path = repo_root / "tests" / "components" / "test_version_and_startup.py"
     try:
         with open(test_path, encoding="utf-8") as f:
@@ -548,12 +548,12 @@ def verify_version_consistency(repo_root: Path, version: str) -> bool:
 
 def perform_git_operations(version: str, skip_verify: bool, no_push: bool, repo_root: Path) -> None:
     """Perform git commit, tag, push, and release operations."""
-    ***REMOVED*** Create commit
+    # Create commit
     if not create_commit(version, skip_verify):
         sys.exit(1)
 
-    ***REMOVED*** Only create tag and push if --no-push is not set
-    ***REMOVED*** With branch protection, use --no-push for PR workflow, then tag manually after merge
+    # Only create tag and push if --no-push is not set
+    # With branch protection, use --no-push for PR workflow, then tag manually after merge
     if no_push:
         print_info("Skipping tag creation (--no-push). After PR merges, run:")
         print_info("  git checkout main && git pull")
@@ -561,15 +561,15 @@ def perform_git_operations(version: str, skip_verify: bool, no_push: bool, repo_
         print_info(f"  git push origin v{version}")
         return
 
-    ***REMOVED*** Create tag
+    # Create tag
     if not create_tag(version):
         sys.exit(1)
 
-    ***REMOVED*** Push commit and tag
+    # Push commit and tag
     if not push_changes(version, skip_verify):
         sys.exit(1)
 
-    ***REMOVED*** Create GitHub release
+    # Create GitHub release
     if not create_github_release(version, repo_root):
         print_warning("Release created but GitHub release failed")
 
@@ -609,49 +609,49 @@ def main():
 
     print_info(f"Starting release process for version {version}")
 
-    ***REMOVED*** Get repository root
+    # Get repository root
     repo_root = get_repo_root()
     print_info(f"Repository root: {repo_root}")
 
-    ***REMOVED*** Validate preconditions
+    # Validate preconditions
     validate_release_preconditions(version, repo_root)
 
-    ***REMOVED*** Run tests
+    # Run tests
     if not args.skip_tests:
         if not run_tests(repo_root):
             sys.exit(1)
     else:
         print_warning("Skipping tests (--skip-tests)")
 
-    ***REMOVED*** Run code quality checks
+    # Run code quality checks
     if not args.skip_quality:
         if not run_code_quality_checks(repo_root):
             sys.exit(1)
     else:
         print_warning("Skipping code quality checks (--skip-quality)")
 
-    ***REMOVED*** Verify translations
+    # Verify translations
     if not verify_translations(repo_root):
         sys.exit(1)
 
-    ***REMOVED*** Update all version files
+    # Update all version files
     update_all_files(repo_root, version, args.skip_changelog)
 
-    ***REMOVED*** Verify version consistency (prevents CI tag/manifest mismatch error)
+    # Verify version consistency (prevents CI tag/manifest mismatch error)
     if not verify_version_consistency(repo_root, version):
         sys.exit(1)
 
-    ***REMOVED*** Stage translations if it was updated
+    # Stage translations if it was updated
     with contextlib.suppress(subprocess.CalledProcessError):
         subprocess.run(
             ["git", "add", "custom_components/cable_modem_monitor/translations/en.json"],
-            check=False,  ***REMOVED*** Don't fail if file doesn't exist
+            check=False,  # Don't fail if file doesn't exist
         )
 
-    ***REMOVED*** Perform git operations
+    # Perform git operations
     perform_git_operations(version, args.skip_verify, args.no_push, repo_root)
 
-    ***REMOVED*** Success message
+    # Success message
     if args.no_push:
         print_success(f"\n🎉 Version {version} prepared! Create PR, then tag after merge.")
     else:

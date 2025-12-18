@@ -1,9 +1,9 @@
-***REMOVED*** This script is a thin wrapper that executes the main Python setup script.
+# This script is a thin wrapper that executes the main Python setup script.
 
-***REMOVED*** Exit on error
+# Exit on error
 $ErrorActionPreference = "Stop"
 
-***REMOVED*** Find a suitable Python interpreter
+# Find a suitable Python interpreter
 $PYTHON_CMD = "python"
 if (-not (Get-Command $PYTHON_CMD -ErrorAction SilentlyContinue)) {
     $PYTHON_CMD = "python3"
@@ -13,8 +13,8 @@ if (-not (Get-Command $PYTHON_CMD -ErrorAction SilentlyContinue)) {
     }
 }
 
-***REMOVED*** Get the directory of this script
+# Get the directory of this script
 $ScriptDir = Split-Path -Path $MyInvocation.MyCommand.Path -Parent
 
-***REMOVED*** Execute the main Python setup script
+# Execute the main Python setup script
 & $PYTHON_CMD (Join-Path $ScriptDir "setup.py")

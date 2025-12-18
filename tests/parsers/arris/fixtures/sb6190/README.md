@@ -1,8 +1,8 @@
-***REMOVED*** Arris SB6190 Modem Fixtures
+# Arris SB6190 Modem Fixtures
 
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -14,11 +14,11 @@
 
 <!-- END AUTO-GENERATED -->
 
-***REMOVED******REMOVED*** Verification Status
+## Verification Status
 
 ⚠️ **UNVERIFIED** - No confirmed user reports
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
@@ -33,9 +33,9 @@
 | **Captured By** | @sfennell |
 | **Capture Date** | November 2025 |
 
-***REMOVED******REMOVED*** Implementation History
+## Implementation History
 
-**Added by:** sfennell (@contributor@example.org)
+**Added by:** @sfennell
 **Date:** November 7, 2025
 **Commit:** a6d09ad "Added support for Arris SB6190"
 **Release:** v3.0.0
@@ -45,7 +45,7 @@
 
 **Note:** Parser was developed based on SB6141 code (author likely meant SB6141, not SB6140), but no user has confirmed it works with a real SB6190 modem.
 
-***REMOVED******REMOVED*** Verification Needed
+## Verification Needed
 
 ⚠️ **This parser has NOT been verified against a real modem!**
 
@@ -61,9 +61,9 @@
 - Provide HTML diagnostics using the "Capture HTML" button
 - Help us move this to "VERIFIED" status!
 
-***REMOVED******REMOVED*** Available Fixtures
+## Available Fixtures
 
-***REMOVED******REMOVED******REMOVED*** arris_sb6190.html
+### arris_sb6190.html
 - **Source:** Unknown - likely synthetic or from online examples
 - **Size:** 15.8 KB
 - **Content:** Status page HTML
@@ -75,7 +75,7 @@
 - May be based on documentation or other sources
 - Parser may not work correctly with real hardware
 
-***REMOVED******REMOVED*** Parser Implementation
+## Parser Implementation
 
 **File:** `custom_components/cable_modem_monitor/parsers/arris/sb6190.py`
 
@@ -84,7 +84,7 @@
 **URL Patterns:**
 ```python
 url_patterns = [
-    {"path": "/cmSignal.asp", "auth_method": "none"},  ***REMOVED*** Note: .asp not .html
+    {"path": "/cmSignal.asp", "auth_method": "none"},  # Note: .asp not .html
 ]
 ```
 
@@ -97,7 +97,7 @@ url_patterns = [
 - HTML table scraping with BeautifulSoup
 - No authentication (assumed)
 
-***REMOVED******REMOVED*** Test Coverage
+## Test Coverage
 
 **File:** `tests/parsers/arris/test_sb6190.py`
 
@@ -110,7 +110,7 @@ url_patterns = [
 
 **⚠️ Important:** Tests pass against the fixture, but fixture may not represent real modem output!
 
-***REMOVED******REMOVED*** Known Issues
+## Known Issues
 
 1. **No User Confirmation**
    - No reports of successful usage
@@ -126,7 +126,7 @@ url_patterns = [
    - Assumes no authentication required
    - Real modem may require Basic Auth or other method
 
-***REMOVED******REMOVED*** How to Help
+## How to Help
 
 **If you own an Arris SB6190:**
 
@@ -140,14 +140,14 @@ url_patterns = [
    - GitHub Issue: https://github.com/solentlabs/cable_modem_monitor/issues
    - HA Forum: https://community.home-assistant.io/t/cable-modem-monitor-track-your-internet-signal-quality-in-home-assistant
 
-***REMOVED******REMOVED*** Related Documentation
+## Related Documentation
 
 - Commit a6d09ad: Initial SB6190 support
 - Release v3.0.0: SB6190 included in release notes
 - No community forum mentions found
 - No GitHub issues for SB6190 found
 
-***REMOVED******REMOVED*** Comparison to SB6141
+## Comparison to SB6141
 
 **Similarities:**
 - Both Arris/Motorola SURFboard modems
@@ -161,7 +161,7 @@ url_patterns = [
 - SB6190: More channels (32 DS / 8 US)
 - SB6141: Fewer channels (8 DS / 4 US)
 
-***REMOVED******REMOVED*** Recommendation
+## Recommendation
 
 ⚠️ **Until verified by a real user, consider this parser experimental.**
 

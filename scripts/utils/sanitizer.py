@@ -31,9 +31,9 @@ from typing import Any
 
 _LOGGER = logging.getLogger(__name__)
 
-***REMOVED*** =============================================================================
-***REMOVED*** HTML Sanitization (from html_helper.py)
-***REMOVED*** =============================================================================
+# =============================================================================
+# HTML Sanitization (from html_helper.py)
+# =============================================================================
 
 
 def sanitize_html(html: str) -> str:
@@ -49,10 +49,10 @@ def sanitize_html(html: str) -> str:
     Returns:
         Sanitized HTML with personal info removed
     """
-    ***REMOVED*** 1. MAC Addresses (various formats: XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX)
+    # 1. MAC Addresses (various formats: XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX)
     html = re.sub(r"\b([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}\b", "XX:XX:XX:XX:XX:XX", html)
 
-    ***REMOVED*** 2. Serial Numbers (various label formats)
+    # 2. Serial Numbers (various label formats)
     html = re.sub(
         r"(Serial\s*Number|SerialNum|SN|S/N)\s*[:\s=]*(?:<[^>]*>)*\s*([a-zA-Z0-9\-]{5,})",
         r"\1: ***REDACTED***",
@@ -60,7 +60,7 @@ def sanitize_html(html: str) -> str:
         flags=re.IGNORECASE,
     )
 
-    ***REMOVED*** 3. Account/Subscriber IDs
+    # 3. Account/Subscriber IDs
     html = re.sub(
         r"(Account|Subscriber|Customer|Device)\s*(ID|Number)\s*[:\s=]+\S+",
         r"\1 \2: ***REDACTED***",
@@ -68,8 +68,8 @@ def sanitize_html(html: str) -> str:
         flags=re.IGNORECASE,
     )
 
-    ***REMOVED*** 4. Private IP addresses (keep common modem IPs for context)
-    ***REMOVED*** Preserves: 192.168.100.1, 192.168.0.1, 192.168.1.1, 10.0.0.1
+    # 4. Private IP addresses (keep common modem IPs for context)
+    # Preserves: 192.168.100.1, 192.168.0.1, 192.168.1.1, 10.0.0.1
     html = re.sub(
         r"\b(?!192\.168\.100\.1\b)(?!192\.168\.0\.1\b)(?!192\.168\.1\.1\b)(?!10\.0\.0\.1\b)"
         r"(?:10\.|172\.(?:1[6-9]|2[0-9]|3[01])\.|192\.168\.)\d{1,3}\.\d{1,3}\b",
@@ -77,7 +77,7 @@ def sanitize_html(html: str) -> str:
         html,
     )
 
-    ***REMOVED*** 5. Public IP addresses (any non-private, non-localhost IP)
+    # 5. Public IP addresses (any non-private, non-localhost IP)
     html = re.sub(
         r"\b(?!10\.)(?!172\.(?:1[6-9]|2[0-9]|3[01])\.)(?!192\.168\.)"
         r"(?!127\.)(?!0\.)(?!255\.)"
@@ -89,9 +89,9 @@ def sanitize_html(html: str) -> str:
         html,
     )
 
-    ***REMOVED*** 6. IPv6 Addresses (full and compressed)
-    ***REMOVED*** Only match if it contains at least one hex letter (a-f) to avoid matching
-    ***REMOVED*** time formats like "12:34:56" which only contain digits
+    # 6. IPv6 Addresses (full and compressed)
+    # Only match if it contains at least one hex letter (a-f) to avoid matching
+    # time formats like "12:34:56" which only contain digits
     def replace_ipv6(match: re.Match[str]) -> str:
         text: str = match.group(0)
         if re.search(r"[a-f]", text, re.IGNORECASE):
@@ -105,7 +105,7 @@ def sanitize_html(html: str) -> str:
         flags=re.IGNORECASE,
     )
 
-    ***REMOVED*** 7. Passwords/Passphrases in HTML forms or text
+    # 7. Passwords/Passphrases in HTML forms or text
     html = re.sub(
         r'(password|passphrase|psk|key|wpa[0-9]*key)\s*[=:]\s*["\\]?([^"\'<>\s]+)',
         r"\1=***REDACTED***",
@@ -113,7 +113,7 @@ def sanitize_html(html: str) -> str:
         flags=re.IGNORECASE,
     )
 
-    ***REMOVED*** 8. Password input fields
+    # 8. Password input fields
     html = re.sub(
         r'(<input[^>]*type=["\\]?password["\\]?[^>]*value=["\\]?)([^"\\]+)(["\\]?)',
         r"\1***REDACTED***\3",
@@ -121,7 +121,7 @@ def sanitize_html(html: str) -> str:
         flags=re.IGNORECASE,
     )
 
-    ***REMOVED*** 9. Session tokens/cookies (long alphanumeric strings)
+    # 9. Session tokens/cookies (long alphanumeric strings)
     html = re.sub(
         r'(session|token|auth|cookie)\s*[=:]\s*["\\]?([^"\'<>\s]{20,})',
         r"\1=***REDACTED***",
@@ -129,7 +129,7 @@ def sanitize_html(html: str) -> str:
         flags=re.IGNORECASE,
     )
 
-    ***REMOVED*** 10. CSRF tokens in meta tags
+    # 10. CSRF tokens in meta tags
     html = re.sub(
         r'(<meta[^>]*name=["\\]?csrf-token["\\]?[^>]*content=["\\]?)([^"\\]+)(["\\]?)',
         r"\1***REDACTED***\3",
@@ -137,14 +137,14 @@ def sanitize_html(html: str) -> str:
         flags=re.IGNORECASE,
     )
 
-    ***REMOVED*** 11. Email addresses
+    # 11. Email addresses
     html = re.sub(
         r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
         "***EMAIL***",
         html,
     )
 
-    ***REMOVED*** 12. Config file paths (may contain ISP/customer identifiers)
+    # 12. Config file paths (may contain ISP/customer identifiers)
     html = re.sub(
         r"(Config\s*File\s*Name|config\s*file)\s*[:\s=]+([^\s<>]+\.cfg)",
         r"\1: ***CONFIG_PATH***",
@@ -155,11 +155,11 @@ def sanitize_html(html: str) -> str:
     return html
 
 
-***REMOVED*** =============================================================================
-***REMOVED*** HAR Sanitization (from har_sanitizer.py)
-***REMOVED*** =============================================================================
+# =============================================================================
+# HAR Sanitization (from har_sanitizer.py)
+# =============================================================================
 
-***REMOVED*** Sensitive header names (case-insensitive)
+# Sensitive header names (case-insensitive)
 SENSITIVE_HEADERS = {
     "authorization",
     "cookie",
@@ -170,7 +170,7 @@ SENSITIVE_HEADERS = {
     "x-csrf-token",
 }
 
-***REMOVED*** Sensitive form field names (case-insensitive patterns)
+# Sensitive form field names (case-insensitive patterns)
 SENSITIVE_FIELD_PATTERNS = [
     r"password",
     r"passwd",
@@ -185,7 +185,7 @@ SENSITIVE_FIELD_PATTERNS = [
     r"api_key",
 ]
 
-***REMOVED*** Compile patterns for efficiency
+# Compile patterns for efficiency
 _SENSITIVE_FIELD_RE = re.compile(
     "|".join(SENSITIVE_FIELD_PATTERNS),
     re.IGNORECASE,
@@ -201,7 +201,7 @@ def sanitize_header_value(name: str, value: str) -> str:
     """Sanitize a header value if it's sensitive."""
     if name.lower() in SENSITIVE_HEADERS:
         if name.lower() in ("cookie", "set-cookie"):
-            ***REMOVED*** Preserve cookie names, redact values
+            # Preserve cookie names, redact values
             def redact_cookie(match: re.Match) -> str:
                 cookie_name = match.group(1)
                 return f"{cookie_name}=[REDACTED]"
@@ -247,13 +247,13 @@ def sanitize_post_data(post_data: dict[str, Any] | None) -> dict[str, Any] | Non
 
     result = copy.deepcopy(post_data)
 
-    ***REMOVED*** Sanitize params array
+    # Sanitize params array
     if "params" in result and isinstance(result["params"], list):
         for param in result["params"]:
             if isinstance(param, dict) and "name" in param and is_sensitive_field(param["name"]):
                 param["value"] = "[REDACTED]"
 
-    ***REMOVED*** Sanitize raw text (form-urlencoded or JSON)
+    # Sanitize raw text (form-urlencoded or JSON)
     if "text" in result and result["text"]:
         text = result["text"]
         mime_type = result.get("mimeType", "")
@@ -351,11 +351,11 @@ def sanitize_har(har_data: dict[str, Any]) -> dict[str, Any]:
 
     log = result["log"]
 
-    ***REMOVED*** Sanitize all entries
+    # Sanitize all entries
     if "entries" in log and isinstance(log["entries"], list):
         log["entries"] = [sanitize_entry(entry) for entry in log["entries"]]
 
-    ***REMOVED*** Sanitize pages (if present)
+    # Sanitize pages (if present)
     if "pages" in log and isinstance(log["pages"], list):
         for page in log["pages"]:
             if isinstance(page, dict) and "title" in page:

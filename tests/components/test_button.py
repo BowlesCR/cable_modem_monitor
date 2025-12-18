@@ -53,13 +53,13 @@ async def test_async_setup_entry(mock_coordinator, mock_config_entry):
     """Test button platform setup."""
     hass = Mock(spec=HomeAssistant)
     hass.data = {DOMAIN: {mock_config_entry.entry_id: mock_coordinator}}
-    hass.async_add_executor_job = AsyncMock(return_value=False)  ***REMOVED*** Mock restart check
+    hass.async_add_executor_job = AsyncMock(return_value=False)  # Mock restart check
 
     async_add_entities = Mock()
 
     await async_setup_entry(hass, mock_config_entry, async_add_entities)
 
-    ***REMOVED*** Verify four buttons were added (Restart, Reset, Update, Capture)
+    # Verify four buttons were added (Restart, Reset, Update, Capture)
     assert async_add_entities.call_count == 1
     added_entities = async_add_entities.call_args[0][0]
     assert len(added_entities) == 4
@@ -91,24 +91,24 @@ async def test_restart_button_success(mock_coordinator, mock_config_entry):
     button = ModemRestartButton(mock_coordinator, mock_config_entry, is_available=True)
     button.hass = hass
 
-    ***REMOVED*** Mock scraper restart to return success
+    # Mock scraper restart to return success
     with patch("custom_components.cable_modem_monitor.core.modem_scraper.ModemScraper") as mock_scraper_class:
         mock_scraper = Mock()
         mock_scraper.restart_modem = Mock(return_value=True)
         mock_scraper_class.return_value = mock_scraper
 
-        ***REMOVED*** Mock get_parsers
+        # Mock get_parsers
         with patch("custom_components.cable_modem_monitor.parsers.get_parsers", return_value=[]):
             hass.async_add_executor_job.side_effect = [
-                [],  ***REMOVED*** get_parsers result
-                True,  ***REMOVED*** restart_modem result
+                [],  # get_parsers result
+                True,  # restart_modem result
             ]
 
-            ***REMOVED*** Mock asyncio.create_task to not actually start the task
+            # Mock asyncio.create_task to not actually start the task
             with patch("asyncio.create_task"):
                 await button.async_press()
 
-            ***REMOVED*** Verify notification was created
+            # Verify notification was created
             assert hass.services.async_call.call_count >= 1
             call_args = hass.services.async_call.call_args_list[0]
             assert call_args[0][0] == "persistent_notification"
@@ -128,7 +128,7 @@ async def test_restart_button_failure(mock_coordinator, mock_config_entry):
     button = ModemRestartButton(mock_coordinator, mock_config_entry, is_available=True)
     button.hass = hass
 
-    ***REMOVED*** Mock scraper restart to return failure
+    # Mock scraper restart to return failure
     with patch("custom_components.cable_modem_monitor.core.modem_scraper.ModemScraper") as mock_scraper_class:
         mock_scraper = Mock()
         mock_scraper.restart_modem = Mock(return_value=False)
@@ -136,13 +136,13 @@ async def test_restart_button_failure(mock_coordinator, mock_config_entry):
 
         with patch("custom_components.cable_modem_monitor.parsers.get_parsers", return_value=[]):
             hass.async_add_executor_job.side_effect = [
-                [],  ***REMOVED*** get_parsers result
-                False,  ***REMOVED*** restart_modem result (failed)
+                [],  # get_parsers result
+                False,  # restart_modem result (failed)
             ]
 
             await button.async_press()
 
-            ***REMOVED*** Verify error notification was created
+            # Verify error notification was created
             call_args = hass.services.async_call.call_args_list[0]
             assert call_args[0][0] == "persistent_notification"
             notification_data = call_args[0][2]
@@ -160,11 +160,11 @@ async def test_monitor_restart_phase1_success_phase2_success(mock_coordinator, m
     button.hass = hass
     button.coordinator = mock_coordinator
 
-    ***REMOVED*** Simulate modem restart: offline -> responding -> online with channels
+    # Simulate modem restart: offline -> responding -> online with channels
     response_sequence = [
-        ***REMOVED*** Phase 1: First call - modem still offline (last_update_success = False)
+        # Phase 1: First call - modem still offline (last_update_success = False)
         {"last_update_success": False, "data": {}},
-        ***REMOVED*** Phase 1: Second call - modem responding but no channels yet
+        # Phase 1: Second call - modem responding but no channels yet
         {
             "last_update_success": True,
             "data": {
@@ -173,7 +173,7 @@ async def test_monitor_restart_phase1_success_phase2_success(mock_coordinator, m
                 "cable_modem_upstream_channel_count": 0,
             },
         },
-        ***REMOVED*** Phase 2: Modem fully online with channels
+        # Phase 2: Modem fully online with channels
         {
             "last_update_success": True,
             "data": {
@@ -196,18 +196,18 @@ async def test_monitor_restart_phase1_success_phase2_success(mock_coordinator, m
 
     mock_coordinator.async_request_refresh = mock_refresh
 
-    ***REMOVED*** Mock sleep to speed up test
+    # Mock sleep to speed up test
     with patch("asyncio.sleep", new_callable=AsyncMock):
         await button._monitor_restart()
 
-    ***REMOVED*** Verify final success notification
+    # Verify final success notification
     final_call = hass.services.async_call.call_args_list[-1]
-    notification_data = final_call[0][2]  ***REMOVED*** Third positional arg is the service data
+    notification_data = final_call[0][2]  # Third positional arg is the service data
     assert "Modem fully online" in notification_data["message"]
     assert "32 downstream" in notification_data["message"]
     assert "4 upstream" in notification_data["message"]
 
-    ***REMOVED*** Verify polling interval was restored
+    # Verify polling interval was restored
     assert mock_coordinator.update_interval == timedelta(seconds=600)
 
 
@@ -222,21 +222,21 @@ async def test_monitor_restart_phase1_timeout(mock_coordinator, mock_config_entr
     button.hass = hass
     button.coordinator = mock_coordinator
 
-    ***REMOVED*** Modem never responds
+    # Modem never responds
     mock_coordinator.last_update_success = False
     mock_coordinator.data = {}
 
-    ***REMOVED*** Mock sleep to speed up test
+    # Mock sleep to speed up test
     with patch("asyncio.sleep", new_callable=AsyncMock):
         await button._monitor_restart()
 
-    ***REMOVED*** Verify timeout notification
+    # Verify timeout notification
     final_call = hass.services.async_call.call_args_list[-1]
-    notification_data = final_call[0][2]  ***REMOVED*** Third positional arg is the service data
+    notification_data = final_call[0][2]  # Third positional arg is the service data
     assert "Modem did not respond" in notification_data["message"]
     assert "120 seconds" in notification_data["message"]
 
-    ***REMOVED*** Verify polling interval was restored
+    # Verify polling interval was restored
     assert mock_coordinator.update_interval == timedelta(seconds=600)
 
 
@@ -251,7 +251,7 @@ async def test_monitor_restart_phase2_timeout(mock_coordinator, mock_config_entr
     button.hass = hass
     button.coordinator = mock_coordinator
 
-    ***REMOVED*** Modem responds immediately but channels never sync
+    # Modem responds immediately but channels never sync
     mock_coordinator.last_update_success = True
     mock_coordinator.data = {
         "cable_modem_connection_status": "offline",
@@ -259,17 +259,17 @@ async def test_monitor_restart_phase2_timeout(mock_coordinator, mock_config_entr
         "cable_modem_upstream_channel_count": 0,
     }
 
-    ***REMOVED*** Mock sleep to speed up test
+    # Mock sleep to speed up test
     with patch("asyncio.sleep", new_callable=AsyncMock):
         await button._monitor_restart()
 
-    ***REMOVED*** Verify warning notification (not error, since modem IS responding)
+    # Verify warning notification (not error, since modem IS responding)
     final_call = hass.services.async_call.call_args_list[-1]
-    notification_data = final_call[0][2]  ***REMOVED*** Third positional arg is the service data
+    notification_data = final_call[0][2]  # Third positional arg is the service data
     assert "Modem responding but channels not fully synced" in notification_data["message"]
     assert "This may be normal" in notification_data["message"]
 
-    ***REMOVED*** Verify polling interval was restored
+    # Verify polling interval was restored
     assert mock_coordinator.update_interval == timedelta(seconds=600)
 
 
@@ -284,22 +284,22 @@ async def test_monitor_restart_exception_handling(mock_coordinator, mock_config_
     button.hass = hass
     button.coordinator = mock_coordinator
 
-    ***REMOVED*** Make refresh catch exceptions silently and eventually timeout phase 1
+    # Make refresh catch exceptions silently and eventually timeout phase 1
     call_count = [0]
 
     async def failing_refresh():
         call_count[0] += 1
-        ***REMOVED*** Always keep modem offline to trigger phase 1 timeout
+        # Always keep modem offline to trigger phase 1 timeout
         mock_coordinator.last_update_success = False
         mock_coordinator.data = {}
 
     mock_coordinator.async_request_refresh = failing_refresh
 
-    ***REMOVED*** Mock sleep to speed up test
+    # Mock sleep to speed up test
     with patch("asyncio.sleep", new_callable=AsyncMock):
         await button._monitor_restart()
 
-    ***REMOVED*** Verify polling interval was restored despite phase 1 timeout (try/finally)
+    # Verify polling interval was restored despite phase 1 timeout (try/finally)
     assert mock_coordinator.update_interval == timedelta(seconds=600)
 
 
@@ -328,11 +328,11 @@ async def test_reset_button_removes_all_entities_and_reloads(mock_coordinator, m
     button = ResetEntitiesButton(mock_coordinator, mock_config_entry)
     button.hass = hass
 
-    ***REMOVED*** Mock entity registry with entities for this config entry
+    # Mock entity registry with entities for this config entry
     with patch("homeassistant.helpers.entity_registry.async_get") as mock_get_registry:
         mock_registry = Mock()
 
-        ***REMOVED*** Create mock entities for this config entry
+        # Create mock entities for this config entry
         mock_entity_1 = Mock()
         mock_entity_1.platform = DOMAIN
         mock_entity_1.config_entry_id = "test_entry_id"
@@ -343,7 +343,7 @@ async def test_reset_button_removes_all_entities_and_reloads(mock_coordinator, m
         mock_entity_2.config_entry_id = "test_entry_id"
         mock_entity_2.entity_id = "sensor.cable_modem_upstream_ch_1_power"
 
-        ***REMOVED*** Entity from different config entry (should not be removed)
+        # Entity from different config entry (should not be removed)
         mock_entity_other = Mock()
         mock_entity_other.platform = DOMAIN
         mock_entity_other.config_entry_id = "other_entry_id"
@@ -360,17 +360,17 @@ async def test_reset_button_removes_all_entities_and_reloads(mock_coordinator, m
 
         await button.async_press()
 
-        ***REMOVED*** Verify only entities from this config entry were removed
+        # Verify only entities from this config entry were removed
         assert mock_registry.async_remove.call_count == 2
         removed_ids = [call[0][0] for call in mock_registry.async_remove.call_args_list]
         assert "sensor.cable_modem_downstream_ch_1_power" in removed_ids
         assert "sensor.cable_modem_upstream_ch_1_power" in removed_ids
         assert "sensor.other_modem_power" not in removed_ids
 
-        ***REMOVED*** Verify integration was reloaded
+        # Verify integration was reloaded
         hass.config_entries.async_reload.assert_called_once_with("test_entry_id")
 
-        ***REMOVED*** Verify success notification
+        # Verify success notification
         notification_calls = [
             c for c in hass.services.async_call.call_args_list if c[0][0] == "persistent_notification"
         ]
@@ -384,10 +384,10 @@ async def test_restart_monitoring_grace_period_detects_all_channels(mock_coordin
     """Test that grace period waits for all channels to sync."""
     import inspect
 
-    ***REMOVED*** Check that the grace period pattern exists in the code
+    # Check that the grace period pattern exists in the code
     source = inspect.getsource(ModemRestartButton)
 
-    ***REMOVED*** Verify grace period logic exists
+    # Verify grace period logic exists
     assert "grace_period" in source.lower()
     assert "stable_count" in source
 
@@ -401,12 +401,12 @@ async def test_restart_monitoring_channel_stability_detection(mock_coordinator, 
 
     source = inspect.getsource(ModemRestartButton)
 
-    ***REMOVED*** Verify stability checking logic exists
+    # Verify stability checking logic exists
     assert "prev_downstream" in source
     assert "prev_upstream" in source
     assert "stable_count" in source
 
-    ***REMOVED*** Verify reset logic when channels change
+    # Verify reset logic when channels change
     assert "stable_count = 0" in source
 
 
@@ -419,9 +419,9 @@ async def test_restart_monitoring_grace_period_resets_on_change(mock_coordinator
 
     source = inspect.getsource(ModemRestartButton)
 
-    ***REMOVED*** Verify grace period reset logic exists
+    # Verify grace period reset logic exists
     assert "grace_period_active = False" in source
-    ***REMOVED*** Should reset grace period when channels change
+    # Should reset grace period when channels change
     assert "stable_count = 0" in source
 
 
@@ -447,10 +447,10 @@ async def test_update_data_button_press(mock_coordinator, mock_config_entry):
 
     await button.async_press()
 
-    ***REMOVED*** Verify coordinator refresh was requested
+    # Verify coordinator refresh was requested
     mock_coordinator.async_request_refresh.assert_called_once()
 
-    ***REMOVED*** Verify notification was created
+    # Verify notification was created
     assert hass.services.async_call.call_count == 1
     call_args = hass.services.async_call.call_args
     assert call_args[0][0] == "persistent_notification"
@@ -484,7 +484,7 @@ async def test_capture_html_button_success(mock_coordinator, mock_config_entry):
     button = CaptureHtmlButton(mock_coordinator, mock_config_entry)
     button.hass = hass
 
-    ***REMOVED*** Mock get_modem_data to return captured HTML
+    # Mock get_modem_data to return captured HTML
     mock_capture_data = {
         "cable_modem_connection_status": "online",
         "_raw_html_capture": {
@@ -506,19 +506,19 @@ async def test_capture_html_button_success(mock_coordinator, mock_config_entry):
 
     with patch("custom_components.cable_modem_monitor.parsers.get_parsers", return_value=[]):
         hass.async_add_executor_job.side_effect = [
-            [],  ***REMOVED*** get_parsers result
-            mock_capture_data,  ***REMOVED*** get_modem_data result
+            [],  # get_parsers result
+            mock_capture_data,  # get_modem_data result
         ]
 
         await button.async_press()
 
-        ***REMOVED*** Verify capture was stored in coordinator
+        # Verify capture was stored in coordinator
         assert "_raw_html_capture" in mock_coordinator.data
         assert (
             mock_coordinator.data["_raw_html_capture"]["urls"][0]["url"] == "https://192.168.100.1/MotoConnection.asp"
         )
 
-        ***REMOVED*** Verify success notification
+        # Verify success notification
         notification_calls = [
             c for c in hass.services.async_call.call_args_list if c[0][0] == "persistent_notification"
         ]
@@ -541,20 +541,20 @@ async def test_capture_html_button_failure(mock_coordinator, mock_config_entry):
     button = CaptureHtmlButton(mock_coordinator, mock_config_entry)
     button.hass = hass
 
-    ***REMOVED*** Mock get_modem_data to return data without capture
+    # Mock get_modem_data to return data without capture
     mock_data = {
         "cable_modem_connection_status": "online",
     }
 
     with patch("custom_components.cable_modem_monitor.parsers.get_parsers", return_value=[]):
         hass.async_add_executor_job.side_effect = [
-            [],  ***REMOVED*** get_parsers result
-            mock_data,  ***REMOVED*** get_modem_data result without capture
+            [],  # get_parsers result
+            mock_data,  # get_modem_data result without capture
         ]
 
         await button.async_press()
 
-        ***REMOVED*** Verify failure notification
+        # Verify failure notification
         notification_calls = [
             c for c in hass.services.async_call.call_args_list if c[0][0] == "persistent_notification"
         ]
@@ -575,7 +575,7 @@ async def test_capture_html_button_exception(mock_coordinator, mock_config_entry
     button = CaptureHtmlButton(mock_coordinator, mock_config_entry)
     button.hass = hass
 
-    ***REMOVED*** Mock scraper.get_modem_data to raise exception
+    # Mock scraper.get_modem_data to raise exception
     with patch("custom_components.cable_modem_monitor.core.modem_scraper.ModemScraper") as mock_scraper_class:
         mock_scraper = Mock()
         mock_scraper.get_modem_data.side_effect = Exception("Test error")
@@ -583,12 +583,12 @@ async def test_capture_html_button_exception(mock_coordinator, mock_config_entry
 
         with patch("custom_components.cable_modem_monitor.parsers.get_parsers", return_value=[]):
             hass.async_add_executor_job.side_effect = [
-                [],  ***REMOVED*** get_parsers result
-                Exception("Test error"),  ***REMOVED*** get_modem_data result (will be caught by the mock)
+                [],  # get_parsers result
+                Exception("Test error"),  # get_modem_data result (will be caught by the mock)
             ]
         await button.async_press()
 
-        ***REMOVED*** Verify error notification
+        # Verify error notification
         notification_calls = [
             c for c in hass.services.async_call.call_args_list if c[0][0] == "persistent_notification"
         ]
@@ -619,18 +619,18 @@ async def test_restart_clears_auth_cache_before_monitoring(mock_coordinator, moc
     hass.services = Mock()
     hass.services.async_call = AsyncMock()
 
-    ***REMOVED*** Create a mock scraper with cached auth
+    # Create a mock scraper with cached auth
     mock_scraper = MagicMock()
     mock_scraper.clear_auth_cache = MagicMock()
 
-    ***REMOVED*** Attach scraper to coordinator (simulating the fix in __init__.py)
+    # Attach scraper to coordinator (simulating the fix in __init__.py)
     mock_coordinator.scraper = mock_scraper
 
     button = ModemRestartButton(mock_coordinator, mock_config_entry, is_available=True)
     button.hass = hass
     button.coordinator = mock_coordinator
 
-    ***REMOVED*** Simulate immediate success for monitoring
+    # Simulate immediate success for monitoring
     mock_coordinator.last_update_success = True
     mock_coordinator.data = {
         "cable_modem_connection_status": "online",
@@ -641,7 +641,7 @@ async def test_restart_clears_auth_cache_before_monitoring(mock_coordinator, moc
     with patch("asyncio.sleep", new_callable=AsyncMock):
         await button._monitor_restart()
 
-    ***REMOVED*** CRITICAL: Verify auth cache was cleared
+    # CRITICAL: Verify auth cache was cleared
     mock_scraper.clear_auth_cache.assert_called_once()
 
 
@@ -655,8 +655,8 @@ async def test_restart_cache_clear_handles_missing_scraper(mock_coordinator, moc
     hass.services = Mock()
     hass.services.async_call = AsyncMock()
 
-    ***REMOVED*** Coordinator WITHOUT scraper attribute (old behavior)
-    ***REMOVED*** This should NOT raise an error
+    # Coordinator WITHOUT scraper attribute (old behavior)
+    # This should NOT raise an error
     if hasattr(mock_coordinator, "scraper"):
         delattr(mock_coordinator, "scraper")
 
@@ -672,7 +672,7 @@ async def test_restart_cache_clear_handles_missing_scraper(mock_coordinator, moc
     }
 
     with patch("asyncio.sleep", new_callable=AsyncMock):
-        ***REMOVED*** Should not raise AttributeError
+        # Should not raise AttributeError
         await button._monitor_restart()
 
 
@@ -692,7 +692,7 @@ async def test_restart_reauth_after_cache_clear(mock_coordinator, mock_config_en
     hass.services = Mock()
     hass.services.async_call = AsyncMock()
 
-    ***REMOVED*** Create mock scraper with HNAP builder that has cached private key
+    # Create mock scraper with HNAP builder that has cached private key
     mock_json_builder = MagicMock()
     mock_json_builder._private_key = "OLD_CACHED_KEY_123"
     mock_json_builder.clear_auth_cache = MagicMock()
@@ -708,7 +708,7 @@ async def test_restart_reauth_after_cache_clear(mock_coordinator, mock_config_en
         """Simulate actual cache clearing."""
         mock_json_builder._private_key = None
         mock_json_builder.clear_auth_cache()
-        mock_scraper.session = MagicMock()  ***REMOVED*** New session
+        mock_scraper.session = MagicMock()  # New session
 
     mock_scraper.clear_auth_cache = clear_cache_impl
     mock_coordinator.scraper = mock_scraper
@@ -717,7 +717,7 @@ async def test_restart_reauth_after_cache_clear(mock_coordinator, mock_config_en
     button.hass = hass
     button.coordinator = mock_coordinator
 
-    ***REMOVED*** Track polling calls to verify re-auth happens
+    # Track polling calls to verify re-auth happens
     poll_count = [0]
     original_session = mock_scraper.session
 
@@ -735,15 +735,15 @@ async def test_restart_reauth_after_cache_clear(mock_coordinator, mock_config_en
     with patch("asyncio.sleep", new_callable=AsyncMock):
         await button._monitor_restart()
 
-    ***REMOVED*** Verify:
-    ***REMOVED*** 1. Old private key was cleared
+    # Verify:
+    # 1. Old private key was cleared
     assert mock_json_builder._private_key is None
 
-    ***REMOVED*** 2. New session was created (different object)
+    # 2. New session was created (different object)
     assert mock_scraper.session is not original_session
 
-    ***REMOVED*** 3. HNAP builder's clear was called
+    # 3. HNAP builder's clear was called
     mock_json_builder.clear_auth_cache.assert_called()
 
-    ***REMOVED*** 4. Polling occurred (which would trigger re-auth in real code)
+    # 4. Polling occurred (which would trigger re-auth in real code)
     assert poll_count[0] > 0

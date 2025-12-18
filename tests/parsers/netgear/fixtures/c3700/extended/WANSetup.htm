@@ -38,7 +38,7 @@
         BodyInit();
 
 //        $('.scroll-pane').jScrollPane('scrollbarMargin:5px');
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
             buttonFilter();
         });
 
@@ -69,14 +69,14 @@
     }
     function moveToHTMLend()
     {
-        window.location.href='***REMOVED***helpframe-anchor';
+        window.location.href='#helpframe-anchor';
         setHelpIframeVisible();
     }
 
 
     function loadhelp(fname,anchname)
     {
-                var pane = window.frames["helpframe"].$('***REMOVED***content');
+                var pane = window.frames["helpframe"].$('#content');
                 var imgSrc=document.getElementById('help-button');
                 if(imgSrc.src.search("up")<0)
                 {
@@ -92,7 +92,7 @@
                         }
                         else
                         {
-                                window.frames["helpframe"].location.href=fname+"_h."+"htm***REMOVED***" + anchname;
+                                window.frames["helpframe"].location.href=fname+"_h."+"htm#" + anchname;
                                 $(".help-frame-div").show();
                         }
 
@@ -409,13 +409,13 @@ function InitUpdateView(tagValues)
 
     if (tagValues[9] == "1")
     {
-        $("***REMOVED***webEthWan1").show();
-        $("***REMOVED***webEthWan2").show();
+        $("#webEthWan1").show();
+        $("#webEthWan2").show();
     }
     else
     {
-        $("***REMOVED***webEthWan1").hide();
-        $("***REMOVED***webEthWan2").hide();
+        $("#webEthWan1").hide();
+        $("#webEthWan2").hide();
     }
 
     /* 3G WAN */
@@ -424,13 +424,13 @@ function InitUpdateView(tagValues)
 
     if (tagValues[11] == "1")
     {
-        $("***REMOVED***web3GWan1").show();
-        $("***REMOVED***web3GWan2").show();
+        $("#web3GWan1").show();
+        $("#web3GWan2").show();
     }
     else
     {
-        $("***REMOVED***web3GWan1").hide();
-        $("***REMOVED***web3GWan2").hide();
+        $("#web3GWan1").hide();
+        $("#web3GWan2").hide();
     }
 
     /* Disable Firewall Protection */

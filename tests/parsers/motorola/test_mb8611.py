@@ -121,7 +121,7 @@ class TestAuthentication:
         mock_session = Mock()
         base_url = "http://192.168.100.1"
 
-        ***REMOVED*** Mock AuthFactory where it's imported, not where it's defined
+        # Mock AuthFactory where it's imported, not where it's defined
         auth_path = "custom_components.cable_modem_monitor.parsers.motorola.mb8611.AuthFactory"
         with patch(auth_path) as mock_factory:
             mock_strategy = Mock()
@@ -160,7 +160,7 @@ class TestHnapParsing:
         mock_session = Mock()
         base_url = "http://192.168.100.1"
 
-        ***REMOVED*** Mock HNAPRequestBuilder
+        # Mock HNAPRequestBuilder
         mock_builder = Mock()
         mock_builder.call_multiple.return_value = json.dumps(hnap_full_status)
         mock_builder_class.return_value = mock_builder
@@ -168,26 +168,26 @@ class TestHnapParsing:
         soup = BeautifulSoup("<html></html>", "html.parser")
         data = parser.parse(soup, session=mock_session, base_url=base_url)
 
-        ***REMOVED*** Verify downstream channels
+        # Verify downstream channels
         assert "downstream" in data
-        assert len(data["downstream"]) == 33  ***REMOVED*** 32 QAM256 + 1 OFDM PLC
+        assert len(data["downstream"]) == 33  # 32 QAM256 + 1 OFDM PLC
 
-        ***REMOVED*** Check first channel (DOCSIS Channel ID 20)
+        # Check first channel (DOCSIS Channel ID 20)
         first_channel = data["downstream"][0]
-        assert first_channel["channel_id"] == 20  ***REMOVED*** DOCSIS Channel ID
+        assert first_channel["channel_id"] == 20  # DOCSIS Channel ID
         assert first_channel["lock_status"] == "Locked"
         assert first_channel["modulation"] == "QAM256"
-        assert first_channel["frequency"] == 543_000_000  ***REMOVED*** 543.0 MHz
+        assert first_channel["frequency"] == 543_000_000  # 543.0 MHz
         assert first_channel["power"] == 1.4
         assert first_channel["snr"] == 45.1
         assert first_channel["corrected"] == 41
         assert first_channel["uncorrected"] == 0
 
-        ***REMOVED*** Check OFDM PLC channel (last channel, DOCSIS Channel ID 193)
+        # Check OFDM PLC channel (last channel, DOCSIS Channel ID 193)
         ofdm_channel = data["downstream"][32]
-        assert ofdm_channel["channel_id"] == 193  ***REMOVED*** DOCSIS Channel ID
+        assert ofdm_channel["channel_id"] == 193  # DOCSIS Channel ID
         assert ofdm_channel["modulation"] == "OFDM PLC"
-        assert ofdm_channel["frequency"] == 957_000_000  ***REMOVED*** 957.0 MHz
+        assert ofdm_channel["frequency"] == 957_000_000  # 957.0 MHz
         assert ofdm_channel["power"] == -4.1
         assert ofdm_channel["snr"] == 41.1
         assert ofdm_channel["corrected"] == 936482395
@@ -200,7 +200,7 @@ class TestHnapParsing:
         mock_session = Mock()
         base_url = "http://192.168.100.1"
 
-        ***REMOVED*** Mock HNAPRequestBuilder
+        # Mock HNAPRequestBuilder
         mock_builder = Mock()
         mock_builder.call_multiple.return_value = json.dumps(hnap_full_status)
         mock_builder_class.return_value = mock_builder
@@ -208,26 +208,26 @@ class TestHnapParsing:
         soup = BeautifulSoup("<html></html>", "html.parser")
         data = parser.parse(soup, session=mock_session, base_url=base_url)
 
-        ***REMOVED*** Verify upstream channels
+        # Verify upstream channels
         assert "upstream" in data
         assert len(data["upstream"]) == 4
 
-        ***REMOVED*** Check first channel (DOCSIS Channel ID 17)
+        # Check first channel (DOCSIS Channel ID 17)
         first_channel = data["upstream"][0]
-        assert first_channel["channel_id"] == 17  ***REMOVED*** DOCSIS Channel ID
+        assert first_channel["channel_id"] == 17  # DOCSIS Channel ID
         assert first_channel["lock_status"] == "Locked"
         assert first_channel["modulation"] == "SC-QAM"
         assert first_channel["symbol_rate"] == 5120
-        ***REMOVED*** 16.4 MHz converted to Hz - account for floating-point precision
+        # 16.4 MHz converted to Hz - account for floating-point precision
         assert abs(first_channel["frequency"] - 16_400_000) <= 1
         assert first_channel["power"] == 44.3
 
-        ***REMOVED*** Check last channel (DOCSIS Channel ID 20)
+        # Check last channel (DOCSIS Channel ID 20)
         last_channel = data["upstream"][3]
-        assert last_channel["channel_id"] == 20  ***REMOVED*** DOCSIS Channel ID
+        assert last_channel["channel_id"] == 20  # DOCSIS Channel ID
         assert last_channel["lock_status"] == "Locked"
         assert last_channel["modulation"] == "SC-QAM"
-        ***REMOVED*** 35.6 MHz converted to Hz - account for floating-point precision
+        # 35.6 MHz converted to Hz - account for floating-point precision
         assert abs(last_channel["frequency"] - 35_600_000) <= 1
         assert last_channel["power"] == 45.5
 
@@ -238,7 +238,7 @@ class TestHnapParsing:
         mock_session = Mock()
         base_url = "http://192.168.100.1"
 
-        ***REMOVED*** Mock HNAPRequestBuilder
+        # Mock HNAPRequestBuilder
         mock_builder = Mock()
         mock_builder.call_multiple.return_value = json.dumps(hnap_full_status)
         mock_builder_class.return_value = mock_builder
@@ -246,27 +246,27 @@ class TestHnapParsing:
         soup = BeautifulSoup("<html></html>", "html.parser")
         data = parser.parse(soup, session=mock_session, base_url=base_url)
 
-        ***REMOVED*** Verify system info
+        # Verify system info
         assert "system_info" in data
         system_info = data["system_info"]
 
-        ***REMOVED*** Check uptime
+        # Check uptime
         assert system_info["system_uptime"] == "47 days 21h:15m:38s"
 
-        ***REMOVED*** Check network access
+        # Check network access
         assert system_info["network_access"] == "Allowed"
 
-        ***REMOVED*** Check connectivity status
+        # Check connectivity status
         assert system_info["connectivity_status"] == "OK"
 
-        ***REMOVED*** Check boot status
+        # Check boot status
         assert system_info["boot_status"] == "OK"
 
-        ***REMOVED*** Check security
+        # Check security
         assert system_info["security_status"] == "Enabled"
         assert system_info["security_comment"] == "BPI+"
 
-        ***REMOVED*** Check downstream frequency
+        # Check downstream frequency
         assert system_info["downstream_frequency"] == "543000000 Hz"
 
     @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611.HNAPRequestBuilder")
@@ -276,7 +276,7 @@ class TestHnapParsing:
         mock_session = Mock()
         base_url = "http://192.168.100.1"
 
-        ***REMOVED*** Mock HNAPRequestBuilder
+        # Mock HNAPRequestBuilder
         mock_builder = Mock()
         mock_builder.call_multiple.return_value = json.dumps(hnap_full_status)
         mock_builder_class.return_value = mock_builder
@@ -284,10 +284,10 @@ class TestHnapParsing:
         soup = BeautifulSoup("<html></html>", "html.parser")
         parser.parse(soup, session=mock_session, base_url=base_url)
 
-        ***REMOVED*** Verify builder instantiation
+        # Verify builder instantiation
         mock_builder_class.assert_called_once_with(endpoint="/HNAP1/", namespace="http://purenetworks.com/HNAP1/")
 
-        ***REMOVED*** Verify SOAP actions (including GetMotoStatusSoftware added in v3.9+)
+        # Verify SOAP actions (including GetMotoStatusSoftware added in v3.9+)
         expected_actions = [
             "GetMotoStatusStartupSequence",
             "GetMotoStatusConnectionInfo",
@@ -309,7 +309,7 @@ class TestEdgeCases:
         mock_session = Mock()
         base_url = "http://192.168.100.1"
 
-        ***REMOVED*** Mock HNAPRequestBuilder returning invalid JSON
+        # Mock HNAPRequestBuilder returning invalid JSON
         mock_builder = Mock()
         mock_builder.call_multiple.return_value = "not valid json {"
         mock_builder_class.return_value = mock_builder
@@ -317,7 +317,7 @@ class TestEdgeCases:
         soup = BeautifulSoup("<html></html>", "html.parser")
         data = parser.parse(soup, session=mock_session, base_url=base_url)
 
-        ***REMOVED*** Should return empty data structures
+        # Should return empty data structures
         assert data["downstream"] == []
         assert data["upstream"] == []
         assert data["system_info"] == {}
@@ -329,7 +329,7 @@ class TestEdgeCases:
         mock_session = Mock()
         base_url = "http://192.168.100.1"
 
-        ***REMOVED*** Mock response without downstream data
+        # Mock response without downstream data
         response = {
             "GetMultipleHNAPsResponse": {
                 "GetMotoStatusDownstreamChannelInfoResponse": {
@@ -346,7 +346,7 @@ class TestEdgeCases:
         soup = BeautifulSoup("<html></html>", "html.parser")
         data = parser.parse(soup, session=mock_session, base_url=base_url)
 
-        ***REMOVED*** Should handle empty data
+        # Should handle empty data
         assert data["downstream"] == []
 
     @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611.HNAPRequestBuilder")
@@ -356,7 +356,7 @@ class TestEdgeCases:
         mock_session = Mock()
         base_url = "http://192.168.100.1"
 
-        ***REMOVED*** Mock response with malformed channel data (missing fields)
+        # Mock response with malformed channel data (missing fields)
         response = {
             "GetMultipleHNAPsResponse": {
                 "GetMotoStatusDownstreamChannelInfoResponse": {
@@ -373,9 +373,9 @@ class TestEdgeCases:
         soup = BeautifulSoup("<html></html>", "html.parser")
         data = parser.parse(soup, session=mock_session, base_url=base_url)
 
-        ***REMOVED*** Should skip malformed entry and parse valid one
+        # Should skip malformed entry and parse valid one
         assert len(data["downstream"]) == 1
-        assert data["downstream"][0]["channel_id"] == 1  ***REMOVED*** DOCSIS Channel ID from fields[3]
+        assert data["downstream"][0]["channel_id"] == 1  # DOCSIS Channel ID from fields[3]
 
     @patch("custom_components.cable_modem_monitor" ".parsers.motorola.mb8611.HNAPRequestBuilder")
     def test_handles_exception_in_builder(self, mock_builder_class):
@@ -384,7 +384,7 @@ class TestEdgeCases:
         mock_session = Mock()
         base_url = "http://192.168.100.1"
 
-        ***REMOVED*** Mock builder raising exception
+        # Mock builder raising exception
         mock_builder = Mock()
         mock_builder.call_multiple.side_effect = Exception("Network error")
         mock_builder_class.return_value = mock_builder
@@ -392,7 +392,7 @@ class TestEdgeCases:
         soup = BeautifulSoup("<html></html>", "html.parser")
         data = parser.parse(soup, session=mock_session, base_url=base_url)
 
-        ***REMOVED*** Should return empty data structures
+        # Should return empty data structures
         assert data["downstream"] == []
         assert data["upstream"] == []
         assert data["system_info"] == {}
@@ -447,7 +447,7 @@ class TestMetadata:
     def test_priority(self):
         """Test parser priority (model-specific should be high)."""
         parser = MotorolaMB8611HnapParser()
-        assert parser.priority == 101  ***REMOVED*** Higher priority for the API-based method
+        assert parser.priority == 101  # Higher priority for the API-based method
 
     def test_ofdm_capability(self):
         """Test that OFDM_DOWNSTREAM capability is declared.
@@ -471,7 +471,7 @@ class TestJsonHnapSupport:
         mock_session = Mock()
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Mock successful JSON HNAP login
+        # Mock successful JSON HNAP login
         with patch.object(
             HNAPJsonRequestBuilder, "login", return_value=(True, '{"LoginResponse":{"LoginResult":"OK"}}')
         ):
@@ -487,12 +487,12 @@ class TestJsonHnapSupport:
         mock_session = Mock()
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Mock JSON login failure, XML/SOAP login success
-        ***REMOVED*** Patch where imports are used, not where they're defined
+        # Mock JSON login failure, XML/SOAP login success
+        # Patch where imports are used, not where they're defined
         json_builder_path = "custom_components.cable_modem_monitor.parsers.motorola.mb8611.HNAPJsonRequestBuilder"
         auth_path = "custom_components.cable_modem_monitor.parsers.motorola.mb8611.AuthFactory"
         with patch(json_builder_path) as mock_json_builder, patch(auth_path) as mock_factory:
-            ***REMOVED*** mock_json_builder is the class, .return_value is the instance created by ()
+            # mock_json_builder is the class, .return_value is the instance created by ()
             mock_json_builder.return_value.login.return_value = (False, "")
             mock_strategy = Mock()
             mock_strategy.login.return_value = (True, "XML Login OK")
@@ -509,12 +509,12 @@ class TestJsonHnapSupport:
         mock_session = Mock()
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Mock JSON HNAP response
+        # Mock JSON HNAP response
         with patch.object(HNAPJsonRequestBuilder, "call_multiple", return_value=json.dumps(hnap_full_status)):
             soup = BeautifulSoup("<html></html>", "html.parser")
             data = parser.parse(soup, session=mock_session, base_url=base_url)
 
-            ***REMOVED*** Should successfully parse using JSON HNAP
+            # Should successfully parse using JSON HNAP
             assert "downstream" in data
             assert "upstream" in data
             assert len(data["downstream"]) == 33
@@ -526,7 +526,7 @@ class TestJsonHnapSupport:
         mock_session = Mock()
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Mock JSON failure, XML/SOAP success
+        # Mock JSON failure, XML/SOAP success
         with (
             patch.object(HNAPJsonRequestBuilder, "call_multiple", side_effect=Exception("JSON not supported")),
             patch.object(HNAPRequestBuilder, "call_multiple", return_value=json.dumps(hnap_full_status)),
@@ -534,7 +534,7 @@ class TestJsonHnapSupport:
             soup = BeautifulSoup("<html></html>", "html.parser")
             data = parser.parse(soup, session=mock_session, base_url=base_url)
 
-            ***REMOVED*** Should successfully parse using XML/SOAP fallback
+            # Should successfully parse using XML/SOAP fallback
             assert "downstream" in data
             assert len(data["downstream"]) == 33
 
@@ -544,7 +544,7 @@ class TestJsonHnapSupport:
         mock_session = Mock()
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Mock both methods failing
+        # Mock both methods failing
         with (
             patch.object(HNAPJsonRequestBuilder, "call_multiple", side_effect=Exception("JSON failed")),
             patch.object(HNAPRequestBuilder, "call_multiple", side_effect=Exception("XML failed")),
@@ -552,7 +552,7 @@ class TestJsonHnapSupport:
             soup = BeautifulSoup("<html></html>", "html.parser")
             data = parser.parse(soup, session=mock_session, base_url=base_url)
 
-            ***REMOVED*** Should return empty data structures
+            # Should return empty data structures
             assert data["downstream"] == []
             assert data["upstream"] == []
             assert data["system_info"] == {}
@@ -563,7 +563,7 @@ class TestJsonHnapSupport:
         mock_session = Mock()
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Mock both methods failing with auth errors
+        # Mock both methods failing with auth errors
         with (
             patch.object(HNAPJsonRequestBuilder, "call_multiple", side_effect=Exception("401 Unauthorized")),
             patch.object(HNAPRequestBuilder, "call_multiple", side_effect=Exception("Login failed")),
@@ -571,12 +571,12 @@ class TestJsonHnapSupport:
             soup = BeautifulSoup("<html></html>", "html.parser")
             data = parser.parse(soup, session=mock_session, base_url=base_url)
 
-            ***REMOVED*** Should return empty data structures
+            # Should return empty data structures
             assert data["downstream"] == []
             assert data["upstream"] == []
             assert data["system_info"] == {}
 
-            ***REMOVED*** Should flag auth failure
+            # Should flag auth failure
             assert data["_auth_failure"] is True
             assert data["_login_page_detected"] is True
             assert "_diagnostic_context" in data
@@ -589,7 +589,7 @@ class TestJsonHnapSupport:
         mock_session = Mock()
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Mock JSON failing with 401, but XML succeeding
+        # Mock JSON failing with 401, but XML succeeding
         with (
             patch.object(HNAPJsonRequestBuilder, "call_multiple", side_effect=Exception("401 Unauthorized")),
             patch.object(HNAPRequestBuilder, "call_multiple", return_value=json.dumps(hnap_full_status)),
@@ -597,10 +597,10 @@ class TestJsonHnapSupport:
             soup = BeautifulSoup("<html></html>", "html.parser")
             data = parser.parse(soup, session=mock_session, base_url=base_url)
 
-            ***REMOVED*** Should successfully parse using XML/SOAP fallback
+            # Should successfully parse using XML/SOAP fallback
             assert "downstream" in data
             assert len(data["downstream"]) == 33
-            ***REMOVED*** Should NOT flag auth failure (XML succeeded)
+            # Should NOT flag auth failure (XML succeeded)
             assert "_auth_failure" not in data
             assert "_login_page_detected" not in data
 
@@ -610,7 +610,7 @@ class TestJsonHnapSupport:
         mock_session = Mock()
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Mock both methods failing with non-auth errors
+        # Mock both methods failing with non-auth errors
         with (
             patch.object(HNAPJsonRequestBuilder, "call_multiple", side_effect=Exception("Connection timeout")),
             patch.object(HNAPRequestBuilder, "call_multiple", side_effect=Exception("Invalid JSON response")),
@@ -618,12 +618,12 @@ class TestJsonHnapSupport:
             soup = BeautifulSoup("<html></html>", "html.parser")
             data = parser.parse(soup, session=mock_session, base_url=base_url)
 
-            ***REMOVED*** Should return empty data structures
+            # Should return empty data structures
             assert data["downstream"] == []
             assert data["upstream"] == []
             assert data["system_info"] == {}
 
-            ***REMOVED*** Should NOT flag auth failure (these are network/parsing errors)
+            # Should NOT flag auth failure (these are network/parsing errors)
             assert "_auth_failure" not in data
             assert "_login_page_detected" not in data
 
@@ -742,7 +742,7 @@ class TestSoftwareVersionParsing:
         system_info: dict = {}
         parser._extract_software_info(hnap_data, system_info)
 
-        ***REMOVED*** Should not add any keys
+        # Should not add any keys
         assert "software_version" not in system_info
         assert "docsis_version" not in system_info
         assert "serial_number" not in system_info
@@ -782,7 +782,7 @@ class TestRestartCapability:
         mock_session = Mock()
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Mock successful restart response
+        # Mock successful restart response
         mock_builder = Mock()
         mock_builder.call_single.return_value = json.dumps(
             {"SetStatusSecuritySettingsResponse": {"SetStatusSecuritySettingsResult": "OK"}}
@@ -805,14 +805,14 @@ class TestRestartCapability:
         mock_session = Mock()
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Mock connection reset (modem rebooting)
+        # Mock connection reset (modem rebooting)
         mock_builder = Mock()
         mock_builder.call_single.side_effect = ConnectionResetError("Connection reset by peer")
         mock_builder_class.return_value = mock_builder
 
         result = parser.restart(mock_session, base_url)
 
-        ***REMOVED*** Connection reset means the modem is rebooting - success!
+        # Connection reset means the modem is rebooting - success!
         assert result is True
 
     @patch("custom_components.cable_modem_monitor.parsers.motorola.mb8611.HNAPJsonRequestBuilder")
@@ -822,7 +822,7 @@ class TestRestartCapability:
         mock_session = Mock()
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Mock failed restart response
+        # Mock failed restart response
         mock_builder = Mock()
         mock_builder.call_single.return_value = json.dumps(
             {"SetStatusSecuritySettingsResponse": {"SetStatusSecuritySettingsResult": "FAILED"}}
@@ -839,7 +839,7 @@ class TestRestartCapability:
         mock_session = Mock()
         base_url = "https://192.168.100.1"
 
-        ***REMOVED*** Simulate that login was called and stored a builder
+        # Simulate that login was called and stored a builder
         mock_builder = Mock()
         mock_builder.call_single.return_value = json.dumps(
             {"SetStatusSecuritySettingsResponse": {"SetStatusSecuritySettingsResult": "OK"}}
@@ -849,5 +849,5 @@ class TestRestartCapability:
         result = parser.restart(mock_session, base_url)
 
         assert result is True
-        ***REMOVED*** Should use the stored builder, not create a new one
+        # Should use the stored builder, not create a new one
         mock_builder.call_single.assert_called_once()

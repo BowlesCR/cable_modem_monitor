@@ -37,7 +37,7 @@
 // Nick Implement ASP Tag display on GUI
 
 //        $('.scroll-pane').jScrollPane('scrollbarMargin:5px');
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
             buttonFilter();
         });
 
@@ -68,14 +68,14 @@
     }
     function moveToHTMLend()
     {
-        window.location.href='***REMOVED***helpframe-anchor';
+        window.location.href='#helpframe-anchor';
         setHelpIframeVisible();
     }
 
 
     function loadhelp(fname,anchname)
     {
-                var pane = window.frames["helpframe"].$('***REMOVED***content');
+                var pane = window.frames["helpframe"].$('#content');
                 var imgSrc=document.getElementById('help-button');
                 if(imgSrc.src.search("up")<0)
                 {
@@ -91,7 +91,7 @@
                         }
                         else
                         {
-                                window.frames["helpframe"].location.href=fname+"_h.htm***REMOVED***" + anchname;
+                                window.frames["helpframe"].location.href=fname+"_h.htm#" + anchname;
                                 $(".help-frame-div").show();
                         }
 

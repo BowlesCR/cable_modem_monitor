@@ -42,7 +42,7 @@ class TestParserNotFoundError:
         with pytest.raises(ParserNotFoundError) as exc_info:
             raise ParserNotFoundError()
 
-        ***REMOVED*** Assertions after context exit
+        # Assertions after context exit
         error_msg = str(exc_info.value)
         assert "Could not detect modem type" in error_msg
         assert "No parser matched" in error_msg
@@ -80,13 +80,13 @@ class TestParserNotFoundError:
 
         error = ParserNotFoundError(modem_info=modem_info, attempted_parsers=attempted)
 
-        ***REMOVED*** Verify all context is stored
+        # Verify all context is stored
         assert error.modem_info["manufacturer"] == "Motorola"
         assert error.modem_info["model"] == "MB8611"
         assert "MotorolaMB8600" in error.attempted_parsers
         assert "MotorolaMB7621" in error.attempted_parsers
 
-        ***REMOVED*** Verify user message includes context
+        # Verify user message includes context
         user_msg = error.get_user_message()
         assert "MB8611" in user_msg
         assert "3 parsers" in user_msg

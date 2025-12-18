@@ -1,20 +1,20 @@
-***REMOVED*** CodeQL Testing Guide
+# CodeQL Testing Guide
 
 This guide explains how to test CodeQL queries both in VS Code and from the command line.
 
-***REMOVED******REMOVED*** Overview
+## Overview
 
 CodeQL tests are **separate** from Python/pytest tests:
 - **Python tests** (440 tests): Run via pytest, show in VS Code Testing tab
 - **CodeQL tests**: Run via CodeQL CLI, show in CodeQL extension sidebar
 
-***REMOVED******REMOVED*** Setup
+## Setup
 
-***REMOVED******REMOVED******REMOVED*** Required
+### Required
 - ✅ CodeQL CLI installed at `codeql/codeql`
 - ✅ Helper script `scripts/dev/test-codeql.sh` for command-line testing
 
-***REMOVED******REMOVED******REMOVED*** Optional (for advanced query development)
+### Optional (for advanced query development)
 - CodeQL VS Code extension (`github.vscode-codeql`)
   - **When to install**: Only if you're actively developing/debugging CodeQL queries
   - **Not needed for**: Just running tests or basic project development
@@ -28,9 +28,9 @@ The VS Code extension is listed in `.vscode/extensions.json` as a recommendation
 - The VS Code extension downloads and manages its own separate CLI installation (typically in `~/.config/Code/User/globalStorage/github.vscode-codeql`)
 - This is intentional - they serve different purposes and don't conflict
 
-***REMOVED******REMOVED*** Testing CodeQL Queries in VS Code
+## Testing CodeQL Queries in VS Code
 
-***REMOVED******REMOVED******REMOVED*** Option 1: Using the CodeQL Extension (Recommended for Development)
+### Option 1: Using the CodeQL Extension (Recommended for Development)
 
 1. **Open the CodeQL view**:
    - Click the CodeQL icon in the left sidebar (or press `Ctrl+Shift+P` and search "CodeQL")
@@ -48,36 +48,36 @@ The VS Code extension is listed in `.vscode/extensions.json` as a recommendation
    - Test results appear in the CodeQL view
    - Failed tests show diffs between expected and actual results
 
-***REMOVED******REMOVED******REMOVED*** Option 2: Command Line (Quick and Reliable)
+### Option 2: Command Line (Quick and Reliable)
 
 From the project root:
 
 ```bash
-***REMOVED*** Run all CodeQL tests
+# Run all CodeQL tests
 bash scripts/dev/test-codeql.sh
 
-***REMOVED*** Or run specific tests manually
+# Or run specific tests manually
 ./codeql/codeql test run cable-modem-monitor-ql/tests/no_timeout/
 ./codeql/codeql test run cable-modem-monitor-ql/queries/
 ```
 
 This is the fastest way to verify everything works before committing.
 
-***REMOVED******REMOVED*** Where Tests Appear
+## Where Tests Appear
 
-***REMOVED******REMOVED******REMOVED*** Python Tests (440 tests)
+### Python Tests (440 tests)
 - **Location**: Testing tab (beaker icon) in VS Code
 - **Run via**: Python Test Explorer
 - **Framework**: pytest
 
-***REMOVED******REMOVED******REMOVED*** CodeQL Tests (2 tests)
+### CodeQL Tests (2 tests)
 - **Location**: CodeQL sidebar OR command line only
 - **Run via**: CodeQL extension or `./test-codeql.sh`
 - **Framework**: CodeQL test framework
 
 **Note**: CodeQL tests **do not** appear in the Python Testing tab - this is expected!
 
-***REMOVED******REMOVED*** Why CodeQL Tests Don't Appear in VS Code Testing Tab
+## Why CodeQL Tests Don't Appear in VS Code Testing Tab
 
 CodeQL test directories contain `test.py` files that VS Code's Python test discovery might try to pick up. However:
 
@@ -89,64 +89,64 @@ CodeQL test directories contain `test.py` files that VS Code's Python test disco
 
 This exclusion is intentional and correct!
 
-***REMOVED******REMOVED*** Development Workflow
+## Development Workflow
 
-***REMOVED******REMOVED******REMOVED*** When Working on Python Code
+### When Working on Python Code
 1. Write code
 2. Run Python tests via Testing tab or `pytest`
 3. Verify in VS Code Testing tab (beaker icon)
 
-***REMOVED******REMOVED******REMOVED*** When Working on CodeQL Queries
+### When Working on CodeQL Queries
 1. Write/modify `.ql` files in `cable-modem-monitor-ql/`
 2. Run `bash scripts/dev/test-codeql.sh` to verify
 3. Alternatively, use CodeQL extension's "Run Tests" feature
 
-***REMOVED******REMOVED******REMOVED*** Before Committing
+### Before Committing
 ```bash
-***REMOVED*** Test Python code
+# Test Python code
 pytest
 
-***REMOVED*** Test CodeQL queries
+# Test CodeQL queries
 bash scripts/dev/test-codeql.sh
 ```
 
-***REMOVED******REMOVED*** Container vs Workspace
+## Container vs Workspace
 
 You asked about the container - here's the breakdown:
 
-***REMOVED******REMOVED******REMOVED*** Working in the Workspace (What you're doing now)
+### Working in the Workspace (What you're doing now)
 - ✅ Faster, no container overhead
 - ✅ Python tests work perfectly (440 tests)
 - ✅ CodeQL tests work via command line (`./test-codeql.sh`)
 - ✅ CodeQL extension works if CLI path is configured (done!)
 - **Recommendation**: This is fine! Stay in the workspace.
 
-***REMOVED******REMOVED******REMOVED*** Working in the Container
+### Working in the Container
 - Container provides consistent Python environment
 - CodeQL CLI would need to be installed in the container too
 - No significant advantage for CodeQL testing
 - **Recommendation**: Only use if you need Home Assistant dependencies
 
-***REMOVED******REMOVED*** Troubleshooting
+## Troubleshooting
 
-***REMOVED******REMOVED******REMOVED*** "CodeQL CLI not found"
+### "CodeQL CLI not found"
 The VS Code extension needs to find the CLI. Check:
 ```json
 // .vscode/settings.json should have:
 "codeQL.cli.executablePath": "${workspaceFolder}/codeql/codeql"
 ```
 
-***REMOVED******REMOVED******REMOVED*** "CodeQL tests don't appear in Testing tab"
+### "CodeQL tests don't appear in Testing tab"
 This is **expected**! CodeQL tests only appear in:
 - CodeQL extension sidebar (if you set up a database)
 - Command line output from `./test-codeql.sh`
 
-***REMOVED******REMOVED******REMOVED*** "I want to see CodeQL results in VS Code"
+### "I want to see CodeQL results in VS Code"
 1. Open CodeQL sidebar (left panel)
 2. You can run queries and tests from there
 3. Results appear in the CodeQL Results panel
 
-***REMOVED******REMOVED*** Summary
+## Summary
 
 **For your current question:**
 - ✅ **440 Python tests in Testing tab** = Correct, these are pytest tests

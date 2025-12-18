@@ -1,18 +1,18 @@
-***REMOVED***!/bin/bash
-***REMOVED*** Cable Modem Monitor - Development Environment Verification Script
-***REMOVED*** This script checks that your development environment is properly configured
+#!/bin/bash
+# Cable Modem Monitor - Development Environment Verification Script
+# This script checks that your development environment is properly configured
 
-***REMOVED*** Don't exit on errors - we're checking for them!
+# Don't exit on errors - we're checking for them!
 set +e
 
-***REMOVED*** Color codes for output
+# Color codes for output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
 BLUE='\033[0;34m'
-NC='\033[0m' ***REMOVED*** No Color
+NC='\033[0m' # No Color
 
-***REMOVED*** Counters
+# Counters
 PASS=0
 FAIL=0
 WARN=0
@@ -24,7 +24,7 @@ echo "Cable Modem Monitor - Setup Verification"
 echo "=========================================="
 echo ""
 
-***REMOVED*** Function to print status
+# Function to print status
 print_status() {
     local status=$1
     local message=$2
@@ -52,7 +52,7 @@ print_status() {
 echo "=== System Requirements ==="
 echo ""
 
-***REMOVED*** Check Python version
+# Check Python version
 if command -v python3 &> /dev/null; then
     PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}')
     PYTHON_MAJOR=$(echo $PYTHON_VERSION | cut -d. -f1)
@@ -67,14 +67,14 @@ else
     print_status "fail" "Python 3 not found in PATH"
 fi
 
-***REMOVED*** Check for python3-venv
+# Check for python3-venv
 if python3 -c "import venv" 2> /dev/null; then
     print_status "pass" "python3-venv module available"
 else
     print_status "fail" "python3-venv module not installed (run: sudo apt install python3-venv)"
 fi
 
-***REMOVED*** Check Docker
+# Check Docker
 if command -v docker &> /dev/null; then
     if docker ps &> /dev/null; then
         DOCKER_VERSION=$(docker --version | awk '{print $3}' | sed 's/,//')
@@ -86,12 +86,12 @@ else
     print_status "fail" "Docker not found in PATH"
 fi
 
-***REMOVED*** Check Git
+# Check Git
 if command -v git &> /dev/null; then
     GIT_VERSION=$(git --version | awk '{print $3}')
     print_status "pass" "Git $GIT_VERSION installed"
 
-    ***REMOVED*** Check Git config
+    # Check Git config
     if git config user.name &> /dev/null && git config user.email &> /dev/null; then
         GIT_NAME=$(git config user.name)
         GIT_EMAIL=$(git config user.email)
@@ -107,7 +107,7 @@ echo ""
 echo "=== Project Environment ==="
 echo ""
 
-***REMOVED*** Check if we're in the right directory
+# Check if we're in the right directory
 if [ -f "custom_components/cable_modem_monitor/__init__.py" ]; then
     print_status "pass" "Running from project root directory"
 else
@@ -117,11 +117,11 @@ else
     exit 1
 fi
 
-***REMOVED*** Check for .venv
+# Check for .venv
 if [ -d ".venv" ]; then
     print_status "pass" "Virtual environment '.venv/' exists"
 
-    ***REMOVED*** Check if .venv has dependencies
+    # Check if .venv has dependencies
     if [ -f ".venv/bin/pytest" ]; then
         print_status "pass" "pytest installed in .venv"
     else
@@ -143,12 +143,12 @@ else
     print_status "fail" "Virtual environment '.venv/' not found (run: python3 -m venv .venv)"
 fi
 
-***REMOVED*** Check for venv (potential confusion)
+# Check for venv (potential confusion)
 if [ -d "venv" ]; then
     print_status "warn" "Both .venv/ and venv/ exist - consider removing venv/ to avoid confusion"
 fi
 
-***REMOVED*** Check pre-commit
+# Check pre-commit
 if [ -d ".git/hooks" ]; then
     if [ -f ".git/hooks/pre-commit" ] && grep -q "pre-commit" ".git/hooks/pre-commit" 2>/dev/null; then
         print_status "pass" "Pre-commit hooks installed"
@@ -163,12 +163,12 @@ echo ""
 echo "=== VS Code Configuration ==="
 echo ""
 
-***REMOVED*** Check VS Code
+# Check VS Code
 if command -v code &> /dev/null; then
     CODE_VERSION=$(code --version | head -1)
     print_status "pass" "VS Code installed ($CODE_VERSION)"
 
-    ***REMOVED*** Check for required extensions
+    # Check for required extensions
     EXTENSIONS=$(code --list-extensions 2>/dev/null || echo "")
 
     if echo "$EXTENSIONS" | grep -q "ms-python.python"; then
@@ -198,7 +198,7 @@ else
     print_status "fail" "VS Code not found in PATH" "true"
 fi
 
-***REMOVED*** Check VS Code settings
+# Check VS Code settings
 if [ -f ".vscode/settings.json" ]; then
     print_status "pass" ".vscode/settings.json exists"
 
@@ -215,7 +215,7 @@ echo ""
 echo "=== Functional Tests ==="
 echo ""
 
-***REMOVED*** Test if pytest can run
+# Test if pytest can run
 if [ -f ".venv/bin/pytest" ]; then
     if .venv/bin/pytest --collect-only tests/ &> /dev/null; then
         TEST_COUNT=$(.venv/bin/pytest --collect-only tests/ 2>/dev/null | grep "test session starts" -A 1 | tail -1 | awk '{print $2}')
@@ -227,7 +227,7 @@ else
     print_status "fail" "Cannot run pytest - not installed in .venv"
 fi
 
-***REMOVED*** Test if a simple test passes
+# Test if a simple test passes
 if [ -f ".venv/bin/pytest" ]; then
     echo -n "  Running quick test... "
     if .venv/bin/pytest tests/parsers/netgear/test_cm600.py::test_fixtures_exist -q &> /dev/null; then
@@ -239,7 +239,7 @@ if [ -f ".venv/bin/pytest" ]; then
     fi
 fi
 
-***REMOVED*** Test if Make commands work
+# Test if Make commands work
 if command -v make &> /dev/null; then
     print_status "pass" "Make utility available"
 else
@@ -250,7 +250,7 @@ echo ""
 echo "=== Configuration Files ==="
 echo ""
 
-***REMOVED*** Check for important files
+# Check for important files
 FILES=(
     "pyproject.toml:Project configuration"
     "pytest.ini:Pytest configuration"
@@ -262,7 +262,7 @@ FILES=(
 
 for item in "${FILES[@]}"; do
     FILE="${item%%:*}"
-    DESC="${item***REMOVED******REMOVED****:}"
+    DESC="${item##*:}"
     if [ -f "$FILE" ]; then
         print_status "pass" "$DESC exists ($FILE)"
     else

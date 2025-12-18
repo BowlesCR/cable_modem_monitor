@@ -62,40 +62,40 @@ class ModemCapability(str, Enum):
         RESTART: Modem can be restarted via the integration
     """
 
-    ***REMOVED*** System information
+    # System information
     SYSTEM_UPTIME = "system_uptime"
     LAST_BOOT_TIME = "last_boot_time"
     CURRENT_TIME = "current_time"
     HARDWARE_VERSION = "hardware_version"
     SOFTWARE_VERSION = "software_version"
 
-    ***REMOVED*** Channel data
+    # Channel data
     DOWNSTREAM_CHANNELS = "downstream_channels"
     UPSTREAM_CHANNELS = "upstream_channels"
     OFDM_DOWNSTREAM = "ofdm_downstream"
     OFDM_UPSTREAM = "ofdm_upstream"
 
-    ***REMOVED*** Actions
+    # Actions
     RESTART = "restart"
 
 
 class ModemParser(ABC):
     """Abstract base class for modem-specific HTML parsers."""
 
-    ***REMOVED*** Parser metadata (override in subclasses)
+    # Parser metadata (override in subclasses)
     name: str = "Unknown"
     manufacturer: str = "Unknown"
-    models: list[str] = []  ***REMOVED*** e.g., ["MB7621", "MB8600"]
+    models: list[str] = []  # e.g., ["MB7621", "MB8600"]
 
-    ***REMOVED*** Priority for parser selection (higher = tried first)
-    ***REMOVED*** Use 100 for model-specific parsers, 50 for generic/fallback parsers
-    ***REMOVED*** Default is 50 for backward compatibility
+    # Priority for parser selection (higher = tried first)
+    # Use 100 for model-specific parsers, 50 for generic/fallback parsers
+    # Default is 50 for backward compatibility
     priority: int = 50
 
-    ***REMOVED*** Parser lifecycle status - defaults to AWAITING_VERIFICATION for new parsers
-    ***REMOVED*** Use ParserStatus.VERIFIED after user confirmation, BROKEN for known issues
+    # Parser lifecycle status - defaults to AWAITING_VERIFICATION for new parsers
+    # Use ParserStatus.VERIFIED after user confirmation, BROKEN for known issues
     status: ParserStatus = ParserStatus.AWAITING_VERIFICATION
-    ***REMOVED*** Optional: Link to issue, forum post, or commit for verification/status
+    # Optional: Link to issue, forum post, or commit for verification/status
     verification_source: str | None = None
 
     @property
@@ -103,53 +103,53 @@ class ModemParser(ABC):
         """Backward compatibility: True if status is VERIFIED."""
         return self.status == ParserStatus.VERIFIED
 
-    ***REMOVED*** Device metadata - for display and mock server
-    ***REMOVED*** Format: "YYYY-MM" or "YYYY" for approximate dates
-    release_date: str | None = None  ***REMOVED*** When modem was first released
-    end_of_life: str | None = None  ***REMOVED*** When discontinued (if applicable)
-    docsis_version: str | None = None  ***REMOVED*** e.g., "3.0", "3.1"
-    ***REMOVED*** Relative path to fixtures in repo (used by mock server and for docs link)
-    ***REMOVED*** e.g., "tests/parsers/netgear/fixtures/c3700"
+    # Device metadata - for display and mock server
+    # Format: "YYYY-MM" or "YYYY" for approximate dates
+    release_date: str | None = None  # When modem was first released
+    end_of_life: str | None = None  # When discontinued (if applicable)
+    docsis_version: str | None = None  # e.g., "3.0", "3.1"
+    # Relative path to fixtures in repo (used by mock server and for docs link)
+    # e.g., "tests/parsers/netgear/fixtures/c3700"
     fixtures_path: str | None = None
 
-    ***REMOVED*** Modem network behavior - whether the modem responds to ICMP ping
-    ***REMOVED*** Set to False for modems that block ICMP (e.g., Arris S33)
-    ***REMOVED*** When False: ping check is skipped, health status uses HTTP only,
-    ***REMOVED*** and the Ping Latency sensor is not created
+    # Modem network behavior - whether the modem responds to ICMP ping
+    # Set to False for modems that block ICMP (e.g., Arris S33)
+    # When False: ping check is skipped, health status uses HTTP only,
+    # and the Ping Latency sensor is not created
     supports_icmp: bool = True
 
-    ***REMOVED*** URL patterns this parser can handle.
-    ***REMOVED***
-    ***REMOVED*** DETECTION CONTRACT:
-    ***REMOVED*** For auto-detection to work, at least one pattern must have 'auth_required': False
-    ***REMOVED*** pointing to a publicly accessible page containing model-identifying strings.
-    ***REMOVED*** Pages requiring auth are invisible to the anonymous probing phase.
-    ***REMOVED***
-    ***REMOVED*** Each pattern is a dict with:
-    ***REMOVED***   - 'path': URL path (e.g., "/MotoSwInfo.asp")
-    ***REMOVED***   - 'auth_method': Authentication method ("none", "basic", "form", "hnap")
-    ***REMOVED***   - 'auth_required': REQUIRED - explicitly set True or False (no implicit defaults!)
-    ***REMOVED***
-    ***REMOVED*** Order matters: Put your detection page first if it's publicly accessible.
-    ***REMOVED*** The scraper tries URLs in the order specified.
-    ***REMOVED***
-    ***REMOVED*** See: tests/parsers/test_parser_contract.py for validation
+    # URL patterns this parser can handle.
+    #
+    # DETECTION CONTRACT:
+    # For auto-detection to work, at least one pattern must have 'auth_required': False
+    # pointing to a publicly accessible page containing model-identifying strings.
+    # Pages requiring auth are invisible to the anonymous probing phase.
+    #
+    # Each pattern is a dict with:
+    #   - 'path': URL path (e.g., "/MotoSwInfo.asp")
+    #   - 'auth_method': Authentication method ("none", "basic", "form", "hnap")
+    #   - 'auth_required': REQUIRED - explicitly set True or False (no implicit defaults!)
+    #
+    # Order matters: Put your detection page first if it's publicly accessible.
+    # The scraper tries URLs in the order specified.
+    #
+    # See: tests/parsers/test_parser_contract.py for validation
     url_patterns: list[dict[str, str | bool]] = []
 
-    ***REMOVED*** Legacy field for backward compatibility (deprecated - use url_patterns)
+    # Legacy field for backward compatibility (deprecated - use url_patterns)
     auth_type: str = "form"
 
-    ***REMOVED*** Authentication configuration (new system - optional, for backward compatibility)
-    ***REMOVED*** Parsers should define this as a class attribute
+    # Authentication configuration (new system - optional, for backward compatibility)
+    # Parsers should define this as a class attribute
     auth_config: AuthConfig | None = None
 
-    ***REMOVED*** Capabilities declaration - what data this parser can provide
-    ***REMOVED*** Override in subclasses to declare supported capabilities
-    ***REMOVED*** Format: set of ModemCapability enum values
-    ***REMOVED*** Example: capabilities = {ModemCapability.DOWNSTREAM_CHANNELS, ModemCapability.SYSTEM_UPTIME}
+    # Capabilities declaration - what data this parser can provide
+    # Override in subclasses to declare supported capabilities
+    # Format: set of ModemCapability enum values
+    # Example: capabilities = {ModemCapability.DOWNSTREAM_CHANNELS, ModemCapability.SYSTEM_UPTIME}
     capabilities: set[ModemCapability] = set()
 
-    ***REMOVED*** GitHub repo base URL for fixtures links
+    # GitHub repo base URL for fixtures links
     GITHUB_REPO_URL = "https://github.com/solentlabs/cable_modem_monitor"
 
     @classmethod
@@ -187,7 +187,7 @@ class ModemParser(ABC):
             "manufacturer": cls.manufacturer,
             "models": cls.models,
             "status": cls.status.value,
-            "verified": cls.status == ParserStatus.VERIFIED,  ***REMOVED*** Backward compat
+            "verified": cls.status == ParserStatus.VERIFIED,  # Backward compat
             "docsis_version": cls.docsis_version,
         }
 
@@ -201,7 +201,7 @@ class ModemParser(ABC):
         if cls.verification_source:
             metadata["verification_source"] = cls.verification_source
 
-        ***REMOVED*** Add capabilities as list of strings
+        # Add capabilities as list of strings
         metadata["capabilities"] = [cap.value for cap in cls.capabilities]
 
         return metadata
@@ -236,10 +236,10 @@ class ModemParser(ABC):
                 - authenticated_html: HTML content from login response, or None if not applicable
 
         Example implementations:
-            ***REMOVED*** No auth required:
+            # No auth required:
             return (True, None)
 
-            ***REMOVED*** Form auth that returns HTML:
+            # Form auth that returns HTML:
             response = session.post(url, data=credentials)
             return (response.ok, response.text if response.ok else None)
         """

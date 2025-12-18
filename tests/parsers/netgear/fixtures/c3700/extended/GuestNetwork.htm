@@ -28,7 +28,7 @@
   position:absolute; top:284px;left:10px;
   width:600px;
   height:140px;
-	background: ***REMOVED***202020;
+	background: #202020;
 	padding:10px;
 	visibility:hidden;
 
@@ -140,7 +140,7 @@
              }
 /* Nick 20111027, Workaround to fix help frame can't work in IE6/IE7 */
 
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
             buttonFilter();
         });
     });
@@ -169,14 +169,14 @@
     }
     function moveToHTMLend()
     {
-        window.location.href='***REMOVED***helpframe-anchor';
+        window.location.href='#helpframe-anchor';
         setHelpIframeVisible();
     }
 
 
     function loadhelp(fname,anchname)
     {
-                var pane = window.frames["helpframe"].$('***REMOVED***content');
+                var pane = window.frames["helpframe"].$('#content');
                 var imgSrc=document.getElementById('help-button');
                 if(imgSrc.src.search("up")<0)
                 {
@@ -192,7 +192,7 @@
                         }
                         else
                         {
-                                window.frames["helpframe"].location.href=fname+"_h."+"htm***REMOVED***" + anchname;
+                                window.frames["helpframe"].location.href=fname+"_h."+"htm#" + anchname;
                                 $(".GNhelp-frame-div").show();
                         }
 
@@ -297,19 +297,19 @@ function initScrn()
     // Nick 20111215, display diff style with multiple ssid
     if (fm.multiple_ssid.value == "1")
     {
-	$("***REMOVED***title_24G").html("Wireless Settings - Profile ");
-	$("***REMOVED***id1_24G").show();
-	$("***REMOVED***id2_24G").show();
-	$("***REMOVED***id3_24G").show();
+	$("#title_24G").html("Wireless Settings - Profile ");
+	$("#id1_24G").show();
+	$("#id2_24G").show();
+	$("#id3_24G").show();
     }
     else
     {
-	$("***REMOVED***title_24G").html("Wireless Network (2.4GHz b/g/n) - Profile ");
-	$("***REMOVED***ssidIdx").html("");
-	$("***REMOVED***ssidSecurityIdx").html("");
-	$("***REMOVED***id1_24G").hide();
-	$("***REMOVED***id2_24G").hide();
-	$("***REMOVED***id3_24G").hide();
+	$("#title_24G").html("Wireless Network (2.4GHz b/g/n) - Profile ");
+	$("#ssidIdx").html("");
+	$("#ssidSecurityIdx").html("");
+	$("#id1_24G").hide();
+	$("#id2_24G").hide();
+	$("#id3_24G").hide();
     }
     // Nick 20111215, display diff style with multiple ssid
 
@@ -901,19 +901,19 @@ function initScrn_an()
     // Nick 20111215, display diff style with multiple ssid
     if (fm.multiple_ssid_an.value == "1")
     {
-	$("***REMOVED***title_5G").html("Wireless Settings - Profile ");
-	$("***REMOVED***id1_5G").show();
-	$("***REMOVED***id2_5G").show();
-	$("***REMOVED***id3_5G").show();
+	$("#title_5G").html("Wireless Settings - Profile ");
+	$("#id1_5G").show();
+	$("#id2_5G").show();
+	$("#id3_5G").show();
     }
     else
     {
-	$("***REMOVED***title_5G").html("Wireless Network (5GHz a/n) - Profile ");
-	$("***REMOVED***ssidIdx_an").html("");
-	$("***REMOVED***ssidSecurityIdx_an").html("");
-	$("***REMOVED***id1_5G").hide();
-	$("***REMOVED***id2_5G").hide();
-	$("***REMOVED***id3_5G").hide();
+	$("#title_5G").html("Wireless Network (5GHz a/n) - Profile ");
+	$("#ssidIdx_an").html("");
+	$("#ssidSecurityIdx_an").html("");
+	$("#id1_5G").hide();
+	$("#id2_5G").hide();
+	$("#id3_5G").hide();
     }
     // Nick 20111215, display diff style with multiple ssid
 
@@ -1315,8 +1315,8 @@ function InitNetworkProfileTableTagValue()
 function onAddRowCB(newRow, rowId, firstCellIdx, tags)
 {
     var cellsArray = new Array();
-    cellsArray [0] = "<input type='radio' name='NPIdx' value='" + rowId + "' onClick='ssid_submit(&***REMOVED***39;"
-                            + rowId + "&***REMOVED***39;);'  />";
+    cellsArray [0] = "<input type='radio' name='NPIdx' value='" + rowId + "' onClick='ssid_submit(&#39;"
+                            + rowId + "&#39;);'  />";
 
     cellsArray [1] = "<span class='thead'>" + (rowId +1) + "<\/span>";
     cellsArray [2] = piplineDecode(tags[firstCellIdx + 0]);
@@ -1418,7 +1418,7 @@ function InitGuestNetwork_anUpdateView(tagValues)
     // Support dual band
     if (tagValues[15] == 1)
     {
-        $("***REMOVED***setting_5G").css ('display', 'block');
+        $("#setting_5G").css ('display', 'block');
     }
 
     // Multiple SSID
@@ -1455,8 +1455,8 @@ function InitNetworkProfile_anTableTagValue()
 function onAddNetworkProfile_anRowCB(newRow, rowId, firstCellIdx, tags)
 {
     var cellsArray = new Array();
-    cellsArray [0] = "<input type='radio' name='NP_anIdx' value='" + rowId + "' onClick='ssid_submit_an(&***REMOVED***39;"
-                            + rowId + "&***REMOVED***39;);'/>";
+    cellsArray [0] = "<input type='radio' name='NP_anIdx' value='" + rowId + "' onClick='ssid_submit_an(&#39;"
+                            + rowId + "&#39;);'/>";
     cellsArray [1] = "<span class='thead'>" + (rowId +1) + "<\/span>";
     cellsArray [2] = piplineDecode(tags[firstCellIdx + 0]);
     cellsArray [3] = tags[firstCellIdx + 1];

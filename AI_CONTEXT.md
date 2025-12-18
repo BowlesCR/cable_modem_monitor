@@ -1,10 +1,10 @@
-***REMOVED*** Cable Modem Monitor - AI Assistant Context
+# Cable Modem Monitor - AI Assistant Context
 
 > **Purpose**: This file provides project context for AI assistants (Claude, Copilot, etc.) working on this codebase. It's optimized for quick comprehension of key workflows and gotchas.
 >
 > **For Claude specifically**: See also `CLAUDE.md` for behavioral rules.
 
-***REMOVED******REMOVED*** Project Details
+## Project Details
 - **GitHub Repository**: https://github.com/solentlabs/cable_modem_monitor
 - **Type**: Home Assistant integration (installable via HACS)
 
@@ -15,14 +15,14 @@
 - **Release history**: `CHANGELOG.md`
 - **Open issues**: https://github.com/solentlabs/cable_modem_monitor/issues
 
-***REMOVED******REMOVED*** Adding Support for New Modems: The Fallback Parser Workflow
+## Adding Support for New Modems: The Fallback Parser Workflow
 
 **IMPORTANT:** This is the primary workflow for adding support for new, unsupported modem models.
 
-***REMOVED******REMOVED******REMOVED*** Overview
+### Overview
 The integration uses a **fallback parser** system that allows installation even when a specific modem parser doesn't exist. This puts users in a position to capture comprehensive diagnostics that developers need to build proper parsers.
 
-***REMOVED******REMOVED******REMOVED*** The Workflow
+### The Workflow
 
 1. **User installs with Unknown Modem (Fallback Mode)**
    - Integration detects no specific parser matches
@@ -55,7 +55,7 @@ The integration uses a **fallback parser** system that allows installation even 
    - Parse channels, frequencies, power, SNR, errors
    - Write tests using captured HTML as fixtures
 
-***REMOVED******REMOVED******REMOVED*** Key Files
+### Key Files
 
 | Purpose | File |
 |---------|------|
@@ -67,7 +67,7 @@ The integration uses a **fallback parser** system that allows installation even 
 
 *All paths relative to `custom_components/cable_modem_monitor/`*
 
-***REMOVED******REMOVED******REMOVED*** Authentication Methods
+### Authentication Methods
 
 | Type | Examples | Notes |
 |------|----------|-------|
@@ -82,7 +82,7 @@ The integration uses a **fallback parser** system that allows installation even 
 - Basic: 401 response, WWW-Authenticate header
 - None: 200 OK without credentials
 
-***REMOVED******REMOVED*** HNAP/SOAP Authentication Guidance
+## HNAP/SOAP Authentication Guidance
 
 **IMPORTANT:** HNAP has proven unreliable. **Prefer HTML-based parsing.**
 
@@ -100,26 +100,26 @@ The integration uses a **fallback parser** system that allows installation even 
 
 **Reference Implementation:** `parsers/motorola/mb8611_hnap.py`
 
-***REMOVED******REMOVED*** Development Rules
+## Development Rules
 
-***REMOVED******REMOVED******REMOVED*** Email Privacy
+### Email Privacy
 All commits use GitHub noreply emails. Personal emails blocked by pre-commit hook.
 - Setup: `./scripts/dev/setup-git-email.sh`
 
-***REMOVED******REMOVED******REMOVED*** Creating Releases
+### Creating Releases
 **CRITICAL: Always use the release script. NEVER manually create tags.**
 
 ```bash
-python scripts/release.py 3.7.0        ***REMOVED*** Full release
-python scripts/release.py 3.7.0 --no-push  ***REMOVED*** Test locally
+python scripts/release.py 3.7.0        # Full release
+python scripts/release.py 3.7.0 --no-push  # Test locally
 ```
 
 The script validates, tests, updates versions, and creates proper commits/tags.
 
-***REMOVED******REMOVED******REMOVED*** Code Quality
+### Code Quality
 Pre-commit hooks enforce: ruff, black, mypy, PII checks. Run `pre-commit run --all-files` to check manually.
 
-***REMOVED******REMOVED******REMOVED*** Deploying to Test Server
+### Deploying to Test Server
 ```bash
 tar czf /tmp/cmm.tar.gz -C custom_components cable_modem_monitor
 scp /tmp/cmm.tar.gz <host>:/tmp/
@@ -127,7 +127,7 @@ ssh <host> "cd /tmp && tar xzf cmm.tar.gz && sudo cp -rf cable_modem_monitor/* /
 ```
 **Never reboot via SSH** - ask user to restart from HA UI.
 
-***REMOVED******REMOVED*** Related Documentation
+## Related Documentation
 
 | Topic | Location |
 |-------|----------|
@@ -138,7 +138,7 @@ ssh <host> "cd /tmp && tar xzf cmm.tar.gz && sudo cp -rf cable_modem_monitor/* /
 | Fixture library | `tests/parsers/FIXTURES.md` |
 | Parser guide (with schema) | `docs/reference/PARSER_GUIDE.md` |
 
-***REMOVED******REMOVED*** Standards References
+## Standards References
 
 Parser data schema fields (`frequency`, `power`, `snr`, `corrected`, `uncorrected`) are aligned with DOCSIS industry standards:
 

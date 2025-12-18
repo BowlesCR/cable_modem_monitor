@@ -81,21 +81,21 @@ class TestSignalAnalyzerBasics:
     @patch("custom_components.cable_modem_monitor.core.signal_analyzer.datetime")
     def test_old_samples_removed(self, mock_datetime, analyzer, stable_sample):
         """Test that samples older than 48 hours are removed."""
-        ***REMOVED*** Set initial time
+        # Set initial time
         base_time = datetime(2025, 1, 1, 12, 0, 0)
         mock_datetime.now.return_value = base_time
 
-        ***REMOVED*** Add sample at base time
+        # Add sample at base time
         analyzer.add_sample(stable_sample)
 
-        ***REMOVED*** Advance time by 49 hours (past the 48-hour threshold)
+        # Advance time by 49 hours (past the 48-hour threshold)
         future_time = base_time + timedelta(hours=49)
         mock_datetime.now.return_value = future_time
 
-        ***REMOVED*** Add new sample - should trigger cleanup
+        # Add new sample - should trigger cleanup
         analyzer.add_sample(stable_sample)
 
-        ***REMOVED*** First sample should be removed, only second remains
+        # First sample should be removed, only second remains
         assert len(analyzer._history) == 1
         assert analyzer._history[0]["timestamp"] == future_time
 
@@ -130,7 +130,7 @@ class TestSignalMetricExtraction:
             "data": {
                 "downstream_channels": [
                     {"channel_id": 1, "snr": 40.0, "power": 5.0},
-                    {"channel_id": 2, "snr": None, "power": 5.1},  ***REMOVED*** None SNR
+                    {"channel_id": 2, "snr": None, "power": 5.1},  # None SNR
                     {"channel_id": 3, "snr": 39.8, "power": 4.9},
                 ]
             },
@@ -138,7 +138,7 @@ class TestSignalMetricExtraction:
 
         snr_values = analyzer._extract_snr_values([sample_with_none])
 
-        assert len(snr_values) == 2  ***REMOVED*** Only 2 valid SNR values
+        assert len(snr_values) == 2  # Only 2 valid SNR values
         assert None not in snr_values
 
     def test_extract_power_handles_none_values(self, analyzer):
@@ -148,7 +148,7 @@ class TestSignalMetricExtraction:
             "data": {
                 "downstream_channels": [
                     {"channel_id": 1, "snr": 40.0, "power": 5.0},
-                    {"channel_id": 2, "snr": 40.5, "power": None},  ***REMOVED*** None power
+                    {"channel_id": 2, "snr": 40.5, "power": None},  # None power
                     {"channel_id": 3, "snr": 39.8, "power": 4.9},
                 ]
             },
@@ -156,7 +156,7 @@ class TestSignalMetricExtraction:
 
         power_values = analyzer._extract_power_values([sample_with_none])
 
-        assert len(power_values) == 2  ***REMOVED*** Only 2 valid power values
+        assert len(power_values) == 2  # Only 2 valid power values
         assert None not in power_values
 
     def test_calculate_error_rates(self, analyzer):
@@ -177,7 +177,7 @@ class TestErrorTrendAnalysis:
 
     def test_error_trend_increasing(self, analyzer):
         """Test detection of increasing error trend."""
-        ***REMOVED*** Recent errors (50-100) are > 1.5x older errors (0-10)
+        # Recent errors (50-100) are > 1.5x older errors (0-10)
         error_rates = [0, 5, 10, 50, 75, 100]
         trend = analyzer._calculate_error_trend(error_rates)
 
@@ -185,7 +185,7 @@ class TestErrorTrendAnalysis:
 
     def test_error_trend_decreasing(self, analyzer):
         """Test detection of decreasing error trend."""
-        ***REMOVED*** Recent errors (0-5) are < 0.5x older errors (100-150)
+        # Recent errors (0-5) are < 0.5x older errors (100-150)
         error_rates = [100, 125, 150, 0, 2, 5]
         trend = analyzer._calculate_error_trend(error_rates)
 
@@ -193,7 +193,7 @@ class TestErrorTrendAnalysis:
 
     def test_error_trend_stable(self, analyzer):
         """Test detection of stable error trend."""
-        ***REMOVED*** Recent and older errors are similar
+        # Recent and older errors are similar
         error_rates = [10, 12, 15, 11, 13, 14]
         trend = analyzer._calculate_error_trend(error_rates)
 
@@ -201,10 +201,10 @@ class TestErrorTrendAnalysis:
 
     def test_error_trend_insufficient_data(self, analyzer):
         """Test error trend with insufficient data."""
-        error_rates = [10]  ***REMOVED*** Only one sample
+        error_rates = [10]  # Only one sample
         trend = analyzer._calculate_error_trend(error_rates)
 
-        assert trend == "stable"  ***REMOVED*** Default to stable
+        assert trend == "stable"  # Default to stable
 
 
 class TestRecommendations:
@@ -216,13 +216,13 @@ class TestRecommendations:
         base_time = datetime(2025, 1, 1, 12, 0, 0)
         mock_datetime.now.return_value = base_time
 
-        ***REMOVED*** Add only 2 samples (need at least 3)
+        # Add only 2 samples (need at least 3)
         analyzer.add_sample(stable_sample)
         analyzer.add_sample(stable_sample)
 
         recommendation = analyzer.get_recommended_interval(300)
 
-        assert recommendation["recommended_seconds"] == 300  ***REMOVED*** Keep current
+        assert recommendation["recommended_seconds"] == 300  # Keep current
         assert recommendation["confidence"] == "low"
         assert "Insufficient data" in recommendation["reason"]
         assert recommendation["signal_status"] == "unknown"
@@ -232,18 +232,18 @@ class TestRecommendations:
         """Test recommendation for very stable signal."""
         base_time = datetime(2025, 1, 1, 12, 0, 0)
 
-        ***REMOVED*** Add 13 stable samples over 24 hours (need 12+ for medium/high confidence)
+        # Add 13 stable samples over 24 hours (need 12+ for medium/high confidence)
         for i in range(13):
             mock_datetime.now.return_value = base_time + timedelta(hours=i * 1.8)
             analyzer.add_sample(stable_sample)
 
-        ***REMOVED*** Get recommendation
+        # Get recommendation
         mock_datetime.now.return_value = base_time + timedelta(hours=24)
         recommendation = analyzer.get_recommended_interval(300)
 
         assert recommendation["signal_status"] == "very_stable"
-        assert recommendation["recommended_seconds"] == 600  ***REMOVED*** Increased from 300 (gradual 2x)
-        ***REMOVED*** With 12+ samples (after 24h filter excludes first), confidence is medium or high
+        assert recommendation["recommended_seconds"] == 600  # Increased from 300 (gradual 2x)
+        # With 12+ samples (after 24h filter excludes first), confidence is medium or high
         assert recommendation["confidence"] in ["medium", "high"]
         assert "stable" in recommendation["reason"].lower()
 
@@ -252,15 +252,15 @@ class TestRecommendations:
         """Test recommendation for problematic signal."""
         base_time = datetime(2025, 1, 1, 12, 0, 0)
 
-        ***REMOVED*** Add 13 problematic samples with increasing errors (need 12+ after filter for high confidence)
+        # Add 13 problematic samples with increasing errors (need 12+ after filter for high confidence)
         for i in range(13):
             mock_datetime.now.return_value = base_time + timedelta(hours=i * 1.8)
             sample = {
                 "downstream_channels": [
-                    {"channel_id": 1, "snr": 25.0 - i, "power": 10.0 + i},  ***REMOVED*** Degrading SNR
+                    {"channel_id": 1, "snr": 25.0 - i, "power": 10.0 + i},  # Degrading SNR
                     {"channel_id": 2, "snr": 18.0 - i, "power": -2.0},
                 ],
-                "total_uncorrected_errors": i * 1000,  ***REMOVED*** Increasing errors
+                "total_uncorrected_errors": i * 1000,  # Increasing errors
             }
             analyzer.add_sample(sample)
 
@@ -268,26 +268,26 @@ class TestRecommendations:
         recommendation = analyzer.get_recommended_interval(300)
 
         assert recommendation["signal_status"] == "problematic"
-        ***REMOVED*** Gradual adjustment: would be 60, but capped to 50% of current (300 * 0.5 = 150)
+        # Gradual adjustment: would be 60, but capped to 50% of current (300 * 0.5 = 150)
         assert recommendation["recommended_seconds"] == 150
         assert recommendation["confidence"] == "high"
         assert "degrading" in recommendation["reason"].lower() or "problematic" in recommendation["reason"].lower()
-        assert "gradual" in recommendation["reason"].lower()  ***REMOVED*** Gradual adjustment mentioned
+        assert "gradual" in recommendation["reason"].lower()  # Gradual adjustment mentioned
 
     @patch("custom_components.cable_modem_monitor.core.signal_analyzer.datetime")
     def test_fluctuating_signal_recommendation(self, mock_datetime, analyzer):
         """Test recommendation for fluctuating signal."""
         base_time = datetime(2025, 1, 1, 12, 0, 0)
 
-        ***REMOVED*** Add samples with moderate SNR variance (5-10 dB)
-        ***REMOVED*** Pattern oscillates between 28-43 dB to create clear variance > 5 dB
-        snr_values = [28, 43, 30, 42, 29, 43, 31, 41, 28, 42]  ***REMOVED*** High variance pattern
+        # Add samples with moderate SNR variance (5-10 dB)
+        # Pattern oscillates between 28-43 dB to create clear variance > 5 dB
+        snr_values = [28, 43, 30, 42, 29, 43, 31, 41, 28, 42]  # High variance pattern
         for i in range(10):
             mock_datetime.now.return_value = base_time + timedelta(hours=i * 2.4)
             sample = {
                 "downstream_channels": [
                     {"channel_id": 1, "snr": snr_values[i], "power": 5.0},
-                    {"channel_id": 2, "snr": snr_values[i], "power": 5.0},  ***REMOVED*** Same values to amplify variance
+                    {"channel_id": 2, "snr": snr_values[i], "power": 5.0},  # Same values to amplify variance
                 ],
                 "total_uncorrected_errors": 50,
             }
@@ -297,7 +297,7 @@ class TestRecommendations:
         recommendation = analyzer.get_recommended_interval(300)
 
         assert recommendation["signal_status"] == "fluctuating"
-        assert recommendation["recommended_seconds"] == 180  ***REMOVED*** More frequent than stable
+        assert recommendation["recommended_seconds"] == 180  # More frequent than stable
         assert "fluctuating" in recommendation["reason"].lower()
 
     @patch("custom_components.cable_modem_monitor.core.signal_analyzer.datetime")
@@ -305,18 +305,18 @@ class TestRecommendations:
         """Test that recommendations don't change too drastically."""
         base_time = datetime(2025, 1, 1, 12, 0, 0)
 
-        ***REMOVED*** Add very stable samples
+        # Add very stable samples
         for i in range(10):
             mock_datetime.now.return_value = base_time + timedelta(hours=i * 2.4)
             analyzer.add_sample(stable_sample)
 
         mock_datetime.now.return_value = base_time + timedelta(hours=24)
 
-        ***REMOVED*** Current interval is 100 seconds
-        ***REMOVED*** Recommendation would be 900 (very_stable), but should be clamped to 200 (2x current)
+        # Current interval is 100 seconds
+        # Recommendation would be 900 (very_stable), but should be clamped to 200 (2x current)
         recommendation = analyzer.get_recommended_interval(100)
 
-        assert recommendation["recommended_seconds"] == 200  ***REMOVED*** 2x current, not full 900
+        assert recommendation["recommended_seconds"] == 200  # 2x current, not full 900
         assert "gradual" in recommendation["reason"]
 
     @patch("custom_components.cable_modem_monitor.core.signal_analyzer.datetime")
@@ -330,7 +330,7 @@ class TestRecommendations:
 
         mock_datetime.now.return_value = base_time + timedelta(hours=24)
 
-        ***REMOVED*** Even with 30-second current interval, should not go below 60
+        # Even with 30-second current interval, should not go below 60
         recommendation = analyzer.get_recommended_interval(30)
 
         assert recommendation["recommended_seconds"] >= 60
@@ -353,7 +353,7 @@ class TestHistorySummary:
         """Test summary with multiple samples."""
         base_time = datetime(2025, 1, 1, 12, 0, 0)
 
-        ***REMOVED*** Add 5 samples over 10 hours
+        # Add 5 samples over 10 hours
         for i in range(5):
             mock_datetime.now.return_value = base_time + timedelta(hours=i * 2)
             analyzer.add_sample(stable_sample)
@@ -387,9 +387,9 @@ class TestMetricsInRecommendation:
         assert "error_trend" in recommendation["metrics"]
         assert "sample_count" in recommendation["metrics"]
 
-        ***REMOVED*** Verify metrics are reasonable
+        # Verify metrics are reasonable
         assert isinstance(recommendation["metrics"]["snr_variance"], int | float)
         assert isinstance(recommendation["metrics"]["power_variance"], int | float)
         assert recommendation["metrics"]["error_trend"] in ["increasing", "stable", "decreasing"]
-        ***REMOVED*** Sample count is 9, not 10, because filter uses > not >= (sample at exactly 24h cutoff is excluded)
+        # Sample count is 9, not 10, because filter uses > not >= (sample at exactly 24h cutoff is excluded)
         assert recommendation["metrics"]["sample_count"] == 9

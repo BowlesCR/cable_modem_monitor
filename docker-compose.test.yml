@@ -3,17 +3,17 @@ services:
     container_name: ha-cable-modem-test
     image: ghcr.io/home-assistant/home-assistant:stable
     ports:
-      - "8123:8123" ***REMOVED*** Home Assistant web interface
-      ***REMOVED*** Note: Port 8300 removed - conflicts with VS Code devcontainer
+      - "8123:8123" # Home Assistant web interface
+      # Note: Port 8300 removed - conflicts with VS Code devcontainer
     volumes:
-      ***REMOVED*** Mount a temporary config directory
-      ***REMOVED*** Use HOST_WORKSPACE_FOLDER (set by dev container) or fall back to PWD (local dev)
+      # Mount a temporary config directory
+      # Use HOST_WORKSPACE_FOLDER (set by dev container) or fall back to PWD (local dev)
       - ${HOST_WORKSPACE_FOLDER:-${PWD}}/test-ha-config:/config
-      ***REMOVED*** Mount the integration directly into custom_components
+      # Mount the integration directly into custom_components
       - ${HOST_WORKSPACE_FOLDER:-${PWD}}/custom_components/cable_modem_monitor:/config/custom_components/cable_modem_monitor
-      ***REMOVED*** Mount the entire project for development and testing
+      # Mount the entire project for development and testing
       - ${HOST_WORKSPACE_FOLDER:-${PWD}}:/workspace:cached
-      ***REMOVED*** Mount Docker socket for Docker-from-Docker
+      # Mount Docker socket for Docker-from-Docker
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - TZ=America/New_York

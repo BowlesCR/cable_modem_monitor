@@ -30,9 +30,9 @@ class TestHmacMd5:
 
     def test_known_value(self):
         """Test HMAC-MD5 against known value."""
-        ***REMOVED*** This matches the JavaScript hex_hmac_md5 function behavior
+        # This matches the JavaScript hex_hmac_md5 function behavior
         result = _hmac_md5("testkey", "testmessage")
-        ***REMOVED*** Verify it's a valid HMAC-MD5 output
+        # Verify it's a valid HMAC-MD5 output
         assert len(result) == 32
         assert result.isupper()
 
@@ -43,7 +43,7 @@ class TestHmacMd5:
 
     def test_special_characters(self):
         """Test HMAC-MD5 with special characters."""
-        result = _hmac_md5("key!@***REMOVED***$%", "message with spaces")
+        result = _hmac_md5("key!@#$%", "message with spaces")
         assert len(result) == 32
 
 
@@ -88,10 +88,10 @@ class TestHnapAuth:
         """Test auth generation without private key uses default."""
         auth = builder._get_hnap_auth("Login")
 
-        ***REMOVED*** Should have format: HASH TIMESTAMP
+        # Should have format: HASH TIMESTAMP
         parts = auth.split(" ")
         assert len(parts) == 2
-        assert len(parts[0]) == 32  ***REMOVED*** HMAC-MD5 hex
+        assert len(parts[0]) == 32  # HMAC-MD5 hex
         assert parts[0].isupper()
         assert parts[1].isdigit()
 
@@ -107,12 +107,12 @@ class TestHnapAuth:
     @patch("time.time")
     def test_timestamp_format(self, mock_time, builder):
         """Test that timestamp is correctly formatted."""
-        mock_time.return_value = 1700000000.123  ***REMOVED*** Fixed timestamp
+        mock_time.return_value = 1700000000.123  # Fixed timestamp
         auth = builder._get_hnap_auth("Login")
 
         parts = auth.split(" ")
         timestamp = int(parts[1])
-        ***REMOVED*** Timestamp should be (time * 1000) % 2000000000000
+        # Timestamp should be (time * 1000) % 2000000000000
         expected = int(1700000000.123 * 1000) % 2000000000000
         assert timestamp == expected
 
@@ -216,7 +216,7 @@ class TestCallMultiple:
         call_args = mock_session.post.call_args
         request_json = call_args[1]["json"]
 
-        ***REMOVED*** Default should be empty dict {} for MB8611 compatibility
+        # Default should be empty dict {} for MB8611 compatibility
         for action in actions:
             assert action in request_json["GetMultipleHNAPs"]
             assert request_json["GetMultipleHNAPs"][action] == {}, (
@@ -233,7 +233,7 @@ class TestCallMultiple:
 
         Reference: https://github.com/solentlabs/cable_modem_monitor/issues/32
         """
-        ***REMOVED*** Create builder with empty string configuration (like S33 does)
+        # Create builder with empty string configuration (like S33 does)
         builder = HNAPJsonRequestBuilder(
             endpoint="/HNAP1/",
             namespace="http://purenetworks.com/HNAP1/",
@@ -251,7 +251,7 @@ class TestCallMultiple:
         call_args = mock_session.post.call_args
         request_json = call_args[1]["json"]
 
-        ***REMOVED*** With empty_action_value="", should use empty strings
+        # With empty_action_value="", should use empty strings
         for action in actions:
             assert action in request_json["GetMultipleHNAPs"]
             assert request_json["GetMultipleHNAPs"][action] == "", (
@@ -278,7 +278,7 @@ class TestLogin:
 
     def test_successful_login(self, builder, mock_session):
         """Test successful two-step login flow."""
-        ***REMOVED*** Step 1: Challenge response
+        # Step 1: Challenge response
         challenge_response = MagicMock()
         challenge_response.status_code = 200
         challenge_response.text = json.dumps(
@@ -291,7 +291,7 @@ class TestLogin:
             }
         )
 
-        ***REMOVED*** Step 2: Login response
+        # Step 2: Login response
         login_response = MagicMock()
         login_response.status_code = 200
         login_response.text = json.dumps(
@@ -308,10 +308,10 @@ class TestLogin:
 
         assert success is True
         assert builder._private_key is not None
-        assert len(builder._private_key) == 32  ***REMOVED*** HMAC-MD5 hex
+        assert len(builder._private_key) == 32  # HMAC-MD5 hex
 
-        ***REMOVED*** Verify both cookies were set (uid and PrivateKey)
-        ***REMOVED*** The modem's browser login (Login.js) requires both cookies for authenticated actions
+        # Verify both cookies were set (uid and PrivateKey)
+        # The modem's browser login (Login.js) requires both cookies for authenticated actions
         assert mock_session.cookies.set.call_count == 2
         mock_session.cookies.set.assert_any_call("uid", "session_cookie_value")
         mock_session.cookies.set.assert_any_call("PrivateKey", builder._private_key)
@@ -338,13 +338,13 @@ class TestLogin:
 
         builder.login(mock_session, "http://192.168.100.1", "testuser", "testpass")
 
-        ***REMOVED*** Check first call (challenge request)
+        # Check first call (challenge request)
         first_call = mock_session.post.call_args_list[0]
         request_json = first_call[1]["json"]
         assert request_json["Login"]["Action"] == "request"
         assert request_json["Login"]["Username"] == "testuser"
         assert request_json["Login"]["LoginPassword"] == ""
-        ***REMOVED*** PrivateLogin field is required for MB8611 authentication
+        # PrivateLogin field is required for MB8611 authentication
         assert request_json["Login"]["PrivateLogin"] == "LoginPassword"
 
     def test_login_request_format(self, builder, mock_session):
@@ -369,16 +369,16 @@ class TestLogin:
 
         builder.login(mock_session, "http://192.168.100.1", "admin", "password")
 
-        ***REMOVED*** Check second call (login request)
+        # Check second call (login request)
         second_call = mock_session.post.call_args_list[1]
         request_json = second_call[1]["json"]
         assert request_json["Login"]["Action"] == "login"
         assert request_json["Login"]["Username"] == "admin"
-        ***REMOVED*** LoginPassword should be a 32-char uppercase hex (HMAC-MD5)
+        # LoginPassword should be a 32-char uppercase hex (HMAC-MD5)
         login_password = request_json["Login"]["LoginPassword"]
         assert len(login_password) == 32
         assert login_password.isupper()
-        ***REMOVED*** PrivateLogin field is required for MB8611 authentication
+        # PrivateLogin field is required for MB8611 authentication
         assert request_json["Login"]["PrivateLogin"] == "LoginPassword"
 
     def test_private_key_computation(self, builder, mock_session):
@@ -403,7 +403,7 @@ class TestLogin:
 
         builder.login(mock_session, "http://192.168.100.1", "admin", "mypassword")
 
-        ***REMOVED*** PrivateKey = HMAC_MD5(PublicKey + password, Challenge)
+        # PrivateKey = HMAC_MD5(PublicKey + password, Challenge)
         expected_private_key = _hmac_md5("TESTPUBKEY" + "mypassword", "TESTCHALLENGE")
         assert builder._private_key == expected_private_key
 
@@ -430,7 +430,7 @@ class TestLogin:
         success, _ = builder.login(mock_session, "http://192.168.100.1", "admin", "wrongpassword")
 
         assert success is False
-        assert builder._private_key is None  ***REMOVED*** Cleared on failure
+        assert builder._private_key is None  # Cleared on failure
 
     def test_challenge_missing_fields(self, builder, mock_session):
         """Test handling of incomplete challenge response."""
@@ -440,7 +440,7 @@ class TestLogin:
             {
                 "LoginResponse": {
                     "Challenge": "TEST",
-                    ***REMOVED*** Missing Cookie and PublicKey
+                    # Missing Cookie and PublicKey
                 }
             }
         )
@@ -496,7 +496,7 @@ class TestLogin:
     def test_success_result_variations(self, builder, mock_session):
         """Test that both OK and SUCCESS are accepted as successful login."""
         for result_value in ["OK", "SUCCESS"]:
-            builder._private_key = None  ***REMOVED*** Reset
+            builder._private_key = None  # Reset
 
             challenge_response = MagicMock()
             challenge_response.status_code = 200
@@ -526,7 +526,7 @@ class TestAuthenticatedRequests:
 
     def test_call_single_uses_private_key(self, builder, mock_session):
         """Test that call_single uses stored private key for auth."""
-        builder._private_key = "STOREDPRIVATEKEY***SERIAL***34"
+        builder._private_key = "STOREDPRIVATEKEY12345678901234"
 
         mock_response = MagicMock()
         mock_response.text = "{}"
@@ -537,12 +537,12 @@ class TestAuthenticatedRequests:
         call_args = mock_session.post.call_args
         auth_header = call_args[1]["headers"]["HNAP_AUTH"]
 
-        ***REMOVED*** Auth should be computed using the stored private key
+        # Auth should be computed using the stored private key
         assert len(auth_header.split(" ")[0]) == 32
 
     def test_call_multiple_uses_private_key(self, builder, mock_session):
         """Test that call_multiple uses stored private key for auth."""
-        builder._private_key = "STOREDPRIVATEKEY***SERIAL***34"
+        builder._private_key = "STOREDPRIVATEKEY12345678901234"
 
         mock_response = MagicMock()
         mock_response.text = "{}"
@@ -562,7 +562,7 @@ class TestIntegration:
 
     def test_full_workflow(self, builder, mock_session):
         """Test complete workflow: login then fetch data."""
-        ***REMOVED*** Step 1: Challenge response
+        # Step 1: Challenge response
         challenge_response = MagicMock()
         challenge_response.status_code = 200
         challenge_response.text = json.dumps(
@@ -575,12 +575,12 @@ class TestIntegration:
             }
         )
 
-        ***REMOVED*** Step 2: Login response
+        # Step 2: Login response
         login_response = MagicMock()
         login_response.status_code = 200
         login_response.text = json.dumps({"LoginResponse": {"LoginResult": "OK"}})
 
-        ***REMOVED*** Step 3: Data response
+        # Step 3: Data response
         data_response = MagicMock()
         data_response.status_code = 200
         data_response.text = json.dumps(
@@ -594,11 +594,11 @@ class TestIntegration:
 
         mock_session.post.side_effect = [challenge_response, login_response, data_response]
 
-        ***REMOVED*** Login
+        # Login
         success, _ = builder.login(mock_session, "http://192.168.100.1", "admin", "password")
         assert success is True
 
-        ***REMOVED*** Fetch data
+        # Fetch data
         result = builder.call_single(mock_session, "http://192.168.100.1", "GetMotoStatusConnectionInfo")
         assert "MB8611" in result
 
@@ -608,7 +608,7 @@ class TestClearAuthCache:
 
     def test_clear_auth_cache_clears_private_key(self, builder):
         """Test that clear_auth_cache clears the stored private key."""
-        builder._private_key = "STOREDPRIVATEKEY***SERIAL***34"
+        builder._private_key = "STOREDPRIVATEKEY12345678901234"
 
         builder.clear_auth_cache()
 
@@ -618,13 +618,13 @@ class TestClearAuthCache:
         """Test clear_auth_cache is safe when private key is already None."""
         assert builder._private_key is None
 
-        builder.clear_auth_cache()  ***REMOVED*** Should not raise
+        builder.clear_auth_cache()  # Should not raise
 
         assert builder._private_key is None
 
     def test_reauth_after_cache_clear(self, builder, mock_session):
         """Test that login works correctly after cache is cleared."""
-        ***REMOVED*** First login
+        # First login
         challenge_response = MagicMock()
         challenge_response.status_code = 200
         challenge_response.text = json.dumps(
@@ -645,11 +645,11 @@ class TestClearAuthCache:
         assert success is True
         first_key = builder._private_key
 
-        ***REMOVED*** Clear cache (simulates modem restart)
+        # Clear cache (simulates modem restart)
         builder.clear_auth_cache()
         assert builder._private_key is None
 
-        ***REMOVED*** Re-login with different challenge (modem rebooted)
+        # Re-login with different challenge (modem rebooted)
         challenge_response2 = MagicMock()
         challenge_response2.status_code = 200
         challenge_response2.text = json.dumps(
@@ -670,7 +670,7 @@ class TestClearAuthCache:
 
         assert success is True
         assert builder._private_key is not None
-        assert builder._private_key != first_key  ***REMOVED*** Different challenge = different key
+        assert builder._private_key != first_key  # Different challenge = different key
 
 
 class TestAuthAttemptTracking:
@@ -735,7 +735,7 @@ class TestAuthAttemptTracking:
 
         auth_attempt = builder.get_last_auth_attempt()
         login_req = auth_attempt["login_request"]
-        ***REMOVED*** Password should be redacted
+        # Password should be redacted
         assert login_req["Login"]["LoginPassword"] == "[REDACTED]"
 
     def test_auth_attempt_stores_error_on_failed_login(self, builder, mock_session):
@@ -789,7 +789,7 @@ class TestAuthAttemptTracking:
         auth_attempt = builder.get_last_auth_attempt()
         challenge_req = auth_attempt["challenge_request"]
 
-        ***REMOVED*** Verify PrivateLogin field is present (MB8611 requirement)
+        # Verify PrivateLogin field is present (MB8611 requirement)
         assert challenge_req["Login"]["PrivateLogin"] == "LoginPassword"
         assert challenge_req["Login"]["Action"] == "request"
         assert challenge_req["Login"]["Username"] == "testuser"

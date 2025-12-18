@@ -1,16 +1,16 @@
-***REMOVED*** Issue to Fixture Verification Skill
+# Issue to Fixture Verification Skill
 
 Mark a parser/fixture as verified after a user confirms it works via a closed GitHub issue.
 
-***REMOVED******REMOVED*** When to Use
+## When to Use
 
 - A GitHub issue has been closed where a user confirms a modem/parser works
 - The parser's `status` field is currently `ParserStatus.PENDING`
 - You need to update the codebase to reflect the confirmation
 
-***REMOVED******REMOVED*** Workflow
+## Workflow
 
-***REMOVED******REMOVED******REMOVED*** 1. Gather Issue Details
+### 1. Gather Issue Details
 
 Read the closed issue to extract:
 - **Modem model** (e.g., TC4400, SB8200)
@@ -22,7 +22,7 @@ Read the closed issue to extract:
 gh issue view <issue_number> --json title,body,state,comments
 ```
 
-***REMOVED******REMOVED******REMOVED*** 2. Locate the Parser
+### 2. Locate the Parser
 
 Find the parser file for the modem. Parsers follow this pattern:
 ```
@@ -34,29 +34,29 @@ Search if unsure:
 grep -r "class.*<Model>.*Parser" custom_components/
 ```
 
-***REMOVED******REMOVED******REMOVED*** 3. Update Parser Verification
+### 3. Update Parser Verification
 
 Edit the parser class to set:
 
 ```python
 from ..base_parser import ModemCapability, ModemParser, ParserStatus
 
-***REMOVED*** Parser status
-status = ParserStatus.VERIFIED  ***REMOVED*** Confirmed by @<username> in ***REMOVED***<issue> (v<version>)
+# Parser status
+status = ParserStatus.VERIFIED  # Confirmed by @<username> in #<issue> (v<version>)
 verification_source = "https://github.com/<repo>/issues/<issue>"
 ```
 
 **Example:**
 ```python
-***REMOVED*** Before
-status = ParserStatus.PENDING  ***REMOVED*** No confirmed user reports
+# Before
+status = ParserStatus.PENDING  # No confirmed user reports
 
-***REMOVED*** After
-status = ParserStatus.VERIFIED  ***REMOVED*** Confirmed by @Mar1usW3 in ***REMOVED***1 (v2.2.0)
+# After
+status = ParserStatus.VERIFIED  # Confirmed by @Mar1usW3 in #1 (v2.2.0)
 verification_source = "https://github.com/kwschulz/cable_modem_monitor/issues/1"
 ```
 
-***REMOVED******REMOVED******REMOVED*** 4. Regenerate FIXTURES.md
+### 4. Regenerate FIXTURES.md
 
 Run the fixture index generator to update the documentation:
 
@@ -69,7 +69,7 @@ This updates:
 - `tests/parsers/FIXTURES.md` - Main fixture index
 - Individual `README.md` files in fixture directories (Quick Facts section)
 
-***REMOVED******REMOVED******REMOVED*** 5. Show Changes for Review
+### 5. Show Changes for Review
 
 Display the diff for user review:
 
@@ -79,11 +79,11 @@ git diff
 
 **Do NOT commit automatically.** Leave changes staged for user review.
 
-***REMOVED******REMOVED******REMOVED*** 6. Optional: Update VERIFICATION_STATUS.md
+### 6. Optional: Update VERIFICATION_STATUS.md
 
 If the project has a `VERIFICATION_STATUS.md` tracking document, update the relevant parser entry from "UNKNOWN" or "UNVERIFIED" to "VERIFIED".
 
-***REMOVED******REMOVED*** Checklist
+## Checklist
 
 - [ ] Issue is closed with user confirmation
 - [ ] Parser `status` field updated to `ParserStatus.VERIFIED`
@@ -92,20 +92,20 @@ If the project has a `VERIFICATION_STATUS.md` tracking document, update the rele
 - [ ] `scripts/generate_fixture_index.py` executed
 - [ ] Changes shown to user (not committed)
 
-***REMOVED******REMOVED*** Example Session
+## Example Session
 
-**User:** "Issue ***REMOVED***1 for the TC4400 is now closed and confirmed working"
+**User:** "Issue #1 for the TC4400 is now closed and confirmed working"
 
 **AI Actions:**
 1. `gh issue view 1` - Confirm closure, extract @Mar1usW3, v2.2.0
 2. Edit `parsers/technicolor/tc4400.py`:
-   - `status = ParserStatus.VERIFIED  ***REMOVED*** Confirmed by @Mar1usW3 in ***REMOVED***1 (v2.2.0)`
+   - `status = ParserStatus.VERIFIED  # Confirmed by @Mar1usW3 in #1 (v2.2.0)`
    - `verification_source = "https://github.com/kwschulz/cable_modem_monitor/issues/1"`
 3. Run `python scripts/generate_fixture_index.py`
 4. Show `git diff` output
 5. Report: "TC4400 marked as verified. Changes ready for review."
 
-***REMOVED******REMOVED*** Notes
+## Notes
 
 - The `status` field affects the status badge in FIXTURES.md (changes from "Pending" to "Verified")
 - Available statuses: `PENDING`, `VERIFIED`, `BROKEN`, `DEPRECATED`

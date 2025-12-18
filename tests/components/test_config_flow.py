@@ -15,7 +15,7 @@ from custom_components.cable_modem_monitor.config_flow import (
     validate_input,
 )
 
-***REMOVED*** Mock constants to avoid ImportError in tests
+# Mock constants to avoid ImportError in tests
 CONF_HOST = "host"
 CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
@@ -30,12 +30,12 @@ class TestConfigFlow:
 
     def test_scan_interval_minimum_valid(self):
         """Test that minimum scan interval (60s) is accepted."""
-        ***REMOVED*** Minimum value should be valid
+        # Minimum value should be valid
         assert MIN_SCAN_INTERVAL == 60
 
     def test_scan_interval_maximum_valid(self):
         """Test that maximum scan interval (1800s) is accepted."""
-        ***REMOVED*** Maximum value should be valid
+        # Maximum value should be valid
         assert MAX_SCAN_INTERVAL == 1800
 
     def test_scan_interval_default_value(self):
@@ -44,7 +44,7 @@ class TestConfigFlow:
 
     def test_scan_interval_range_valid(self):
         """Test that scan interval range makes sense."""
-        ***REMOVED*** Min should be less than default, default less than max
+        # Min should be less than default, default less than max
         assert MIN_SCAN_INTERVAL < DEFAULT_SCAN_INTERVAL < MAX_SCAN_INTERVAL
 
 
@@ -72,23 +72,23 @@ class TestValidateInput:
     @patch("custom_components.cable_modem_monitor.config_flow.ModemScraper")
     async def test_success(self, mock_scraper_class, mock_connectivity_check, mock_hass, valid_input):
         """Test successful validation."""
-        ***REMOVED*** Mock connectivity check to succeed
+        # Mock connectivity check to succeed
         mock_connectivity_check.return_value = (True, None)
 
-        ***REMOVED*** Mock scraper to return valid data
+        # Mock scraper to return valid data
         mock_scraper = Mock()
         mock_scraper.get_modem_data.return_value = {
             "cable_modem_software_version": "1.0.0",
             "cable_modem_connection_status": "online",
         }
-        ***REMOVED*** Mock detection info with proper dictionary
+        # Mock detection info with proper dictionary
         mock_scraper.get_detection_info.return_value = {
             "modem_name": "Cable Modem",
             "manufacturer": "Unknown",
         }
         mock_scraper_class.return_value = mock_scraper
 
-        ***REMOVED*** Mock async_add_executor_job to return the data
+        # Mock async_add_executor_job to return the data
         async def mock_executor_job(func, *args):
             if func == mock_connectivity_check:
                 return mock_connectivity_check(*args)
@@ -105,16 +105,16 @@ class TestValidateInput:
     @patch("custom_components.cable_modem_monitor.config_flow.ModemScraper")
     async def test_connection_failure(self, mock_scraper_class, mock_get_parsers, mock_hass, valid_input):
         """Test validation fails when cannot connect to modem."""
-        ***REMOVED*** Mock get_parsers to return a mock parser
+        # Mock get_parsers to return a mock parser
         mock_parser = Mock()
         mock_get_parsers.return_value = [mock_parser]
 
-        ***REMOVED*** Mock scraper to raise exception
+        # Mock scraper to raise exception
         mock_scraper = Mock()
         mock_scraper.get_modem_data.side_effect = Exception("Connection failed")
         mock_scraper_class.return_value = mock_scraper
 
-        ***REMOVED*** Mock async_add_executor_job to call the function
+        # Mock async_add_executor_job to call the function
         async def mock_executor_job(func, *args):
             return func(*args)
 
@@ -127,12 +127,12 @@ class TestValidateInput:
     @patch("requests.head")
     async def test_quick_connectivity_check_timeout(self, mock_requests_head, mock_hass, valid_input):
         """Test that the quick connectivity check uses the correct timeout."""
-        ***REMOVED*** Mock requests.head to simulate a successful connection
+        # Mock requests.head to simulate a successful connection
         mock_requests_head.return_value.status_code = 200
 
-        ***REMOVED*** Mock async_add_executor_job to call the function
+        # Mock async_add_executor_job to call the function
         async def mock_executor_job(func, *args):
-            ***REMOVED*** Since we are in an async context, we need to handle both coroutines and regular functions
+            # Since we are in an async context, we need to handle both coroutines and regular functions
             if asyncio.iscoroutinefunction(func):
                 return await func(*args)
             else:
@@ -140,7 +140,7 @@ class TestValidateInput:
 
         mock_hass.async_add_executor_job = mock_executor_job
 
-        ***REMOVED*** We need to patch the rest of the validation to isolate the connectivity check
+        # We need to patch the rest of the validation to isolate the connectivity check
         with (
             patch("custom_components.cable_modem_monitor.config_flow.get_parsers"),
             patch("custom_components.cable_modem_monitor.config_flow.ModemScraper") as mock_scraper_class,
@@ -157,8 +157,8 @@ class TestValidateInput:
             mock_scraper_class.return_value = mock_scraper
             await validate_input(mock_hass, valid_input)
 
-        ***REMOVED*** Assert that requests.head was called with a timeout of 10
-        ***REMOVED*** The check will try https first
+        # Assert that requests.head was called with a timeout of 10
+        # The check will try https first
         mock_requests_head.assert_called_with("https://192.168.100.1", timeout=10, verify=False, allow_redirects=True)
 
     @pytest.mark.asyncio
@@ -168,15 +168,15 @@ class TestValidateInput:
         self, mock_requests_head, mock_requests_get, mock_hass, valid_input
     ):
         """Test that connectivity check falls back to GET if HEAD times out."""
-        ***REMOVED*** Mock requests.head to timeout
+        # Mock requests.head to timeout
         import requests
 
         mock_requests_head.side_effect = requests.exceptions.Timeout("HEAD timeout")
 
-        ***REMOVED*** Mock requests.get to succeed
+        # Mock requests.get to succeed
         mock_requests_get.return_value.status_code = 200
 
-        ***REMOVED*** Mock async_add_executor_job to call the function
+        # Mock async_add_executor_job to call the function
         async def mock_executor_job(func, *args):
             if asyncio.iscoroutinefunction(func):
                 return await func(*args)
@@ -185,7 +185,7 @@ class TestValidateInput:
 
         mock_hass.async_add_executor_job = mock_executor_job
 
-        ***REMOVED*** We need to patch the rest of the validation to isolate the connectivity check
+        # We need to patch the rest of the validation to isolate the connectivity check
         with (
             patch("custom_components.cable_modem_monitor.config_flow.get_parsers"),
             patch("custom_components.cable_modem_monitor.config_flow.ModemScraper") as mock_scraper_class,
@@ -202,14 +202,14 @@ class TestValidateInput:
             mock_scraper_class.return_value = mock_scraper
             await validate_input(mock_hass, valid_input)
 
-        ***REMOVED*** Assert that requests.head was tried first
+        # Assert that requests.head was tried first
         mock_requests_head.assert_called()
-        ***REMOVED*** Assert that requests.get was called as fallback with timeout of 10
+        # Assert that requests.get was called as fallback with timeout of 10
         mock_requests_get.assert_called_with("https://192.168.100.1", timeout=10, verify=False, allow_redirects=True)
 
     def test_requires_host(self, valid_input):
         """Test that host is required."""
-        ***REMOVED*** Host should be in valid input
+        # Host should be in valid input
         assert CONF_HOST in valid_input
 
 
@@ -218,29 +218,29 @@ class TestScanIntervalValidation:
 
     def test_scan_interval_below_minimum_invalid(self):
         """Test that values below minimum are invalid."""
-        ***REMOVED*** 59 seconds should be below minimum
+        # 59 seconds should be below minimum
         assert MIN_SCAN_INTERVAL > 59
 
     def test_scan_interval_above_maximum_invalid(self):
         """Test that values above maximum are invalid."""
-        ***REMOVED*** 1801 seconds should be above maximum
+        # 1801 seconds should be above maximum
         assert MAX_SCAN_INTERVAL < 1801
 
     def test_scan_interval_at_boundaries_valid(self):
         """Test that boundary values are valid."""
-        ***REMOVED*** Exact min and max should be valid
+        # Exact min and max should be valid
         assert MIN_SCAN_INTERVAL == 60
         assert MAX_SCAN_INTERVAL == 1800
 
     def test_scan_interval_common_values_valid(self):
         """Test common interval values are within range."""
         common_intervals = [
-            60,  ***REMOVED*** 1 minute
-            180,  ***REMOVED*** 3 minutes
-            300,  ***REMOVED*** 5 minutes (default)
-            600,  ***REMOVED*** 10 minutes
-            900,  ***REMOVED*** 15 minutes
-            1800,  ***REMOVED*** 30 minutes
+            60,  # 1 minute
+            180,  # 3 minutes
+            300,  # 5 minutes (default)
+            600,  # 10 minutes
+            900,  # 15 minutes
+            1800,  # 30 minutes
         ]
 
         for interval in common_intervals:
@@ -278,7 +278,7 @@ class TestModemNameFormatting:
         mock_scraper.get_modem_data.return_value = {
             "cable_modem_connection_status": "online",
         }
-        ***REMOVED*** Modem name already starts with manufacturer
+        # Modem name already starts with manufacturer
         mock_scraper.get_detection_info.return_value = {
             "modem_name": "Motorola MB7621",
             "manufacturer": "Motorola",
@@ -294,7 +294,7 @@ class TestModemNameFormatting:
 
         result = await validate_input(mock_hass, valid_input)
 
-        ***REMOVED*** Should NOT be "Motorola Motorola MB7621 (192.168.100.1)"
+        # Should NOT be "Motorola Motorola MB7621 (192.168.100.1)"
         assert result["title"] == "Motorola MB7621 (192.168.100.1)"
 
     @pytest.mark.asyncio
@@ -310,7 +310,7 @@ class TestModemNameFormatting:
         mock_scraper.get_modem_data.return_value = {
             "cable_modem_connection_status": "online",
         }
-        ***REMOVED*** Modem name does NOT include manufacturer
+        # Modem name does NOT include manufacturer
         mock_scraper.get_detection_info.return_value = {
             "modem_name": "XB7",
             "manufacturer": "Technicolor",
@@ -326,7 +326,7 @@ class TestModemNameFormatting:
 
         result = await validate_input(mock_hass, valid_input)
 
-        ***REMOVED*** Should prepend manufacturer
+        # Should prepend manufacturer
         assert result["title"] == "Technicolor XB7 (192.168.100.1)"
 
     @pytest.mark.asyncio
@@ -357,7 +357,7 @@ class TestModemNameFormatting:
 
         result = await validate_input(mock_hass, valid_input)
 
-        ***REMOVED*** Should NOT include "Unknown"
+        # Should NOT include "Unknown"
         assert result["title"] == "Generic Modem (192.168.100.1)"
 
     @pytest.mark.asyncio
@@ -390,7 +390,7 @@ class TestModemNameFormatting:
 
         result = await validate_input(mock_hass, valid_input)
 
-        ***REMOVED*** Detection info should be in result
+        # Detection info should be in result
         assert "detection_info" in result
         assert result["detection_info"] == detection_info
 
@@ -407,20 +407,20 @@ class TestConfigConstants:
             CONF_SCAN_INTERVAL,
         ]
 
-        ***REMOVED*** All should be strings
+        # All should be strings
         for key in required_keys:
             assert isinstance(key, str)
             assert len(key) > 0
 
     def test_defaults_are_reasonable(self):
         """Test that default values make sense."""
-        ***REMOVED*** Scan interval: 10 minutes
+        # Scan interval: 10 minutes
         assert DEFAULT_SCAN_INTERVAL == 600
 
-        ***REMOVED*** Min interval: 1 minute
+        # Min interval: 1 minute
         assert MIN_SCAN_INTERVAL == 60
 
-        ***REMOVED*** Max interval: 30 minutes
+        # Max interval: 30 minutes
         assert MAX_SCAN_INTERVAL == 1800
 
 
@@ -441,7 +441,7 @@ class TestOptionsFlow:
         This prevents the TypeError that caused a 500 error when trying to
         access the configuration UI in Home Assistant.
         """
-        ***REMOVED*** This should not raise TypeError
+        # This should not raise TypeError
         handler = OptionsFlowHandler()
         assert handler is not None
 

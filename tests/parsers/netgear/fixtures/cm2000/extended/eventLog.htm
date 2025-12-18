@@ -35,10 +35,10 @@
     $(document).ready(function()
     {
 //        $('.scroll-pane').jScrollPane('scrollbarMargin:5px');
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
             buttonFilter();
         });
-        $("***REMOVED***target").bind("keypress", function(e) {
+        $("#target").bind("keypress", function(e) {
               if (e.keyCode == 13) {
                  return false;
               }
@@ -121,7 +121,7 @@ function onAddRowCB(newRow, rowId, firstCellIdx, tags)
 
     var cellA = newRow.insertCell(-1);
     cellA.align = "center";
-    //Eason, 201311118 Mantis ***REMOVED***10123 remove ".0".
+    //Eason, 201311118 Mantis #10123 remove ".0".
     cellA.innerHTML = tags[firstCellIdx];
 
     var cellB = newRow.insertCell(-1);

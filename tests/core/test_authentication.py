@@ -112,9 +112,9 @@ class TestFormPlainAuthStrategy:
         """Test successful form authentication."""
         strategy = FormPlainAuthStrategy()
 
-        ***REMOVED*** Mock successful response
+        # Mock successful response
         mock_response = MagicMock()
-        mock_response.url = "http://192.168.1.1/status.asp"  ***REMOVED*** Success indicator
+        mock_response.url = "http://192.168.1.1/status.asp"  # Success indicator
         mock_response.text = "<html>Logged in</html>"
         mock_response.status_code = 200
         mock_session.post.return_value = mock_response
@@ -124,7 +124,7 @@ class TestFormPlainAuthStrategy:
         assert success is True
         assert response is not None
 
-        ***REMOVED*** Verify POST call
+        # Verify POST call
         mock_session.post.assert_called_once()
         call_args = mock_session.post.call_args
         assert call_args[0][0] == "http://192.168.1.1/login.asp"
@@ -143,7 +143,7 @@ class TestFormPlainAuthStrategy:
     def test_form_auth_wrong_config_type(self, mock_session):
         """Test form auth with wrong config type."""
         strategy = FormPlainAuthStrategy()
-        wrong_config = MagicMock()  ***REMOVED*** Not a FormAuthConfig
+        wrong_config = MagicMock()  # Not a FormAuthConfig
 
         success, response = strategy.login(mock_session, "http://192.168.1.1", "admin", "password", wrong_config)
 
@@ -152,21 +152,21 @@ class TestFormPlainAuthStrategy:
 
     def test_form_auth_large_response_indicator(self, mock_session):
         """Test form auth with size-based success indicator."""
-        ***REMOVED*** Config with digit success indicator (response size check)
+        # Config with digit success indicator (response size check)
         config = FormAuthConfig(
             strategy=AuthStrategyType.FORM_PLAIN,
             login_url="/login.asp",
             username_field="username",
             password_field="password",
-            success_indicator="1000",  ***REMOVED*** Response must be > 1000 bytes
+            success_indicator="1000",  # Response must be > 1000 bytes
         )
 
         strategy = FormPlainAuthStrategy()
 
-        ***REMOVED*** Mock large response
+        # Mock large response
         mock_response = MagicMock()
         mock_response.url = "http://192.168.1.1/other.asp"
-        mock_response.text = "x" * 2000  ***REMOVED*** 2000 bytes
+        mock_response.text = "x" * 2000  # 2000 bytes
         mock_response.status_code = 200
         mock_session.post.return_value = mock_response
 

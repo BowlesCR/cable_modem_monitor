@@ -1,6 +1,6 @@
-***REMOVED***!/bin/bash
-***REMOVED*** Post-start message for dev container
-***REMOVED*** This runs every time the container starts
+#!/bin/bash
+# Post-start message for dev container
+# This runs every time the container starts
 
 echo ""
 echo "=========================================="

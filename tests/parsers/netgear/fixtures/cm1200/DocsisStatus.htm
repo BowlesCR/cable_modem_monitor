@@ -34,7 +34,7 @@ var gExtUsPower = "";
 
     $(document).ready(function()
     {
-        $("***REMOVED***target").submit(function() {
+        $("#target").submit(function() {
         });
     });
 
@@ -63,14 +63,14 @@ var gExtUsPower = "";
     /*
     function moveToHTMLend()
     {
-        window.location.href='***REMOVED***helpframe-anchor';
+        window.location.href='#helpframe-anchor';
         setHelpIframeVisible();
     }
     */
 
     function loadhelp(fname,anchname)
     {
-                var pane = window.frames["helpframe"].$('***REMOVED***content');
+                var pane = window.frames["helpframe"].$('#content');
                 var imgSrc=document.getElementById('help-button');
                 if(imgSrc.src.search("up")<0)
                 {
@@ -86,7 +86,7 @@ var gExtUsPower = "";
                         }
                         else
                         {
-                                window.frames["helpframe"].location.href=fname+"_h."+"htm***REMOVED***" + anchname;
+                                window.frames["helpframe"].location.href=fname+"_h."+"htm#" + anchname;
                                 $(".help-frame-div").show();
                         }
 
@@ -187,7 +187,7 @@ function InitUpdateView(tagValues)
     document.getElementById("SecurityComment").innerHTML = tagValues[9];
     document.getElementById("CurrentSystemTime").innerHTML = 'Current System Time:' + tagValues[10];
     document.getElementById("SystemUpTime").innerHTML = 'System Up Time:' + tagValues[14];
-    $("***REMOVED***Startupfreq").val(tagValues[11]);   //20120525 jeffery implement goto freq
+    $("#Startupfreq").val(tagValues[11]);   //20120525 jeffery implement goto freq
     if( tagValues[12] == 0 )
     {
         document.getElementById("DownstreamBondedChannels").innerHTML = 'Downstream Bonded Channels';
@@ -344,7 +344,7 @@ function InitCmIpProvModeUpdateView(tagValues)
     }
     else
     {
-        $('***REMOVED***CmIpProvMode').hide();
+        $('#CmIpProvMode').hide();
     }
 }
 
@@ -451,9 +451,9 @@ function loadSettings()
     var extUsPower = document.getElementsByName("extUsPower")[0].value;
     if(extUsPower == "0")
     {
-        $("***REMOVED***ext_us_pwr_line").hide();
-        $("***REMOVED***ext_us_pwr_title").hide();
-        $("***REMOVED***ext_us_pwr_checkbox").hide();
+        $("#ext_us_pwr_line").hide();
+        $("#ext_us_pwr_title").hide();
+        $("#ext_us_pwr_checkbox").hide();
     }
     else if(extUsPower == "3")
     {

@@ -1,7 +1,7 @@
-***REMOVED*** Normalize all text files to LF line endings
+# Normalize all text files to LF line endings
 * text=auto eol=lf
 
-***REMOVED*** Binary files
+# Binary files
 *.png binary
 *.jpg binary
 *.jpeg binary
@@ -9,8 +9,8 @@
 *.gz binary
 *.tar binary
 
-***REMOVED*** Exclude test fixtures from GitHub language statistics
-***REMOVED*** These are captured modem responses, not code we wrote
+# Exclude test fixtures from GitHub language statistics
+# These are captured modem responses, not code we wrote
 tests/parsers/**/fixtures/**/*.html linguist-vendored
 tests/parsers/**/fixtures/**/*.htm linguist-vendored
 tests/parsers/**/fixtures/**/*.asp linguist-vendored
@@ -19,6 +19,6 @@ tests/parsers/**/fixtures/**/*.json linguist-vendored
 tests/parsers/**/fixtures/**/*.xml linguist-vendored
 tests/parsers/**/fixtures/**/*.jst linguist-vendored
 
-***REMOVED*** HAR captures are also vendored data
+# HAR captures are also vendored data
 captures/** linguist-vendored
 *.har linguist-vendored

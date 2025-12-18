@@ -63,7 +63,7 @@ class TestParseUptime:
     def test_days_hours(self):
         """Test parsing uptime with days and hours."""
         result = parse_uptime_to_seconds("2 days 5 hours")
-        expected = (2 * 86400) + (5 * 3600)  ***REMOVED*** 2 days + 5 hours
+        expected = (2 * 86400) + (5 * 3600)  # 2 days + 5 hours
         assert result == expected
 
     def test_hours_only(self):
@@ -101,7 +101,7 @@ class TestParseUptime:
 
     def test_hms_format(self):
         """Test parsing HH:MM:SS format (e.g., CM600)."""
-        ***REMOVED*** 1308:19:22 = 1308 hours, 19 minutes, 22 seconds
+        # 1308:19:22 = 1308 hours, 19 minutes, 22 seconds
         result = parse_uptime_to_seconds("1308:19:22")
         expected = (1308 * 3600) + (19 * 60) + 22
         assert result == expected
@@ -120,7 +120,7 @@ class TestParseUptime:
 
     def test_days_plus_hms_format(self):
         """Test parsing 'X days HH:MM:SS' format (e.g., Arris S33)."""
-        ***REMOVED*** "7 days 12:34:56" = 7 days + 12 hours + 34 minutes + 56 seconds
+        # "7 days 12:34:56" = 7 days + 12 hours + 34 minutes + 56 seconds
         result = parse_uptime_to_seconds("7 days 12:34:56")
         expected = (7 * 86400) + (12 * 3600) + (34 * 60) + 56
         assert result == expected

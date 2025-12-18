@@ -13,7 +13,7 @@ class SignalQualityAnalyzer:
     def __init__(self):
         """Initialize the signal analyzer."""
         self._history: list[dict[str, Any]] = []
-        self._max_history_hours = 48  ***REMOVED*** Keep 48 hours of data for analysis
+        self._max_history_hours = 48  # Keep 48 hours of data for analysis
 
     def add_sample(self, data: dict[str, Any]) -> None:
         """
@@ -28,7 +28,7 @@ class SignalQualityAnalyzer:
         }
         self._history.append(sample)
 
-        ***REMOVED*** Clean old data (older than max_history_hours)
+        # Clean old data (older than max_history_hours)
         cutoff = datetime.now() - timedelta(hours=self._max_history_hours)
         self._history = [s for s in self._history if s["timestamp"] > cutoff]
 
@@ -61,7 +61,7 @@ class SignalQualityAnalyzer:
                 "signal_status": "unknown",
             }
 
-        ***REMOVED*** Extract recent samples (last 24 hours)
+        # Extract recent samples (last 24 hours)
         cutoff_24h = datetime.now() - timedelta(hours=24)
         recent_samples = [s for s in self._history if s["timestamp"] > cutoff_24h]
 
@@ -73,17 +73,17 @@ class SignalQualityAnalyzer:
                 "signal_status": "unknown",
             }
 
-        ***REMOVED*** Analyze signal stability
+        # Analyze signal stability
         snr_values = self._extract_snr_values(recent_samples)
         power_values = self._extract_power_values(recent_samples)
         error_rates = self._calculate_error_rates(recent_samples)
 
-        ***REMOVED*** Calculate stability metrics
+        # Calculate stability metrics
         snr_variance = statistics.stdev(snr_values) if len(snr_values) > 1 else 0
         power_variance = statistics.stdev(power_values) if len(power_values) > 1 else 0
         error_trend = self._calculate_error_trend(error_rates)
 
-        ***REMOVED*** Determine signal status and recommendation
+        # Determine signal status and recommendation
         return self._calculate_recommendation(
             current_interval=current_interval,
             snr_variance=snr_variance,
@@ -129,15 +129,15 @@ class SignalQualityAnalyzer:
         if len(error_rates) < 2:
             return "stable"
 
-        ***REMOVED*** Compare recent half to older half
+        # Compare recent half to older half
         mid = len(error_rates) // 2
         older_avg = statistics.mean(error_rates[:mid])
         recent_avg = statistics.mean(error_rates[mid:])
 
-        ***REMOVED*** If recent errors are 50% higher, consider increasing
+        # If recent errors are 50% higher, consider increasing
         if recent_avg > older_avg * 1.5:
             return "increasing"
-        ***REMOVED*** If recent errors are significantly lower
+        # If recent errors are significantly lower
         elif recent_avg < older_avg * 0.5:
             return "decreasing"
         else:
@@ -162,37 +162,37 @@ class SignalQualityAnalyzer:
 
         Power variance threshold: 3 dBmV
         """
-        ***REMOVED*** Determine signal status
+        # Determine signal status
         if error_trend == "increasing" or snr_variance > 10:
             signal_status = "problematic"
-            recommended = 60  ***REMOVED*** 1 minute - frequent monitoring
+            recommended = 60  # 1 minute - frequent monitoring
             confidence = "high"
             reason = "Signal quality degrading - recommend frequent monitoring"
 
         elif snr_variance > 5 or power_variance > 3:
             signal_status = "fluctuating"
-            recommended = 180  ***REMOVED*** 3 minutes
+            recommended = 180  # 3 minutes
             confidence = "medium"
             reason = "Signal fluctuating - moderate monitoring recommended"
 
         elif snr_variance < 2 and power_variance < 2 and error_trend != "increasing":
             signal_status = "very_stable"
-            recommended = 900  ***REMOVED*** 15 minutes
+            recommended = 900  # 15 minutes
             confidence = "high"
             reason = "Signal very stable - can reduce polling frequency"
 
-        else:  ***REMOVED*** Stable
+        else:  # Stable
             signal_status = "stable"
-            recommended = 300  ***REMOVED*** 5 minutes (standard)
+            recommended = 300  # 5 minutes (standard)
             confidence = "medium"
             reason = "Signal stable - standard polling interval recommended"
 
-        ***REMOVED*** Consider sample count for confidence
-        if sample_count < 12:  ***REMOVED*** Less than half a day of 30-min samples
+        # Consider sample count for confidence
+        if sample_count < 12:  # Less than half a day of 30-min samples
             confidence = "low"
 
-        ***REMOVED*** Don't recommend drastic changes from current
-        ***REMOVED*** Max 2x increase or 50% decrease at once
+        # Don't recommend drastic changes from current
+        # Max 2x increase or 50% decrease at once
         if recommended > current_interval * 2:
             recommended = current_interval * 2
             reason += " (gradual adjustment)"
@@ -200,7 +200,7 @@ class SignalQualityAnalyzer:
             recommended = int(current_interval * 0.5)
             reason += " (gradual adjustment)"
 
-        ***REMOVED*** Clamp to valid range (60-1800 seconds)
+        # Clamp to valid range (60-1800 seconds)
         recommended = max(60, min(1800, recommended))
 
         return {

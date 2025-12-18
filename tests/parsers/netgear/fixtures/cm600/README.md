@@ -1,8 +1,8 @@
-***REMOVED*** Netgear CM600 Test Fixtures
+# Netgear CM600 Test Fixtures
 
 
 <!-- AUTO-GENERATED FROM metadata.yaml - DO NOT EDIT BELOW -->
-***REMOVED******REMOVED*** Quick Facts
+## Quick Facts
 
 | Spec | Value |
 |------|-------|
@@ -14,7 +14,7 @@
 
 <!-- END AUTO-GENERATED -->
 
-***REMOVED******REMOVED*** Modem Information
+## Modem Information
 
 | Property | Value |
 |----------|-------|
@@ -33,38 +33,38 @@
 | **Captured By** | @chairstacker |
 | **Capture Date** | November 2025 |
 
-***REMOVED******REMOVED*** Links
+## Links
 
 - [Netgear CM600 Product Page](https://www.netgear.com/home/wifi/modems/cm600/)
 - [Netgear CM600 Support (EOL)](https://www.netgear.com/support/product/cm600)
 - [CM600 Data Sheet (PDF)](https://www.downloads.netgear.com/files/GDC/datasheet/en/CM600.pdf)
 - [Quick Start Guide (PDF)](https://www.downloads.netgear.com/files/GDC/CM600/CM600_All_MSOs_QSG_EN.pdf)
-- [Related Issue: ***REMOVED***3](https://github.com/solentlabs/cable_modem_monitor/issues/3)
+- [Related Issue: #3](https://github.com/solentlabs/cable_modem_monitor/issues/3)
 
-***REMOVED******REMOVED*** Authentication
+## Authentication
 
 - **Method**: HTTP Basic Authentication
 - **Default Username**: `admin`
 - **Default Password**: `password`
 - **Default IP**: `192.168.100.1`
 
-***REMOVED******REMOVED*** Directory Structure
+## Directory Structure
 
 ```
 cm600/
-├── DocsisStatus.asp      ***REMOVED*** Core - channel data
-├── RouterStatus.asp      ***REMOVED*** Core - system info
-├── DashBoard.asp         ***REMOVED*** Core - overview
-├── DocsisOffline.asp     ***REMOVED*** Core - offline state
-├── index.html            ***REMOVED*** Core - detection
+├── DocsisStatus.asp      # Core - channel data
+├── RouterStatus.asp      # Core - system info
+├── DashBoard.asp         # Core - overview
+├── DocsisOffline.asp     # Core - offline state
+├── index.html            # Core - detection
 ├── README.md
-└── extended/             ***REMOVED*** Reference files
+└── extended/             # Reference files
     ├── EventLog.asp
     ├── GPL_rev1.htm
     └── SetPassword.asp
 ```
 
-***REMOVED******REMOVED*** Core Fixtures
+## Core Fixtures
 
 | File | Description | Key Data |
 |------|-------------|----------|
@@ -74,7 +74,7 @@ cm600/
 | `DocsisOffline.asp` | Offline error page | Error display template |
 | `index.html` | Main frameset page | Firmware version, device type |
 
-***REMOVED******REMOVED*** Extended Fixtures (`extended/`)
+## Extended Fixtures (`extended/`)
 
 | File | Description |
 |------|-------------|
@@ -82,7 +82,7 @@ cm600/
 | `SetPassword.asp` | Password change page (form structure only) |
 | `GPL_rev1.htm` | GPL license (no data) |
 
-***REMOVED******REMOVED*** Known Firmware Limitations
+## Known Firmware Limitations
 
 The CM600 firmware (V1.01.22) does **NOT** expose:
 - **System Uptime** - Index [35] in RouterStatus is always empty
@@ -93,11 +93,11 @@ These fields exist in the HTML as placeholders but are never populated by the fi
 
 ---
 
-***REMOVED******REMOVED*** Complete Data Field Inventory
+## Complete Data Field Inventory
 
-***REMOVED******REMOVED******REMOVED*** DocsisStatus.asp
+### DocsisStatus.asp
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** InitTagValue() - DOCSIS Status
+#### InitTagValue() - DOCSIS Status
 | Index | Field | Example Value | Notes |
 |-------|-------|---------------|-------|
 | 0 | Acquire DS Frequency | `141000000` | Hz |
@@ -115,7 +115,7 @@ These fields exist in the HTML as placeholders but are never populated by the fi
 | 12 | DS Partial Service | `0` | 0=full, 1=partial |
 | 13 | US Partial Service | `0` | 0=full, 1=partial |
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** InitDsTableTagValue() - Downstream Channels
+#### InitDsTableTagValue() - Downstream Channels
 | Index | Field | Example Value | Notes |
 |-------|-------|---------------|-------|
 | 0 | Channel Count | `8` | Number of DS channels |
@@ -145,7 +145,7 @@ These fields exist in the HTML as placeholders but are never populated by the fi
 | 7 | Locked | QAM256 | 7 | 177 MHz | -7.1 dBmV | 42.2 dB | 0 | 0 |
 | 8 | Locked | QAM256 | 8 | 183 MHz | -7.2 dBmV | 42.4 dB | 0 | 0 |
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** InitUsTableTagValue() - Upstream Channels
+#### InitUsTableTagValue() - Upstream Channels
 | Index | Field | Example Value | Notes |
 |-------|-------|---------------|-------|
 | 0 | Channel Count | `4` | Number of US channels |
@@ -169,14 +169,14 @@ These fields exist in the HTML as placeholders but are never populated by the fi
 | 3 | Locked | ATDMA | 3 | 2560 Ksym/s | 20.0 MHz | 49.0 dBmV |
 | 4 | Locked | ATDMA | 4 | 2560 Ksym/s | 23.3 MHz | 48.3 dBmV |
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** InitProvRateTableTagValue() - Provisioned Rates
+#### InitProvRateTableTagValue() - Provisioned Rates
 | Index | Field | Example Value | Notes |
 |-------|-------|---------------|-------|
 | 0 | Is Genie | `0` | 0=no, 1=yes |
 | 1 | DS Provisioned Rate | `0` | bps (0 = not available) |
 | 2 | US Provisioned Rate | `0` | bps (0 = not available) |
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** InitCmIpProvModeTag() - IP Provisioning
+#### InitCmIpProvModeTag() - IP Provisioning
 | Index | Field | Example Value | Notes |
 |-------|-------|---------------|-------|
 | 0 | Is Retail | `1` | 0=ISP, 1=retail |
@@ -185,14 +185,14 @@ These fields exist in the HTML as placeholders but are never populated by the fi
 
 ---
 
-***REMOVED******REMOVED******REMOVED*** RouterStatus.asp
+### RouterStatus.asp
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** InitTagValue() - System Information
+#### InitTagValue() - System Information
 | Index | Field | Example Value | Notes |
 |-------|-------|---------------|-------|
 | 0 | Hardware Version | `1.01B` | |
 | 1 | Firmware Version | `V1.01.22` | |
-| 2 | Serial Number | `***SERIAL***` | Redacted in fixtures |
+| 2 | Serial Number | `4DF168WV011F3` | Redacted in fixtures |
 | 3 | DOCSIS Mode | `1` | |
 | 4 | Cable MAC | `XX:XX:XX:XX:XX:XX` | Redacted |
 | 5 | Internet IP/Mask | `***.***.***.173/16` | Redacted |
@@ -217,9 +217,9 @@ These fields exist in the HTML as placeholders but are never populated by the fi
 
 ---
 
-***REMOVED******REMOVED******REMOVED*** DashBoard.asp
+### DashBoard.asp
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** InitTagValue() - Dashboard Status
+#### InitTagValue() - Dashboard Status
 | Index | Field | Example Value | Notes |
 |-------|-------|---------------|-------|
 | 0 | Unknown | `0` | |
@@ -235,9 +235,9 @@ These fields exist in the HTML as placeholders but are never populated by the fi
 
 ---
 
-***REMOVED******REMOVED******REMOVED*** index.html
+### index.html
 
-***REMOVED******REMOVED******REMOVED******REMOVED*** InitTagValue() - Basic Info
+#### InitTagValue() - Basic Info
 | Index | Field | Example Value | Notes |
 |-------|-------|---------------|-------|
 | 0 | Firmware Version | `V1.01.22` | |
@@ -247,14 +247,14 @@ These fields exist in the HTML as placeholders but are never populated by the fi
 
 ---
 
-***REMOVED******REMOVED*** Contributor Information
+## Contributor Information
 
-- **Original Issue**: [***REMOVED***3 - Netgear CM600 Login Doesn't Work](https://github.com/solentlabs/cable_modem_monitor/issues/3)
+- **Original Issue**: [#3 - Netgear CM600 Login Doesn't Work](https://github.com/solentlabs/cable_modem_monitor/issues/3)
 - **Contributor**: @chairstacker
 - **Fixtures Captured**: November 2025
 - **Parser Status**: Verified working (v3.5.1+)
 
-***REMOVED******REMOVED*** Notes for Parser Development
+## Notes for Parser Development
 
 1. **Primary data source**: `DocsisStatus.asp` contains all channel data
 2. **System info**: `RouterStatus.asp` has hardware/firmware versions

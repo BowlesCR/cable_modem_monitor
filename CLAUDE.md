@@ -1,27 +1,27 @@
-***REMOVED*** Claude Rules
+# Claude Rules
 
 > **For project context**: See `AI_CONTEXT.md` for workflows, architecture, and development guidance.
 >
 > **This file**: Claude-specific behavioral constraints.
 
-***REMOVED******REMOVED*** Pre-Push Verification - ALWAYS Run Before Push
+## Pre-Push Verification - ALWAYS Run Before Push
 
 Before pushing ANY commits, run these checks on the ENTIRE project:
 
 ```bash
-***REMOVED*** Run linting on entire project (not just custom_components/)
+# Run linting on entire project (not just custom_components/)
 ruff check .
 
-***REMOVED*** Run full test suite
+# Run full test suite
 pytest
 
-***REMOVED*** If either fails, fix before pushing
+# If either fails, fix before pushing
 ```
 
 **Why?** CI runs on the entire project. Pre-commit hooks only check staged files.
 Skipping this causes CI failures that should have been caught locally.
 
-***REMOVED******REMOVED*** Irreversible Operations - STOP and VERIFY
+## Irreversible Operations - STOP and VERIFY
 
 When the user gives explicit constraints (e.g., "without closing the PR", "don't delete X"):
 1. **Treat these as HARD BLOCKERS** - not suggestions
@@ -35,7 +35,7 @@ Examples of irreversible operations requiring verification:
 - Tag deletions
 - Any git operation with `--force`
 
-***REMOVED******REMOVED*** Release Checklist - Verify ALL Before Saying "Ready"
+## Release Checklist - Verify ALL Before Saying "Ready"
 
 1. [ ] Run `scripts/release.py <version>` to bump versions
 2. [ ] `CHANGELOG.md` has entry for this version
@@ -43,8 +43,8 @@ Examples of irreversible operations requiring verification:
 
 **NEVER manually edit version numbers. ALWAYS use `scripts/release.py`.**
 
-***REMOVED******REMOVED*** PR and Issue Rules
+## PR and Issue Rules
 
-**NEVER use "Closes ***REMOVED***X", "Fixes ***REMOVED***X", or similar auto-close keywords.**
+**NEVER use "Closes #X", "Fixes #X", or similar auto-close keywords.**
 - Users should close their own tickets after confirming fixes work
-- Use "Related to ***REMOVED***X" or "Addresses ***REMOVED***X" instead
+- Use "Related to #X" or "Addresses #X" instead

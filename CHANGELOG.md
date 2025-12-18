@@ -1,32 +1,36 @@
-***REMOVED*** Changelog
+# Changelog
 
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-***REMOVED******REMOVED*** [Unreleased]
+## [Unreleased]
 
-***REMOVED******REMOVED*** [3.10.1] - 2025-12-17
+### Fixed
+- **PII Sanitization** - Extended sanitizer to catch Motorola JavaScript password variables (`var CurrentPwAdmin = 'x'`) missed by v3.9.2 tagValueList fix
+- **Fixture PII** - Sanitized passwords, serial numbers, and email in 5 fixture files (MB7621, MB8611, CM600, XB7, SB6190)
 
-***REMOVED******REMOVED******REMOVED*** Highlights
+## [3.10.1] - 2025-12-17
+
+### Highlights
 
 🏪 **HACS Default Repository Submission** - Preparing for inclusion in the HACS default repository list
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Hassfest Validation** - Added hassfest CI workflow required for HACS default submission
 - **AI Skills** - Added modem-request-triage and issue-to-fixture AI skills for development workflow
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Manifest Key Order** - Sorted manifest.json keys per Home Assistant requirements (domain, name, then alphabetical)
 - **Test Warnings** - Resolved implicit string concatenation warnings in test_s33.py
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Scripts Cleanup** - Removed 6 superseded maintenance scripts
 
-***REMOVED******REMOVED*** [3.10.0] - 2025-12-16
+## [3.10.0] - 2025-12-16
 
-***REMOVED******REMOVED******REMOVED*** Highlights
+### Highlights
 
 📡 **3 New Modem Parsers** - Netgear C7000v2, Netgear CM1200, and Arris CM820B now supported
 
@@ -43,73 +47,73 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 🌍 **12-Language Support** - Added 6 new languages: Dutch, Italian, Polish, Swedish, Russian, Ukrainian
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Netgear C7000v2 Parser** - Support for Netgear C7000v2 cable modem/router combo (DOCSIS 3.0)
-- **Netgear CM1200 Parser** - Support for Netgear Nighthawk CM1200 (DOCSIS 3.1) - contributed via Issue ***REMOVED***63
+- **Netgear CM1200 Parser** - Support for Netgear Nighthawk CM1200 (DOCSIS 3.1) - contributed via Issue #63
 - **Arris CM820B Parser** - Support for Arris CM820B EuroDOCSIS 3.0 modem - community contribution from @dimkalinux
 - **Unified Status Sensor** - New `sensor.cable_modem_status` combines connection health and DOCSIS lock state into single pass/fail sensor
 - **Dashboard Generator Service** - New `generate_dashboard` service returns ready-to-use Lovelace YAML for all modem channels
-- **S33 Firmware Version** - Added `GetArrisDeviceStatus` HNAP action to retrieve firmware version (Issue ***REMOVED***32)
+- **S33 Firmware Version** - Added `GetArrisDeviceStatus` HNAP action to retrieve firmware version (Issue #32)
 - **ICMP Skip Support** - Parsers can declare `supports_icmp = False` to skip ping checks for modems that block ICMP
 - **12-Language Support** - Added Dutch, Italian, Polish, Swedish, Russian, and Ukrainian translations
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Status Sensor States** - Simplified to pass/fail states: Operational, ICMP Blocked, Partial Lock, Not Locked, Parser Error, Unresponsive
 
-***REMOVED******REMOVED******REMOVED*** Removed
+### Removed
 - **Deprecated Sensors** - Removed `cable_modem_connection_status` and `cable_modem_health_status` (use unified `cable_modem_status` instead)
 
-***REMOVED******REMOVED******REMOVED*** Addressed
-- **S33 ICMP Blocked** - S33 no longer shows "icmp_blocked" health status; ping check skipped for this modem (Issue ***REMOVED***32)
-- **S33 Uptime Parsing** - Support "X days HH:MM:SS" format returned by S33 modem (Issue ***REMOVED***32)
-- **S33 Restart** - Fetch current EEE/LED config before reboot to match browser behavior (Issue ***REMOVED***32)
+### Addressed
+- **S33 ICMP Blocked** - S33 no longer shows "icmp_blocked" health status; ping check skipped for this modem (Issue #32)
+- **S33 Uptime Parsing** - Support "X days HH:MM:SS" format returned by S33 modem (Issue #32)
+- **S33 Restart** - Fetch current EEE/LED config before reboot to match browser behavior (Issue #32)
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **MB7621 Channel ID** - Channels now use DOCSIS Channel ID instead of row counter
 - **CM2000 OFDM Parsing** - Added missing OFDM downstream/upstream channel parsing for DOCSIS 3.1 channels
 - **MB8611 OFDM Capability** - Declared OFDM capability (channels were already parsed but capability wasn't flagged)
 - **Config Flow Asterisk** - Correctly display asterisk for unverified parsers in modem selection
 
-***REMOVED******REMOVED******REMOVED*** Security
-- **Netgear tagValueList Sanitization** - WiFi credentials in Netgear's positional `tagValueList` format are now properly sanitized in diagnostics (Issue ***REMOVED***61)
+### Security
+- **Netgear tagValueList Sanitization** - WiFi credentials in Netgear's positional `tagValueList` format are now properly sanitized in diagnostics (Issue #61)
 
-***REMOVED******REMOVED******REMOVED*** Documentation
+### Documentation
 - **Documentation Restructure** - Consolidated scattered docs into clear user journeys; net reduction of ~930 lines
 - **MODEM_REQUEST.md** - New comprehensive guide for modem data submissions with PII review checklist
 - **SB8200 Reboot** - Added historical context explaining why reboot is disabled (SNMP-only)
 - **FIXTURES.md** - Added Protocol (HNAP/HTML) and Chipset columns with reference sections
 - **README/TROUBLESHOOTING** - Updated status sensor documentation to reflect unified sensor
 
-***REMOVED******REMOVED*** [3.9.2] - 2025-12-13
+## [3.9.2] - 2025-12-13
 
-***REMOVED******REMOVED******REMOVED*** Security
-- **PII Sanitization** - Addressed diagnostics sanitization gap for WiFi credentials, device names, serial numbers, and SSIDs in Netgear `tagValueList` JavaScript variables (Related to ***REMOVED***61)
+### Security
+- **PII Sanitization** - Addressed diagnostics sanitization gap for WiFi credentials, device names, serial numbers, and SSIDs in Netgear `tagValueList` JavaScript variables (Related to #61)
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Device Name Detection** - Sanitization now detects and redacts device names appearing before IP/MAC addresses in access control lists
 - **PII Check CI Job** - New CI workflow validates fixture files for unsanitized PII on every PR
 - **Enhanced PII Checker** - Pre-commit hook now detects `tagValueList` credentials and validates HAR files
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Fixture PII Cleanup** - Redacted WiFi passwords, serial numbers, SSIDs, WEP keys, and device identifiers from existing test fixtures
 
-***REMOVED******REMOVED*** [3.9.1] - 2025-12-11
+## [3.9.1] - 2025-12-11
 
-***REMOVED******REMOVED******REMOVED*** Addressed
-- **S33 HNAP Empty Action Value** - S33 parser now uses empty string `""` instead of empty dict `{}` for HNAP action values, resolving 500 errors (Related to ***REMOVED***32)
-- **MB8611 Restart PrivateKey Cookie** - Added missing `PrivateKey` cookie required for authenticated actions like modem restart (Related to ***REMOVED***6)
+### Addressed
+- **S33 HNAP Empty Action Value** - S33 parser now uses empty string `""` instead of empty dict `{}` for HNAP action values, resolving 500 errors (Related to #32)
+- **MB8611 Restart PrivateKey Cookie** - Added missing `PrivateKey` cookie required for authenticated actions like modem restart (Related to #6)
 - **Diagnostics Logging** - Removed redundant logging imports
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **CI Dependencies** - Bumped actions/checkout from 4 to 6
 
-***REMOVED******REMOVED******REMOVED*** Documentation
+### Documentation
 - **README Improvements** - Updated screenshots and added troubleshooting guidance
 - **CAPTURE_GUIDE** - Clarified HNAP vs HTML capture requirements
 
-***REMOVED******REMOVED*** [3.9.0] - 2025-12-09
+## [3.9.0] - 2025-12-09
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Arris/CommScope S33 Parser** - Full support for DOCSIS 3.1 modem with HNAP authentication
 - **ParserStatus Enum** - New lifecycle states for parser development (experimental, verified, deprecated)
 - **HNAP Request Logging** - Debug logs now show exact JSON payloads sent to modem (helps compare with browser)
@@ -118,110 +122,110 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Fixture Requirements Guide** - `docs/FIXTURE_REQUIREMENTS.md` with metadata.yaml template and PII checklist
 - **Examples Documentation** - Dashboard and automation examples moved to `docs/EXAMPLES.md`
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **MB8611 HNAP Login** - Added `PrivateLogin` field to login requests (potential fix for auth failures)
 - **TC4400 Parser Verified** - Updated verification status with community confirmation
 - **XB7 Parser Verified** - Updated verification status with community confirmation
 - **README Restructure** - Reduced from 756 to 371 lines (51% reduction) following single-source-of-truth principle
 - **PR Template** - Added explicit fixture checkboxes for PII scrubbing and metadata.yaml
 
-***REMOVED******REMOVED******REMOVED*** Removed
+### Removed
 - **Entity Cleanup Feature** - Removed vestigial v2.0 migration code (entity_cleanup.py, CleanupEntitiesButton, cleanup_entities service)
 - **Motorola Generic Parser** - Removed obsolete parser superseded by model-specific parsers
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **HNAP Auth Cache** - Clear auth cache after modem restart to prevent stale token errors
 - **MB8611 Restart Action** - Use correct HNAP action for restart command
 - **Pre-commit Hook Compatibility** - Support both .venv and pyenv environments
 
-***REMOVED******REMOVED******REMOVED*** Developer Experience
+### Developer Experience
 - **Welcome Task** - New VS Code task for first-time dev container setup
 - **Port Conflict Resolution** - Improved handling of port 8123 conflicts
 - **Fixture PII Validation** - Pre-commit hook checks for MAC addresses and public IPs
 
-***REMOVED******REMOVED*** [3.8.6] - 2025-12-01
+## [3.8.6] - 2025-12-01
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Test Fixtures License** - Added LICENSE file for test fixture data directory
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **DevContainer Docker Compatibility** - Added `DOCKER_API_VERSION` env var for host daemon compatibility
 - **Setup Script pyenv Support** - Auto-initialize pyenv, prefer `python` over `python3` for shim compatibility
 - **Setup Python Detection** - Read required version from pyproject.toml, platform-specific install instructions
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Port Cleanup Reliability** - Use `fuser` for reliable port 8123 cleanup (fixes VS Code port forwarding conflicts)
 - **VS Code Tasks** - Added "Fix Dev Container" task to reinstall dependencies when tools are missing
 
-***REMOVED******REMOVED*** [3.8.5] - 2025-11-30
+## [3.8.5] - 2025-11-30
 
-***REMOVED******REMOVED******REMOVED*** Fixed
-- **SB8200 Uptime Sensor** - Fix uptime showing "Unknown" by using correct `system_uptime` key (Issue ***REMOVED***42)
+### Fixed
+- **SB8200 Uptime Sensor** - Fix uptime showing "Unknown" by using correct `system_uptime` key (Issue #42)
 
-***REMOVED******REMOVED*** [3.8.4] - 2025-11-30
+## [3.8.4] - 2025-11-30
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Verified Modem Metadata** - Parser metadata with release dates, DOCSIS versions, and fixture paths
 - **i18n Translations** - Internationalization support for integration strings
 - **SB8200 Uptime Support** - Parse uptime from cmswinfo.html product info page
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Diagnostic Improvements** - Organized fixture files and improved capture workflow
 
-***REMOVED******REMOVED******REMOVED*** Fixed
-- **CodeQL Alerts** - Remove unused stdout/stderr variables (alerts ***REMOVED***3, ***REMOVED***4)
+### Fixed
+- **CodeQL Alerts** - Remove unused stdout/stderr variables (alerts #3, #4)
 - **Release Script** - Don't create tag with --no-push flag in PR workflow
 
-***REMOVED******REMOVED*** [3.8.3] - 2025-11-29
+## [3.8.3] - 2025-11-29
 
-***REMOVED******REMOVED******REMOVED*** Added
-- **Comprehensive HTML Capture** - Discovers all modem resources for fixture database (Issue ***REMOVED***42)
+### Added
+- **Comprehensive HTML Capture** - Discovers all modem resources for fixture database (Issue #42)
   - Parses JavaScript files for URL patterns (menu configs, AJAX endpoints)
   - Extracts jQuery `.load()` fragments (header/footer templates)
   - Iterative discovery: fetches JS → finds more URLs → repeats
   - 2x improvement in captured data across all modems
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Capture Data Format** - Renamed `html` to `content` field to support JS, CSS, JSON responses
 - **Login Method Standardization** - All parsers now return `tuple[bool, str | None]` consistently
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Diagnostics Timestamp** - Log entries now show collection time instead of `0`
 - **Mypy Type Error** - Added type annotation in html_crawler.py for BeautifulSoup rel attribute
 
-***REMOVED******REMOVED*** [3.8.2] - 2025-11-28
+## [3.8.2] - 2025-11-28
 
-***REMOVED******REMOVED******REMOVED*** Added
-- **ARRIS SB8200 Parser** - Full support for DOCSIS 3.1 modem with 32 downstream + 3 upstream channels (Issue ***REMOVED***42)
+### Added
+- **ARRIS SB8200 Parser** - Full support for DOCSIS 3.1 modem with 32 downstream + 3 upstream channels (Issue #42)
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **MB8611 Private Key Persistence** - Fix HNAP authentication key storage between sessions
 
-***REMOVED******REMOVED*** [3.8.1] - 2025-11-28
+## [3.8.1] - 2025-11-28
 
-***REMOVED******REMOVED******REMOVED*** Added
-- **CM2000 Software Version** - Parse firmware version from index.htm InitTagValue() (Issue ***REMOVED***38)
-- **CM2000 Restart Support** - Remote modem restart via RouterStatus.htm buttonSelect=2 (Issue ***REMOVED***38)
-- **SB8200 Fixtures** - Test fixtures for future ARRIS SB8200 parser (Issue ***REMOVED***42)
+### Added
+- **CM2000 Software Version** - Parse firmware version from index.htm InitTagValue() (Issue #38)
+- **CM2000 Restart Support** - Remote modem restart via RouterStatus.htm buttonSelect=2 (Issue #38)
+- **SB8200 Fixtures** - Test fixtures for future ARRIS SB8200 parser (Issue #42)
   - Full HTML capture with 32 downstream + 3 upstream channels
   - No authentication required (public status page)
-- **MB8600 Fixtures** - Test fixtures for future Motorola MB8600 parser (Issue ***REMOVED***40)
+- **MB8600 Fixtures** - Test fixtures for future Motorola MB8600 parser (Issue #40)
   - Login page with HNAP JavaScript references
   - Implementation guide for HNAP authentication
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **CM2000 Fixtures** - Updated all 12 fixture pages from latest diagnostics
 - **Issue Templates** - Rewritten to prioritize Fallback Mode + Capture HTML workflow
   - Added PII warnings for manual HTML capture
   - Improved auth details field to discourage password sharing
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **CM2000 Version Regex** - Fixed regex matching commented lines in InitTagValue()
 
-***REMOVED******REMOVED*** [3.8.0] - 2025-11-28
+## [3.8.0] - 2025-11-28
 
-***REMOVED******REMOVED******REMOVED*** Added
-- **Netgear CM2000 Parser** - Full support for DOCSIS 3.1 cable modem (Issue ***REMOVED***38)
+### Added
+- **Netgear CM2000 Parser** - Full support for DOCSIS 3.1 cable modem (Issue #38)
   - Downstream and upstream channel parsing
   - System information extraction
   - Comprehensive test suite with fixtures
@@ -235,7 +239,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **MB8611 HNAP Authentication** - Challenge-response auth implementation
   - HMAC-MD5 based authentication for Motorola MB8611/MB8612
   - Credit: @BowlesCR (Chris Bowles) for reverse-engineering the auth flow
-  - Credit: @cvonk (Coert Vonk) for HAR capture and persistent debugging support (Issue ***REMOVED***6)
+  - Credit: @cvonk (Coert Vonk) for HAR capture and persistent debugging support (Issue #6)
   - Prior art: xNinjaKittyx/mb8600 repository
   - ⚠️ UNVERIFIED - awaiting real hardware confirmation
 
@@ -250,7 +254,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Interactive mode guides users through deployment options
   - New `docs/TESTING_ON_HA.md` guide for manual deployment
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **MB8611 Fixture Consolidation** - Merged mb8611_hnap and mb8611_static into single mb8611 directory
   - Removed non-functional static parser (never authenticated)
   - Preserved MotoStatusLog.html and MotoStatusSecurity.html from static for field mapping reference
@@ -261,18 +265,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `capture_modem.py` and `sanitize_har.py` now work with just `pip install playwright`
   - Removes friction for contributors capturing modem data (California PII laws compliance)
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Unverified Parser Selection** - Fixed bug where selecting an unverified parser fell back to autodiscovery
   - The " *" suffix marking unverified parsers wasn't stripped during lookup
-  - Credit: @BowlesCR for discovering the issue (Issue ***REMOVED***40)
+  - Credit: @BowlesCR for discovering the issue (Issue #40)
 - **GitHub Language Stats** - Added `.gitattributes` linguist-vendored rules
   - HTML/JSON fixtures no longer counted as project code
 - **Pre-commit Config** - Migrated deprecated `commit` stage to `pre-commit`
 - **PII Sanitization** - Updated fixture files with redacted MAC addresses
 
-***REMOVED******REMOVED*** [3.7.2] - 2025-11-26
+## [3.7.2] - 2025-11-26
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **C3700 Uptime Support** - System uptime and last boot time now available
   - Parses uptime from RouterStatus.htm tagValues[33] (e.g., "5 days 12:34:56")
   - Calculates last boot time from uptime
@@ -292,7 +296,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Auto-detects devcontainer environment
   - Prompts for HTTP Basic Auth credentials when needed
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **IPv6 Sanitizer** - No longer incorrectly matches time formats
   - Times like "12:34:56" were being converted to `***IPv6***`
   - Now uses callback to only replace strings containing hex letters (a-f)
@@ -303,16 +307,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Test Mock Paths** - Fixed 6 tests broken by import reorganization
   - Updated mock patch paths for AuthFactory in multiple test files
 
-***REMOVED******REMOVED*** [3.7.1] - 2025-11-25
+## [3.7.1] - 2025-11-25
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **CM600 Uptime Support** - System uptime and last boot time now available
   - Parses HH:MM:SS uptime format (e.g., "1308:19:22" = 1308 hours)
   - Calculates last boot time from uptime
   - Added `SYSTEM_UPTIME` and `LAST_BOOT_TIME` capabilities
-  - Confirmed working by user @chairstacker (Issue ***REMOVED***3)
+  - Confirmed working by user @chairstacker (Issue #3)
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Uptime Parser Enhancement** - `parse_uptime_to_seconds()` now handles HH:MM:SS format
   - Supports hours exceeding 24 (long uptimes like "1308:19:22")
   - Backwards compatible with existing formats ("5d 12h 30m 15s")
@@ -320,18 +324,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **PII Checker Improvement** - Recognizes uptime format as false positive
   - Prevents HH:MM:SS uptime strings from being flagged as IPv6 addresses
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **CM600 Documentation** - Corrected docstring that incorrectly stated uptime was unavailable
 - **CM600 Test Fixture** - Updated with realistic uptime data instead of scrubbed placeholder
 
-***REMOVED******REMOVED******REMOVED*** Testing
+### Testing
 - Improved cm600.py coverage: 75% → 90%
 - Improved utils.py coverage: 65% → 85%
 - Added 12 new tests for multi-page parsing, restart scenarios, detection methods
 
-***REMOVED******REMOVED*** [3.7.0] - 2025-11-25
+## [3.7.0] - 2025-11-25
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Parser Capabilities System** - Standardized capability declarations across all parsers
   - New `ModemCapability` enum defines standard capabilities (uptime, channels, restart, etc.)
   - Each parser declares supported features via `capabilities` class attribute
@@ -360,7 +364,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `scripts/dev/setup-git-email.sh` - Configure Git email for contributions
   - `.github/workflows/check-commit-email.yml` - Verify commit attribution
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **CM600 Restart Improvements**
   - Added response logging for restart command debugging
   - Handle connection drop as expected success during reboot
@@ -370,15 +374,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Deleted `test_generic.py`, moved restart detection tests to `test_mb7621.py`
   - All Motorola MB-series tests now consolidated in appropriate model-specific files
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Fixture PII Sanitization** - Sanitized all existing fixture files
   - MAC addresses replaced with `XX:XX:XX:XX:XX:XX`
   - Public IPs replaced with RFC 5737 TEST-NET addresses (203.0.113.x)
   - Serial numbers redacted in README files
 
-***REMOVED******REMOVED*** [3.6.0] - 2025-11-25
+## [3.6.0] - 2025-11-25
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Parser Verification Status System** - New transparency framework for modem parser reliability
   - All parsers now include `verified` boolean flag and `verification_source` documentation
   - Base parser defaults to `verified = False`, requiring explicit verification for each model
@@ -401,7 +405,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Alternative reporting path via Home Assistant Community Forums for non-GitHub users
   - Significantly reduced friction for community verification reports
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **README Modem Support Tables** - Reorganized for transparency and accuracy
   - ✅ Verified Working: Only 4 confirmed models (Arris SB6141, Motorola MB7621, Netgear C3700, Netgear CM600)
   - ⚠️ Unverified Parsers: Parsers needing user confirmation
@@ -410,7 +414,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Motorola MB8611 Status** - Correctly documented as non-working
   - Removed from "Verified Working" list (was incorrectly listed)
   - Added to "Known Issues" section with specific problems documented
-  - HNAP variant: SSL certificate and protocol issues (Issues ***REMOVED***4, ***REMOVED***6)
+  - HNAP variant: SSL certificate and protocol issues (Issues #4, #6)
   - Static variant: Untested with limited features
 - **Release Script Enhancements** - Comprehensive pre-deployment validation added
   - Now runs full test suite before release
@@ -421,7 +425,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added `--skip-tests` and `--skip-quality` flags for flexibility
   - Prevents CI failures by running identical checks locally before push
 
-***REMOVED******REMOVED******REMOVED*** Developer Experience
+### Developer Experience
 - **Docker Status Checking** - Added cross-platform Docker check helper (`scripts/dev/check-docker.py`)
   - Verifies Docker is installed and running before Docker operations
   - Provides platform-specific error messages for Windows, macOS, and Linux
@@ -436,7 +440,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Removed emoji from welcome text to fix Windows terminal encoding issues
   - Cross-platform compatibility maintained for Linux, macOS, and Windows
 
-***REMOVED******REMOVED******REMOVED*** Technical Details
+### Technical Details
 - **Files Modified**:
   - `custom_components/cable_modem_monitor/config_flow.py` - Added `_get_parser_display_name()` helper, updated dropdown generation
   - `custom_components/cable_modem_monitor/strings.json` - Restructured with consistent field descriptions
@@ -447,43 +451,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `VERIFICATION_STATUS.md` - New comprehensive verification status document
   - `scripts/release.py` - Added test, quality, and translation validation steps
 
-***REMOVED******REMOVED******REMOVED*** Planning
+### Planning
 - Future features and improvements
 - See GitHub issues and milestones for upcoming features
 
-***REMOVED******REMOVED*** [3.5.1] - 2025-11-24
+## [3.5.1] - 2025-11-24
 
-***REMOVED******REMOVED******REMOVED*** Enhanced
-- **Netgear CM600 Parser Improvements** - Addressed user feedback from issue ***REMOVED***3 with comprehensive parser enhancements
+### Enhanced
+- **Netgear CM600 Parser Improvements** - Addressed user feedback from issue #3 with comprehensive parser enhancements
   - Channel data now correctly parses 24 downstream and 6 upstream channels from HTML tables instead of JavaScript dummy data
   - Frequency, power, SNR, and error values now match the modem's web interface
   - System information (hardware version, firmware version, uptime) now displays correctly instead of "unknown"
   - Parser now fetches both DocsisStatus.asp (channel data) and RouterStatus.asp (system info) for complete data
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Modem Restart Support for CM600** - New `restart()` method enables modem reboot functionality
   - Sends POST request to `/goform/RouterStatus` with `RsAction=2` parameter
   - Integrated with existing Home Assistant button entity infrastructure
   - Comprehensive test coverage (3 new restart tests)
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **CM600 Multi-Page Fetching** - Enhanced parser to fetch multiple pages for complete data
   - DocsisStatus.asp for downstream/upstream channel data
   - RouterStatus.asp for hardware version, firmware version, and system information
   - Graceful fallback if page fetching fails
 
-***REMOVED******REMOVED******REMOVED*** DevContainer
+### DevContainer
 - **Port Forwarding Configuration** - Added explicit port forwarding for development environment
   - Configured ports 8123 (Home Assistant) and 8300 (Home Assistant Internal)
   - Enhanced port attributes with labels and auto-forward behavior
 
-***REMOVED******REMOVED******REMOVED*** Testing
+### Testing
 - Updated all CM600 tests to reflect real modem data (24 downstream, 6 upstream channels)
 - Added 3 new tests for modem restart functionality
 - All 495 tests passing
 - Code quality checks passing (ruff, black, mypy)
 
-***REMOVED******REMOVED******REMOVED*** Technical Details
+### Technical Details
 - **Files Modified**:
   - `custom_components/cable_modem_monitor/parsers/netgear/cm600.py` - Complete rewrite of channel parsing (JavaScript → HTML tables), added restart() method
   - `tests/parsers/netgear/test_cm600.py` - Updated expectations for 24 DS/6 US channels, added restart tests
@@ -491,11 +495,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `custom_components/cable_modem_monitor/const.py` - Version bump to 3.5.1
   - `custom_components/cable_modem_monitor/manifest.json` - Version bump to 3.5.1
   - `tests/components/test_version_and_startup.py` - Updated version assertion to 3.5.1
-- **Related Issue**: Addresses user feedback in issue ***REMOVED***3 (user verification pending)
+- **Related Issue**: Addresses user feedback in issue #3 (user verification pending)
 
-***REMOVED******REMOVED*** [3.4.1] - 2025-11-22
+## [3.4.1] - 2025-11-22
 
-***REMOVED******REMOVED******REMOVED*** Enhanced
+### Enhanced
 - **Connectivity Check Diagnostics** - Significantly improved troubleshooting for modem connection issues
   - Added detailed timing information for each connection attempt (shows actual elapsed time vs timeout)
   - Logs now show which protocol (HTTP/HTTPS) and method (HEAD/GET) is being tried
@@ -505,20 +509,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Each failure now reports: protocol, method, elapsed time, exception type, and error details
   - Error messages now include diagnostic summary to help identify root cause
 
-***REMOVED******REMOVED******REMOVED*** Changed
-- **Connectivity Check Timeout** - Increased from 2s to 10s (Addresses Issue ***REMOVED***3)
+### Changed
+- **Connectivity Check Timeout** - Increased from 2s to 10s (Addresses Issue #3)
   - Aligns pre-flight connectivity check with main scraper timeout (10s)
   - More accommodating for slower-responding modems
   - Reduces false "network_unreachable" errors during setup
   - Particularly helpful for modems like Netgear CM600 that may need more time
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Test Coverage** - Enhanced connectivity check testing
   - New test validates GET fallback behavior when HEAD requests timeout
   - Existing test updated to verify 10-second timeout configuration
   - Tests ensure both HEAD and GET methods work correctly with proper timeout
 
-***REMOVED******REMOVED******REMOVED*** Technical Details
+### Technical Details
 - **Files Modified**:
   - `custom_components/cable_modem_monitor/config_flow.py` - Enhanced `_do_quick_connectivity_check()` with:
     - Timing measurement for all requests
@@ -529,7 +533,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `custom_components/cable_modem_monitor/const.py` - Version bump to 3.4.1
   - `custom_components/cable_modem_monitor/manifest.json` - Version bump to 3.4.1
 
-***REMOVED******REMOVED******REMOVED*** Benefits for Issue ***REMOVED***3
+### Benefits for Issue #3
 This release provides extensive diagnostic information to help understand why the Netgear CM600 (and other modems) might fail connectivity checks:
 - Identifies if it's a timeout issue vs connection refused vs other errors
 - Shows if HTTP vs HTTPS makes a difference
@@ -537,10 +541,10 @@ This release provides extensive diagnostic information to help understand why th
 - Provides timing data to understand modem response characteristics
 - All diagnostic details appear in Home Assistant logs for troubleshooting
 
-***REMOVED******REMOVED*** [3.4.0] - 2025-11-21
+## [3.4.0] - 2025-11-21
 
-***REMOVED******REMOVED******REMOVED*** Added
-- **JSON HNAP Support for Motorola MB8611** - Dual-format HNAP authentication and parsing (Fixes Issue ***REMOVED***29)
+### Added
+- **JSON HNAP Support for Motorola MB8611** - Dual-format HNAP authentication and parsing (Fixes Issue #29)
   - New `HNAPJsonRequestBuilder` class for JSON-formatted HNAP requests
   - MB8611 parser now tries JSON HNAP first, then falls back to XML/SOAP
   - Fixes `SET_JSON_FORMAT_ERROR` for firmware variants that reject XML/SOAP format
@@ -553,20 +557,20 @@ This release provides extensive diagnostic information to help understand why th
   - Validates HTTP Basic Auth configuration and behavior
   - Tests malformed data handling and graceful error recovery
 
-***REMOVED******REMOVED******REMOVED*** Fixed
-- **Motorola MB8611 (HNAP) Configuration** - Resolved JSON format compatibility issue (Fixes Issue ***REMOVED***29)
+### Fixed
+- **Motorola MB8611 (HNAP) Configuration** - Resolved JSON format compatibility issue (Fixes Issue #29)
   - Modem firmware variants that respond with `SET_JSON_FORMAT_ERROR` now work correctly
   - Parser automatically detects and uses JSON-formatted HNAP requests when XML/SOAP fails
   - Seamless fallback ensures backward compatibility with older firmware
   - Users no longer need to manually select different parser variants
-- **Netgear CM600 Authentication** - Fixed HTTP 401 errors on protected pages (Fixes Issue ***REMOVED***3)
+- **Netgear CM600 Authentication** - Fixed HTTP 401 errors on protected pages (Fixes Issue #3)
   - Enabled HTTP Basic Authentication for `/DocsisStatus.asp`, `/DashBoard.asp`, `/RouterStatus.asp`
   - Changed `auth_required: False` to `auth_required: True` for protected endpoints
   - Updated login() method to use AuthFactory for proper credential handling
   - Index pages remain accessible without authentication for modem detection
   - Parser now successfully retrieves channel data and system information
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Enhanced Authentication Error Detection** - Better diagnostics for HNAP format mismatches
   - Authentication module now detects JSON error responses (`SET_JSON_FORMAT_ERROR`, `LoginResult:FAILED`)
   - Warning messages suggest using JSON-formatted HNAP when XML/SOAP is rejected
@@ -577,7 +581,7 @@ This release provides extensive diagnostic information to help understand why th
   - Enhanced debug logging shows which format succeeded
   - Channel count and response size logged for troubleshooting
 
-***REMOVED******REMOVED******REMOVED*** Technical Details
+### Technical Details
 - **Files Added**: `core/hnap_json_builder.py` (212 lines) - JSON HNAP request builder
 - **Files Modified**:
   - `core/authentication.py` - Added JSON error detection (lines 396-407)
@@ -588,9 +592,9 @@ This release provides extensive diagnostic information to help understand why th
 - **Compatibility**: No breaking changes, fully backward compatible with existing configurations
 - **Test Coverage**: Increased from 443 to 463 tests (all passing)
 
-***REMOVED******REMOVED*** [3.3.1] - 2025-11-20
+## [3.3.1] - 2025-11-20
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **VS Code Development Environment Configuration** - Comprehensive IDE setup for consistent development
   - Extension recommendations for Python, testing, security (CodeQL), YAML, and Markdown
   - Excludes conflicting extensions (test adapters, pylint) that interfere with native Python testing
@@ -608,7 +612,7 @@ This release provides extensive diagnostic information to help understand why th
   - Testing panel usage instructions
   - Troubleshooting for common development issues
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Test Configuration** - Improved pytest discovery reliability
   - Excluded CodeQL test fixtures from pytest discovery (prevents false test detection)
   - Added `norecursedirs` in pytest.ini to ignore `cable-modem-monitor-ql`, `.venv`, and `codeql` directories
@@ -619,12 +623,12 @@ This release provides extensive diagnostic information to help understand why th
   - Separates local development artifacts from GitHub workflow artifacts
   - Clarified comments distinguishing local vs CI/CD CodeQL resources
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Threading Cleanup Error in Tests** - Resolved race condition in HTTP error handling tests
   - Fixed `test_http_rejects_5xx` test that had intermittent threading cleanup errors
   - Proper async mock teardown and session cleanup
   - Prevents "Task was destroyed but it is pending" warnings
-- **Authentication Failure Handling** - Universal fix for setup blocking on auth failures (Issue ***REMOVED***4)
+- **Authentication Failure Handling** - Universal fix for setup blocking on auth failures (Issue #4)
   - Integration setup now properly blocks when authentication fails
   - Prevents "Retrying setup" loops for incorrect credentials
   - Returns proper `ConfigEntryNotReady` with auth error details
@@ -634,16 +638,16 @@ This release provides extensive diagnostic information to help understand why th
   - HNAP authentication shows full request/response details when auth fails
   - MB8611 HNAP parser logs attempted URLs and responses
   - MB8611 Static parser logs detection attempts and failures
-  - Helps diagnose parser selection issues (related to Issue ***REMOVED***4)
+  - Helps diagnose parser selection issues (related to Issue #4)
 - **Parser Loading Performance Test** - Fixed flaky test timing assertion
   - Increased cached load threshold from 1ms to 10ms
   - Prevents intermittent failures on slower systems or under load
   - More realistic timing expectation for cached operations
 
-***REMOVED******REMOVED*** [3.3.0] - 2025-11-18
+## [3.3.0] - 2025-11-18
 
-***REMOVED******REMOVED******REMOVED*** Added
-- **Netgear CM600 Support** - Full support for Netgear CM600 cable modem (Issue ***REMOVED***3)
+### Added
+- **Netgear CM600 Support** - Full support for Netgear CM600 cable modem (Issue #3)
   - JavaScript-based parser for DocsisStatus.asp page
   - Extracts channel data from InitDsTableTagValue and InitUsTableTagValue functions
   - Comprehensive test coverage with real modem fixtures
@@ -653,7 +657,7 @@ This release provides extensive diagnostic information to help understand why th
   - `parser_detection` section shows user selection vs. auto-detection
   - `detection_method` field: "user_selected", "cached", or "auto_detected"
   - `parser_detection_history` tracks attempted parsers during failures
-  - Helps diagnose parser mismatch issues (like Issue ***REMOVED***4)
+  - Helps diagnose parser mismatch issues (like Issue #4)
   - New `_get_detection_method()` helper function in diagnostics.py
   - Comprehensive test coverage (4 new diagnostics tests)
 - **Core Module Test Coverage** - 115 new unit tests for previously untested modules
@@ -701,7 +705,7 @@ This release provides extensive diagnostic information to help understand why th
   - Provides pre-commit hook setup instructions
   - Includes recommended development workflow
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Documentation Cleanup** - Archived historical documents and streamlined roadmap
   - Trimmed ARCHITECTURE_ROADMAP.md from 2,474 to 313 lines (87% reduction)
   - Moved 7 historical documents to docs/archive/ (~130 KB)
@@ -710,7 +714,7 @@ This release provides extensive diagnostic information to help understand why th
   - Better maintainability and navigation
 - **Parser Detection Logging** - Enhanced troubleshooting output
   - Shows attempted parsers when detection fails
-  - Added TC4400 detection debug logging (Issue ***REMOVED***1)
+  - Added TC4400 detection debug logging (Issue #1)
   - Parser error messages include attempted parser list
   - Better visibility into detection failures
 - **MB8611 Static Parser Enhancement** - Added MB8600 fallback URL compatibility
@@ -718,10 +722,10 @@ This release provides extensive diagnostic information to help understand why th
   - Handles firmware variations that use older MB8600 URLs
   - Form-based authentication support for legacy endpoints
 - **Issue Status Updates** - Accurate tracking in TEST_FIXTURE_STATUS.md
-  - Issue ***REMOVED***2 (XB7 system info): Marked RESOLVED (v2.6.0)
-  - Issue ***REMOVED***3 (CM600): Marked IMPLEMENTED (v3.3.0), awaiting testing
-  - Issue ***REMOVED***4 (MB8611): Analysis shows parser mismatch issue
-  - Issue ***REMOVED***5 (XB7 timeout): Marked RESOLVED (v2.6.0)
+  - Issue #2 (XB7 system info): Marked RESOLVED (v2.6.0)
+  - Issue #3 (CM600): Marked IMPLEMENTED (v3.3.0), awaiting testing
+  - Issue #4 (MB8611): Analysis shows parser mismatch issue
+  - Issue #5 (XB7 timeout): Marked RESOLVED (v2.6.0)
 - **Modem Compatibility Documentation** - Accurate status for all modems
   - CM600 listed as "Experimental / Newly Implemented"
   - MB8611 clarified as having dual parsers (HNAP vs Static)
@@ -751,7 +755,7 @@ This release provides extensive diagnostic information to help understand why th
   - LOCAL_ENVIRONMENT_SETUP.md includes navigation header linking to other dev docs
   - Clear documentation hierarchy: README → CONTRIBUTING → specialized guides
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **CM600 Parser Robustness** - Improved error handling and data extraction
   - Better handling of JavaScript variable parsing
   - Type annotations for better code quality
@@ -781,9 +785,9 @@ This release provides extensive diagnostic information to help understand why th
   - Allows workflows to post helpful feedback comments when checks fail
   - Resolves "Resource not accessible by integration" 403 errors
 
-***REMOVED******REMOVED*** [3.2.0] - 2025-11-13
+## [3.2.0] - 2025-11-13
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Fallback Mode for Unsupported Modems** - Universal parser for modems without specific support
   - New `UniversalFallbackParser` that works with any cable modem
   - Manual selection via "Unknown Modem (Fallback Mode)" in dropdown
@@ -802,7 +806,7 @@ This release provides extensive diagnostic information to help understand why th
   - Connection status (responsive/unresponsive)
   - Helps diagnose network vs. modem issues
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Health Status Terminology** - Changed from "healthy" to "responsive" for clarity
 - **Modem Dropdown and Auto-Detect Sorting** - Unified to alphabetical order
   - Both dropdown and auto-detection now use same alphabetical sorting (manufacturer → name)
@@ -810,7 +814,7 @@ This release provides extensive diagnostic information to help understand why th
   - Priority field deprecated (backward compatible, no longer used for ordering)
   - Example order: MB7621, MB8611 (HNAP), MB8611 (Static), MB Series (Generic)
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Blocking Import in Event Loop** - Eliminated 515ms delays when updating button entity state
   - Moved parser import check from `available` property to async setup
   - Created `_check_restart_support()` helper function
@@ -836,31 +840,31 @@ This release provides extensive diagnostic information to help understand why th
   - Check moved to async setup to avoid blocking I/O
   - Clear indication when restart functionality is unavailable
 
-***REMOVED******REMOVED******REMOVED*** Security
+### Security
 - **Bandit Security Scanner Suppressions** - Addressed false positive warnings
-  - Added `***REMOVED*** nosec B105` comments to suppress 3 false positives:
+  - Added `# nosec B105` comments to suppress 3 false positives:
     - `CONF_PASSWORD` constant (configuration key name, not password value)
     - `password_field` parameters (HTML form field names, not password values)
   - All 6 Bandit warnings addressed (3 suppressed false positives + 3 already mitigated)
   - XML parsing warnings already protected by required defusedxml==0.7.1 dependency
   - Security analysis confirms 0 real vulnerabilities
 
-***REMOVED******REMOVED******REMOVED*** Testing
+### Testing
 - **All 319 Tests Passing** - Fixed test failures for v3.2.0 release
   - Updated `test_version_is_3_2_0` to expect VERSION = "3.2.0"
   - Updated `test_get_parsers_sorts_alphabetically` to check alphabetical sorting
-  - Added `***REMOVED*** noqa: C901` to suppress complexity warnings (4 functions)
+  - Added `# noqa: C901` to suppress complexity warnings (4 functions)
   - Applied Black formatting across all modified files
 
-***REMOVED******REMOVED******REMOVED*** Technical Details
+### Technical Details
 - **Files Modified**: `const.py`, `manifest.json`, `config_flow.py`, `parsers/__init__.py`, `button.py`, `modem_scraper.py`, `sensor.py`, `strings.json`, test files
 - **Version**: Bumped from 3.1.0 to 3.2.0
 - **Commits**: 40+ commits with fallback mode, UX improvements, and bug fixes
 - **Compatibility**: No breaking changes, fully backward compatible
 
-***REMOVED******REMOVED*** [3.1.0] - 2025-11-11
+## [3.1.0] - 2025-11-11
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Update Modem Data Button** - Manual refresh button for on-demand data updates
   - `button.cable_modem_update_data` - Triggers immediate coordinator refresh
   - Useful for verifying changes after modem configuration or troubleshooting
@@ -875,13 +879,13 @@ This release provides extensive diagnostic information to help understand why th
   - Notification shows capture status and reminds user to download diagnostics
   - Diagnostic button category - grouped with other diagnostic tools
 
-***REMOVED******REMOVED******REMOVED*** Fixed
-- **MB8611 Static Parser Missing URL Patterns** - Fixed "No URL patterns available to try" error (Fixes ***REMOVED***6)
+### Fixed
+- **MB8611 Static Parser Missing URL Patterns** - Fixed "No URL patterns available to try" error (Fixes #6)
   - Added missing `url_patterns` attribute to `MotorolaMB8611StaticParser` class
   - Parser now properly specifies `/MotoStatusConnection.html` as the data source URL
   - Without this attribute, the modem scraper had no URLs to fetch, causing immediate failure
   - Users can now successfully use the "Motorola MB8611 (Static)" parser option
-- **SSL Certificate Verification Issue** - Fixed HTTPS connection failures for modems with self-signed certificates (Fixes ***REMOVED***6)
+- **SSL Certificate Verification Issue** - Fixed HTTPS connection failures for modems with self-signed certificates (Fixes #6)
   - Added explicit `verify=session.verify` parameter to all HTTP requests in authentication.py (6 locations)
   - Added explicit `verify=session.verify` parameter to all HTTP requests in hnap_builder.py (2 locations)
   - While `session.verify=False` was already configured, some requests library versions may not reliably inherit this setting
@@ -901,7 +905,7 @@ This release provides extensive diagnostic information to help understand why th
   - Helps identify which version is loaded when troubleshooting issues
   - Makes it easy to confirm integration loaded properly from diagnostic logs
 
-***REMOVED******REMOVED******REMOVED*** Performance
+### Performance
 - **Parser Loading Optimization** - Dramatically faster integration startup and modem restarts
   - When user selects specific modem: load only that parser (8x faster than scanning all parsers)
   - Auto-detection mode: scan filesystem once, cache results for subsequent loads (instant)
@@ -916,7 +920,7 @@ This release provides extensive diagnostic information to help understand why th
   - Config changes automatically re-detect protocol when user clicks Submit
   - Particularly beneficial for older HTTP-only modems that previously logged HTTPS errors
 
-***REMOVED******REMOVED******REMOVED*** Removed
+### Removed
 - **v1.x to v2.0 Entity Migration Code** - Removed automatic entity ID migration from legacy versions
   - Deleted 127 lines of migration code that ran on every startup
   - Removed: `async_migrate_entity_ids()`, `_migrate_config_data()`, and helper functions
@@ -924,7 +928,7 @@ This release provides extensive diagnostic information to help understand why th
   - Reduces startup overhead and code complexity
   - Migration was for v2.0.0 (released Oct 24, 2025) - no longer needed at v3.1.0
 
-***REMOVED******REMOVED******REMOVED*** Testing
+### Testing
 - **Comprehensive Test Coverage for v3.1.0 Features** - Added 20+ new test cases
   - UpdateModemDataButton tests (initialization, press, notification)
   - CaptureHtmlButton tests (success, failure, exception handling)
@@ -939,7 +943,7 @@ This release provides extensive diagnostic information to help understand why th
   - Added ConfigEntryState.SETUP_IN_PROGRESS to mock config entries
   - All version logging and parser selection optimization tests now pass
 
-***REMOVED******REMOVED******REMOVED*** Technical Details
+### Technical Details
 - **Files Modified**: `mb8611_static.py`, `authentication.py`, `hnap_builder.py`, `diagnostics.py`, `__init__.py`, `button.py`, `parsers/__init__.py`, `modem_scraper.py`, `const.py`, `manifest.json`
 - **HTML Capture Implementation**: Added `capture_raw` parameter to `get_modem_data()` and `_fetch_data()` methods, stores raw HTML in coordinator data with 5-minute TTL, sanitization removes MACs/serials/passwords/IPs while preserving signal data for debugging
 - **Test Coverage**: Added `test_diagnostics.py` (28 tests) and expanded `test_button.py` (+6 tests, 669 lines total)
@@ -949,9 +953,9 @@ This release provides extensive diagnostic information to help understand why th
 - **Performance**: 8x faster startup when specific modem selected, instant startup for cached auto-detection
 - **Compatibility**: No breaking changes, fully backward compatible with existing configurations
 
-***REMOVED******REMOVED*** [3.0.0] - 2025-11-10
+## [3.0.0] - 2025-11-10
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **MB8611 Dual-Parser Support** - Two parsing strategies for Motorola MB8611 modems
   - HNAP/SOAP protocol parser (priority 101) for API-based access with authentication
   - Static HTML parser (priority 100) as fallback for basic HTML table scraping
@@ -997,7 +1001,7 @@ This release provides extensive diagnostic information to help understand why th
   - Config flow tests
   - Total test improvements across authentication and discovery modules
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **MB8611 Parser Refactoring** - Enhanced parser architecture
   - Renamed `mb8611.py` → `mb8611_hnap.py` with class rename to `MotorolaMB8611HnapParser`
   - Updated display name to "Motorola MB8611 (HNAP)" for clarity
@@ -1021,7 +1025,7 @@ This release provides extensive diagnostic information to help understand why th
   - Modern type hints with `from __future__ import annotations`
   - Enforced line length limits (removed E501 exception)
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Type Checking Errors** - Resolved all mypy type checking errors
   - Added type annotations (`dict[str, Any]`) for channel data dictionaries in SB6190 parser
   - Removed `[mypy-requests.*]` ignore from mypy.ini to allow types-requests stubs (required by CI)
@@ -1045,7 +1049,7 @@ This release provides extensive diagnostic information to help understand why th
   - Removed duplicate manufacturer names from detection
 - **SSL Context Creation** - Fixed blocking I/O in event loop for SSL context creation
 
-***REMOVED******REMOVED******REMOVED*** Documentation
+### Documentation
 - **Phase 1, 2, 3 Implementation Summary** - Comprehensive documentation of architecture phases
 - **Session Improvements Summary** - Detailed session management enhancements
 - **Test Coverage Summary** - Overview of test additions and coverage
@@ -1063,24 +1067,24 @@ This release provides extensive diagnostic information to help understand why th
   - Phase 5 community platform proposal
   - HTML Capture Feature Specification (507 lines)
 
-***REMOVED******REMOVED*** [2.6.1] - 2025-11-06
+## [2.6.1] - 2025-11-06
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Excessive Logging** - Reduced excessive error logging during modem restart and connection attempts. Debug messages that were temporarily promoted to `ERROR` for testing have been moved to the appropriate `DEBUG` level, cleaning up the logs during normal operation.
 - **Standardized Logging** - Updated all logging statements to use standard string formatting instead of f-strings for consistency and performance.
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Modem Restart Reliability** - The `restart_modem` function is now more robust.
   - It always re-fetches connection data before a restart to detect if the modem has fallen back from HTTPS to HTTP, ensuring the correct protocol is used.
   - It now attempts to log in before sending the restart command if credentials are provided, improving compatibility with modems that require authentication for restart functionality.
 - **Motorola Parser Security** - Improved the security of the Motorola parser's login mechanism by allowing redirects only within private IP address ranges, preventing open redirect vulnerabilities while still accommodating local network device behavior.
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Restart Tests** - Added a comprehensive suite of tests for the `restart_modem` functionality to verify HTTP/HTTPS fallback, login handling, and various failure scenarios.
 
-***REMOVED******REMOVED*** [2.6.0] - 2025-11-06
+## [2.6.0] - 2025-11-06
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **GitHub Best Practices Implementation** - Comprehensive repository governance and security
   - `SECURITY.md` - Vulnerability reporting policy and security guidelines
   - `CODE_OF_CONDUCT.md` - Contributor Covenant v2.1 for community standards
@@ -1100,14 +1104,14 @@ This release provides extensive diagnostic information to help understand why th
   - Coverage enforcement: 50% minimum threshold in pytest and CI
   - Type checking with mypy in pre-commit hooks and CI
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - Enhanced CI/CD workflows with additional quality checks
   - Added mypy type checking to lint job
   - Added coverage enforcement to test job (--cov-fail-under=50)
 - Updated test requirements to include mypy and types-requests
 - Updated pre-commit hooks to include mypy type checking
 
-***REMOVED******REMOVED******REMOVED*** Security
+### Security
 - **Comprehensive Security Remediation** - Resolved all 26 CodeQL security vulnerabilities
   - **SSL/TLS Security (Critical/High - 4 issues)**
     - Made SSL certificate verification configurable via integration settings
@@ -1168,9 +1172,9 @@ This release provides extensive diagnostic information to help understand why th
   - Adds `verify=False` to requests in modem_scraper.py
   - Suppresses urllib3 SSL warnings
   - Automatic HTTPS/HTTP protocol detection with fallback
-  - Unblocks MB8611 and other HTTPS modems (Issue ***REMOVED***6)
+  - Unblocks MB8611 and other HTTPS modems (Issue #6)
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - Enhanced CI/CD workflows with additional quality checks
   - Added mypy type checking to lint job
   - Added coverage enforcement to test job (--cov-fail-under=50)
@@ -1182,7 +1186,7 @@ This release provides extensive diagnostic information to help understand why th
   - Authentication errors logged at ERROR level
   - Helps distinguish between network issues, modem reboots, and authentication problems
 
-***REMOVED******REMOVED******REMOVED*** Documentation
+### Documentation
 - **TROUBLESHOOTING.md** - Comprehensive troubleshooting guide
   - Connection and authentication issues
   - Health monitoring diagnostic matrix
@@ -1193,7 +1197,7 @@ This release provides extensive diagnostic information to help understand why th
   - Issue management policy
   - Version targets and strategy
 
-***REMOVED******REMOVED******REMOVED*** Security
+### Security
 - **Comprehensive Security Remediation** - Resolved all 26 CodeQL security vulnerabilities
   - **SSL/TLS Security (Critical/High - 4 issues)**
     - Made SSL certificate verification configurable via integration settings
@@ -1235,26 +1239,26 @@ This release provides extensive diagnostic information to help understand why th
   - **Files Modified**: `config_flow.py`, `core/health_monitor.py`, `core/modem_scraper.py`, `diagnostics.py`, `parsers/motorola/generic.py`, `parsers/technicolor/xb7.py`
   - **Impact**: Eliminates all critical security vulnerabilities while maintaining backward compatibility
 
-***REMOVED******REMOVED******REMOVED*** Test Fixtures
-- **MB8611 Test Data** - Complete test fixtures for Motorola MB8611 (Issue ***REMOVED***4)
+### Test Fixtures
+- **MB8611 Test Data** - Complete test fixtures for Motorola MB8611 (Issue #4)
   - HNAP JSON response with 33 downstream + 4 upstream channels
   - HTML pages: Login, Home, Connection, Software, Event Log
   - Ready for Phase 2 MB8611 parser implementation
 
-***REMOVED******REMOVED******REMOVED*** Technical Details
+### Technical Details
 - Health monitoring uses ModemHealthMonitor class in `core/health_monitor.py`
 - Health checks run async in parallel (ICMP + HTTP) during coordinator updates
 - XB7 parser enhancements use regex parsing for uptime and boot time calculation
 - Reset Entities button deletes entity registry entries but preserves recorder database
 - Integration maintains stable `unique_id` pattern: `{entry.entry_id}_cable_modem_{sensor_name}`
 
-***REMOVED******REMOVED*** [2.5.0] - 2025-10-30
+## [2.5.0] - 2025-10-30
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Critical Bug Fix** - Fixed config flow validation that allowed setup to succeed even when modem was unreachable
   - Changed `config_flow.py` to check correct key: `cable_modem_connection_status` instead of `connection_status`
   - This bug caused sensors to show as "unavailable" with no data despite successful integration setup
-  - Resolves [***REMOVED***4](https://github.com/solentlabs/cable_modem_monitor/issues/4)
+  - Resolves [#4](https://github.com/solentlabs/cable_modem_monitor/issues/4)
 - **Diagnostics Data Fix** - Updated `diagnostics.py` to use correct data keys with `cable_modem_` prefix
   - Fixed all key names to match actual data structure returned by modem scraper
   - Diagnostics now properly display connection status, channel counts, and system info
@@ -1263,36 +1267,36 @@ This release provides extensive diagnostic information to help understand why th
   - `test_coordinator.py`: Fixed all data keys to match production code
   - `test_sensor.py`: Updated mock coordinator data keys
 
-***REMOVED******REMOVED******REMOVED*** Technical Details
+### Technical Details
 - The root cause was a key name mismatch introduced during v2.0 refactoring
 - `modem_scraper.py` returns `cable_modem_connection_status` but `config_flow.py` was checking `connection_status`
 - Since `.get()` returns `None` for missing keys, validation incorrectly passed
 - Users could "successfully" configure the integration but all entities remained unavailable
 
-***REMOVED******REMOVED*** [2.4.1] - 2025-10-29
+## [2.4.1] - 2025-10-29
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Parser Priority System** - Model-specific parsers now tried before generic parsers
   - Ensures MB7621 uses its specific parser instead of generic Motorola parser
   - Priority 100 for model-specific parsers, 50 for generic/fallback parsers
   - Improves reliability and performance for supported models
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **MB7621 Auto-Detection Improvements**
   - Parser now checks software info page (`/MotoSwInfo.asp`) first for better detection
   - Prevents duplicate parser registration
   - Improved detection reliability
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Code Organization** - Refactored codebase for better maintainability
   - Organized parsers by manufacturer directories (motorola/, arris/, technicolor/)
   - Created `core/` directory for modem_scraper
   - Created `lib/` directory for shared utilities
   - Cleaner, more scalable architecture
 
-***REMOVED******REMOVED*** [2.3.0] - 2025-10-28
+## [2.3.0] - 2025-10-28
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Technicolor XB7 Support** - Full parser implementation for XB7 cable modems
   - Supports 34 downstream + 5 upstream channels
   - Handles transposed table layout (similar to ARRIS SB6141)
@@ -1302,9 +1306,9 @@ This release provides extensive diagnostic information to help understand why th
   - Detection by URL pattern (`network_setup.jst`) and content
   - Basic HTTP Authentication support
   - Used by Rogers (Canada), Comcast
-  - Resolves [***REMOVED***2](https://github.com/solentlabs/cable_modem_monitor/issues/2)
+  - Resolves [#2](https://github.com/solentlabs/cable_modem_monitor/issues/2)
 
-***REMOVED******REMOVED******REMOVED*** Test Coverage
+### Test Coverage
 - Added 27 comprehensive tests for XB7 parser:
   - 3 detection tests
   - 2 authentication tests
@@ -1314,7 +1318,7 @@ This release provides extensive diagnostic information to help understand why th
   - 2 integration tests
 - **Total test suite: 108 tests passing** (was 81, added 27 new tests)
 
-***REMOVED******REMOVED******REMOVED*** Technical
+### Technical
 - New file: `custom_components/cable_modem_monitor/parsers/technicolor_xb7.py`
 - New test file: `tests/test_parser_technicolor_xb7.py`
 - HTML fixture: `tests/fixtures/technicolor_xb7_network_setup.html`
@@ -1322,42 +1326,42 @@ This release provides extensive diagnostic information to help understand why th
   - `symbol_rate`: Integer (2560, 5120, 0)
   - `channel_type`: String (TDMA, ATDMA, TDMA_AND_ATDMA, OFDMA)
 
-***REMOVED******REMOVED******REMOVED*** Community Updates
+### Community Updates
 - **ARRIS SB6141** confirmed working by @captain-coredump on [Community Forum](https://community.home-assistant.io/t/cable-modem-monitor-track-your-internet-signal-quality-in-home-assistant)
   - All 57 entities displaying correctly
   - Parser fully functional with v2.0.0+
 
-***REMOVED******REMOVED******REMOVED*** Thanks
+### Thanks
 - Special thanks to @esand for providing detailed HTML samples and modem information for XB7 support!
 - Thanks to @captain-coredump for confirming ARRIS SB6141 compatibility and providing valuable testing feedback
 
-***REMOVED******REMOVED*** [2.2.1] - 2025-10-28
+## [2.2.1] - 2025-10-28
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - Updated manifest version and documentation images
 
-***REMOVED******REMOVED*** [2.2.0] - 2025-10-28
+## [2.2.0] - 2025-10-28
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **TC-4400 Authentication** - Corrected login method signature for TC4400 parser
 
-***REMOVED******REMOVED*** [2.1.0] - 2025-10-28
+## [2.1.0] - 2025-10-28
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Cleanup Entities Button** - One-click cleanup of orphaned entities from entity registry
   - Useful after upgrades or entity ID changes
   - Displays notification showing how many entities were removed
   - Available in device controls alongside Restart Modem button
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Standardized Entity Naming** - All entities now use `cable_modem_` prefix
   - Provides consistent naming across all sensors
   - Makes entities easier to find and identify
   - Previous entity prefix configuration options removed (simpler UX)
 
-***REMOVED******REMOVED*** [2.0.0] - 2025-10-24
+## [2.0.0] - 2025-10-24
 
-***REMOVED******REMOVED******REMOVED*** Breaking Changes
+### Breaking Changes
 - **Entity Naming Standardization** - All sensor entity IDs now use the hard-coded `cable_modem_` prefix
   - **Before (v1.x)**: Entity IDs could vary (no prefix or domain prefix)
   - **After (v2.0)**: All entity IDs consistently use `sensor.cable_modem_*` format
@@ -1365,7 +1369,7 @@ This release provides extensive diagnostic information to help understand why th
   - Configuration options for entity prefixes have been removed
   - See UPGRADING.md for detailed migration guide
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Automatic Entity ID Migration** - Seamlessly upgrades entity IDs from pre-v2.0 to v2.0 naming
   - Runs automatically on integration startup
   - Includes safety checks to prevent conflicts with other integrations
@@ -1376,7 +1380,7 @@ This release provides extensive diagnostic information to help understand why th
   - Current host/username displayed for context
   - Helpful descriptions for scan interval and history retention settings
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Simplified Configuration Flow** - Reduced from two steps to single-step options flow
   - Entity naming configuration removed (now hard-coded)
   - Cleaner, more intuitive configuration experience
@@ -1392,7 +1396,7 @@ This release provides extensive diagnostic information to help understand why th
   - Added clarity comments explaining v2.0+ parser architecture
   - Better documentation throughout codebase
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Upstream Channel Sensors** - Fixed upstream sensors not being created
   - Relaxed validation to allow upstream channels without frequency data
   - Fixed Motorola parser reading frequency from wrong column (was column 2, now column 5)
@@ -1401,7 +1405,7 @@ This release provides extensive diagnostic information to help understand why th
   - Only active "Locked" channels are shown (inactive "Not Locked" channels are filtered out)
   - Resolves issue where no upstream sensors appeared despite modem reporting 5 active channels
 
-***REMOVED******REMOVED******REMOVED*** Technical
+### Technical
 - Added `async_migrate_entity_ids()` function in __init__.py for automatic migration
 - Simplified config_flow.py to single-step options flow
 - Removed deprecated CONF_ENTITY_PREFIX and related constants
@@ -1412,16 +1416,16 @@ This release provides extensive diagnostic information to help understand why th
 - Fixed Motorola MB parser upstream channel column indices
 - Added filtering for "Not Locked" upstream channels in Motorola parser
 
-***REMOVED******REMOVED******REMOVED*** Migration Notes
+### Migration Notes
 - **Recommended**: Fresh install (cleanest approach)
 - **Alternative**: Automatic migration will rename entities on first startup
 - **History**: Some history loss may occur during migration due to database conflicts
 - **Orphaned Data**: Old records from renamed entities persist - use clear_history service to clean up
 - **Documentation**: See UPGRADING.md for complete migration guide
 
-***REMOVED******REMOVED*** [1.7.1] - 2025-10-23
+## [1.7.1] - 2025-10-23
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Nested Table Parsing** - Fixed HTML parsing for modems with nested table structures
   - Some Motorola modems were showing "0 tables found" despite successful connection
   - Updated `_parse_downstream_channels()` and `_parse_upstream_channels()` to use `recursive=False` when searching for table rows
@@ -1431,16 +1435,16 @@ This release provides extensive diagnostic information to help understand why th
   - Fixes Home Assistant 2025.12 deprecation warning
   - `config_entry` is now provided automatically by the base class
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Default Polling Interval** - Increased from 5 minutes (300s) to 10 minutes (600s)
   - Reduces load on modem and Home Assistant
   - Still within industry best practices (5-10 minute range)
   - Users can adjust via configuration options if needed
 - **Attribution** - Updated credit to @captain-coredump in v1.7.0 release notes
 
-***REMOVED******REMOVED*** [1.7.0] - 2025-10-22
+## [1.7.0] - 2025-10-22
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **ARRIS SB6141 Support (Testing)** - Added parser for ARRIS SB6141 modem (awaiting user confirmation)
   - Handles unique HTML structure where columns represent channels instead of rows
   - Parses downstream channels with power, SNR, frequency, and error statistics
@@ -1449,16 +1453,16 @@ This release provides extensive diagnostic information to help understand why th
   - Based on HTML sample contributed by @captain-coredump from community forum
   - **Status**: Parser implemented and tested, awaiting real-world confirmation from user
 
-***REMOVED******REMOVED******REMOVED*** Technical
+### Technical
 - Added `_parse_arris_sb6141()` method for ARRIS-specific parsing
 - Added `_parse_arris_transposed_table()` for column-based channel data
 - Added `_merge_arris_error_stats()` to combine error data from separate table
 - Handles nested tables in Power Level row
 - Created test fixture: `tests/fixtures/arris_sb6141_signal.html`
 
-***REMOVED******REMOVED*** [1.6.1] - 2025-10-22
+## [1.6.1] - 2025-10-22
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Improved Authentication UX** - Changed username default from "admin" to empty string for modems without authentication
   - Makes it clearer that credentials are optional
   - Reduces confusion for users with modems like ARRIS SB6141 that don't require login
@@ -1467,20 +1471,20 @@ This release provides extensive diagnostic information to help understand why th
   - Guides users to enable debug logging for unsupported modems
   - Provides clear instructions for requesting modem support
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Better Debug Logging** - Improved logging for unsupported modem HTML formats
   - Logs successful connection URL and HTML structure details
   - Reduced log verbosity for connection attempts (moved to debug level)
   - Helps diagnose when modem connects but HTML format isn't recognized
 
-***REMOVED******REMOVED******REMOVED*** Technical
+### Technical
 - Updated config_flow.py: Changed CONF_USERNAME default from "admin" to ""
 - Updated modem_scraper.py: Added HTML structure logging and better error messages
 - Updated strings.json and translations/en.json: Enhanced error messages and field descriptions
 
-***REMOVED******REMOVED*** [1.6.0] - 2025-10-22
+## [1.6.0] - 2025-10-22
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Technicolor TC4400 Support** - Added support for TC4400 cable modems
   - Added `/cmconnectionstatus.html` URL endpoint
   - Based on research from philfry's check_tc4400 project (see ATTRIBUTION.md)
@@ -1492,14 +1496,14 @@ This release provides extensive diagnostic information to help understand why th
   - 120-character line limit for better readability
   - McCabe complexity limit of 12 for parsing functions
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Code Quality Improvements** - Fixed line length violations across codebase
   - Improved SQL query formatting in __init__.py
   - Better readability in modem_scraper.py parsing logic
 
-***REMOVED******REMOVED*** [1.4.0] - 2025-10-21
+## [1.4.0] - 2025-10-21
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Clear History Button** - New UI button entity to clean up old historical data
   - Appears alongside Restart Modem button in device page
   - Uses configurable retention period from settings
@@ -1512,23 +1516,23 @@ This release provides extensive diagnostic information to help understand why th
   - Downstream Power Levels graph with all channels
   - Signal-to-Noise Ratio graph with all channels
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Enhanced Documentation** - Comprehensive updates to README.md
   - New "Configuration Options" section explaining all settings
   - Expanded "Managing Historical Data" section
   - Updated dashboard YAML examples to include Clear History button
   - Added visual examples of historical graphs
 
-***REMOVED******REMOVED******REMOVED*** Technical
+### Technical
 - Added `CONF_HISTORY_DAYS` and `DEFAULT_HISTORY_DAYS` constants to const.py
 - Extended config_flow.py options flow with history_days field (1-365 validation)
 - Added `ClearHistoryButton` class to button.py
 - Updated translations/en.json with button and configuration translations
 - Button reads retention setting from config entry data
 
-***REMOVED******REMOVED*** [1.3.0] - 2025-10-21
+## [1.3.0] - 2025-10-21
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Options Flow** - Users can now reconfigure the integration without reinstalling
   - Update modem IP address through UI
   - Change username/password through UI
@@ -1541,7 +1545,7 @@ This release provides extensive diagnostic information to help understand why th
 - **Translation Support** - Added English translations for config flow and services
 - **Service Definitions** - Added services.yaml for proper service documentation
 
-***REMOVED******REMOVED******REMOVED*** Changed
+### Changed
 - **Connection Status Improvements** - Now distinguishes between network issues and modem issues
   - `unreachable`: Cannot connect to modem (network/auth problem - Home Assistant issue)
   - `offline`: Modem responds but no channels detected (modem is actually down)
@@ -1551,87 +1555,87 @@ This release provides extensive diagnostic information to help understand why th
   - Connection status sensor remains available to show offline/unreachable state
 - **Version Bump** - Updated to v1.3.0
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Diagnostics Download** - Fixed AttributeError when downloading diagnostics
   - Removed invalid `last_update_success_time` attribute reference
   - Diagnostics now successfully export all modem data
 
-***REMOVED******REMOVED******REMOVED*** Technical
+### Technical
 - Added `OptionsFlowHandler` class to config_flow.py for reconfiguration support
 - Added clear_history service handler in __init__.py with SQLite database operations
 - Modified sensor base class to control availability based on connection status
 - Updated modem_scraper.py to return "unreachable" instead of "offline" for connection failures
 - Added translations/en.json for internationalization support
 
-***REMOVED******REMOVED*** [1.2.2] - 2025-10-21
+## [1.2.2] - 2025-10-21
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Zero values in history** - Integration now properly validates and skips updates when modem returns invalid/empty data
 - Prevents recording of 0 values during modem connection issues or reboots
 - Improved data extraction methods to return `None` instead of `0` for invalid data
 - Added validation to skip channel data when all values are null/invalid
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Diagnostics support** - Integration now provides downloadable diagnostics via Home Assistant UI
 - Diagnostics include channel data, error counts, connection status, and last error information
 - Documentation for cleaning up existing zero values from history (`cleanup_zero_values.md`)
 
-***REMOVED******REMOVED******REMOVED*** Technical
+### Technical
 - `_extract_number()` and `_extract_float()` now return `None` instead of `0` when parsing fails
 - Skip channel parsing when all critical values are `None`
 - Skip entire update if no valid downstream or upstream channels are parsed
 - Added comprehensive diagnostics platform for troubleshooting
 - Improved error calculations to handle `None` values properly
 
-***REMOVED******REMOVED*** [1.2.1] - 2025-10-21
+## [1.2.1] - 2025-10-21
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Error totals double-counting** - Fixed bug where Total row from modem table was being counted as a channel
 - Error sensors now show correct values (previously were exactly double the actual errors)
 
-***REMOVED******REMOVED******REMOVED*** Technical
+### Technical
 - Added check to skip "Total" row in downstream channel table parsing
 - Prevents Total row (4489/8821) from being added to per-channel sums
 
-***REMOVED******REMOVED*** [1.2.0] - 2025-10-21
+## [1.2.0] - 2025-10-21
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Software version parsing** - Now correctly uses CSS class selectors to find the value cell
 - **System uptime parsing** - Now correctly uses CSS class selectors to find the value cell
 - Both parsers now avoid matching header/label text and get actual values
 
-***REMOVED******REMOVED******REMOVED*** Technical
+### Technical
 - Changed to class-based cell selection (`moto-param-value`, `moto-content-value`)
 - More robust parsing that won't match table headers or labels
 
-***REMOVED******REMOVED*** [1.1.3] - 2025-10-21
+## [1.1.3] - 2025-10-21
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **System uptime parsing** now correctly extracts uptime from MotoConnection.asp page
 - Restored system_uptime sensor (was incorrectly removed - it IS available on Motorola modems)
 
-***REMOVED******REMOVED******REMOVED*** Technical
+### Technical
 - Fixed _parse_system_uptime() to match actual HTML structure from MotoConnection.asp
 - Uptime parsed before fetching MotoHome.asp for efficiency
 
-***REMOVED******REMOVED*** [1.1.1] - 2025-10-21
+## [1.1.1] - 2025-10-21
 
-***REMOVED******REMOVED******REMOVED*** Fixed
+### Fixed
 - **Software version** now correctly parsed from MotoHome.asp page
 - **Upstream channel count** now accurately reports modem's actual channel count from MotoHome.asp
 - Channel counts now use modem-reported values instead of just counting parsed channels
 
-***REMOVED******REMOVED******REMOVED*** Removed
+### Removed
 - **System uptime sensor** - Not available on Motorola MB series modems
 
-***REMOVED******REMOVED******REMOVED*** Technical
+### Technical
 - Scraper now fetches additional data from MotoHome.asp for version and channel counts
 - Added `_parse_channel_counts()` method for accurate channel counting
 - Improved error handling for optional MotoHome.asp data
 
-***REMOVED******REMOVED*** [1.1.0] - 2025-10-20
+## [1.1.0] - 2025-10-20
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - **Channel count sensors**: Track number of active upstream and downstream channels
 - **Software version sensor**: Monitor modem firmware/software version
 - **System uptime sensor**: Track how long the modem has been running
@@ -1639,20 +1643,20 @@ This release provides extensive diagnostic information to help understand why th
 - Enhanced dashboard examples with new sensors
 - Automation examples for channel count monitoring and auto-restart
 
-***REMOVED******REMOVED******REMOVED*** Enhanced
+### Enhanced
 - Modem scraper now extracts additional system information
 - Improved documentation with trend analysis use cases
 - Better automation examples for proactive network monitoring
 
-***REMOVED******REMOVED******REMOVED*** Technical
+### Technical
 - Added button platform support
 - Extended modem_scraper.py with version and uptime parsing
 - New sensor classes for channel counts, version, and uptime
 - Restart functionality with multiple endpoint fallbacks
 
-***REMOVED******REMOVED*** [1.0.0] - 2025-10-20
+## [1.0.0] - 2025-10-20
 
-***REMOVED******REMOVED******REMOVED*** Added
+### Added
 - Initial release of Cable Modem Monitor integration
 - Config flow for easy UI-based setup
 - Support for Motorola MB series modems (DOCSIS 3.0)
@@ -1674,12 +1678,12 @@ This release provides extensive diagnostic information to help understand why th
 - Comprehensive documentation and examples
 - HACS compatibility
 
-***REMOVED******REMOVED******REMOVED*** Security
+### Security
 - Credentials stored securely in Home Assistant's encrypted storage
 - Session-based authentication with proper cookie handling
 - No cloud services - all data stays local
 
-***REMOVED******REMOVED******REMOVED*** Known Issues
+### Known Issues
 - Modem-specific HTML parsing may need adjustment for some models
 - Limited to HTTP (no HTTPS support for modem connections)
 

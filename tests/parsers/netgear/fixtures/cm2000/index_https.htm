@@ -62,7 +62,7 @@ function get_browser()
 
 function OnSubmitForm()
 {    //alert("1*");
-        var text = $('***REMOVED***searchText').val();
+        var text = $('#searchText').val();
         var URItext = encodeURIComponent(text);
 
         URItext =  "http://support.netgear.com/app/answers/list/kw/" + URItext;
@@ -91,10 +91,10 @@ $(window).on( "load", function() {
     {
     */
         //alert("change");
-        $('***REMOVED***lang_menu_li').css("float", "right");
-         $('***REMOVED***lang_menu_li').css("padding-right", "25px");
-        $('***REMOVED***lang_menu_li').css("margin-bottom", "10px");
-        $('***REMOVED***lang_menu_li').hide();
+        $('#lang_menu_li').css("float", "right");
+         $('#lang_menu_li').css("padding-right", "25px");
+        $('#lang_menu_li').css("margin-bottom", "10px");
+        $('#lang_menu_li').hide();
     /*
     }
     */
@@ -103,56 +103,56 @@ $(window).on( "load", function() {
 
     if(0=="1" & 0)
     {
-        if($('***REMOVED***firmware-update').hasClass("firmware-update-hint-long")) {
-            $('***REMOVED***ModuleName').css("position", "relative");
-            $('***REMOVED***ModuleName').css("right", "480px");
+        if($('#firmware-update').hasClass("firmware-update-hint-long")) {
+            $('#ModuleName').css("position", "relative");
+            $('#ModuleName').css("right", "480px");
         } else if(isSafari) {
             //alert("");
-            $('***REMOVED***ModuleName').css("position", "relative");
-            $('***REMOVED***ModuleName').css("right", "410px");
+            $('#ModuleName').css("position", "relative");
+            $('#ModuleName').css("right", "410px");
         } else if(isOpera) {
             //alert("");
-            $('***REMOVED***ModuleName').css("position", "relative");
-            $('***REMOVED***ModuleName').css("right", "0px");
+            $('#ModuleName').css("position", "relative");
+            $('#ModuleName').css("right", "0px");
         } else if(isIE) {
             //alert("");
-            $('***REMOVED***ModuleName').css("position", "relative");
-            $('***REMOVED***ModuleName').css("right", "-10px");
-        } else if($('***REMOVED***firmware-update').hasClass("firmware-update-hint-long-long")) {
-            $('***REMOVED***ModuleName').css("position", "relative");
-            $('***REMOVED***ModuleName').css("right", "530px");
+            $('#ModuleName').css("position", "relative");
+            $('#ModuleName').css("right", "-10px");
+        } else if($('#firmware-update').hasClass("firmware-update-hint-long-long")) {
+            $('#ModuleName').css("position", "relative");
+            $('#ModuleName').css("right", "530px");
         }  else {
-            $('***REMOVED***ModuleName').css("position", "relative");
-            $('***REMOVED***ModuleName').css("right", "410px");
+            $('#ModuleName').css("position", "relative");
+            $('#ModuleName').css("right", "410px");
         }
     }
     else
     {
-        $('***REMOVED***ModuleName').css("position", "relative");
-        $('***REMOVED***ModuleName').css("right", "0px");
+        $('#ModuleName').css("position", "relative");
+        $('#ModuleName').css("right", "0px");
     }
 
     change_size();
 
     /*
-    if((isIE && ($("***REMOVED***firmware-update").hasClass('firmware-update-hint')
-        || $("***REMOVED***firmware-update").hasClass('firmware-update-hint-long') || $("***REMOVED***firmware-update").hasClass('firmware-update-hint-long-long')))
-        || ((isFirefox || isOpera) && ($("***REMOVED***firmware-update").hasClass('firmware-update-hint-long') || $("***REMOVED***firmware-update").hasClass('firmware-update-hint-long-long'))))
+    if((isIE && ($("#firmware-update").hasClass('firmware-update-hint')
+        || $("#firmware-update").hasClass('firmware-update-hint-long') || $("#firmware-update").hasClass('firmware-update-hint-long-long')))
+        || ((isFirefox || isOpera) && ($("#firmware-update").hasClass('firmware-update-hint-long') || $("#firmware-update").hasClass('firmware-update-hint-long-long'))))
     {
-//      $('***REMOVED***lang_menu_li').css("position", "relative");
-//      $('***REMOVED***lang_menu_li').css("top", "-24px");
+//      $('#lang_menu_li').css("position", "relative");
+//      $('#lang_menu_li').css("top", "-24px");
     }
     */
 
 
     if(0)
     {
-            $("***REMOVED***second").hide();
-            $("***REMOVED***first").show();
-            $("***REMOVED***basic-pane").css("display","block");
-            $("***REMOVED***adv-pane").css("display","none");
-            //$('***REMOVED***BasicTab').css("background","url(../img/tab-active.gif) no-repeat 0");
-            //$("***REMOVED***AdvanceTab").css("background","url(../img/tab-nonactive.gif) no-repeat 0");
+            $("#second").hide();
+            $("#first").show();
+            $("#basic-pane").css("display","block");
+            $("#adv-pane").css("display","none");
+            //$('#BasicTab').css("background","url(../img/tab-active.gif) no-repeat 0");
+            //$("#AdvanceTab").css("background","url(../img/tab-nonactive.gif) no-repeat 0");
             $('.subHeader').hide();
             $('.menuActive').removeClass('menuActive');
             loadPage("GstManagePage.htm");
@@ -211,7 +211,7 @@ function chgTimeZone()
 
 $(document).ready(function(){
 //alert("2*");
-    //$('***REMOVED***lang_menu').removeAttr("disabled");
+    //$('#lang_menu').removeAttr("disabled");
     BodyInit();
     adjustPageLayout();
     ;
@@ -221,9 +221,9 @@ $(document).ready(function(){
     $('.subHeader').hide();
     var pnpx = 0
     if(pnpx == 1){
-        $("***REMOVED***AdvanceTab").click();
-        $("***REMOVED***basic-pane").css("display","none");
-        $("***REMOVED***adv-pane").css("display","block");
+        $("#AdvanceTab").click();
+        $("#basic-pane").css("display","none");
+        $("#adv-pane").css("display","block");
         pnpx = 0;
     }
 });
@@ -260,8 +260,8 @@ function dieMenuClick()
     $('.SubMenuActive').off("click");
     $('.SubMenuActiveLarge').off("click");
 
-    $("***REMOVED***BasicTab").off("click");
-    $("***REMOVED***AdvanceTab").off("click");
+    $("#BasicTab").off("click");
+    $("#AdvanceTab").off("click");
     $('.basic-menu-div').off("click");
 
     $('.basic-menu-div').on("click", function(ev){
@@ -288,61 +288,61 @@ function liveMenuClick()
 
       if(ap_mode_flag[0].value=="1" || repeater_flag[0].value=="1" || repeater_an_flag[0].value=="1")
       {
-          if($("***REMOVED***basic-int").hasClass("basic-menu-div"))
+          if($("#basic-int").hasClass("basic-menu-div"))
           {
-              $("***REMOVED***basic-int").addClass('basic-menu-div-gray');
-              $("***REMOVED***basic-int").removeClass('basic-menu-div');
-              $('***REMOVED***basic-int').bind('contextmenu', function(e) {
+              $("#basic-int").addClass('basic-menu-div-gray');
+              $("#basic-int").removeClass('basic-menu-div');
+              $('#basic-int').bind('contextmenu', function(e) {
                 e.preventDefault();
               });
           }
-          if($("***REMOVED***basic-par").hasClass("basic-menu-div")){
-              $("***REMOVED***basic-par").addClass('basic-menu-div-gray');
-              $("***REMOVED***basic-par").removeClass('basic-menu-div');
-              $('***REMOVED***basic-par').bind('contextmenu', function(e) {
+          if($("#basic-par").hasClass("basic-menu-div")){
+              $("#basic-par").addClass('basic-menu-div-gray');
+              $("#basic-par").removeClass('basic-menu-div');
+              $('#basic-par').bind('contextmenu', function(e) {
                 e.preventDefault();
               });
         }
       }
       if( sta_mode_flag[0].value=="1" ){
-          if($("***REMOVED***basic-int").hasClass("basic-menu-div")){
-              $("***REMOVED***basic-int").addClass('basic-menu-div-gray');
-              $("***REMOVED***basic-int").removeClass('basic-menu-div');
+          if($("#basic-int").hasClass("basic-menu-div")){
+              $("#basic-int").addClass('basic-menu-div-gray');
+              $("#basic-int").removeClass('basic-menu-div');
           }
-          if($("***REMOVED***basic-wls").hasClass("basic-menu-div")){
-              $("***REMOVED***basic-wls").addClass('basic-menu-div-gray');
-              $("***REMOVED***basic-wls").removeClass('basic-menu-div');
+          if($("#basic-wls").hasClass("basic-menu-div")){
+              $("#basic-wls").addClass('basic-menu-div-gray');
+              $("#basic-wls").removeClass('basic-menu-div');
           }
-          if($("***REMOVED***basic-par").hasClass("basic-menu-div")){
-              $("***REMOVED***basic-par").addClass('basic-menu-div-gray');
-              $("***REMOVED***basic-par").removeClass('basic-menu-div');
+          if($("#basic-par").hasClass("basic-menu-div")){
+              $("#basic-par").addClass('basic-menu-div-gray');
+              $("#basic-par").removeClass('basic-menu-div');
           }
-          if($("***REMOVED***basic-gst").hasClass("basic-menu-div")){
-              $("***REMOVED***basic-gst").addClass('basic-menu-div-gray');
-              $("***REMOVED***basic-gst").removeClass('basic-menu-div');
+          if($("#basic-gst").hasClass("basic-menu-div")){
+              $("#basic-gst").addClass('basic-menu-div-gray');
+              $("#basic-gst").removeClass('basic-menu-div');
           }
       }
-      if( $('***REMOVED***wizard').hasClass('noSubGray')){
-        $('***REMOVED***wizard').bind('contextmenu', function(e) {
+      if( $('#wizard').hasClass('noSubGray')){
+        $('#wizard').bind('contextmenu', function(e) {
             e.preventDefault();
         });
       }
     /*
     if(downloader_flag[0].value=="0")
     {
-        if($("***REMOVED***basic-dlr").hasClass("basic-menu-div"))
+        if($("#basic-dlr").hasClass("basic-menu-div"))
         {
-            $("***REMOVED***basic-dlr").addClass('basic-menu-div-gray');
-            $("***REMOVED***basic-dlr").removeClass('basic-menu-div');
+            $("#basic-dlr").addClass('basic-menu-div-gray');
+            $("#basic-dlr").removeClass('basic-menu-div');
         }
     }
     */
-      $('***REMOVED***AdvanceTab').on("click", function(ev){
-          $("***REMOVED***first").hide();
-          $("***REMOVED***second").show();
+      $('#AdvanceTab').on("click", function(ev){
+          $("#first").hide();
+          $("#second").show();
           $('.subHeader').hide();
           //$(this).css("background","url(../img/tab-active.gif) no-repeat 0");
-          //$("***REMOVED***BasicTab").css("background","url(../img/tab-nonactive.gif) no-repeat 0");
+          //$("#BasicTab").css("background","url(../img/tab-nonactive.gif) no-repeat 0");
           $('.noSubActive').removeClass('noSubActive');
           $('.noSubActiveLarge').removeClass('noSubActiveLarge');
           $('.SubMenuActive').addClass('SubMenu');
@@ -353,22 +353,22 @@ function liveMenuClick()
           $('.SubMenuActiveLarge').removeClass('SubMenuActiveLarge');
           $('.SubActive').addClass('Sub');
           $('.SubActive').removeClass('SubActive');
-          if($('***REMOVED***adv-home').hasClass('noSubLarge'))
-            $('***REMOVED***adv-home').addClass('noSubActiveLarge');
+          if($('#adv-home').hasClass('noSubLarge'))
+            $('#adv-home').addClass('noSubActiveLarge');
           else
-            $('***REMOVED***adv-home').addClass('noSubActive');
+            $('#adv-home').addClass('noSubActive');
           $('.subHeader:visible').slideUp('fast');
           loadPage2("RouterStatus.htm");
       });
 
-      $('***REMOVED***BasicTab').on("click", function(ev){
-          $("***REMOVED***second").hide();
-          $("***REMOVED***first").show();
+      $('#BasicTab').on("click", function(ev){
+          $("#second").hide();
+          $("#first").show();
           //$(this).css("background","url(../img/tab-active.gif) no-repeat 0");
-          //$("***REMOVED***AdvanceTab").css("background","url(../img/tab-nonactive.gif) no-repeat 0");
+          //$("#AdvanceTab").css("background","url(../img/tab-nonactive.gif) no-repeat 0");
           $('.subHeader').hide();
           $('.menuActive').removeClass('menuActive');
-          $('***REMOVED***basic-home').addClass('menuActive');
+          $('#basic-home').addClass('menuActive');
           loadPage("DashBoard.htm");
       });
 
@@ -396,7 +396,7 @@ function liveMenuClick()
 
 
       $('.noSub').on("click",function(ev){
-          $("***REMOVED***first").hide();
+          $("#first").hide();
           if( !$(this).hasClass('noSubGray') & !$(this).hasClass('noSubGrayLarge')){
                 $('.noSubActive').removeClass('noSubActive');
                 $('.noSubActiveLarge').removeClass('noSubActiveLarge');
@@ -422,7 +422,7 @@ function liveMenuClick()
       });
 
       $('.noSubLarge').on("click",function(ev){
-          $("***REMOVED***first").hide();
+          $("#first").hide();
           if( !$(this).hasClass('noSubGray') & !$(this).hasClass('noSubGrayLarge')){
                 $('.noSubActive').removeClass('noSubActive');
                 $('.noSubActiveLarge').removeClass('noSubActiveLarge');
@@ -469,7 +469,7 @@ function liveMenuClick()
 
 
       $('.SubMenu').on("click",function(ev){
-         $("***REMOVED***first").hide();
+         $("#first").hide();
          if( !$(this).hasClass('SubMenuDisable') && !$(this).hasClass('SubMenuLargeDisable')){
             $('.noSubActive').removeClass('noSubActive');
             $('.noSubActiveLarge').removeClass('noSubActiveLarge');
@@ -494,14 +494,14 @@ function liveMenuClick()
       });
 
       $('.SubMenuActive').on("click",function(ev){
-         $("***REMOVED***first").hide();
+         $("#first").hide();
          var path = $(this).children("a").attr("href");
          loadPage2(path);
          ev.preventDefault();
       });
 
       $('.SubMenuActiveLarge').on("click",function(ev){
-         $("***REMOVED***first").hide();
+         $("#first").hide();
          var path = $(this).children("a").attr("href");
          loadPage2(path);
          ev.preventDefault();
@@ -509,8 +509,8 @@ function liveMenuClick()
 
 
 
-      $('***REMOVED***go').click(function(ev){
-        var text = $('***REMOVED***searchText').val();
+      $('#go').click(function(ev){
+        var text = $('#searchText').val();
         var URItext = encodeURIComponent(text);
 
         URItext =  "http://support.netgear.com/app/answers/list/kw/" + URItext;
@@ -554,7 +554,7 @@ function advanceMenu() { //alert("5");
     $('.subHeader').hide();
 
     $('.Sub').click(function() {
-        $('***REMOVED***first').hide();
+        $('#first').hide();
         var checkElement = $(this).next();
         if((checkElement.is('li')) && (checkElement.is(':visible'))) {
             $('.subHeader:visible').slideUp('fast');
@@ -602,7 +602,7 @@ function adjustPageLayout()
         if($(this)[0].parentNode.parentNode.parentNode.getAttribute('id') == "security_settings_header")
             entry++;
     });
-    $('***REMOVED***security_settings_header').css("height", entry*18+20 + "px");
+    $('#security_settings_header').css("height", entry*18+20 + "px");
 
     $('.nosub_text').each(function(){
         if($(this)[0].clientHeight > 16){
@@ -623,18 +623,18 @@ function adjustPageLayout()
     /*
     $('.basic-menu').css("height",adjustPageHeight);
     $('.advance-menu').css("height",adjustPageHeight);
-    $('***REMOVED***basic-table').css("height",adjustPageHeight);
-    $('***REMOVED***advance-table').css("height",adjustPageHeight);
+    $('#basic-table').css("height",adjustPageHeight);
+    $('#advance-table').css("height",adjustPageHeight);
     */
 
-    var readyshareField = $("***REMOVED***USB_storage");
+    var readyshareField = $("#USB_storage");
     var readyshareHeight = 0;
-    for (var i = 0; i < $("***REMOVED***USB_storage").parent().children().length; i++) {
+    for (var i = 0; i < $("#USB_storage").parent().children().length; i++) {
       readyshareHeight += readyshareField[0].clientHeight;
       readyshareField = readyshareField.next();
     }
 
-    $("***REMOVED***USB_storage").parent().css("height",readyshareHeight + "px");
+    $("#USB_storage").parent().css("height",readyshareHeight + "px");
 }
 
 function loadPage(path)
@@ -648,25 +648,25 @@ function loadPage(path)
             var page_width = page_contain_width - 130;
             var page_height = page_contain_height - 45;
 
-            $('***REMOVED***page_contain').width(parseInt(page_contain_width));
-            $('***REMOVED***page_contain').height(parseInt(page_contain_height));
-            $('***REMOVED***page_contain').css("margin-top","5");
+            $('#page_contain').width(parseInt(page_contain_width));
+            $('#page_contain').height(parseInt(page_contain_height));
+            $('#page_contain').css("margin-top","5");
             if(get_browser() == "IE"){
-               $('***REMOVED***page_contain').html("<iframe id=\"page\" src='' scrolling=\"no\" style=\" background-color:***REMOVED***E5E5E5;width:"+page_width+"px;height:"+page_height+"px;margin-top:0;margin-left:30px\" frameborder=\"0\" border=\"0\" cellspacing=\"0\" onFocus=\"this.blur()\"></iframe>");
+               $('#page_contain').html("<iframe id=\"page\" src='' scrolling=\"no\" style=\" background-color:#E5E5E5;width:"+page_width+"px;height:"+page_height+"px;margin-top:0;margin-left:30px\" frameborder=\"0\" border=\"0\" cellspacing=\"0\" onFocus=\"this.blur()\"></iframe>");
             }else{
-               $('***REMOVED***page').attr("scrolling","no");
-               $('***REMOVED***page').width(parseInt(page_width));
-               $('***REMOVED***page').height(parseInt(page_height));
-               $('***REMOVED***page').css("margin-top","0");
-               $('***REMOVED***page').css("margin-left","30");
+               $('#page').attr("scrolling","no");
+               $('#page').width(parseInt(page_width));
+               $('#page').height(parseInt(page_height));
+               $('#page').css("margin-top","0");
+               $('#page').css("margin-left","30");
             }
-            $('***REMOVED***page').css("visibility","hidden");
-            $('***REMOVED***page_contain').addClass('main-page-contain-loading');
-            $('***REMOVED***page').delay(1000).attr("src",path);
+            $('#page').css("visibility","hidden");
+            $('#page_contain').addClass('main-page-contain-loading');
+            $('#page').delay(1000).attr("src",path);
 
-            $('***REMOVED***page').on( "load", function(){
-                $('***REMOVED***page').css("visibility","visible");
-                $('***REMOVED***page_contain').removeClass('main-page-contain-loading');
+            $('#page').on( "load", function(){
+                $('#page').css("visibility","visible");
+                $('#page_contain').removeClass('main-page-contain-loading');
             })
 
          }else if(path.search("netgear") != -1){
@@ -675,28 +675,28 @@ function loadPage(path)
             var page_width = page_contain_width - 50;
             var page_height = page_contain_height - 0;
 
-            $('***REMOVED***page_contain').width(parseInt(page_contain_width));
-            $('***REMOVED***page_contain').height(parseInt(page_contain_height));
-            $('***REMOVED***page_contain').css("margin-top","5");
+            $('#page_contain').width(parseInt(page_contain_width));
+            $('#page_contain').height(parseInt(page_contain_height));
+            $('#page_contain').css("margin-top","5");
             if(get_browser() == "IE" || (get_browser() == "Safari" && path == "AutoTimeZone.htm")){
-             $('***REMOVED***page_contain').html("<iframe id=\"page\" src='' scrolling=\"no\" style=\"background-color:***REMOVED***E5E5E5;width:"+page_width+"px;height:"+page_height+"px;margin-top:0px;margin-left:30px\" frameborder=\"0\" border=\"0\" cellspacing=\"0\" onFocus=\"this.blur()\"></iframe>");
+             $('#page_contain').html("<iframe id=\"page\" src='' scrolling=\"no\" style=\"background-color:#E5E5E5;width:"+page_width+"px;height:"+page_height+"px;margin-top:0px;margin-left:30px\" frameborder=\"0\" border=\"0\" cellspacing=\"0\" onFocus=\"this.blur()\"></iframe>");
             }else{
-               $('***REMOVED***page').attr("scrolling","no");
-               $('***REMOVED***page').css("overflow-x","hidden");
-               $('***REMOVED***page').css("overflow-y","hidden");
-               $('***REMOVED***page').width(parseInt(page_width));
-               $('***REMOVED***page').height(parseInt(page_height));
-               $('***REMOVED***page').css("margin-top","0");
-               $('***REMOVED***page').css("margin-left","30");
+               $('#page').attr("scrolling","no");
+               $('#page').css("overflow-x","hidden");
+               $('#page').css("overflow-y","hidden");
+               $('#page').width(parseInt(page_width));
+               $('#page').height(parseInt(page_height));
+               $('#page').css("margin-top","0");
+               $('#page').css("margin-left","30");
 
             }
-            $('***REMOVED***page').css("visibility","hidden");
-            $('***REMOVED***page_contain').addClass('main-page-contain-loading');
-            $('***REMOVED***page').attr("src",path);
-            $('***REMOVED***page').on( "load", function()
+            $('#page').css("visibility","hidden");
+            $('#page_contain').addClass('main-page-contain-loading');
+            $('#page').attr("src",path);
+            $('#page').on( "load", function()
             {
-                 $('***REMOVED***page').css("visibility","visible");
-                 $('***REMOVED***page_contain').removeClass('main-page-contain-loading');
+                 $('#page').css("visibility","visible");
+                 $('#page_contain').removeClass('main-page-contain-loading');
             });
          }
          return false;
@@ -719,27 +719,27 @@ function loadPage2(path) {  //alert("8");
             var page_width = page_contain_width - 130;
             var page_height = page_contain_height - 45;
 
-            $('***REMOVED***page_contain2').width(parseInt(page_contain_width));
-            $('***REMOVED***page_contain2').height(parseInt(page_contain_height));
-            $('***REMOVED***page_contain').css("margin-top","5");
+            $('#page_contain2').width(parseInt(page_contain_width));
+            $('#page_contain2').height(parseInt(page_contain_height));
+            $('#page_contain').css("margin-top","5");
            if(get_browser() == "IE"){
-               $('***REMOVED***page_contain2').html("<iframe id=\"page2\" src='' scrolling=\"no\" style=\"background-color:***REMOVED***E5E5E5;width:"+page_width+"px;height:"+page_height+"px;margin-top:0;margin-left:30px\" frameborder=\"0\" border=\"0\" cellspacing=\"0\" onFocus=\"this.blur()\"></iframe>");
+               $('#page_contain2').html("<iframe id=\"page2\" src='' scrolling=\"no\" style=\"background-color:#E5E5E5;width:"+page_width+"px;height:"+page_height+"px;margin-top:0;margin-left:30px\" frameborder=\"0\" border=\"0\" cellspacing=\"0\" onFocus=\"this.blur()\"></iframe>");
            }else{
-               $('***REMOVED***page2').attr("scrolling","no");
-               $('***REMOVED***page2').width(parseInt(page_width));
-               $('***REMOVED***page2').height(parseInt(page_height));
-               $('***REMOVED***page2').css("margin-top","0");
-               $('***REMOVED***page2').css("margin-left","50");
+               $('#page2').attr("scrolling","no");
+               $('#page2').width(parseInt(page_width));
+               $('#page2').height(parseInt(page_height));
+               $('#page2').css("margin-top","0");
+               $('#page2').css("margin-left","50");
 
 
            }
-           $('***REMOVED***page2').css("visibility","hidden");
-           $('***REMOVED***page2').attr("src",path);
+           $('#page2').css("visibility","hidden");
+           $('#page2').attr("src",path);
 
-           $('***REMOVED***page2').on( "load", function()
+           $('#page2').on( "load", function()
            {
-                 $('***REMOVED***page2').css("visibility","visible");
-                 $('***REMOVED***page_contain2').removeClass('main-page-contain-loading');
+                 $('#page2').css("visibility","visible");
+                 $('#page_contain2').removeClass('main-page-contain-loading');
             });
         }else if(path.search("netgear") != -1){
             window.open(path,'_blank','fullscreen=yes,toolbar=yes,location=yes,scrollbars=yes');
@@ -747,27 +747,27 @@ function loadPage2(path) {  //alert("8");
             var page_width = page_contain_width - 50;
             var page_height = page_contain_height - 0;
 
-            $('***REMOVED***page_contain2').width(parseInt(page_contain_width));
-            $('***REMOVED***page_contain2').height(parseInt(page_contain_height));
+            $('#page_contain2').width(parseInt(page_contain_width));
+            $('#page_contain2').height(parseInt(page_contain_height));
 
             if(get_browser() == "IE"){ //alert("8 * ");
-               $('***REMOVED***page_contain2').html("<iframe id=\"page2\" src='' scrolling=\"no\" style=\"background-color:***REMOVED***E5E5E5;width:"+page_width+"px;height:"+page_height+"px;overflow-x:hidden;margin-top:0px;margin-left:30px\" frameborder=\"0\" border=\"0\" cellspacing=\"0\" onFocus=\"this.blur()\"></iframe>");
+               $('#page_contain2').html("<iframe id=\"page2\" src='' scrolling=\"no\" style=\"background-color:#E5E5E5;width:"+page_width+"px;height:"+page_height+"px;overflow-x:hidden;margin-top:0px;margin-left:30px\" frameborder=\"0\" border=\"0\" cellspacing=\"0\" onFocus=\"this.blur()\"></iframe>");
            }else{  //alert("8 ** ");
-               $('***REMOVED***page2').attr("scrolling","no");
-               $('***REMOVED***page2').css("overflow-x","hidden");
-               $('***REMOVED***page2').css("overflow-y","hidden");
-               $('***REMOVED***page2').width(parseInt(page_width));
-               $('***REMOVED***page2').height(parseInt(page_height));
-               $('***REMOVED***page2').css("margin-top","0");
-               $('***REMOVED***page2').css("margin-left","30");
+               $('#page2').attr("scrolling","no");
+               $('#page2').css("overflow-x","hidden");
+               $('#page2').css("overflow-y","hidden");
+               $('#page2').width(parseInt(page_width));
+               $('#page2').height(parseInt(page_height));
+               $('#page2').css("margin-top","0");
+               $('#page2').css("margin-left","30");
            }
-           $('***REMOVED***page2').css("visibility","hidden");
-           $('***REMOVED***page_contain2').addClass('main-page-contain-loading');
-           $('***REMOVED***page2').attr("src",path);
-           $('***REMOVED***page2').on( "load", function()
+           $('#page2').css("visibility","hidden");
+           $('#page_contain2').addClass('main-page-contain-loading');
+           $('#page2').attr("src",path);
+           $('#page2').on( "load", function()
            {
-                $('***REMOVED***page2').css("visibility","visible");
-                $('***REMOVED***page_contain2').removeClass('main-page-contain-loading');
+                $('#page2').css("visibility","visible");
+                $('#page_contain2').removeClass('main-page-contain-loading');
            });
 
         }
@@ -784,15 +784,15 @@ function setParentalControls()
      var support = 1;
 
      if(support == 0){
-          $('***REMOVED***PAR_menu').attr("href","http://www.netgear.com/lpc");
-          $('***REMOVED***PAR_menu2').attr("href","http://www.netgear.com/lpc");
+          $('#PAR_menu').attr("href","http://www.netgear.com/lpc");
+          $('#PAR_menu2').attr("href","http://www.netgear.com/lpc");
      }else{
          if(ParentalControls_Result == 0){
-             $('***REMOVED***PAR_menu').attr("href","http://www.netgear.com/lpc");
-             $('***REMOVED***PAR_menu2').attr("href","http://www.netgear.com/lpc");
+             $('#PAR_menu').attr("href","http://www.netgear.com/lpc");
+             $('#PAR_menu2').attr("href","http://www.netgear.com/lpc");
          }else{
-             $('***REMOVED***PAR_menu').attr("href","http://netgear.opendns.com/");
-             $('***REMOVED***PAR_menu2').attr("href","http://www.netgear.com/lpc");
+             $('#PAR_menu').attr("href","http://netgear.opendns.com/");
+             $('#PAR_menu2').attr("href","http://www.netgear.com/lpc");
          }
      }
 }
@@ -873,7 +873,7 @@ function chgLang()
         setTimeout(function(){
             ret = confirm("Do you want to switch from "+ gui_lang_local + ""+"(the current language) to "+""+ choice + "?");
             if(ret==1){
-                if($("***REMOVED***BasicTab").hasClass('current')){
+                if($("#BasicTab").hasClass('current')){
                     loadPage("LANG_check_redirect.htm");
                 }else{
                     loadPage2("LANG_check_redirect.htm");
@@ -904,13 +904,13 @@ function chgBrsLang()
                     else
                         ret = confirm("Do you want to switch from "+ gui_lang_local + ""+"(the current language) to "+""+ brslang + "?");
                     if(ret==1){
-                        if($("***REMOVED***BasicTab").hasClass('current')){
+                        if($("#BasicTab").hasClass('current')){
                            loadPage("LANG_check_redirect2.htm");
                         }else{
                            loadPage2("LANG_check_redirect2.htm");
                         }
                     }else{
-                        if($("***REMOVED***BasicTab").hasClass('current')){
+                        if($("#BasicTab").hasClass('current')){
                             loadPage("auto_block.htm");
                         }else{
                             loadPage2("auto_block.htm");
@@ -927,7 +927,7 @@ function chgBrsLang()
 
 function fw_upgrade_hint()
 {
-    if($("***REMOVED***BasicTab").hasClass('current')){
+    if($("#BasicTab").hasClass('current')){
         loadPage("UPG_upgrade_ver_check.htm");
     }else{
         loadPage2("UPG_upgrade_ver_check.htm");
@@ -936,7 +936,7 @@ function fw_upgrade_hint()
 
 function gui_logout()
 {    //alert("16");
-    if($("***REMOVED***BasicTab").hasClass('current')){
+    if($("#BasicTab").hasClass('current')){
         top.location.href="Logout.htm";
     }
     else
@@ -960,7 +960,7 @@ function enable_circle()
 
     hide_circle_window();
     $('.menuActive').removeClass('menuActive');
-    $('***REMOVED***basic-par').addClass('menuActive');
+    $('#basic-par').addClass('menuActive');
     loadPage("Parental_controls.htm");
 }
 
@@ -991,8 +991,8 @@ function show_circle_window()
         else
             document.getElementById("circle-info-modal").style.top="0px";
 
-        $("***REMOVED***container").addClass("gray");
-        $("***REMOVED***main_screen").addClass("gray");
+        $("#container").addClass("gray");
+        $("#main_screen").addClass("gray");
         document.getElementById("container").style.display="none";
         document.getElementById("main_screen").style.display="none";
     }
@@ -1047,18 +1047,18 @@ function InitUpdateView(tagValues)
     /* multilang support */
     if (tagValues[2] == "0")
     {
-        $("***REMOVED***lang_menu_li").hide();
+        $("#lang_menu_li").hide();
     }
 
     /* Rg/Bridge mode */
     if (tagValues[3] == "1")
     {
         // Basic menu
-        $("***REMOVED***basic-wls").show();
-        $("***REMOVED***basic-atd").show();
-        $("***REMOVED***basic-par").show();
-        $("***REMOVED***basic-rea").show();
-        $("***REMOVED***basic-gst").show();
+        $("#basic-wls").show();
+        $("#basic-atd").show();
+        $("#basic-par").show();
+        $("#basic-rea").show();
+        $("#basic-gst").show();
         if(tagValues[8] == "1")
         {
             ETHERNET_SUPPORT = true;
@@ -1066,98 +1066,98 @@ function InitUpdateView(tagValues)
             if(tagValues[9] == "1")
             {
                 ethernetConnect = true;
-                $("***REMOVED***basic-int").hide();
-                $("***REMOVED***eventlog").hide();
-                $("***REMOVED***routerMode").hide();
+                $("#basic-int").hide();
+                $("#eventlog").hide();
+                $("#routerMode").hide();
             }
         }
     }
     else
     {
         // Basic menu
-        $("***REMOVED***basic-wls").hide();
-        $("***REMOVED***basic-atd").hide();
-        $("***REMOVED***basic-par").hide();
-        $("***REMOVED***basic-rea").hide();
-        $("***REMOVED***basic-gst").hide();
+        $("#basic-wls").hide();
+        $("#basic-atd").hide();
+        $("#basic-par").hide();
+        $("#basic-rea").hide();
+        $("#basic-gst").hide();
 
-        $("***REMOVED***wps-wizard").hide();
-        $("***REMOVED***setup_header").hide();
-        $("***REMOVED***usb_header").hide();
-        $("***REMOVED***security_header").hide();
-        $("***REMOVED***AdminId li").hide();
+        $("#wps-wizard").hide();
+        $("#setup_header").hide();
+        $("#usb_header").hide();
+        $("#security_header").hide();
+        $("#AdminId li").hide();
         // always hide nat mode webpage
-        $("***REMOVED***adv_header").hide();
-        $("***REMOVED***attach_dev").hide();
-        $("***REMOVED***NTP_setting").hide();
-        $("***REMOVED***firmware_upgrade").hide();
-        $("***REMOVED***config_backup").hide();
-        $("***REMOVED***logs").hide();
-        $("***REMOVED***orbi-alert").hide();
-        $("***REMOVED***left_banner").hide();
+        $("#adv_header").hide();
+        $("#attach_dev").hide();
+        $("#NTP_setting").hide();
+        $("#firmware_upgrade").hide();
+        $("#config_backup").hide();
+        $("#logs").hide();
+        $("#orbi-alert").hide();
+        $("#left_banner").hide();
     }
 
     /* Guest Network Supported */
     if (tagValues[1] == "1")
     {
-        $("***REMOVED***basic-gst").hide();
-        $("***REMOVED***guest_set").hide();
+        $("#basic-gst").hide();
+        $("#guest_set").hide();
     }
 
     // Nick 20120507, new mta icon
     // Voice Supported
     if (tagValues[4] == "1")
     {
-        $("***REMOVED***basic-par").hide();
-        $("***REMOVED***basic-voice").show();
+        $("#basic-par").hide();
+        $("#basic-voice").show();
     }
     else
     {
         if (tagValues[3] == "1")  //parental control is not support in bridge.
-            $("***REMOVED***basic-par").show();
-        $("***REMOVED***basic-voice").hide();
+            $("#basic-par").show();
+        $("#basic-voice").hide();
     }
 
     /*if(tagValues[5] == "retail")
     {
-        $("***REMOVED***topleftLogo").show();
-        $("***REMOVED***topleftLogo").attr("src", "img/logo_retail.png");
-        $(".topframe").css("background-color","***REMOVED***ffffff");
-        $(".topframe").css("color","***REMOVED***000000");
-        $(".tabs").css("background-color","***REMOVED***ffffff");
+        $("#topleftLogo").show();
+        $("#topleftLogo").attr("src", "img/logo_retail.png");
+        $(".topframe").css("background-color","#ffffff");
+        $(".topframe").css("color","#000000");
+        $(".tabs").css("background-color","#ffffff");
         // 20150203 Emerson add to replace the NetworkMap by AttachedDevices
-        $("***REMOVED***basic-atd").html('<a href="AttachedDevices_new.htm"><span>Attached Devices<\/span><\/a>');
-        $("***REMOVED***advNetworkMap").attr("href", "AttachedDevices_new.htm");
-        $("***REMOVED***advNetworkMap").html('<span class="subMenu_text">Attached Devices<\/span>');
+        $("#basic-atd").html('<a href="AttachedDevices_new.htm"><span>Attached Devices<\/span><\/a>');
+        $("#advNetworkMap").attr("href", "AttachedDevices_new.htm");
+        $("#advNetworkMap").html('<span class="subMenu_text">Attached Devices<\/span>');
         // 20150203 Emerson end
 
-        $("***REMOVED***toprightLogo").hide();
-        $("***REMOVED***ipv6").show();
+        $("#toprightLogo").hide();
+        $("#ipv6").show();
 
         // Chuck 20160815 Add support for Dynamic QoS page
-        $("***REMOVED***QosSetup").show();
-        $("***REMOVED***QosSetup_hl").attr("href", "");
+        $("#QosSetup").show();
+        $("#QosSetup_hl").attr("href", "");
 
         // Chuck 20160909 Add support for LED Settings page
-        $("***REMOVED***led_settings").show();
+        $("#led_settings").show();
 
         // Chuck 20161115 Add support for Ethernet Port Aggregation page
-        $("***REMOVED***link_aggregation").show();
+        $("#link_aggregation").show();
     }
     else
     {
-        $("***REMOVED***topleftLogo").show();
-        $("***REMOVED***topleftLogo").attr("src", "img/Netgeargenie.png");
+        $("#topleftLogo").show();
+        $("#topleftLogo").attr("src", "img/Netgeargenie.png");
 
-        $("***REMOVED***toprightLogo").hide();
+        $("#toprightLogo").hide();
     }*/
 
     // USB Hidden
     if (tagValues[6] == "1")
     {
-        $("***REMOVED***basic-rea").hide();
-        $("***REMOVED***usb_header").hide();
-        $("***REMOVED***advUSB").hide();
+        $("#basic-rea").hide();
+        $("#usb_header").hide();
+        $("#advUSB").hide();
     }
 
     // WPS Wizard
@@ -1170,51 +1170,51 @@ function InitUpdateView(tagValues)
     // Chuck 20141001 Do not show Traffic Meter page in bridge mode
     if(tagValues[10] == "0" || tagValues[3] == "0")
     {
-        $("***REMOVED***traffic_meter").hide();
+        $("#traffic_meter").hide();
     }
     else
     {
-        $("***REMOVED***traffic_meter").show();
+        $("#traffic_meter").show();
     }
 
     // Chuck 20140610 for "Turn off wireless signal by schedule "
     if(tagValues[11] == "1")
     {
-        $("***REMOVED***adv_wireless_set").children().attr('href','');
+        $("#adv_wireless_set").children().attr('href','');
     }
 
     // Chuck 20140610 add for "Access Control"
     if(tagValues[12] == "0")
     {
-        $("***REMOVED***access_control").hide();
+        $("#access_control").hide();
     }
     else
     {
-        $("***REMOVED***access_control").show();
+        $("#access_control").show();
     }
 
     //retail MTA pages support
     if(tagValues[13] == "0")
     {
-        $("***REMOVED***basic-callListRetail").hide();
-        $("***REMOVED***MtaEventLogRetail").hide();
-        $("***REMOVED***MtaCallListRetail").hide();
+        $("#basic-callListRetail").hide();
+        $("#MtaEventLogRetail").hide();
+        $("#MtaCallListRetail").hide();
     }
     else
     {
-        $("***REMOVED***basic-callListRetail").show();
-        $("***REMOVED***MtaEventLogRetail").show();
-        $("***REMOVED***MtaCallListRetail").show();
+        $("#basic-callListRetail").show();
+        $("#MtaEventLogRetail").show();
+        $("#MtaCallListRetail").show();
     }
 
     //retail LAG pages support
     if(tagValues[14] == "0")
     {
-        $("***REMOVED***PortTrunking_setting").hide();
+        $("#PortTrunking_setting").hide();
     }
     else
     {
-        $("***REMOVED***PortTrunking_setting").show();
+        $("#PortTrunking_setting").show();
     }
 }
 
@@ -1230,24 +1230,24 @@ function initBridgeView(statusTag)
 {
     if(statusTag == "1")
     {
-        $("***REMOVED***routerMode").hide();
-        $("***REMOVED***router_status_text").html("Modem Status");
-        $("***REMOVED***SetPassword").show();
+        $("#routerMode").hide();
+        $("#router_status_text").html("Modem Status");
+        $("#SetPassword").show();
     }
 }
 function hiddenWifi(statusTag)
 {
     if(statusTag == "1")
     {
-        $("***REMOVED***basic-wls").hide();
-        $("***REMOVED***basic-gst").hide();
-        $("***REMOVED***wps-wizard").hide();
-        $("***REMOVED***wireless_set").hide();
-        $("***REMOVED***guest_set").hide();
-        $("***REMOVED***wireless_hotspot").hide();
-        $("***REMOVED***WirelessRadarChList").hide();
-        $("***REMOVED***WirelessRadarApList").hide();
-        $("***REMOVED***adv_wireless_set").hide();
+        $("#basic-wls").hide();
+        $("#basic-gst").hide();
+        $("#wps-wizard").hide();
+        $("#wireless_set").hide();
+        $("#guest_set").hide();
+        $("#wireless_hotspot").hide();
+        $("#WirelessRadarChList").hide();
+        $("#WirelessRadarApList").hide();
+        $("#adv_wireless_set").hide();
     }
 }
 
@@ -1268,9 +1268,9 @@ function myFunction() {
 .download-orbi-banner{
     font-size: 14.4px;
     text-decoration: none;
-    color: ***REMOVED***fff;
+    color: #fff;
     border-radius: 6px;
-    background-color: ***REMOVED***4a444d;
+    background-color: #4a444d;
     width: 480px;
     padding: 18px 15px 18px 20px;
     display: flex;
@@ -1287,9 +1287,9 @@ function myFunction() {
     text-decoration: none;
     border-radius: 3px;
     display: inline-block;
-    background-color: ***REMOVED***ffffff;
+    background-color: #ffffff;
     font-size: 12px;
-    color: ***REMOVED***4a444d;
+    color: #4a444d;
     transition: all .3s ease-in-out;
     -moz-transition: all .3s ease-in-out;
     -webkit-transition: all .3s ease-in-out;
@@ -1318,7 +1318,7 @@ function myFunction() {
           <tr>
             <td style="padding-left:20px">
               <img style="position:relative;width: 216px" src="img/NightHawk.png" >
-              <br><span id="ModuleName"><b>My Modem:</b> Nighthawk CM2000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--<b><font color="***REMOVED***EEDAOO">Operation Mode:Access Point</font></b>--></span>
+              <br><span id="ModuleName"><b>My Modem:</b> Nighthawk CM2000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--<b><font color="#EEDAOO">Operation Mode:Access Point</font></b>--></span>
             </td>
             <td style="text-align:right;padding-right:25px">
               <ul class="tnb-right">
@@ -1363,18 +1363,18 @@ function myFunction() {
                     var device = get_browser();
                     if(device=="iOS")
                     {
-                        $("***REMOVED***other_button").removeClass("block_button");
-                        $("***REMOVED***other_button").addClass("none_button");
-                        $("***REMOVED***ios_button").removeClass("none_button");
-                        $("***REMOVED***ios_button").addClass("block_button");
+                        $("#other_button").removeClass("block_button");
+                        $("#other_button").addClass("none_button");
+                        $("#ios_button").removeClass("none_button");
+                        $("#ios_button").addClass("block_button");
                     }
 
                     if(device=="Android")
                     {
-                        $("***REMOVED***other_button").removeClass("block_button");
-                        $("***REMOVED***other_button").addClass("none_button");
-                        $("***REMOVED***android_button").removeClass("none_button");
-                        $("***REMOVED***android_button").addClass("block_button");
+                        $("#other_button").removeClass("block_button");
+                        $("#other_button").addClass("none_button");
+                        $("#android_button").removeClass("none_button");
+                        $("#android_button").addClass("block_button");
                     }
 
                     function adsFunction()
@@ -1414,8 +1414,8 @@ function myFunction() {
               <td>
               <!-- tabs -->
                 <ul class="tabs custom_tab" width="100%" >
-                  <li><a id="BasicTab"class="current" onFocus="this.blur()" href="***REMOVED***"><span>BASIC</span></a></li>
-                  <li><a id="AdvanceTab" onFocus="this.blur()" href="***REMOVED***"><span>ADVANCED</span></a></li>
+                  <li><a id="BasicTab"class="current" onFocus="this.blur()" href="#"><span>BASIC</span></a></li>
+                  <li><a id="AdvanceTab" onFocus="this.blur()" href="#"><span>ADVANCED</span></a></li>
                   <li><div id="firmware-update" class="button-sty2" onClick="fw_upgrade_hint();" style="padding-left:17px; height:28px; position:relative; left:10px; display:none">    A router firmware upgrade is available.</div></li>
                   <li></li>
                   <li id="lang_menu_li" style="disply:none" >
@@ -1428,7 +1428,7 @@ function myFunction() {
                 <div class="pane" id="basic-pane">
                   <table width="100%" CELLPADDING="0" CELLSPACING="0" id="basic-table" style="padding:0;margin:0;height:480px">
                     <tr>
-                      <td style="background-color:***REMOVED***FFFFFF;width:200px;font-size:12px;font-family:Arial;">
+                      <td style="background-color:#FFFFFF;width:200px;font-size:12px;font-family:Arial;">
                       <div class="basic-menu basic-menu-custom">
                           <div class="basic-menu-div" id="basic-home"><a href="DashBoard.htm"><span>Home</span></a></div>
                           <div class="basic-menu-div" id="basic-int"><a href="DocsisOffline.htm" id="INT_menu"><span>Cable Connection</span></a></div>
@@ -1464,7 +1464,7 @@ function myFunction() {
                                 -->
                         </div>
                       </td>
-                      <td style="background-color:***REMOVED***FFFFFF;width:760px;height:480px;font-family:Arial;">
+                      <td style="background-color:#FFFFFF;width:760px;height:480px;font-family:Arial;">
                         <div id="page_contain" >
                           <iframe id="page" style="width:600px;height:405px;margin-left:30px" name="page"  frameborder="0" border="0" cellspacing="0" scrolling="no" onFocus="this.blur()" src=""></iframe>
                         </div>
@@ -1475,7 +1475,7 @@ function myFunction() {
                 <div class="pane" id="adv-pane">
                   <table CELLPADDING=0 CELLSPACING=0 id="advance-table" style="padding:0;margin:0;height:480px;border:0;width:960px;">
                     <tr style="height:480px;">
-                      <td style="background-color:***REMOVED***FFFFFF;width:200px;">
+                      <td style="background-color:#FFFFFF;width:200px;">
                        <div class="advance_menu_section">
                         <ul class="advance-menu">
                           <li class="noSub" id="adv-home"><a href="RouterStatus.htm"><span class="nosub_text">ADVANCED Home</span></a></li>
@@ -1484,7 +1484,7 @@ function myFunction() {
                         -->
                           <!--<li class="noSub" id="wizard"><a href="WIZ_sel.htm"><span class="nosub_text">Setup Wizard</span></a></li>-->
                           <li class=" noSub" id="wps-wizard"><a href="AddWPSClient_TOP.htm"><span class="nosub_text">WPS Wizard</span></a></li>
-                          <li class="Sub" id="setup_header"><a href="***REMOVED***"><span>Setup</span></a></li>
+                          <li class="Sub" id="setup_header"><a href="#"><span>Setup</span></a></li>
                           <li  class="subHeader" id="set_hdr">
                           <ul style="width:100%;height:100%">
 
@@ -1496,7 +1496,7 @@ function myFunction() {
               <li class="SubMenu SubMenu" id="guest_set"><a href="" onClick="return false"><span class="subMenu_text">Guest Network</span></a></li>
                           </ul>
                           </li>
-                          <li class="Sub" id="usb_header"><a href="***REMOVED***"><span>USB Functions</span></a></li>
+                          <li class="Sub" id="usb_header"><a href="#"><span>USB Functions</span></a></li>
                           <li  class="subHeader">
                           <ul style="width:100%;height:100%">
 
@@ -1511,7 +1511,7 @@ function myFunction() {
                             </ul>
                           </li>
 <!--
-                          <li class="noSubGray" id="downloader_header"><a href="***REMOVED***"><span>NETGEAR Downloader (BETA)</span></a></li>
+                          <li class="noSubGray" id="downloader_header"><a href="#"><span>NETGEAR Downloader (BETA)</span></a></li>
                             <li  class="subHeader">
                             <ul style="width:100%;height:60px">
                               <li class="SubMenu" id="down_set"><a href="Download_settings.htm" onClick="return false"><span class="subMenu_text">Download Settings</span></a></li>
@@ -1520,7 +1520,7 @@ function myFunction() {
                             </ul>
                           </li>
 -->
-                          <li class="Sub"   id="security_header"><a href="***REMOVED***"><span>Security</span></a></li>
+                          <li class="Sub"   id="security_header"><a href="#"><span>Security</span></a></li>
                           <li  class="subHeader">
                               <ul id="security_settings_header" style="width:100%;height:100%">
 
@@ -1540,7 +1540,7 @@ function myFunction() {
                                 -->
                               </ul>
                           </li>
-                          <li class="Sub" id="AdminId"><a href="***REMOVED***"><span>Administration</span></a></li>
+                          <li class="Sub" id="AdminId"><a href="#"><span>Administration</span></a></li>
                           <li  class="subHeader">
                               <ul style="width:100%;height:100%">
                                 <li class="SubMenu" id="router_status"><a href="RouterStatus.htm" onClick="return false"><span style="border:0;" class="subMenu_text" id="router_status_text">Gateway Status</span></a></li>
@@ -1559,7 +1559,7 @@ function myFunction() {
                                     <li class="SubMenu" id="WebServiceManagement"><a href="WebServiceManagement.htm" onClick="return false"><span class="subMenu_text">Web Service Management</span></a></li>
                                 </ul>
                             </li>
-                          <li class="Sub" id="adv_header"><a href="***REMOVED***"><span>Advanced Setup</span></a></li>
+                          <li class="Sub" id="adv_header"><a href="#"><span>Advanced Setup</span></a></li>
                           <li  class="subHeader">
                             <ul id="adv_settings_header" style="width:100%;height:100%;display:block;">
                               <li class="SubMenu" id="adv_wireless_set"><a href="" onClick="return false"><span class="subMenu_text">Wireless Settings</span></a></li>
@@ -1586,7 +1586,7 @@ function myFunction() {
                         </ul>
                         </div>
                       </td>
-                      <td style="background-color:***REMOVED***ffffff">
+                      <td style="background-color:#ffffff">
                         <div id="page_contain2">
                           <iframe id="page2" name="page2" style="width:600px;height:405px;margin-left:30px"  frameborder="0" border="0" cellspacing="0" scrolling="no" onFocus="this.blur()"></iframe>
                         </div>
@@ -1633,7 +1633,7 @@ function myFunction() {
               <tr style="height:50px">
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                 <td style="text-align:center">
-                  <a onClick="window.open('http://www.netgear.com/circle', 'Help', 'scrollbars=yes')" href="***REMOVED***"><span style="font-size:12px;font-color:RGB(5,187,209)"><b>Learn More</b></span></a>
+                  <a onClick="window.open('http://www.netgear.com/circle', 'Help', 'scrollbars=yes')" href="#"><span style="font-size:12px;font-color:RGB(5,187,209)"><b>Learn More</b></span></a>
                 </td>
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
               </tr>
@@ -1700,9 +1700,9 @@ $(function() {
     $("ul.tabs").tabs("> .pane");
         var pnpx = 0
             if(pnpx == 1){
-            $("***REMOVED***AdvanceTab").click();
-            $("***REMOVED***basic-pane").css("display","none");
-            $("***REMOVED***adv-pane").css("display","block");
+            $("#AdvanceTab").click();
+            $("#basic-pane").css("display","none");
+            $("#adv-pane").css("display","block");
             pnpx = 0;
         }
 });
@@ -1710,7 +1710,7 @@ $(function() {
 
 <script>
     //$(".current").css("background","url(../img/tab-active.gif) no-repeat 0");
-    //$("***REMOVED***AdvanceTab").css("background","url(../img/tab-nonactive.gif) no-repeat 0");
+    //$("#AdvanceTab").css("background","url(../img/tab-nonactive.gif) no-repeat 0");
     $(".noSub").first().addClass("noSubActive");
     $('.basic-menu-div').first().addClass('menuActive');
 

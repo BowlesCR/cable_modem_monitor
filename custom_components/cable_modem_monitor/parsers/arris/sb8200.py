@@ -28,19 +28,19 @@ class ArrisSB8200Parser(ModemParser):
     manufacturer = "ARRIS"
     models = ["SB8200"]
 
-    ***REMOVED*** Parser status
+    # Parser status
     status = ParserStatus.VERIFIED
     verification_source = "https://github.com/solentlabs/cable_modem_monitor/issues/42 (@undotcom)"
 
-    ***REMOVED*** Device metadata
+    # Device metadata
     release_date = "2016"
     docsis_version = "3.1"
     fixtures_path = "tests/parsers/arris/fixtures/sb8200"
 
-    ***REMOVED*** Priority - model-specific parser
+    # Priority - model-specific parser
     priority = 100
 
-    ***REMOVED*** Authentication configuration (none required)
+    # Authentication configuration (none required)
     auth_config = NoAuthConfig(strategy=AuthStrategyType.NO_AUTH)
 
     url_patterns = [
@@ -49,7 +49,7 @@ class ArrisSB8200Parser(ModemParser):
         {"path": "/cmswinfo.html", "auth_method": "none", "auth_required": False},
     ]
 
-    ***REMOVED*** Capabilities - SB8200 has DOCSIS 3.1 OFDM channels
+    # Capabilities - SB8200 has DOCSIS 3.1 OFDM channels
     capabilities = {
         ModemCapability.DOWNSTREAM_CHANNELS,
         ModemCapability.UPSTREAM_CHANNELS,
@@ -71,7 +71,7 @@ class ArrisSB8200Parser(ModemParser):
         upstream_channels = self._parse_upstream(soup)
         system_info = self._parse_system_info(soup)
 
-        ***REMOVED*** Fetch product info page for uptime and version info
+        # Fetch product info page for uptime and version info
         if session and base_url:
             try:
                 response = session.get(f"{base_url}/cmswinfo.html", timeout=10)
@@ -91,11 +91,11 @@ class ArrisSB8200Parser(ModemParser):
     @classmethod
     def can_parse(cls, soup: BeautifulSoup, url: str, html: str) -> bool:
         """Detect if this is an ARRIS SB8200 modem."""
-        ***REMOVED*** Look for SB8200 model identifier
+        # Look for SB8200 model identifier
         model_span = soup.find("span", {"id": "thisModelNumberIs"})
         if model_span and "SB8200" in model_span.text:
             return True
-        ***REMOVED*** Fallback: look for model string anywhere
+        # Fallback: look for model string anywhere
         return bool(soup.find(string=lambda s: s and "SB8200" in s) and soup.find(string="Downstream Bonded Channels"))
 
     def _parse_downstream(self, soup: BeautifulSoup) -> list[dict]:
@@ -116,13 +116,13 @@ class ArrisSB8200Parser(ModemParser):
             if len(rows) < 2:
                 continue
 
-            ***REMOVED*** Skip header row(s) - may be 1 or 2 depending on HTML structure
-            ***REMOVED*** Row 0 is always the title row. Row 1 may be column headers or data.
+            # Skip header row(s) - may be 1 or 2 depending on HTML structure
+            # Row 0 is always the title row. Row 1 may be column headers or data.
             start_idx = 1
             if len(rows) > 1:
                 first_data_row = rows[1]
                 cells = first_data_row.find_all("td")
-                ***REMOVED*** If first cell is "Channel ID", this is a header row
+                # If first cell is "Channel ID", this is a header row
                 if cells and "Channel ID" in cells[0].text:
                     start_idx = 2
 
@@ -137,7 +137,7 @@ class ArrisSB8200Parser(ModemParser):
 
                 modulation = cells[2].text.strip()
 
-                ***REMOVED*** Parse frequency (in Hz format: "435000000 Hz")
+                # Parse frequency (in Hz format: "435000000 Hz")
                 freq_text = cells[3].text.strip()
                 freq_hz = extract_number(freq_text)
 
@@ -152,14 +152,14 @@ class ArrisSB8200Parser(ModemParser):
                     "uncorrected": extract_number(cells[7].text),
                 }
 
-                ***REMOVED*** Mark OFDM channels (modulation is "Other" for OFDM downstream)
+                # Mark OFDM channels (modulation is "Other" for OFDM downstream)
                 if modulation == "Other":
                     channel["is_ofdm"] = True
 
                 channels.append(channel)
                 _LOGGER.debug("Parsed SB8200 downstream channel %s: %s", channel_id, channel)
 
-            break  ***REMOVED*** Found the downstream table
+            break  # Found the downstream table
 
         return channels
 
@@ -181,12 +181,12 @@ class ArrisSB8200Parser(ModemParser):
             if len(rows) < 2:
                 continue
 
-            ***REMOVED*** Skip header row(s) - may be 1 or 2 depending on HTML structure
+            # Skip header row(s) - may be 1 or 2 depending on HTML structure
             start_idx = 1
             if len(rows) > 1:
                 first_data_row = rows[1]
                 cells = first_data_row.find_all("td")
-                ***REMOVED*** If first cell is "Channel", this is a header row
+                # If first cell is "Channel", this is a header row
                 if cells and cells[0].text.strip() == "Channel":
                     start_idx = 2
 
@@ -202,11 +202,11 @@ class ArrisSB8200Parser(ModemParser):
 
                 channel_type = cells[3].text.strip()
 
-                ***REMOVED*** Parse frequency (in Hz format)
+                # Parse frequency (in Hz format)
                 freq_text = cells[4].text.strip()
                 freq_hz = extract_number(freq_text)
 
-                ***REMOVED*** Parse width (in Hz format)
+                # Parse width (in Hz format)
                 width_text = cells[5].text.strip()
                 width_hz = extract_number(width_text)
 
@@ -220,14 +220,14 @@ class ArrisSB8200Parser(ModemParser):
                     "power": extract_float(cells[6].text),
                 }
 
-                ***REMOVED*** Mark OFDM upstream channels
+                # Mark OFDM upstream channels
                 if "OFDM" in channel_type:
                     channel["is_ofdm"] = True
 
                 channels.append(channel)
                 _LOGGER.debug("Parsed SB8200 upstream channel %s: %s", channel_id, channel)
 
-            break  ***REMOVED*** Found the upstream table
+            break  # Found the upstream table
 
         return channels
 
@@ -235,8 +235,8 @@ class ArrisSB8200Parser(ModemParser):
         """Parse system information from ARRIS SB8200."""
         system_info: dict[str, Any] = {}
 
-        ***REMOVED*** Parse current system time
-        ***REMOVED*** Format: <p id="systime" align="center"><strong>Current System Time:</strong> Fri Nov 28 ...
+        # Parse current system time
+        # Format: <p id="systime" align="center"><strong>Current System Time:</strong> Fri Nov 28 ...
         systime = soup.find("p", {"id": "systime"})
         if systime:
             time_text = systime.get_text()
@@ -244,7 +244,7 @@ class ArrisSB8200Parser(ModemParser):
                 time_value = time_text.split("Current System Time:")[-1].strip()
                 system_info["current_time"] = time_value
 
-        ***REMOVED*** Parse startup procedure status
+        # Parse startup procedure status
         tables = soup.find_all("table")
         for table in tables:
             header = table.find(string=lambda s: s and "Startup Procedure" in str(s))
@@ -286,7 +286,7 @@ class ArrisSB8200Parser(ModemParser):
                     value = cells[1].get_text(strip=True)
 
                     if "Up Time" in label:
-                        ***REMOVED*** Store as string for display (matches other parsers)
+                        # Store as string for display (matches other parsers)
                         info["system_uptime"] = value
                         _LOGGER.debug("Parsed SB8200 uptime: %s", value)
 
@@ -307,7 +307,7 @@ class ArrisSB8200Parser(ModemParser):
         Format: "8 days 01h:16m:13s.00"
         """
         try:
-            ***REMOVED*** Match pattern: X days HHh:MMm:SSs.XX
+            # Match pattern: X days HHh:MMm:SSs.XX
             match = re.match(
                 r"(\d+)\s*days?\s+(\d+)h:(\d+)m:(\d+)s",
                 uptime_str,
@@ -320,7 +320,7 @@ class ArrisSB8200Parser(ModemParser):
                 seconds = int(match.group(4))
                 return days * 86400 + hours * 3600 + minutes * 60 + seconds
 
-            ***REMOVED*** Try simpler format without days: HHh:MMm:SSs
+            # Try simpler format without days: HHh:MMm:SSs
             match = re.match(r"(\d+)h:(\d+)m:(\d+)s", uptime_str, re.IGNORECASE)
             if match:
                 hours = int(match.group(1))
